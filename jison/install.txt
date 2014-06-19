@@ -1,0 +1,5 @@
+On Ubuntu 13.10:
+sudo apt-get install npm
+sudo apt-get install nodejs-legacy
+sudo npm install jison -g
+jison eseecode.jison

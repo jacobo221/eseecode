@@ -1,0 +1,422 @@
+	body {
+		font-family: sans-serif;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: normal;
+		letter-spacing: 0px;
+		text-decoration:none;
+		/* background-color: #FFFFFF; */
+		color: #000000;
+		margin: 0px 0px 0px 0px;
+		min-width: 1000px !important;
+	}
+	div, textarea {
+		width: inherit;
+	}
+	h1 {
+		font-size: 30px;
+		background-color: inherit;
+		color: #EEEEEE;
+		margin: 0px 0px 0px 0px;
+		border-top-left-radius: 30px;
+		border-top-right-radius: 30px;
+	}
+	input, select {
+		border-radius: 5px;
+	}
+	input:hover, select:hover {
+		box-shadow: 0px 0px 5px #000000;
+	}
+	input[type="checkbox"] {
+		margin: 3px 3px 3px 3px;
+	}
+	label {
+		display: none;
+	}
+	.ace-chrome .ace_marker-layer .ace_stack {
+		/* Overwrite Ace's definition */
+		background: rgb(255, 100, 100) !important;
+	}
+	.block {
+		background-repeat: no-repeat;
+		background-color: #AAAAAA;
+		border-left: 1px solid #AAAAAA;
+		clear: both;
+		float: left;
+		border: 1px solid #AAAAAA;
+		margin-left: 10px;
+		margin-right: 5px;
+		box-shadow: 5px 5px 5px #888888;
+		width: auto;
+	}
+	.blockTitle {
+		display: block;
+	}
+	.column {
+		width: 300px;
+		float: left;
+		margin-left: 3px;
+	}
+	.column:first-child {
+		width: 400px;
+		clear: left;
+	}
+	.column:last-child {
+		clear: right;
+		margin-right: 3px;
+	}
+	.dialog-debug-analyzer-breakpoint {
+		border-top:1px solid #000000;
+		margin-top:5px;
+	}
+	.dummyBlock {
+		background-image: none;
+		background-color: transparent;
+		border: none;
+		box-shadow: none !important;
+	}
+	.floatingBlock {
+		border: 3px solid #555555 !important;
+		box-shadow: 5px 5px 10px #AAAAAA !important;
+		border-radius: 10px !important;
+	}
+	.floatingBlock canvas {
+		border-radius: 4px !important;
+	}
+	.function {
+		border-top-width: 2px !important;
+		border-radius: 10px !important;
+	}
+	div.function:before {
+		border-bottom-left-radius: 10px !important;
+		border-bottom-right-radius: 10px !important;
+	}
+	div.function:after {
+		border-top-left-radius: 10px !important;
+		border-top-right-radius: 10px !important;
+	}
+	.level1 {
+		margin-top: 7px;
+		border-radius: 10px;
+	}
+	.level2, .level3 {
+		border-top-width: 0px;
+		margin-bottom: 0px;
+		margin-top: 0px;
+		border-radius: 0px;
+	}
+	.level2:first-child, .level3:first-child {
+		border-top-width: 1px;
+	}
+	.level2:hover, .level3:hover {
+		box-shadow: 7px 5px 5px #4444AA;
+	}
+	.program {
+		height: 349px;
+		background-color: #FFFFFF;
+		color: inherit;
+		border: 1px solid #666666;
+		border-top-width: 0px;
+		border-bottom-width: 0px;
+	}
+	.separator {
+		border-bottom: 1px solid #FFFFFF;
+		clear: both;
+		height: 0px;
+	}
+	.tab {
+		float: right;
+		width: 60px;
+		height: 18px;
+		margin: 2px 0px 0px 0px;
+		padding: 2px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+	.tab a {
+		background-color: inherit;
+		color: #FFFFFF;
+		text-decoration: none;
+	}
+	.tab:hover {
+		height: 20px;
+		margin: 0px 0px 0px 0px;
+		background-color: #789ABC;
+		color: inherit;
+		font-weight: bold;
+	}
+	.tab-active, .tab-active:hover {
+		height: 20px;
+		margin: 0px 0px 0px 0px;
+		background-color: #FFFFFF;
+		color: #123456;
+		font-weight: bold;
+	}
+	.tab-active a {
+		background-color: inherit;
+		color: #123456;
+	}
+/*
+	#author {
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+		text-align: right;
+		width: initial;
+	}
+*/
+	#body>div {
+		height: 400px;
+	}
+	#console .program {
+		overflow: auto;
+		border-top-right-radius: 10px;
+	}
+	#console .tab {
+		float: left;
+	}
+	#console-blocks>div:first-child {
+		margin-top: 5px;
+		border-top-left-radius: 10px !important;
+		border-top-right-radius: 10px !important;
+	}
+	#console-blocks>div:last-child {
+		margin-bottom: 10px;
+		border-bottom-left-radius: 10px !important;
+		border-bottom-right-radius: 10px !important;
+	}
+	#console-blocks span, #dialog-blocks span {
+		cursor: default;
+	}
+	#console-blocks.breakpointHandler span {
+		cursor: crosshair !important;
+	}
+	#console-buttons, #dialog-debug-command {
+		background-color: #AAAAAA;
+		color: inherit;
+		border: 1px solid #666666;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+	#console-buttons {
+		text-align: center;
+	}
+	#console-buttons div:not(:first-child):not(:last-child)  {
+		width: 50%;
+	}
+	#console-buttons canvas {
+		margin: 3px 10px 0px 10px;
+	}
+	#console-buttons canvas:hover, #dialog-debug-command canvas:hover {
+		box-shadow: 0px 0px 7px #000000;
+		border-radius: 10px;
+	}
+	#console-buttons canvas:active, #dialog-debug-command canvas:active {
+		box-shadow: 0px 0px 4px #000000;
+		border-radius: 10px;
+	}
+	#console-buttons div {
+		display: table-cell;
+		text-align: center;
+	}
+	#console-blocks-tip {
+		border-radius: 0px !important;
+		background-color: transparent !important;
+	}
+	#console-tabs {
+		margin: 0px 3px 0px 1px;
+	}
+	#console-tabdiv {
+		clear: both;
+	}
+	#console-write.breakpointHandler div {
+		cursor: crosshair !important;
+	}
+	#dialog-debug-layers, #dialog-debug-analyzer {
+		float: left;
+		width: auto;
+	}
+	#dialog-debug-layers-help, #dialog-debug-analyzer-help {
+		float: right;
+		font-weight: bold;
+		width: 10px;
+		margin: 0px 0px 0px 0px;
+		cursor: help;
+	}
+	#dialog-debug-layers-title, #dialog-debug-analyzer-title {
+		padding: 3px 0px 3px 0px;
+		border-bottom: 1px solid #000000;
+		text-align: center;
+		font-weight: bold;
+		background-color: #CCCCCC;
+		color: inherit;
+	}
+	#dialog {
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+	#dialog .block {
+		border: 1px solid #AAAAAA;
+		margin: 2px;
+		float: left;
+		clear: none;
+		box-shadow: 4px 3px 10px #888888;
+		border-radius: 5px;
+		width: initial;
+	}
+	#dialog-blocks div:hover {
+		box-shadow: 0px 0px 20px #000000;
+	}
+	#dialog .program {
+		background-color: #E9E9E9;
+		color: inherit;
+		overflow-x: hidden;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+	#dialog-debug-command {
+		clear: both;
+		text-align: left;
+		vertical-align: top;
+		display: none;
+	}
+	#dialog-debug-command-input {
+		width: 87%;
+		padding: 0px 0px 0px 0px;
+		margin: 0px 0px 2px 2px;
+	}
+	#dialog-debug.program {
+		border-bottom-left-radius: 0px;
+		border-bottom-right-radius: 0px;
+	}
+	#dialog-setup {
+		text-align: center;
+	}
+	#dialog-setup input[type="number"] {
+		width: 40px;
+	}
+	#dialog-tabs {
+		height: 23px;
+		text-align: center;
+	}
+	#dialog-tabs-setup {
+		width: 20px;
+	}
+	#dialog-window .dialog-window {
+		background-color: #AAAAAA;
+		color: inherit;
+		height: inherit;
+	}
+	#execute-notes {
+		margin-top: 5px;
+	}
+	#eseecode {
+		width: 980px; /* iPad / Android default layout viewport */
+		height: 480px;
+		color: inherit;
+		background-color: #123456;
+		border-radius: 30px;
+		position: relative;
+	}
+	#filemenu {
+		/* float: right; */
+		width: auto;
+	}
+	#filemenu input:hover, #footer input:hover {
+		box-shadow: 0px 0px 5px #FFFFFF;
+	}
+	#footer, #header {
+		clear: both;
+		background-color: transparent;
+		color: #FFFFFF;
+	}
+	#footer {
+		text-align: center;
+		height: 20px;
+	}
+	#footer a, #header a {
+		background-color: inherit;
+		color: #FFFFFF;
+		font-weight: bold;
+	}
+	#footer a:hover, #header a:hover {
+		box-shadow: 0px 0px 5px #FFFFFF;
+		background-color: inherit;
+		color: #DDEECC;
+		border-radius: 5px;
+	}
+	#footer input[type="text"], #footer input[type="number"] {
+		width: 50px;
+	}
+	#footer .column {
+		height: auto;
+	}
+	#header {
+		height: 40px;
+		position: relative;
+		text-align: left;
+		font-size: 10px;
+		float: left;
+	}
+	#header div {
+		display: inline;
+		text-align: left;
+	}
+	#header>:first-child {
+		float: left;
+		margin-left: 25px;
+	}
+	#header>:last-child {
+		text-align: right;
+		float: right;
+		margin-right: 5px;
+		width: auto;
+		margin-right: 25px;
+	}
+	#language {
+		float: left;
+	}
+	#msgBox {
+		position: relative;
+		margin: auto;
+  		top: 25%;
+		width: 50%;
+		height: 50%;
+		border: 10px solid black;
+		background-color: #FFFFFF;
+		color: #000000;
+		padding: 10px 10px 10px 10px;
+		white-space: pre-line;
+		font-family: "Courier New", Courier, monospace;	
+	}
+	#msgBoxWrapper {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 980px;
+		height: 100%;
+		z-index: 20000;
+		border: 0px solid black;
+		background-color: rgba(0,0,0,0.4);
+	}
+	#setup-turtle-enable-title {
+		margin-left: 10px;
+	}
+	#whiteboard {
+		background-color: #FFFFFF;
+		color: inherit;
+		border-radius: 10px;
+	}
+	#whiteboard canvas {
+		border-radius: 10px;
+	}
+	#whiteboard div {
+		position: absolute;
+		border-radius: 10px;
+	}

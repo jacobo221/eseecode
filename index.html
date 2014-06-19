@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=980">
+<meta name="author" content="Jacobo Vilella Vilahur" />
+<meta name="description" content="Easy computer programming eLearning development platform for schools and fun" />
+<meta name="keywords" content="esee,code,eesecode,programming,school" />
+<title>eSeeCode</title>
+<link rel="stylesheet" type="text/css" href="css/ui.css">
+<link rel="icon" type="image/x-icon" sizes="64x64 32x32 16x16" href="favicon.ico" />
+<link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
+<script type="text/javascript" src="js/ui.js"></script>
+<script type="text/javascript" src="js/i18n/ca.js"></script>
+<script type="text/javascript" src="js/i18n/es.js"></script>
+<script type="text/javascript" src="js/instructions.js"></script>
+<script type="text/javascript" src="js/instructions-icons.js"></script>
+<script type="text/javascript" src="jison/eseecodeLanguage.js"></script>
+<script type="text/javascript" src="jison/makeBlocks.js"></script>
+<script type="text/javascript" src="jison/makeWrite.js"></script>
+<script type="text/javascript" src="ace/ace.js"></script>
+<script type="text/javascript" src="jscolor/jscolor.js"></script>
+</head>
+<div id="eseecode">
+	<div id="header">
+		<div id="language" class="column">			
+			<div id="language-translator"></div><br />
+			<div id="language-switch">
+				<span id="language-title"></span>
+				<select id="language-select" onChange="switchLanguage(document.getElementById('language-select').value)"></select>
+			</div>
+		</div>
+		<h1 id="title" class="column"></h1>
+		<div id="author"></div>
+	</div>
+	<div id="body">
+		<div id="whiteboard" class="column"></div>
+		<div id="console" class="column column-middle">
+			<div id="console-tabs">
+				<div id="console-tabs-level1" class="tab" onclick="switchConsoleMode('level1')" ondblclick="resizeConsole()"></div>
+				<div id="console-tabs-level2" class="tab" onclick="switchConsoleMode('level2')" ondblclick="resizeConsole()"></div>
+				<div id="console-tabs-level3" class="tab" onclick="switchConsoleMode('level3')" ondblclick="resizeConsole()"></div>
+				<div id="console-tabs-level4" class="tab" onclick="switchConsoleMode('level4')" ondblclick="resizeConsole()"></div>
+			</div>
+			<div id="console-tabdiv" class="console-tabdiv">
+				<div id="console-blocks" class="program"></div>
+				<div id="console-write" class="program"></div>
+			</div>
+			<div id="console-buttons">
+				<div>
+					<a id="button-undo" href="#"><canvas width="40" height="20" onclick="undo(false)"></canvas></a>
+				</div><div>
+					<a id="button-execute" href="#"><canvas width="20" height="20" onclick="execute()"></canvas></a>
+					<a id="button-clear" href="#"><canvas width="20" height="20" onclick="resetDraw()"></canvas></a>
+					<a id="button-reset" href="#"><canvas width="20" height="20" onclick="resetUI(true)"></canvas></a>
+				</div><div>
+					<a id="button-redo" href="#"><canvas width="40" height="20" onclick="undo(true)"></canvas></a>
+				</div>
+			</div>
+		</div>
+		<div id="dialog" class="column">
+			<div id="dialog-tabs">
+				<div id="dialog-tabs-setup" class="tab" onclick="switchDialogMode('setup')"><canvas width="20" height="20"></canvas></div>
+				<div id="dialog-tabs-debug" class="tab" onclick="switchDialogMode('debug')"></div>
+				<div id="dialog-tabs-window" class="tab" onclick="switchDialogMode('window')"></div>
+				<div id="dialog-tabs-pieces" class="tab" onclick="switchDialogMode($_eseecode.modes.console[0])"></div>
+			</div>
+			<div id="dialog-blocks" class="program"></div>
+			<div id="dialog-write" class="program"></div>
+			<div id="dialog-window" class="program"></div>
+			<div id="dialog-debug" class="program">
+				<div id="dialog-debug-layers-title"></div>
+				<div id="dialog-debug-layers-help">?</div>
+				<div id="dialog-debug-layers"></div>
+				<div class="separator"></div>
+				<div id="dialog-debug-analyzer-title"></div>
+				<div id="dialog-debug-analyzer-help">?</div>
+				<div id="dialog-debug-analyzer"></div>
+			</div>
+			<div id="dialog-debug-command"><form id="dialog-debug-form" onsubmit="execute(true,document.getElementById('dialog-debug-command-input').value);return false;">
+				<label id="dialog-debug-command-label" for="dialog-debug-command-input"></label><input id="dialog-debug-command-input" type="text" />
+				<a id="dialog-debug-command-button" href="#"><canvas width="20" height="20" onclick="execute(true,document.getElementById('dialog-debug-command-input').value)"></canvas></a>
+			</form></div>
+			<div id="dialog-setup" class="program">
+				<br />
+				<div id="filemenu">
+					<input type="button" id="loadcode" name="loadfile" onclick="loadCode()" />
+					<input type="button" id="savecode" name="savefile" onclick="saveCode()" />
+				</div>
+				<br />
+				<div id="setup-execute-step-buttons">
+					<span id="setup-execute-step-title"></span><input id="setup-execute-step" type="number" min="1" onchange="updateExecutionStep()" /><span id="setup-execute-step-title2"></span><label id="setup-execute-stepped-label" for="setup-execute-stepped"></label><input id="setup-execute-stepped" type="checkbox" onchange="updateExecutionStepped()" />
+				</div>
+				<div id="setup-execute-time-buttons">
+					<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
+				</div><br />
+				<div>
+					<a id="downloadImage" href="#" onclick="downloadCanvas(this)"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer">
+		<div id="setup-grid" class="column">
+			<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
+			<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" />
+			<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
+		</div>
+		<div id="setup-execute" class="column">
+			<div id="execute-notes"></div>
+		</div>
+	</div>
+</div>
+<script>    
+    // Init application
+    window.addEventListener("load", resetUI, false);
+</script>
+</body>
+</html>
