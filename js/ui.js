@@ -1,11 +1,11 @@
 "use strict;"
 
-	/** Returns a canvas in the whiteboard
-	 * If needed, canvas is created overlapping exactly the whiteboard div element
-	 * The created canvas can be accessed via $_eseecode.canvasArray[id]
+	/** Returns a layer in the whiteboard
+	 * If needed, layer is created overlapping exactly the whiteboard div element
+	 * The created layer can be accessed via $_eseecode.canvasArray[id]
 	 * @private
-	 * @param [id] Id number (if blank it creates a new id)
-	 * @returns the canvas object
+	 * @param {Number} [id] Layer id (if blank it creates a new id)
+	 * @returns {!Object}
 	 * @example $_eseecode.currentCanvas = getCanvas(id)
 	 */
 	function getCanvas(id) {
@@ -71,6 +71,14 @@
 		return $_eseecode.canvasArray[id];
 	}
 
+	/** Returns a window
+	 * If needed, window is created overlapping exactly the whiteboard div element
+	 * The created window can be accessed via $_eseecode.windowsArray[id]
+	 * @private
+	 * @param {Number} [id] Window id (if blank it creates a new id)
+	 * @returns {!Object}
+	 * @example $_eseecode.currentWiundow = getWindow(id)
+	 */
 	function getWindow(id) {
 		if (typeof id === "undefined") {
 			id = $_eseecode.windowsArray.length;
@@ -88,10 +96,11 @@
 		return $_eseecode.windowsArray[id];
 	}
 
-	/* removeCanvas(id): Deletes a canvas from the whiteboard
-		id: id number (optional, otherwise creates a new one)
-		@returns the id number if the canvas was deleted, otherwise -1
-	*/
+	/** Deletes a layer from the whiteboard
+	 * @private
+	 * @param {Number} [id] Layer id
+	 * @example removeCanvas(3)
+	 */
 	function removeCanvas(id) {
 		if ($_eseecode.canvasArray[id]) {
 			$_eseecode.whiteboard.removeChild($_eseecode.canvasArray[id].div);
@@ -99,14 +108,25 @@
 		}
 	}
 
+	/** Switches the currently active layer, returns the layer
+	 * @private
+	 * @param {Number} [id] Layer id
+	 * @return {!Object}
+	 * @example switchCanvas(3)
+	 */
 	function switchCanvas(id) {
 		$_eseecode.currentCanvas = getCanvas(id);
 		resetTurtle(); // switch to the apropiate turtle
 		return $_eseecode.currentCanvas;
 	}
 
+	/** Switches the currently active window
+	 * @private
+	 * @param {Number} [id] Window id
+	 * @example windowSwitch(3)
+	 */
 	function windowSwitch(id) {
-		if (id !== null) { // 0 is a valid id
+		if (id !== undefined) { // 0 is a valid id
 			$_eseecode.currentWindow = getWindow(id);
 		}
 		// even if we did getWindow() still do the following, since it fixes rendering issues
@@ -118,10 +138,128 @@
 		$_eseecode.currentWindow.style.display = "block";
 	}
 
-	function isNumber(n) {
-		return !isNaN(parseFloat(n)) && isFinite(n);
+	/**
+	 * Sets the font properties on the currently active layer context
+	 * @private
+	 * @param {!Object} [context] Canvas context to take style difinitions from. If unset, currently active layer
+	 * @example setTextStyle(ctx)
+	 */
+	function setTextStyle(context) {
+		if (context === undefined) {
+			context = $_eseecode.currentCanvas.context;
+		}
+		var style = $_eseecode.currentCanvas.style;
+		var font = "";
+		if (style.italic) {
+			font += "italic ";
+		}
+		if (style.bold) {
+			font += "bold ";
+		}
+		font += (style.size+$_eseecode.setup.defaultFontSize)+"px ";
+		font += style.font;
+		context.font = font;
 	}
 
+	/**
+	 * Sets the size of the future draw lines and text
+	 * @private
+	 * @param {Number} [size] Size in pixels. If unset uses currently active layer's size
+	 * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
+	 * @example setSizeStyle(2, ctx)
+	 */
+	function setSizeStyle(size, context) {
+		if (size === undefined) {
+			color = $_eseecode.currentCanvas.style.size;
+		}
+		if (context === undefined) {
+			context = $_eseecode.currentCanvas.context;
+		}
+		$_eseecode.currentCanvas.style.size = size;
+		if (size < 1) {
+			context.lineWidth = 1;
+		} else {
+			context.lineWidth = size;
+		}
+		setTextStyle();
+	}
+
+	/**
+	 * Sets the color of the future draw lines and text
+	 * @private
+	 * @param {String} [color] Color to use. If unset uses currently active layer's color
+	 * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
+	 * @example setColor("#FF0000", ctx)
+	 */
+	function setColorStyle(color, context) {
+		if (color === undefined) {
+			color = $_eseecode.currentCanvas.style.color;
+		}
+		if (context === undefined) {
+			context = $_eseecode.currentCanvas.context;
+		}
+		$_eseecode.currentCanvas.style.color = color;
+		context.fillStyle = color;
+		context.strokeStyle = color;
+		setTextStyle(context);
+	}
+
+	/**
+	 * Deletes a window element
+	 * @private
+	 * @param {String} id Element id
+	 * @example windowElementRemove("b1")
+	 */
+	function windowElementRemove(id) {
+		var obj = document.getElementById("element-"+id);
+		if (!obj) {
+			return false;
+		}
+		var objParent = obj.parentNode;
+		if (!objParent) {
+			return false;
+		}
+		return objParent.removeChild(obj);
+	}
+
+	/**
+	 * Hides a window element
+	 * @private
+	 * @param {String} id Element id
+	 * @example windowElementHide("b1")
+	 */
+	function windowElementHide(id) {
+		var obj = document.getElementById("element-"+id);
+		obj.style.display = "none";
+	}
+
+	/**
+	 * Shows a window element if it was hidden
+	 * @private
+	 * @param {String} id Element id
+	 * @example windowElementShow("b1")
+	 */
+	function windowElementShow(id) {
+		var obj = document.getElementById("element-"+id);
+		obj.style.display = "inline";
+	}
+
+	/**
+	 * Returns if a value is a number or not
+	 * @private
+	 * @param {*} value Value to test
+	 * @example isNumber(5)
+	 */
+	function isNumber(value) {
+		return !isNaN(parseFloat(value)) && isFinite(value);
+	}
+
+	/**
+	 * Links an A HTML element to the current whiteboard export drawing
+	 * @private
+	 * @param {!Object} link HTML A element to add the link to
+	 * @example downloadCanvas(document.body.createElement("a"))
+	 */
 	function downloadCanvas(link) {
 		var canvas = document.createElement('canvas');
 		canvas.width = 400;
@@ -139,6 +277,12 @@
 		link.download = "canvas-"+d.getTime()+".png";
 	}
 
+	/**
+	 * Removes all content from a layer
+	 * @private
+	 * @param {Number} id Layer id
+	 * @example clearCanvas(2)
+	 */
 	function clearCanvas(id) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var ctx, canvas;
@@ -156,6 +300,12 @@
 		canvas.width = canvasSize;
 	}
 
+	/**
+	 * Resizes the console window
+	 * @private
+	 * @param {Boolean} [restore=false] If false it maximizes the console window taking up the dialog window, otherwise it restores its size to the initial size
+	 * @example resizeConsole(true)
+	 */
 	function resizeConsole(restore) {
 		var mainWidth = document.getElementById('eseecode').clientWidth;
 		var whiteboardWidth = $_eseecode.whiteboard.offsetWidth;
@@ -178,6 +328,13 @@
 		ace.edit("console-write").resize();
 	}
 
+	/**
+	 * Shows a message box overlapping all the platform's user interface
+	 * @private
+	 * @param {String} text Message to show in the message box
+	 * @param {function()} actionOk Function to run when the user clicks the OK button in the message box 
+	 * @example msgBox("Alert!")
+	 */
 	function msgBox(text, actionOk) {
 		var mainBlock = document.getElementById("eseecode");
 		var div = document.createElement("div");
@@ -207,6 +364,12 @@
 		})
 	}
 
+	/**
+	 * Switches the user interface to the specified level
+	 * @private
+	 * @param {Number|String} [id] Can refer to a level number or to a level name. If unset it checks the "level" parameter in the browser's URL. If it can't determine the new level, it keeps the current level
+	 * @example switchConsoleMode(2)
+	 */
 	function switchConsoleMode(id) {
 		var oldMode = $_eseecode.modes.console[0];
 		if (!id) {
@@ -329,6 +492,12 @@
 		highlight();
 	}
 
+	/**
+	 * Switches the dialog window
+	 * @private
+	 * @param {Number|String} [id] Can refer to a dialog index or to a dialog name. If unset it keeps the current dialog window
+	 * @example switchDialogMode("debug")
+	 */
 	function switchDialogMode(id) {
 		if (!id) {
 			id = $_eseecode.modes.dialog[0];
@@ -402,6 +571,12 @@
 		$_eseecode.modes.dialog[0] = id;
 	}
 
+	/**
+	 * Initializes or resets custom UI elements
+	 * Such elements include the console and dialog buttons and the console and dialog backgrounds
+	 * @private
+	 * @example initUIElements()
+	 */
 	function initUIElements() {
 		var canvas, ctx, div, width, height, src;
 		// Main background
@@ -658,6 +833,13 @@
 		ctx.closePath();
 	}
 
+	/**
+	 * Returns a readable text color given a background color
+	 * @private
+	 * @param {String} backgroundColor Background color
+	 * @return {String}
+	 * @example readableText("#123456")
+	 */
 	function readableText(backgroundColor) {
 		var color = backgroundColor.substring(1);
 		var colorR = parseInt(color.substring(0,2), 16);
@@ -672,6 +854,11 @@
 		return color;
 	}
 
+	/**
+	 * Initializes the cursor layer
+	 * @private
+	 * @example initTurtle()
+	 */
 	function initTurtle() {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var name = "turtle";
@@ -693,6 +880,11 @@
 		$_eseecode.canvasArray[name] = {name: name, canvas: canvas, div: div, visible: true};
 	}
 
+	/**
+	 * Hides/Shows the cursor layer
+	 * @private
+	 * @example toggleTurtle()
+	 */
 	function toggleTurtle() {
 		var turtleCanvas = $_eseecode.canvasArray["turtle"];
 		if (turtleCanvas.visible) {
@@ -704,6 +896,13 @@
 		}
 	}
 
+	/**
+	 * Resets the cursor in a layer
+	 * @private
+	 * @param {Number} [id] Layer id. If unset use the currently active layer
+	 * @param {Number} [ctx] Canvas context. If unset use the "turtle" layer
+	 * @example resetTurtle()
+	 */
 	function resetTurtle(id, ctx) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (id === undefined) {
@@ -755,12 +954,24 @@
 		ctx.stroke();
 	}
 
+	/**
+	 * Deletes a breakpoint
+	 * @private
+	 * @param {String} line Line to remove breakpoint from
+	 * @example removeBreakpoint(12)
+	 */
 	function removeBreakpoint(line) {
 		delete $_eseecode.session.breakpoints[line];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
 		div.parentNode.removeChild(div);
 	}
 
+	/**
+	 * Completes or cancels an asynchronous breakpoint addition event
+	 * @private
+	 * @param {Object} event Event. If unset and in blocks mode it will cancel the breakpoint event
+	 * @example addBreakpointEventEnd()
+	 */
 	function addBreakpointEventEnd(event) {
 		var line;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
@@ -789,6 +1000,11 @@
 		event.stopPropagation();
 	}
 
+	/**
+	 * Cancels an asynchronous breakpoint addition event
+	 * @private
+	 * @example addBreakpointEventCancel()
+	 */
 	function addBreakpointEventCancel() {
 		$_eseecode.session.breakpointHandler = false;
 		var tabdiv = document.getElementById("console-tabdiv");
@@ -810,6 +1026,12 @@
 		}
 	}
 
+	/**
+	 * Starts an asynchronous breakpoint addition event
+	 * @private
+	 * @param {String} [oldLine] Breakpoint handler. Use only when editting an existing breakpoint
+	 * @example addBreakpointEventStart()
+	 */
 	function addBreakpointEventStart(oldLine) {
 		if (!oldLine) {
 			oldLine = true;
@@ -835,6 +1057,12 @@
 		document.body.addEventListener("keydown",keyboardShortcuts,false);
 	}
 
+	/**
+	 * Synchronous part of a breakpoint addition
+	 * @private
+	 * @param {String} [line] Line in code to add the breakpoint to. If unset it calls for the user to set it up via the UI
+	 * @example addBreakpoint(12)
+	 */
 	function addBreakpoint(line) {
 		if (!line) {
 			addBreakpointEventStart();
@@ -870,6 +1098,13 @@
 		}
 	}
 
+	/**
+	 * Edit breakpoint
+	 * @private
+	 * @param {String} oldLine Line where the breakpoint was
+	 * @param {String} [line] Line where the breakpoint will be. If unset just add the breakpoint
+	 * @example updateBreakpoint(12, 17)
+	 */
 	function updateBreakpoint(oldLine, line) {
 		if (!line) {
 			addBreakpointEventStart(oldLine);
@@ -893,6 +1128,13 @@
 		
 	}
 
+	/**
+	 * Adds a watch in a breakpoint
+	 * @private
+	 * @param {String} line Breakpoint (line) to add the watch to
+	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
+	 * @example addBreakpointWatch(12, "count")
+	 */
 	function addBreakpointWatch(line, watch) {
 		if (!watch) {
 			do {
@@ -911,12 +1153,24 @@
 		}
 	}
 
+	/**
+	 * Deletes a watch from a breakpoint
+	 * @private
+	 * @param {String} line Breakpoint (line) to remove the watch from
+	 * @param {String} watch Name of the variable to stop watching
+	 * @example removeBreakpointWatch(12, "count")
+	 */
 	function removeBreakpointWatch(line, watch) {
 		delete $_eseecode.session.breakpoints[line][watch];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch);
 		div.parentNode.removeChild(div);
 	}
 
+	/**
+	 * Resets the debug window
+	 * @private
+	 * @example resetDebug()
+	 */
 	function resetDebug() {
 		var debugDiv = document.getElementById("dialog-debug");
 		// Clean old debug info and create new debug info
@@ -950,18 +1204,38 @@
 		}
 	}
 
+	/**
+	 * Gets the execution step value from the setup and updates in the $_eseecode class
+	 * @private
+	 * @example updateExecutionStep()
+	 */
 	function updateExecutionStep() {
 		$_eseecode.execution.step = parseInt(document.getElementById("setup-execute-step").value);
 	}
 
+	/**
+	 * Gets the execution stepped value from the setup and updates in the $_eseecode class
+	 * @private
+	 * @example updateExecutionStepped()
+	 */
 	function updateExecutionStepped() {
 		$_eseecode.execution.stepped = document.getElementById("setup-execute-stepped").checked;
 	}
 
+	/**
+	 * Gets the execution time limit value from the setup and updates in the $_eseecode class
+	 * @private
+	 * @example updateExecutionTime()
+	 */
 	function updateExecutionTime() {
 		$_eseecode.execution.timeLimit = parseInt(document.getElementById("setup-execute-time").value);
 	}
 
+	/**
+	 * Initiates/Resets the setup window
+	 * @private
+	 * @example initSetup()
+	 */
 	function initSetup() {
 		var debugDiv = document.getElementById("dialog-setup");
 		document.getElementById("setup-execute-step").value = $_eseecode.execution.step;
@@ -973,6 +1247,12 @@
 		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
 
+	/**
+	 * Checks the layers list and returns the debug layers list content
+	 * @private
+	 * @return {String}
+	 * @example debugLayers()
+	 */
 	function debugLayers() {
 		var list = [];
 		var listReverse = [];
@@ -1018,6 +1298,12 @@
 		return list;
 	}
 
+	/**
+	 * Shows/Hides a layer
+	 * @private
+	 * @param {Number} id Layer id
+	 * @example toggleCanvas(3)
+	 */
 	function toggleCanvas(id) {
 		var div = $_eseecode.canvasArray[id].div;
 		if (div.style.display == "none") {
@@ -1027,6 +1313,12 @@
 		}
 	}
 
+	/**
+	 * Shows only a layer (hodes the others)
+	 * @private
+	 * @param {Number} id Layer id
+	 * @example highlightCanvas(3)
+	 */
 	function highlightCanvas(id) {
 		unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
 		// Since we destroy it and create it again every time it should always be on top of the canvas stack
@@ -1115,6 +1407,11 @@
 		$_eseecode.whiteboard.appendChild(div);
 	}
 
+	/**
+	 * Resets the layers visibility back to normal after a highlightCanvas() call
+	 * @private
+	 * @example unhighlightCanvas()
+	 */
 	function unhighlightCanvas() {
 		var div = document.getElementById("canvas-div-highlight");
 		if (div) {
@@ -1122,6 +1419,11 @@
 		}
 	}
 
+	/**
+	 * Initializes/Resets the grid layer
+	 * @private
+	 * @example resetGrid(3)
+	 */
 	function resetGrid() {
 		var canvasSize = window.getComputedStyle(document.querySelector('#whiteboard')).getPropertyValue('width').replace("px","");
 		var ctx = $_eseecode.canvasArray[0].context;
@@ -1156,8 +1458,14 @@
 		}
 	}
 
-	// If $_eseecode.execution.programCounterLimit === false the step limit is ignored
+	/**
+	 * Check the execution control limits
+	 * @private
+	 * @param {Number} lineNumber Code line number currently running
+	 * @example checkExecutionLimits(31)
+	 */
 	function checkExecutionLimits(lineNumber) {
+		// If $_eseecode.execution.programCounterLimit === false the step limit is ignored
 		var executionTime = new Date().getTime();
 		$_eseecode.execution.programCounter++;
 		setHighlight(lineNumber);
@@ -1175,6 +1483,12 @@
 		}
 	}
 
+	/**
+	 * Show execution results
+	 * @private
+	 * @param {String|Object} [err] Caught exception
+	 * @example showExecutionResults()
+	 */
 	function showExecutionResults(err) {
 		if (err === undefined) {
 			if ($_eseecode.execution.programCounterLimit !== false) {
@@ -1199,7 +1513,12 @@
 		document.getElementById("execute-notes").innerHTML = _("Instructions executed")+": "+$_eseecode.execution.programCounter+" ("+executionTime+" "+_("secs")+")";
 	}
 
-	// resetStepLimit can be true to restart the limit, false to update the limit, or "disabled" to disable the limit
+	/**
+	 * Resets and sets up internal configuration for a new cod execution
+	 * @private
+	 * @param {Boolean|String} [resetStepLimit] true = restart the stepping, false = update the stepping, "disabled" = ignore the stepping
+	 * @example initProgramCounter()
+	 */
 	function initProgramCounter(resetStepLimit) {
 		// Stop previous execution remaining animations
 		for (var i=0; i<$_eseecode.session.timeoutHandlers.length; i++) {
@@ -1240,6 +1559,12 @@
 		}
 	}
 
+	/**
+	 * Displays execution error
+	 * @private
+	 * @param {!Object} [err] Caught exception
+	 * @example printExecutionError(err)
+	 */
 	function printExecutionError(err) {
 		var lineNumber;
 		if (err.lineNumber) { // Firefox
@@ -1270,6 +1595,12 @@
 		msgBox(message);
 	}
 
+	/**
+	 * Setup execution sandboxing
+	 * It deletes or resets variables created in the last execution
+	 * @private
+	 * @example resetSandbox()
+	 */
 	function resetSandbox() {
 		if (!$_eseecode.execution.sandboxProperties) {
 			$_eseecode.execution.sandboxProperties = [];
@@ -1279,6 +1610,14 @@
 		}
 	}
 
+	/**
+	 * Checks and takes note of which variables where created during the last execution
+	 * The list of changes is pushed into $_eseecode.execution.sandboxProperties
+	 * @private
+	 * @param {Array<String>} oldKeys List of variables existing before the last execution
+	 * @param {Array<String>} newKeys List of variables existing after the last execution
+	 * @example updateSandboxChanges(oldKeys, newKeys)
+	 */
 	function updateSandboxChanges(oldKeys, newKeys) {
 		for (var i=0; i<newKeys.length; i++) {
 			var keyNameNew = newKeys[i];
@@ -1297,8 +1636,13 @@
 		}
 	}
 
-	/* execute(): Runs code
-	*/
+	/**
+	 * Runs code
+	 * @private
+	 * @param {Boolean} [forceNoStep] Whether or not to force to ignore the stepping
+	 * @param {String} [code] Code to run. If unset run the code in the console window
+	 * @example execute()
+	 */
 	function execute(forceNoStep, code) {
 		if (!code) {
 			resetSandbox();
@@ -1365,15 +1709,27 @@
 		}
 	}
 
-	function selectTextareaLine(textarea,lineStart,lineEnd, style) {
+	/**
+	 * Select text in ace
+	 * @private
+	 * @param {Number} lineStart Line where the selection starts
+	 * @param {Number} lineEnd Line where the selection ends
+	 * @param {String} style Ace style to use for highlighting
+	 * @example selectTextareaLine(12, 12, "ace_step")
+	 */
+	function selectTextareaLine(lineStart, lineEnd, style) {
 		lineStart--; // array starts at 0, we leave lineEnd as is beacuse we'll select until the beginning of the next line
 		var Range = require('ace/range').Range;
 		return ace.edit("console-write").session.addMarker(new Range(lineStart,0,lineEnd-1,ace.edit("console-write").session.getLine(lineEnd-1).length), style, "fullLine");
 	}
 
-	/* highlight(lineNumber): Higlights canvas 
-		lineNumber: line of code (or block) to highlight
-	*/
+	/**
+	 * Highlight code
+	 * @private
+	 * @param {Number} [lineNumber] Line to highlight. If unset it highlights the last line marked with setHighlight()
+	 * @param {String} [reason=step] Reason for highlighting. Available reasons are: "step", "error"
+	 * @example highlight(12, "error")
+	 */
 	function highlight(lineNumber, reason) {
 		reason = reason?reason:"step";
 		if (!lineNumber) {
@@ -1409,15 +1765,18 @@
 			} else {
 				style = "ace_step";
 			}
-			selectTextareaLine(document.getElementById("console-write"),lineNumber,lineNumber, style);
+			selectTextareaLine(lineNumber,lineNumber, style);
 			ace.edit("console-write").scrollToLine(lineNumber, true, true);
 		}
 		$_eseecode.session.highlight.lineNumber = lineNumber;
 		$_eseecode.session.highlight.reason = reason;
 	}
 
-	/* unhighlight(): Removes highlight from a canvas
-	*/
+	/**
+	 * Removes code highlight
+	 * @private
+	 * @example unhighlight()
+	 */
 	function unhighlight() {
 		if (!$_eseecode.session.highlight.lineNumber) {
 			return;
@@ -1439,12 +1798,26 @@
 		$_eseecode.session.highlight.reason = undefined;
 	}
 
+	/**
+	 * Mark a line to highlight
+	 * @private
+	 * @param lineNumber Line to mark to highlight
+	 * @example setHighlight(12)
+	 */
 	function setHighlight(lineNumber) {
 		$_eseecode.session.highlight.lineNumber = lineNumber;
 		
 	}
 
-	function getInstructionSetIdFromName(instructionName,startId) {
+	/**
+	 * Returns the index where the given instruction is in $_eseecode.instructions.set, or -1 if it didn't find it
+	 * @private
+	 * @param instructionName Name of the instruction to search
+	 * @param startId Index to start from. Useful when an instruction appears several times in the set and we want to skip the ones we've seen
+	 * @return {Number}
+	 * @example getInstructionSetIdFromName("forward")
+	 */
+	function getInstructionSetIdFromName(instructionName, startId) {
 		if (startId == null) { // By default search from the beginning
 			startId = 0;
 		}
@@ -1456,6 +1829,11 @@
 		return -1;
 	}
 
+	/**
+	 * Converts all blocks into code and puts the code in the write console
+	 * @private
+	 * @example blocks2write()
+	 */
 	function blocks2write() {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var code = blocks2code(document.getElementById("console-blocks").firstChild);
@@ -1472,7 +1850,15 @@
 		resetWriteConsole(cleanCode);
 	}
 	
-	// This function generates the pseudocode visible in level4
+	/**
+	 * Returns in text the code from the blocks console
+	 * This function generates the pseudocode visible in level4
+	 * @private
+	 * @param {!Object} blockDiv Blocks console element
+	 * @param {String} [indentation=""] Initial indentation
+	 * @return {String}
+	 * @example blocks2code(document.getElementById("console-blocks").firstChild)
+	 */
 	function blocks2code(blockDiv,indentation) {
 		if (!indentation) { // We assume this is the main call
 			indentation = "";
@@ -1493,6 +1879,12 @@
 		return code;
 	}
 
+	/**
+	 * Converts blocks in blocks console to a level
+	 * @private
+	 * @param {String} level Level to convert blocks to
+	 * @example blocks2blocks("level2")
+	 */
 	function blocks2blocks(level) {
 		var divs = document.getElementById("console-blocks").getElementsByTagName("div");
 		for (var i=divs.length-1; i>=0; i--) { // We parse it bottom-up because we need to redraw the children before begin able to accurately redraw the parents
@@ -1504,6 +1896,13 @@
 		}
 	}
 
+	/**
+	 * Converts user code to executable code and returns it
+	 * @private
+	 * @param {String} pseudoCode User code to convert
+	 * @return {String}
+	 * @example eval(code2run("repeat(4){forward(100)}"))
+	 */
 	function code2run(pseudoCode) {
 		var program = eseecodeLanguage.parse(pseudoCode);
 		var level;
@@ -1521,6 +1920,11 @@
 		return code;
 	}
 
+	/**
+	 * Downloads the user code as a file to the user's device
+	 * @private
+	 * @example saveCode()
+	 */
 	function saveCode() {
 		if (navigator.userAgent.match(/MSIE/)) {
 			msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to level4, copy the code and paste it into a file in your computer."));
@@ -1536,6 +1940,12 @@
 		document.body.removeChild(downloadLink);
 	}
 
+	/**
+	 * Returns the user's code
+	 * @public
+	 * @return {String}
+	 * @example downloadCode()
+	 */
 	function downloadCode() {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
@@ -1549,6 +1959,11 @@
 		return code;
 	}
 
+	/**
+	 * Asks the user via the UI to upload a file which will then trigger loadCodFile()
+	 * @private
+	 * @example loadCode()
+	 */
 	function loadCode() {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			var uploadButton = document.createElement("input");
@@ -1563,6 +1978,12 @@
 		}
 	}
 
+	/**
+	 * Completes or cancels the loadCode() asynchronous event by loading the code into the console if possible
+	 * @private
+	 * @param {!Object} event Event
+	 * @example loadCodeFile(event)
+	 */
 	function loadCodeFile(event) {
 		if (!event.target.files.length) {
 			return;
@@ -1583,6 +2004,12 @@
 		reader.readAsText(file);
 	}
 
+	/**
+	 * Loads code into the console
+	 * @public
+	 * @param {String} code Code to upload
+	 * @example uploadCode("repeat(4){forward(100)}")
+	 */
 	function uploadCode(code) {
 		if (!code) {
 			return;
@@ -1612,6 +2039,14 @@
 		resetCanvas();
 	}
 
+	/**
+	 * Scrolls to a position in the div, it scrolls smoothly
+	 * @private
+	 * @param {!Object} div Div to scroll
+	 * @param {Number} height Pixels from top to scroll to
+	 * @param {Number} [startTop] Offset from the start. If unset it takes the current div's scroll offset
+	 * @example smoothScroll()
+	 */
 	function smoothScroll(div, height, startTop) {
 		if (!startTop) {
 			startTop = div.scrollTop;
@@ -1634,6 +2069,15 @@
 		}
 	}
 
+	/**
+	 * Translate the string
+	 * Translation strings must be available at $_eseecode.i18n.available[language_code][text]
+	 * @private
+	 * @param {String} text Text to translate
+	 * @param {Array<String>} [params] Parameters to instert into the text replacing '%s'
+	 * @return {String}
+	 * @example _("text")
+	 */
 	function _(text, params) {
 		var langCurrent = $_eseecode.i18n.current;
 		var lang = $_eseecode.i18n.available[langCurrent];
@@ -1655,6 +2099,13 @@
 		return translated;
 	}
 
+	/**
+	 * Switch translation
+	 * @private
+	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new langauge, it takes "default"
+	 * @param {Boolean} [force] Forces the language switch even if it is the same as the current language. If the language doens't exist it falls back to "default"
+	 * @example switchLanguage("ca")
+	 */
 	function switchLanguage(lang, force) {
 		if (!lang) {
 			if (!lang) {
@@ -1696,6 +2147,11 @@
 		document.getElementById("language-translator").innerHTML = translator;
 	}
 
+	/**
+	 * Initializes/Resets static text translations
+	 * @private
+	 * @example addStaticText()
+	 */
 	function addStaticText() {
 		for (var i=1; i<$_eseecode.modes.console.length; i++) {
 			var levelName = $_eseecode.modes.console[i].name;
@@ -1752,15 +2208,15 @@
 		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");
 	}
 
+	/**
+	 * Initializes/Resets the language selection element to provide all available translations
+	 * @private
+	 * @example resetLanguageSelect("ca")
+	 */
 	function resetLanguageSelect() {
 		var select = document.getElementById("language-select");
 		// Reset languages in dropdown menu
 		select.options.length = 0;
-/*
-		for (var key in select.options) {
-			select.options[key] = null;
-		}
-*/
 		// Get available translations
 		var languages = [];
 		for (var langKey in $_eseecode.i18n.available) {
@@ -1780,6 +2236,12 @@
 		}
 	}
 
+	/**
+	 * Check if the code in the console is empty
+	 * @private
+	 * @return {Boolean}
+	 * @example codeIsEmpty("ca")
+	 */
 	function codeIsEmpty() {
 		if (ace.edit("console-write").getValue()) {
 			return false;
@@ -1790,6 +2252,12 @@
 		return true;
 	}
 
+	/**
+	 * Initializes/Resets all UI elements
+	 * @private
+	 * @param {Boolean} nonInitial If set to true it asks for confirmation if code would be lost
+	 * @example resetUI()
+	 */
 	function resetUI(notInitial) {
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
 		$_eseecode.dialogWindow = document.getElementById("dialog-window");
@@ -1832,11 +2300,25 @@
 		return true;
 	}
 
+	/**
+	 * Initializes/Resets the Console
+	 * @private
+	 * @example initConsole()
+	 */
 	function initConsole() {
 		resetBlocksConsole(document.getElementById("console-blocks"));
 		resetWriteConsole();
 	}
 
+	/**
+	 * Returns the block's height in the given level
+	 * This takes into account space between blocks, border heights, etc
+	 * @private
+	 * @param {String} level Level name
+	 * @param {!Object} div Div element
+	 * @return {{width:Number, height:Number}}
+	 * @example blockSize("level2", document.getElementById("div-123213213"))
+	 */
 	function blockSize(level, div) {
 		var size = { width: div.clientWidth, height: div.clientHeight };
 		if (div.lastChild && div.lastChild.tagName === "DIV") {
@@ -1851,6 +2333,12 @@
 		return size;
 	}
 
+	/**
+	 * Cancels a block movement or edition
+	 * @private
+	 * @param {Object} event Event
+	 * @example cancelFloatingBlock()
+	 */
 	function cancelFloatingBlock(event) {
 		if (event && event.type == "keydown") {
 			if (event.keyCode != 27) {
@@ -1881,6 +2369,12 @@
 		}
 	}
 
+	/**
+	 * Keyboard shortcuts listener. It listenes for all keyboard presses and calls functions when shurtcut combinations happen
+	 * @private
+	 * @param {Object} event Event
+	 * @example document.body.addEventListener("keydown",keyboardShortcuts,false)
+	 */
 	function keyboardShortcuts(event) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if ($_eseecode.session.breakpointHandler && event && event.type == "keydown" && event.keyCode == 27) {
@@ -1898,6 +2392,12 @@
 		}
 	}
 
+	/**
+	 * Block clicked listener. It listenes for clicks on blocks and acts accordingly
+	 * @private
+	 * @param {Object} event Event
+	 * @example div.addEventListener(handler,clickBlock)
+	 */
 	function clickBlock(event) {
 		if ($_eseecode.session.breakpointHandler) {
 			addBreakpointEvent(event);
@@ -1989,6 +2489,12 @@
 		event.stopPropagation();
 	}
 
+	/**
+	 * Block unclicked listener. It listenes for unclicks on blocks and acts accordingly
+	 * @private
+	 * @param {Object} event Event
+	 * @example div.addEventListener(handler,unclickBlock)
+	 */
 	function unclickBlock(event) {
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		var consoleDiv = document.getElementById("console-blocks");
@@ -2090,16 +2596,29 @@
 		}
 	}
 
-	/*
-	   positionIsInBlock: returns true if the position-th position in the code is in div
-	*/
-
+	/**
+	 * Returns true if the position-th position in the code is inside div
+	 * @private
+	 * @param {!Object} consoleDiv Blocks console div
+	 * @param {!Object} div Block div
+	 * @param {Number} position Position to check if it is inside div
+	 * @return {Boolean}
+	 * @example positionIsInBlock(document.getElementById("console-blocks"), document.getElementById("div-1231231231"), 34)
+	 */
 	function positionIsInBlock(consoleDiv, div, position) {
 		var startPos = searchBlockPosition(consoleDiv.firstChild,div).count-1;
 		var endPos = searchBlockByPosition(div.firstChild.nextSibling,-1,startPos).count;
 		return (position >= startPos && position <= endPos);
 	}
 
+	/**
+	 * Add a listener to a handler in a div and its children recursively
+	 * @private
+	 * @param {!Object} div Div to add the listener to
+	 * @param {String} handler Event handler to add the listener to
+	 * @param {function()} callPointer Function to add the the listener
+	 * @example recursiveAddEventListener(document.getElementById("div-1231231231"), "click", clickBlock)
+	 */
 	function recursiveAddEventListener(div, handler, callPointer) {
 		if (!div) {
 			return;
@@ -2116,9 +2635,14 @@
 		recursiveAddEventListener(div.nextSibling,handler,callPointer);
 	}
 
-	/*
-	   recursiveCount: returns in found if targetDiv was found in div and in count the position of targetDiv in div
-	*/
+	/**
+	 * Returns in found if targetDiv was found in div and in count the position of targetDiv in div
+	 * @private
+	 * @param {!Object} div Block in which to search for targetDiv
+	 * @param {!Object} targetDiv Block to search for in div
+	 * @return {{found:Boolean, count:Number}}
+	 * @example recursiveCount(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
+	 */
 	function recursiveCount(div, targetDiv) {
 		if (!div || (div == targetDiv)) {
 			return { count: 0, found: (div == targetDiv) };
@@ -2135,6 +2659,12 @@
 		return { found: output.found, count: count };
 	}
 
+	/**
+	 * Moves a block with the mouse movemement
+	 * @private
+	 * @param {Object} event Event
+	 * @example document.body.removeEventListener("mousemove", moveBlock, false)
+	 */
 	function moveBlock(event) {
 		event = event ? event : window.event;
 		if (!event) {  // firefox doesn't know window.event
@@ -2161,6 +2691,13 @@
 		}
 	}
 
+	/**
+	 * Returns the absolute position where a mouse event has been triggered
+	 * @private
+	 * @param {!Object} event Event
+	 * @return {{x:Number, y:Number}}
+	 * @example alert(eventPosition(event))
+	 */
 	function eventPosition(event) {
 		var pos = {x: 0, y: 0};
 		event = event ? event : window.event;
@@ -2182,6 +2719,14 @@
 		return pos;
 	}
 
+	/**
+	 * Adds a block in a position in the blocks console
+	 * @private
+	 * @param {!Object} blockDiv Block to add
+	 * @param {Boolean|Number} position Position to add the block at. If set to true it adds it at the end
+	 * @param {Object} [parent] If set, blockDiv must be a child of parent. In this case position counts from the parent's position
+	 * @example addBlock(block, true)
+	 */
 	function addBlock(blockDiv, position, parent) {
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
@@ -2224,16 +2769,21 @@
 		paintBlock(blockDiv);
 	}
 
-	/*
-	   searchBlockPosition: returns in found if searchDiv was found in currentDiv or its siblings and in count its position
-	*/
-	function searchBlockPosition(currentDiv, searchDiv) {
+	/**
+	 * Returns in found if targetDiv was found in currentDiv or its siblings and in count its position
+	 * @private
+	 * @param {!Object} currentDiv Block in which to search for targetDiv
+	 * @param {!Object} targetDiv Block to search for in div
+	 * @return {{found:Boolean, count:Number}}
+	 * @example searchBlockPosition(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
+	 */
+	function searchBlockPosition(currentDiv, targetDiv) {
 		var count = 0;
 		var found = false;
 		while (currentDiv && !found) {
-			found = (currentDiv == searchDiv);
+			found = (currentDiv == targetDiv);
 			if (!found && currentDiv.firstChild.nextSibling) {
-				var output = searchBlockPosition(currentDiv.firstChild.nextSibling, searchDiv);
+				var output = searchBlockPosition(currentDiv.firstChild.nextSibling, targetDiv);
 				count += output.count;
 				found = output.found
 			}
@@ -2243,9 +2793,15 @@
 		return { found: found, count: count };
 	}
 
-	/*
-	   searchBlockByPosition: returns the position-th element in element or its siblings. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
-	*/
+	/**
+	 * Returns the position-th element in element or its siblings. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
+	 * @private
+	 * @param {!Object} element Block in which to search for
+	 * @param {Number} position Position to return the block from
+	 * @param {Number} count Initial counter (position of element)
+	 * @return {{element:Object, count:Number}}
+	 * @example searchBlockByPosition(document.getElementById("console-blocks").firstChild, 12, 1)
+	 */
 	function searchBlockByPosition(element, position, count) {
 		while (element && count != position) { // if the code is almost empty position could be far ahead of the last block
 			var instruction = $_eseecode.instructions.set[element.getAttribute("instructionSetId")];
@@ -2265,6 +2821,12 @@
 		return { element: element, count: count };
 	}
 
+	/**
+	 * Removes a block from the console and deletes it
+	 * @private
+	 * @param {!Object} div Block to delete
+	 * @example deleteBlock(document.getElementById("div-123123123"))
+	 */
 	function deleteBlock(div) {
 		var consoleDiv = document.getElementById("console-blocks");
 		div.parentNode.removeChild(div);
@@ -2273,6 +2835,11 @@
 		}
 	}
 
+	/**
+	 * Adds the console tip if no code exists
+	 * @private
+	 * @example checkAndAddConsoleTip()
+	 */
 	function checkAndAddConsoleTip() {
 		var consoleDiv = document.getElementById("console-blocks");
 		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == 'console-blocks-tip') {
@@ -2280,28 +2847,48 @@
 		}
 	}
 
+	/**
+	 * Returns a new valid and unique block id
+	 * @private
+	 * @return {String}
+	 * @example var id = newDivId()
+	 */
 	function newDivId() {
 		var d = new Date();
 		var id = d.getTime()*10000+Math.floor((Math.random()*10000));
 		return "div-"+id;
 	}
 
-	function ordinal(num) {
+	/**
+	 * Returns the ordinal name of a number
+	 * @private
+	 * @param {Number} number Number
+	 * @return {String}
+	 * @example var text = ordinal(3)
+	 */
+	function ordinal(number) {
 		var value = "";
-		if (num == 1) {
+		if (number == 1) {
 			value = _("1st");
-		} else if (num == 2) {
+		} else if (number == 2) {
 			value = _("2nd");
-		} else if (num == 3) {
+		} else if (number == 3) {
 			value = _("3rd");
-		} else if (num == 4) {
+		} else if (number == 4) {
 			value = _("4th");
 		} else {
-			value = num+_("th");
+			value = number+_("th");
 		}
 		return value;
 	}
 
+	/**
+	 * Asks the user to setup the parameters of the instruction associated with the block. Returns a list of parameter changes in an array with the format ["param"+paramNumber, old_value, new_value]
+	 * @private
+	 * @param {!Object} div Block div
+	 * @return {Array<String, String, String>}
+	 * @example setupBlock(document.getElementById("div-123123123"))
+	 */
 	function setupBlock(div) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
@@ -2369,7 +2956,14 @@
 		}
 		return setupChanges;
 	}
-	
+
+	/**
+	 * Returns a list of all variables declared before and in the scope of div
+	 * @private
+	 * @param {!Object} div Block div
+	 * @return {Array<String>}
+	 * @example getVariables(document.getElementById("div-123123123"))
+	 */
 	function getVariables(div) {
 		var consoleDiv = document.getElementById("console-blocks");
 		var values = [];
@@ -2386,18 +2980,34 @@
 		}
 		return values;
 	}
-	
+
+	/**
+	 * Returns a list of all eSeeCode functions declared in the code that return a specific type of value
+	 * @private
+	 * @param {!Object} div Block div
+	 * @return {Array<String>}
+	 * @example getFunctions("int"))
+	 */
 	function getFunctions(type) {
 		var values = [];
 		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
 			if ($_eseecode.instructions.set[i].return === type) {
-				values.push($_eseecode.instructions.set);
+				values.push($_eseecode.instructions.set[i].name);
 			}
 		}
 		return values;
 	}
 
-	// Load parameters or default parameters
+	/**
+	 * Returns the parameters of a block, or the default parameters if none were set
+	 * In parameters it returns the parameters in an array, in text it returns the parameters ready to insert them in code
+	 * @private
+	 * @param {String} level Current level name
+	 * @param {!Object} div Block div
+	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
+	 * @return {{parameters:Array<String>, text:String}
+	 * @example loadParameters("level2", document.getElementById("div-123123123"))
+	 */
 	function loadParameters(level, div, dialog) {
 		var instructionSetId = div.getAttribute("instructionSetId");
 		var instruction = $_eseecode.instructions.set[instructionSetId];
@@ -2508,8 +3118,16 @@
 		return { parameters: parameters, text: text };
 	}
 
-	// div must already be created
-	function createBlock(level,div,instructionSetId,dialog) {
+	/**
+	 * Given a block and an instruction it sets up the block
+	 * @private
+	 * @param {String} level Current level name
+	 * @param {!Object} div Block div
+	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
+	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
+	 * @example createBlock("level2", document.body.createElement("div"), 3)
+	 */
+	function createBlock(level, div, instructionSetId, dialog) {
 		var codeId;
 		if (instructionSetId == null) { // If no instructionSetId is passed we just want to update the block
 			instructionSetId = div.getAttribute("instructionSetId");
@@ -2554,7 +3172,15 @@
 		}
 	}
 
-	function paintBlock(div,dialog,skipRepaint) {
+	/**
+	 * Sets up the shape, color and icon of a block
+	 * @private
+	 * @param {!Object} div Block div
+	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
+	 * @param {Boolean} [skipRecursiveRepaint=false] Whether or not skip the repainting of the blocks' children
+	 * @example paintBlock(document.getElementById("div-123123123"), false, true)
+	 */
+	function paintBlock(div, dialog, skipRecursiveRepaint) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var color = "transparent"; // default color
@@ -2672,7 +3298,7 @@
 */
 			div.style.backgroundImage = "url("+bgCanvas.toDataURL()+")";
 		}
-		if (!skipRepaint) {
+		if (!skipRecursiveRepaint) {
 			while (div.parentNode && div.parentNode.getAttribute("instructionSetId")) {
 				div = div.parentNode;
 				paintBlock(div,dialog,true);
@@ -2680,7 +3306,14 @@
 		}
 	}
 
-	function initDialogBlocks(level,dialog) {
+	/**
+	 * Initializes/Resets the blocks in the dialog window
+	 * @private
+	 * @param {String} level Level name
+	 * @param {!Object} dialog Dialog window element
+	 * @example initDialogBlocks("level2", document.getElementById("dialog-window"))
+	 */
+	function initDialogBlocks(level, dialog) {
 		resetDialog(dialog);
 		var instructions = $_eseecode.instructions.set;
 		var width = $_eseecode.setup.blockWidth[level];
@@ -2721,7 +3354,14 @@
 		}
 	}
 
-	function initDialogWrite(level,dialog) {
+	/**
+	 * Initializes/Resets the write dialog window
+	 * @private
+	 * @param {String} level Level name
+	 * @param {!Object} dialog Dialog window element
+	 * @example initDialogWrite("level2", document.getElementById("dialog-window"))
+	 */
+	function initDialogWrite(level, dialog) {
 		resetDialog(dialog);
 		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
 			$_eseecode.instructions.set[i].index = i;
@@ -2800,6 +3440,12 @@
 		}
 	}
 
+	/**
+	 * Writes in the write console at the position where the cursor is the instruction clicked in the dialgo window
+	 * @private
+	 * @param {!Object} event Event
+	 * @example div.addEventListener("click", writeText, false)
+	 */
 	function writeText(event) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var div = event.target;
@@ -2832,6 +3478,12 @@
 		ace.edit("console-write").insert(text);
 	}
 
+	/**
+	 * Returns if the device is a touch device or not
+	 * @private
+	 * @return {Boolean}
+	 * @example isTouchDevice()
+	 */
 	function isTouchDevice() {
 		var touchscreen = (('ontouchstart' in window) ||
      		    (navigator.maxTouchPoints > 0) ||
@@ -2839,6 +3491,12 @@
 		return touchscreen;
 	}
 
+	/**
+	 * Undoes/Redoes the last action in the block undo pile
+	 * @private
+	 * @param {Boolean} [redo] Whether we want to redo or undo
+	 * @example undo()
+	 */
 	function undo(redo) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var action = redo ? "redo" : "undo";
@@ -2898,14 +3556,22 @@
 		}
 	}
 
+	/**
+	 * Initializes/Resets all the drawing elements including execution
+	 * @private
+	 * @example resetDraw()
+	 */
 	function resetDraw() {
 		resetCanvas();
 		initProgramCounter(true);
 		unhighlight();
 	}
 
-	/* resetCanvas(): Resets all canvas
-	*/
+	/**
+	 * Initializes/Resets the whiteboard
+	 * @private
+	 * @example resetCanvas()
+	 */
 	function resetCanvas() {
 		document.getElementById("execute-notes").innerHTML = "";
 		var turtle = $_eseecode.canvasArray["turtle"]; // must check this before removing $_eseecode.canvasArray
@@ -2938,12 +3604,24 @@
 		windowSwitch(1); // window-1 is the default
 	}
 
+	/**
+	 * Initializes/Resets the dialog window
+	 * @private
+	 * @param {!Object} dialog Dialog div element
+	 * @example resetDialog(document.getElementById("dialog-window"))
+	 */
 	function resetDialog(dialog) {
 		while (dialog.hasChildNodes()) {
 			dialog.removeChild(dialog.lastChild);
 		}
 	}
 
+	/**
+	 * Initializes/Resets the blocks console window
+	 * @private
+	 * @param {!Object} dialog Console div element
+	 * @example resetBlocksConsole(document.getElementById("console-blocks"))
+	 */
 	function resetBlocksConsole(console) {
 		while (console.hasChildNodes()) {
 		    console.removeChild(console.lastChild);
@@ -2952,6 +3630,12 @@
 		checkAndAddConsoleTip();
 	}
 
+	/**
+	 * Initializes/Resets the write console window
+	 * @private
+	 * @param {!Object} dialog Console div element
+	 * @example resetWriteConsole(document.getElementById("console-write"))
+	 */
 	function resetWriteConsole(code) {
 		if (!code) {
 			code = "";
@@ -2971,19 +3655,39 @@
 		editor.session.on("change",writeChanged);
 	}
 
+	/**
+	 * Added as a listener it informs $_eseecode.session.changesInCode that the code in write console changed
+	 * @private
+	 * @example writeChanged()
+	 */
 	function writeChanged() {
 		$_eseecode.session.changesInCode = "write";
 		unhighlight();
 	}
 
+	/**
+	 * Initializes/Resets the blocks undo pile in $_eseecode.session.blocksUndo
+	 * @private
+	 * @example resetUndo()
+	 */
 	function resetUndo() {
 		$_eseecode.session.blocksUndo = [0, null];
 	}
 
+	/**
+	 * Initializes/Resets the breakpoints array in $_eseecode.session.breakpoints
+	 * @private
+	 * @example resetBreakpoints()
+	 */
 	function resetBreakpoints() {
 		$_eseecode.session.breakpoints = {};
 	}
 
+	/**
+	 * Initializes/Resets the breakpoint watches values in $_eseecode.session.breakpoints[breakpoint]
+	 * @private
+	 * @example resetBreakpointWatches()
+	 */
 	function resetBreakpointWatches() {
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			for (var watch in $_eseecode.session.breakpoints[breakpoint]) {
@@ -2994,7 +3698,8 @@
 
 	// Main initialization
 	/**
-	 * author: Jacobo Vilella Vilahur
+	 * @author Jacobo Vilella Vilahur
+	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,sandboxProperties:Array<String>},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:Object,fromDiv:Object},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>},whiteboard:Object,dialogWindow:Object,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:Object,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number},modes:{console:Array<{*}>,dialog:Array<{*}>}}>
 	 */
 	var $_eseecode = {
 		platform: {
@@ -3045,7 +3750,7 @@
 				reason: undefined
 			},
 			changesInCode: false,
-			floatingBlock: { div: null, frombDiv: null },
+			floatingBlock: { div: null, fromDiv: null },
 			blocksUndo: null,
 			breakpoints: {},
 			breakpointHandler: false,

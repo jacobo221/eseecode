@@ -1,5 +1,4 @@
  * User manual
- * JSDoc code
  * comments right before functionDeclaration should be resorted with them
  * icons should reflect when instruction parameter is a variable instead of a literal (for example: forward(a) )
  * uploadCode() should detect syntax errors: load code in level4 and highlight (take the chance to unify all code parsing into a single function common to all code uses)

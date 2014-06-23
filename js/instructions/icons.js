@@ -724,8 +724,8 @@
 				param = param[0];
 			}
 			var margin = 15;
-			ctx.font = (param?"bold ":"")+(height-margin*2)+"px Verdana";
-      			ctx.fillStyle = param?'#000000':'#AAAAAA';
+			ctx.font = ((param||param===undefined)?"bold ":"")+(height-margin*2)+"px Verdana";
+      			ctx.fillStyle = (param||param===undefined)?'#000000':'#AAAAAA';
 			ctx.fillText("B",margin,height-margin);
 		},
 		"setColor": function(ctx, width, height, param) {
@@ -788,8 +788,8 @@
 				param = param[0];
 			}
 			var margin = 15;
-			ctx.font = (param?"italic ":"")+(height-margin*2)+"px Verdana";
-      			ctx.fillStyle = param?'#000000':'#AAAAAA';
+			ctx.font = ((param||param===undefined)?"italic ":"")+(height-margin*2)+"px Verdana";
+      			ctx.fillStyle = (param||param===undefined)?'#000000':'#AAAAAA';
 			ctx.fillText("I",margin,height-margin);
 		},
 		"setInvisible": function(ctx, width, height, param) {
