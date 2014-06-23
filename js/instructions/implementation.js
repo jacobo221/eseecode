@@ -771,6 +771,7 @@
 
 	/**
 	 * @since 2.0
+	 */
 	function animate(seconds, command, count, timeoutHandlersIndex) {
 		var returnValue;
 		try {

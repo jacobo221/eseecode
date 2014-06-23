@@ -1,11 +1,13 @@
 "use strict;"
 
-	/* getCanvas(id): Returns a canvas in the whiteboard
-		id: id number (optional, otherwise creates a new id)
-		@returns the canvas object
-	   If needed, canvas is created overlapping exactly the whiteboard div element
-	   The created canvas can be accessed via $_eseecode.canvasArray[id]
-	*/
+	/** Returns a canvas in the whiteboard
+	 * If needed, canvas is created overlapping exactly the whiteboard div element
+	 * The created canvas can be accessed via $_eseecode.canvasArray[id]
+	 * @private
+	 * @param [id] Id number (if blank it creates a new id)
+	 * @returns the canvas object
+	 * @example $_eseecode.currentCanvas = getCanvas(id)
+	 */
 	function getCanvas(id) {
 		if (typeof id === "undefined") {
 			id = $_eseecode.canvasArray.length;
@@ -2991,6 +2993,9 @@
 	}
 
 	// Main initialization
+	/**
+	 * author: Jacobo Vilella Vilahur
+	 */
 	var $_eseecode = {
 		platform: {
 			name: {

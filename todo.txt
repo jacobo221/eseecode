@@ -1,3 +1,5 @@
+ * User manual
+ * JSDoc code
  * comments antes de functionDeclaration no moverlas
  * icons con variables como parametros (por ejemplo: forward(a) )
  * uploadCode() debería reconocer errores de sintaxis, cargar el codigo en level4 y hacer highlight (unificar lectura de codigo en una funcion)
