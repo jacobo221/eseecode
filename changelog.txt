@@ -1,8 +1,5 @@
 Roadmap:
 
-3.0
- * Allow animations
-
 2.0
  * Setup blocks with a friendly interface
  * Add animations capability
