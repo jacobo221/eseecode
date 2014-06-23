@@ -1,18 +1,10 @@
 "use strict";
 
-	$_eseecode.instructions.categories = [
-		{ name: "turtle", color: "#FFFF00" },
-		{ name: "canvas", color: "#D033D0" },
-		{ name: "draw", color: "#FF3030" },
-		{ name: "objects", color: "#606060" },
-		{ name: "flow", color: "#80FF80" },
-		{ name: "value", color: "#60FFFF" },
-		{ name: "window", color: "#00A000" },
-		{ name: "other", color: "#DDDDDD" },
-		{ name: "userdefined", color: "#333333" },
-		{ name: "internal", color: "grey" },
-		{ name: "custom", color: "transparent" }
-	];
+	/**
+	 * Contains the icon definition for each instruction
+	 * @type {Array<{String, function(!Object, Number, Number, Array<String>)}>}
+	 * @example {"arc": function(ctx, width, height, param) { ... }}
+	 */
 	$_eseecode.instructions.icons = {
 		"arc": function(ctx, width, height, param) {
 			var param1, param2;
