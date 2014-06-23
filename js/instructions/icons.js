@@ -7,6 +7,7 @@
 	 */
 	$_eseecode.instructions.icons = {
 		"arc": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1, param2;
 			if (param) {
 				param1 = param[0];
@@ -26,7 +27,6 @@
 			if (param2 > maxparam2) {
 				param2 = maxparam2;
 			}
-			var margin = 15;
 			var radius = (height-margin*2)/2*(param1/maxparam1);
 			ctx.strokeStyle = '#0000FF';
 			ctx.lineWidth = 3;
@@ -48,7 +48,6 @@
 			if (fontSize < maxparam1) {
 				fontSize = maxparam1;
 			}
-			var margin = 15;
 			ctx.font = fontSize+"px Verdana";
       			ctx.fillStyle = '#FFFFFF';
 			ctx.fillText(param,margin,height-margin);
