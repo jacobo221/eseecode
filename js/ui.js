@@ -76,7 +76,7 @@
 	 * The created window can be accessed via $_eseecode.windowsArray[id]
 	 * @private
 	 * @param {Number} [id] Window id (if blank it creates a new id)
-	 * @returns {!Object}
+	 * @returns {!HTMLElement}
 	 * @example $_eseecode.currentWiundow = getWindow(id)
 	 */
 	function getWindow(id) {
@@ -141,7 +141,7 @@
 	/**
 	 * Sets the font properties on the currently active layer context
 	 * @private
-	 * @param {!Object} [context] Canvas context to take style difinitions from. If unset, currently active layer
+	 * @param {!HTMLElement} [context] Canvas context to take style difinitions from. If unset, currently active layer
 	 * @example setTextStyle(ctx)
 	 */
 	function setTextStyle(context) {
@@ -257,7 +257,7 @@
 	/**
 	 * Links an A HTML element to the current whiteboard export drawing
 	 * @private
-	 * @param {!Object} link HTML A element to add the link to
+	 * @param {!HTMLElement} link HTML A element to add the link to
 	 * @example downloadCanvas(document.body.createElement("a"))
 	 */
 	function downloadCanvas(link) {
@@ -1854,7 +1854,7 @@
 	 * Returns in text the code from the blocks console
 	 * This function generates the pseudocode visible in level4
 	 * @private
-	 * @param {!Object} blockDiv Blocks console element
+	 * @param {!HTMLElement} blockDiv Blocks console element
 	 * @param {String} [indentation=""] Initial indentation
 	 * @return {String}
 	 * @example blocks2code(document.getElementById("console-blocks").firstChild)
@@ -2042,7 +2042,7 @@
 	/**
 	 * Scrolls to a position in the div, it scrolls smoothly
 	 * @private
-	 * @param {!Object} div Div to scroll
+	 * @param {!HTMLElement} div Div to scroll
 	 * @param {Number} height Pixels from top to scroll to
 	 * @param {Number} [startTop] Offset from the start. If unset it takes the current div's scroll offset
 	 * @example smoothScroll()
@@ -2315,7 +2315,7 @@
 	 * This takes into account space between blocks, border heights, etc
 	 * @private
 	 * @param {String} level Level name
-	 * @param {!Object} div Div element
+	 * @param {!HTMLElement} div Div element
 	 * @return {{width:Number, height:Number}}
 	 * @example blockSize("level2", document.getElementById("div-123213213"))
 	 */
@@ -2599,8 +2599,8 @@
 	/**
 	 * Returns true if the position-th position in the code is inside div
 	 * @private
-	 * @param {!Object} consoleDiv Blocks console div
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} consoleDiv Blocks console div
+	 * @param {!HTMLElement} div Block div
 	 * @param {Number} position Position to check if it is inside div
 	 * @return {Boolean}
 	 * @example positionIsInBlock(document.getElementById("console-blocks"), document.getElementById("div-1231231231"), 34)
@@ -2614,7 +2614,7 @@
 	/**
 	 * Add a listener to a handler in a div and its children recursively
 	 * @private
-	 * @param {!Object} div Div to add the listener to
+	 * @param {!HTMLElement} div Div to add the listener to
 	 * @param {String} handler Event handler to add the listener to
 	 * @param {function()} callPointer Function to add the the listener
 	 * @example recursiveAddEventListener(document.getElementById("div-1231231231"), "click", clickBlock)
@@ -2638,8 +2638,8 @@
 	/**
 	 * Returns in found if targetDiv was found in div and in count the position of targetDiv in div
 	 * @private
-	 * @param {!Object} div Block in which to search for targetDiv
-	 * @param {!Object} targetDiv Block to search for in div
+	 * @param {!HTMLElement} div Block in which to search for targetDiv
+	 * @param {!HTMLElement} targetDiv Block to search for in div
 	 * @return {{found:Boolean, count:Number}}
 	 * @example recursiveCount(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
@@ -2722,9 +2722,9 @@
 	/**
 	 * Adds a block in a position in the blocks console
 	 * @private
-	 * @param {!Object} blockDiv Block to add
+	 * @param {!HTMLElement} blockDiv Block to add
 	 * @param {Boolean|Number} position Position to add the block at. If set to true it adds it at the end
-	 * @param {Object} [parent] If set, blockDiv must be a child of parent. In this case position counts from the parent's position
+	 * @param {HTMLElement} [parent] If set, blockDiv must be a child of parent. In this case position counts from the parent's position
 	 * @example addBlock(block, true)
 	 */
 	function addBlock(blockDiv, position, parent) {
@@ -2772,8 +2772,8 @@
 	/**
 	 * Returns in found if targetDiv was found in currentDiv or its siblings and in count its position
 	 * @private
-	 * @param {!Object} currentDiv Block in which to search for targetDiv
-	 * @param {!Object} targetDiv Block to search for in div
+	 * @param {!HTMLElement} currentDiv Block in which to search for targetDiv
+	 * @param {!HTMLElement} targetDiv Block to search for in div
 	 * @return {{found:Boolean, count:Number}}
 	 * @example searchBlockPosition(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
@@ -2796,10 +2796,10 @@
 	/**
 	 * Returns the position-th element in element or its siblings. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
 	 * @private
-	 * @param {!Object} element Block in which to search for
+	 * @param {!HTMLElement} element Block in which to search for
 	 * @param {Number} position Position to return the block from
 	 * @param {Number} count Initial counter (position of element)
-	 * @return {{element:Object, count:Number}}
+	 * @return {{element:HTMLElement, count:Number}}
 	 * @example searchBlockByPosition(document.getElementById("console-blocks").firstChild, 12, 1)
 	 */
 	function searchBlockByPosition(element, position, count) {
@@ -2824,7 +2824,7 @@
 	/**
 	 * Removes a block from the console and deletes it
 	 * @private
-	 * @param {!Object} div Block to delete
+	 * @param {!HTMLElement} div Block to delete
 	 * @example deleteBlock(document.getElementById("div-123123123"))
 	 */
 	function deleteBlock(div) {
@@ -2885,7 +2885,7 @@
 	/**
 	 * Asks the user to setup the parameters of the instruction associated with the block. Returns a list of parameter changes in an array with the format ["param"+paramNumber, old_value, new_value]
 	 * @private
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String, String, String>}
 	 * @example setupBlock(document.getElementById("div-123123123"))
 	 */
@@ -2960,7 +2960,7 @@
 	/**
 	 * Returns a list of all variables declared before and in the scope of div
 	 * @private
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String>}
 	 * @example getVariables(document.getElementById("div-123123123"))
 	 */
@@ -2984,7 +2984,7 @@
 	/**
 	 * Returns a list of all eSeeCode functions declared in the code that return a specific type of value
 	 * @private
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String>}
 	 * @example getFunctions("int"))
 	 */
@@ -3003,7 +3003,7 @@
 	 * In parameters it returns the parameters in an array, in text it returns the parameters ready to insert them in code
 	 * @private
 	 * @param {String} level Current level name
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @return {{parameters:Array<String>, text:String}
 	 * @example loadParameters("level2", document.getElementById("div-123123123"))
@@ -3122,7 +3122,7 @@
 	 * Given a block and an instruction it sets up the block
 	 * @private
 	 * @param {String} level Current level name
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @example createBlock("level2", document.body.createElement("div"), 3)
@@ -3175,7 +3175,7 @@
 	/**
 	 * Sets up the shape, color and icon of a block
 	 * @private
-	 * @param {!Object} div Block div
+	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @param {Boolean} [skipRecursiveRepaint=false] Whether or not skip the repainting of the blocks' children
 	 * @example paintBlock(document.getElementById("div-123123123"), false, true)
@@ -3310,7 +3310,7 @@
 	 * Initializes/Resets the blocks in the dialog window
 	 * @private
 	 * @param {String} level Level name
-	 * @param {!Object} dialog Dialog window element
+	 * @param {!HTMLElement} dialog Dialog window element
 	 * @example initDialogBlocks("level2", document.getElementById("dialog-window"))
 	 */
 	function initDialogBlocks(level, dialog) {
@@ -3358,7 +3358,7 @@
 	 * Initializes/Resets the write dialog window
 	 * @private
 	 * @param {String} level Level name
-	 * @param {!Object} dialog Dialog window element
+	 * @param {!HTMLElement} dialog Dialog window element
 	 * @example initDialogWrite("level2", document.getElementById("dialog-window"))
 	 */
 	function initDialogWrite(level, dialog) {
@@ -3607,7 +3607,7 @@
 	/**
 	 * Initializes/Resets the dialog window
 	 * @private
-	 * @param {!Object} dialog Dialog div element
+	 * @param {!HTMLElement} dialog Dialog div element
 	 * @example resetDialog(document.getElementById("dialog-window"))
 	 */
 	function resetDialog(dialog) {
@@ -3619,7 +3619,7 @@
 	/**
 	 * Initializes/Resets the blocks console window
 	 * @private
-	 * @param {!Object} dialog Console div element
+	 * @param {!HTMLElement} dialog Console div element
 	 * @example resetBlocksConsole(document.getElementById("console-blocks"))
 	 */
 	function resetBlocksConsole(console) {
@@ -3633,7 +3633,7 @@
 	/**
 	 * Initializes/Resets the write console window
 	 * @private
-	 * @param {!Object} dialog Console div element
+	 * @param {!HTMLElement} dialog Console div element
 	 * @example resetWriteConsole(document.getElementById("console-write"))
 	 */
 	function resetWriteConsole(code) {
@@ -3699,7 +3699,7 @@
 	// Main initialization
 	/**
 	 * @author Jacobo Vilella Vilahur
-	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,sandboxProperties:Array<String>},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:Object,fromDiv:Object},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>},whiteboard:Object,dialogWindow:Object,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:Object,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number},modes:{console:Array<{*}>,dialog:Array<{*}>}}>
+	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,sandboxProperties:Array<String>},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>},whiteboard:HTMLElement,dialogWindow:HTMLElement,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number},modes:{console:Array<{*}>,dialog:Array<{*}>}}>
 	 */
 	var $_eseecode = {
 		platform: {

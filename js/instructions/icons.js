@@ -2,7 +2,7 @@
 
 	/**
 	 * Contains the icon definition for each instruction
-	 * @type {Array<{String, function(!Object, Number, Number, Array<String>)}>}
+	 * @type {Array<{String, function(!HTMLElement, Number, Number, Array<String>)}>}
 	 * @example {"arc": function(ctx, width, height, param) { ... }}
 	 */
 	$_eseecode.instructions.icons = {
