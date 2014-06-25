@@ -1,0 +1,35 @@
+	body {
+		font-family: sans-serif;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: normal;
+		letter-spacing: 0px;
+		text-decoration:none;
+		/* background-color: #FFFFFF; */
+		color: #000000;
+		margin: 0px 0px 0px 0px;
+		min-width: 1000px !important;
+	}
+	div, textarea {
+		width: inherit;
+	}
+	h1 {
+		font-size: 30px;
+		background-color: inherit;
+		color: #EEEEEE;
+		margin: 0px 0px 0px 0px;
+		border-top-left-radius: 30px;
+		border-top-right-radius: 30px;
+	}
+	input, select {
+		border-radius: 5px;
+	}
+	input:hover, select:hover {
+		box-shadow: 0px 0px 5px #000000;
+	}
+	input[type="checkbox"] {
+		margin: 3px 3px 3px 3px;
+	}
+	label {
+		display: none;
+	}

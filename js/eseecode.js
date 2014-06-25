@@ -34,7 +34,9 @@
 		document.getElementsByTagName("head")[0].appendChild(element);
 	}
 
+	loadStyle("css/common.css");
 	loadStyle("css/ui.css");
+	loadStyle("css/blocks.css");
 	loadScript("js/common.js");
 	loadScript("js/backend.js");
 	loadScript("js/execution.js");
