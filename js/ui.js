@@ -3239,52 +3239,53 @@
 			bgCanvas.setAttribute("width", bgWidth);
 			bgCanvas.setAttribute("height", bgHeight);
 			var bgCtx = bgCanvas.getContext("2d");
-/*
-			if (color.charAt(0) == "#") {
-				var r = color.substr(1,2);
-				var g = color.substr(3,5);
-				var b = color.substr(5,7);
-				// We can't just use transparent gradient because IE11 fails horribly with them
+			bgCtx.fillStyle = color;
+			bgCtx.fillRect(0,0,bgWidth,bgHeight);
+			if (!!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
+				// There is a bug in IE11 where it fails to show transparent gradients on canvas. See https://connect.microsoft.com/IE/feedback/details/828441 . This hack works around the bug
+				if (color.charAt(0) == "#") {
+					var r = color.substr(1,2);
+					var g = color.substr(3,5);
+					var b = color.substr(5,7);
+					if (level == "level1" || level == "level2") {
+						var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight,bgWidth/3,bgHeight/3,bgHeight/4);
+						gradient.addColorStop(0,'rgb(150,150,150)');
+						gradient.addColorStop(1,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
+						bgCtx.fillStyle = gradient;
+						bgCtx.beginPath();
+						bgCtx.fillRect(0,0,bgWidth,bgHeight);
+						bgCtx.closePath();
+						bgCtx.fill();
+					} else if (level == "level3") {
+						var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);
+						gradient.addColorStop(0,'rgb(120,120,120)');
+						gradient.addColorStop(0.5,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
+						gradient.addColorStop(1,'rgb(120,120,120)');
+						bgCtx.fillStyle = gradient;
+						bgCtx.fillRect(0,0,bgWidth,bgHeight);
+					}
+				} else {
+						bgCtx.fillStyle = color;
+						bgCtx.fillRect(0,0,bgWidth,bgHeight);
+				}
+			} else {
 				if (level == "level1" || level == "level2") {
-					var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight,bgWidth/3,bgHeight/3,bgHeight/4);
-					gradient.addColorStop(0,'rgb(150,150,150)');
-					gradient.addColorStop(1,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
+					var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight*1.5,bgWidth/3,bgHeight/3,bgHeight/4);
+					gradient.addColorStop(0.0,'rgba(0,0,0,1)');
+					gradient.addColorStop(1.0,'rgba(0,0,0,0)');
 					bgCtx.fillStyle = gradient;
 					bgCtx.beginPath();
-					bgCtx.fillRect(0,0,bgWidth,bgHeight);
+					bgCtx.arc(bgWidth/2,bgHeight/2,bgHeight,2*Math.PI,0,false);
 					bgCtx.closePath();
 					bgCtx.fill();
 				} else if (level == "level3") {
-					var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);
-					gradient.addColorStop(0,'rgb(120,120,120)');
-					gradient.addColorStop(0.5,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
-					gradient.addColorStop(1,'rgb(120,120,120)');
+					var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);	
+					gradient.addColorStop(0.0,'rgba(0,0,0,0.25)');
+					gradient.addColorStop(0.5,'rgba(0,0,0,0)');
+					gradient.addColorStop(1.0,'rgba(0,0,0,0.25)');
 					bgCtx.fillStyle = gradient;
-					bgCtx.fillRect(0,0,bgWidth,bgHeight);
+					bgCtx.fillRect(0,-bgHeight*2,bgWidth,bgHeight*3);
 				}
-			} else {
-					bgCtx.fillStyle = color;
-					bgCtx.fillRect(0,0,bgWidth,bgHeight);
-			}
-*/
-			bgCtx.fillStyle = color;
-			bgCtx.fillRect(0,0,bgWidth,bgHeight);
-			if (level == "level1" || level == "level2") {
-				var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight*1.5,bgWidth/3,bgHeight/3,bgHeight/4);
-				gradient.addColorStop(0.0,'rgba(0,0,0,1)');
-				gradient.addColorStop(1.0,'rgba(0,0,0,0)');
-				bgCtx.fillStyle = gradient;
-				bgCtx.beginPath();
-				bgCtx.arc(bgWidth/2,bgHeight/2,bgHeight,2*Math.PI,0,false);
-				bgCtx.closePath();
-				bgCtx.fill();
-			} else if (level == "level3") {
-				var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);	
-				gradient.addColorStop(0.0,'rgba(0,0,0,0.25)');
-				gradient.addColorStop(0.5,'rgba(0,0,0,0)');
-				gradient.addColorStop(1.0,'rgba(0,0,0,0.25)');
-				bgCtx.fillStyle = gradient;
-				bgCtx.fillRect(0,-bgHeight*2,bgWidth,bgHeight*3);
 			}
 			var height = parseInt(div.style.minHeight.replace("px",""));
 			var width = parseInt(div.style.minWidth.replace("px",""));
