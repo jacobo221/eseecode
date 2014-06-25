@@ -30,7 +30,7 @@ Integrated projects
 -------------------
 
 This project would have never been possible without the following projects which are bundled with it:
-[Ace](http://ace.c9.io/)
-[Jison](http://zaach.github.io/jison/)
-[jsParser](http://cjihrig.com/blog/creating-a-javascript-parser/)
-[jsColor](http://jscolor.com/)
+* [Ace](http://ace.c9.io/)
+* [Jison](http://zaach.github.io/jison/)
+* [jsParser](http://cjihrig.com/blog/creating-a-javascript-parser/)
+* [jsColor](http://jscolor.com/)
