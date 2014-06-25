@@ -1,9 +1,11 @@
 eSeeCode
 ========
 
-Educational programming language and graphic platform for all ages from 3-years-old to K12, adapting to each age and level of knowledge.
+**Educational programming language and graphic platform** for all ages from 3-years-old to **K12**, adapting to each age and level of knowledge.
 
-The platform offers 4 different levels of programming, from a pure graphical click-and-run interface to a pure text synthax highlighting editor, with two middle interfaces. This allows for a smooth progress in programming learning while keeping a common general interface, platform and instruction set, avoiding the need to learn a new language every now and then during the learning process.
+The platform is free and open source and is available online at (http://www.eseecode.com)[http://www.eseecode.com].
+
+The platform offers **4 different levels** of programming, from a pure **graphical** click-and-run interface to a pure **text** synthax highlighting editor, with two middle interfaces. This allows for a **smooth progress in programming learning** while keeping a common general interface, platform and instruction set, avoiding the need to learn a new language every now and then during the learning process.
 
 The language is based on JavaScript (although this base is well hidden) so after mastering in Level4 the user can program freely on a real programming language like JavaScript.
 
