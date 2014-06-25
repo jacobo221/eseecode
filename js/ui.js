@@ -250,6 +250,16 @@
 	 * @param {*} value Value to test
 	 * @example isNumber(5)
 	 */
+	function isBoolean(value) {
+		return (typeof value).toLowerCase() === "boolean";
+	}
+
+	/**
+	 * Returns if a value is a number or not
+	 * @private
+	 * @param {*} value Value to test
+	 * @example isNumber(5)
+	 */
 	function isNumber(value) {
 		return !isNaN(parseFloat(value)) && isFinite(value);
 	}

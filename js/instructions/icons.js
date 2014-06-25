@@ -16,15 +16,20 @@
 				param1 = (height-margin*2)/3;
 				param2 = 50;
 			}
-			if (param2 < 0) {
-				param2 = 360 - param;
+			if (!isNumber(param1) || !isNumber(param2)) {
+				ctx.font = 12+"px Verdana";
+      				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (param1 > (height-margin*2)/2) {
-				param2 = (height-margin*2)/2;
-			}
 			var maxparam2 = 360;
-			if (param2 > maxparam2) {
+			if (isNumber(param2) && param2 < 0) {
+				param2 = 360 - param;
+			}
+			if (!isNumber(param1) || param1 > (height-margin*2)/2) {
+				param1 = (height-margin*2)/2;
+			}
+			if (!isNumber(param2) || param2 > maxparam2) {
 				param2 = maxparam2;
 			}
 			var radius = (height-margin*2)/2*(param1/maxparam1);
@@ -177,21 +182,26 @@
 			ctx.fill();
 		},
 		"forward": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			} else {
 				param = 50;
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 250;
 			var backwards = false;
-			if (param < 0) {
+			if (isNumber(param) && param < 0) {
 				backwards = true;
 				param = -param;
 			}
-			if (param > maxparam*0.75) {
+			if (!isNumber(param) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			} 
-			var margin = 15;
 			var lineHeight = (height-margin*2)/2*(1-param/maxparam);
 			var lineWidth = (width-margin*2)*param/maxparam;
 			var arrowHeight = lineHeight*2;
@@ -241,21 +251,31 @@
 			ctx.fillText("( )",margin,height-margin);
 		},
 		"goTo": function(ctx, width, height, param) {
+			var margin = 20;
 			if (!param) {
 				return;
 			}
-			var margin = 20;
+			var param1 = param[0];
+			var param2 = param[1];
+			if (!isNumber(param1) || !isNumber(param2)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
+			if (!isNumber(param1)) {
+				param1 = 200;
+			}
+			if (!isNumber(param2)) {
+				param2 = 200;
+			}
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin+(width-margin*2)*param[0]/whiteboard.offsetWidth,margin+(height-margin*2)*param[1]/whiteboard.offsetHeight,height/20,startAngle,endAngle);
+			ctx.arc(margin+(width-margin*2)*param1/whiteboard.offsetWidth,margin+(height-margin*2)*param2/whiteboard.offsetHeight,height/20,startAngle,endAngle);
 			ctx.fill();
 		},
 		"goToCenter": function(ctx, width, height, param) {
-			if (!param) {
-				return;
-			}
 			var margin = 20;
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -265,9 +285,6 @@
 			ctx.fill();
 		},
 		"goToLowLeft": function(ctx, width, height, param) {
-			if (!param) {
-				return;
-			}
 			var margin = 20;
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -277,9 +294,6 @@
 			ctx.fill();
 		},
 		"goToLowRight": function(ctx, width, height, param) {
-			if (!param) {
-				return;
-			}
 			var margin = 20;
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -289,9 +303,6 @@
 			ctx.fill();
 		},
 		"goToUpLeft": function(ctx, width, height, param) {
-			if (!param) {
-				return;
-			}
 			var margin = 20;
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -301,9 +312,6 @@
 			ctx.fill();
 		},
 		"goToUpRight": function(ctx, width, height, param) {
-			if (!param) {
-				return;
-			}
 			var margin = 20;
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -413,15 +421,20 @@
 				param1 = param[0];
 				param2 = param[1];
 			}
+			var margin = 15;
+			if (isNumber(param1) && isNumber(param2)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 100;
-			if (param1 > maxparam1*0.75) {
+			if (!isNumber(param1) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			var maxparam2 = 100;
-			if (param2 > maxparam2*0.75) {
+			if (!isNumber(param2) || param2 > maxparam2*0.75) {
 				param2 = maxparam2*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#000000";
 			ctx.strokeStyle = "#000000";
 			var lineWidth = width/20;
@@ -438,15 +451,20 @@
 			ctx.closePath();
 		},
 		"moveDown": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
 				param1 = param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 100;
-			if (param1 > maxparam1*0.75) {
+			if (!isNumber(param1) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#000000";
 			ctx.strokeStyle = "#000000";
 			var lineWidth = width/20;
@@ -463,15 +481,20 @@
 			ctx.closePath();
 		},
 		"moveLeft": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
 				param1 = param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 100;
-			if (param1 > maxparam1*0.75) {
+			if (!isNumber(param1) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#000000";
 			ctx.strokeStyle = "#000000";
 			var lineWidth = width/20;
@@ -488,15 +511,20 @@
 			ctx.closePath();
 		},
 		"moveRight": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
 				param1 = param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 100;
-			if (param1 > maxparam1*0.75) {
+			if (!isNumber(param1) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#000000";
 			ctx.strokeStyle = "#000000";
 			var lineWidth = width/20;
@@ -513,15 +541,20 @@
 			ctx.closePath();
 		},
 		"moveUp": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
 				param1 = param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 100;
-			if (param1 > maxparam1*0.75) {
+			if (!isNumber(param1) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#000000";
 			ctx.strokeStyle = "#000000";
 			var lineWidth = width/20;
@@ -556,16 +589,21 @@
 			ctx.fillText(param,margin,height/2);
 		},
 		"pull": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param != null && param != undefined && param != "") {
 				param = param[0];
 			} else {
 				param = 1;
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 6;
-			if (param > maxparam*0.75) {
+			if (!isNumber(param) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#00FF00";
 			ctx.beginPath();
 			ctx.moveTo(margin,height-margin);
@@ -582,16 +620,21 @@
 			ctx.closePath();
 		},
 		"push": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param != null && param != undefined && param != "") {
 				param = param[0];
 			} else {
 				param = 1;
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 6;
-			if (param > maxparam*0.75) {
+			if (!isNumber(param) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			}
-			var margin = 15;
 			ctx.fillStyle = "#FFFFFF";
 			ctx.beginPath();
 			ctx.moveTo(margin,margin);
@@ -610,6 +653,11 @@
 		"repeat": function(ctx, width, height, param) {
 			param = param[0].toString();
 			var margin = 15;
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var lineWidth = 3
 			ctx.lineWidth = lineWidth;
 			ctx.strokeStyle = '#000000';
@@ -631,15 +679,20 @@
 			ctx.fillText(param,margin+lineWidth,height-(margin+lineWidth));
 		},
 		"rotateLeft": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param) {
 				param1 = param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 360;
-			if (param1 > maxparam1) {
+			if (!isNumber(param1) || param1 > maxparam1) {
 				param1 = maxparam1;
 			}
-			var margin = 15;
 			var lineWidth = height/20;
 			ctx.lineWidth = lineWidth;
 			ctx.strokeStyle = '#000000';
@@ -661,15 +714,20 @@
 			ctx.fill();
 		},
 		"rotateRight": function(ctx, width, height, param) {
+			var margin = 30;
 			var param1;
 			if (param) {
 				param1 = -param[0];
 			}
+			if (!isNumber(param1)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 360;
-			if (param1*(-1) > maxparam1) {
+			if (!isNumber(param1) || param1*(-1) > maxparam1) {
 				param1 = maxparam1*(-1);
 			}
-			var margin = 30;
 			var lineWidth = height/20;
 			ctx.lineWidth = lineWidth;
 			ctx.strokeStyle = '#000000';
@@ -691,6 +749,7 @@
 			ctx.fill();
 		},
 		"scale": function(ctx, width, height, param) {
+			var margin = 15;
 			var param1;
 			if (param) {
 				param1 = param[0];
@@ -699,15 +758,19 @@
 				param1 = 1;
 				param2 = 1;
 			}
+			if (!isNumber(param1) || !isNumber(param2)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam1 = 2;
-			if (param1 > maxparam1) {
+			if (!isNumber(param1) || param1 > maxparam1) {
 				param1 = maxparam1;
 			}
 			var maxparam2 = 2;
-			if (param2 > maxparam2) {
+			if (!isNumber(param2) || param2 > maxparam2) {
 				param2 = maxparam2;
 			}
-			var margin = 15;
 			ctx.beginPath();
 			ctx.fillStyle = "#FFFFFF";
 			ctx.rect(margin,margin,param1*(width-margin*2)/2,param2*(width-margin*2)/2);
@@ -720,20 +783,33 @@
 			ctx.closePath();
 		},
 		"setBold": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			var margin = 15;
+			if (param === "true" || param === "false") {
+				param = (param === "true");
+			}
+			if (!isBoolean(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = true;
+			}
 			ctx.font = ((param||param===undefined)?"bold ":"")+(height-margin*2)+"px Verdana";
       			ctx.fillStyle = (param||param===undefined)?'#000000':'#AAAAAA';
 			ctx.fillText("B",margin,height-margin);
 		},
 		"setColor": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			if (param < 0) {
-				param = 360 - param;
+			if (param.indexOf('"') !== 0) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = '"#123456"';
 			}
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
@@ -747,14 +823,19 @@
 			ctx.closePath();
 		},
 		"setSize": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 20;
-			if (param > maxparam*0.85) {
+			if (!isNumber(param) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
-			var margin = 15;
 			var squareWidth = (width-margin*2)*(param/maxparam);
 			var squareHeight = (height-margin*2)*(param/maxparam);
 			ctx.strokeStyle = '#000000';
@@ -775,28 +856,49 @@
 			ctx.stroke();
 		},
 		"setFont": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			var margin = 15;
-			ctx.font = (height-margin*2)+"px "+(param?param:"");
+			if (param.indexOf('"') !== 0) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = "";
+			}
+			ctx.font = (height-margin*2)+"px "+(param?param:"sans-serif");
       			ctx.fillStyle = '#000000';
 			ctx.fillText("F",margin,height-margin);
 		},
 		"setItalic": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			var margin = 15;
+			if (param === "true" || param === "false") {
+				param = (param === "true");
+			}
+			if (!isBoolean(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = true;
+			}
 			ctx.font = ((param||param===undefined)?"italic ":"")+(height-margin*2)+"px Verdana";
       			ctx.fillStyle = (param||param===undefined)?'#000000':'#AAAAAA';
 			ctx.fillText("I",margin,height-margin);
 		},
 		"setInvisible": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			var margin = 15;
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = 0.5;
+			}
 			var grd=ctx.createRadialGradient(width/2,height/2,1,width/2,height/2,(height-margin*2)/1.5);
 			grd.addColorStop(0,"rgba(0, 256, 0, "+param+")");
 			grd.addColorStop(1,"#FFFF00");
@@ -834,16 +936,21 @@
 			ctx.stroke();
 		},
 		"turnLeft": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			} else {
 				param = 275;
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 360;
-			if (param > maxparam*0.85) {
+			if (!isNumber(param) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
-			var margin = 15;
 			var startAngle = (-90-param)*Math.PI/180;
 			var endAngle = -90*Math.PI/180;
 			ctx.fillStyle = "#0000FF";
@@ -881,19 +988,24 @@
 			ctx.fill();
 		},
 		"turnRight": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = parseInt(param[0]);
 			} else {
 				param = 90;
 			}
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
 			var maxparam = 360;
-			if (param < 0) {
+			if (isNumber(param) && param < 0) {
 				param = 360 - param;
 			}
-			if (param > maxparam*0.85) {
+			if (!isNumber(param) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
-			var margin = 15;
 			var startAngle = -90*Math.PI/180;
 			var endAngle = (param-90)*Math.PI/180;
 			ctx.fillStyle = "#0000FF";
@@ -921,13 +1033,18 @@
 			ctx.restore();
 		},
 		"use": function(ctx, width, height, param) {
+			var margin = 15;
 			if (param) {
 				param = param[0];
 			}
-			if (param === undefined) {
+			if (!isNumber(param)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
+			if (!isNumber(param) || param === undefined) {
 				param = "N";
 			}
-			var margin = 15;
 			ctx.font = "bold "+(height-margin*2)+"px Verdana";
       			ctx.fillStyle = '#FFFFFF';
       			ctx.strokeStyle = '#FFFFFF';
@@ -936,12 +1053,9 @@
 			ctx.stroke();
 		},
 		"unsetBold": function(ctx, width, height, param) {
-			if (param) {
-				param = param[0];
-			}
 			var margin = 15;
-			ctx.font = (param?"bold ":"")+(height-margin*2)+"px Verdana";
-      			ctx.fillStyle = param?'#000000':'#AAAAAA';
+			ctx.font = (height-margin*2)+"px Verdana";
+      			ctx.fillStyle = '#AAAAAA';
 			ctx.fillText("B",margin,height-margin);
 		},
 		"unsetColor": function(ctx, width, height, param) {
@@ -966,21 +1080,15 @@
 			ctx.stroke();
 		},
 		"unsetFont": function(ctx, width, height, param) {
-			if (param) {
-				param = param[0];
-			}
 			var margin = 15;
-			ctx.font = (height-margin*2)+"px "+(param?param:"sans-serif");
-      			ctx.fillStyle = param?'#000000':'#AAAAAA';
+			ctx.font = (height-margin*2)+"px "+"sans-serif";
+      			ctx.fillStyle = '#AAAAAA';
 			ctx.fillText("F",margin,height-margin);
 		},
 		"unsetItalic": function(ctx, width, height, param) {
-			if (param) {
-				param = param[0];
-			}
 			var margin = 15;
-			ctx.font = (param?"italic ":"")+(height-margin*2)+"px Verdana";
-      			ctx.fillStyle = param?'#000000':'#AAAAAA';
+			ctx.font = (height-margin*2)+"px Verdana";
+      			ctx.fillStyle = '#AAAAAA';
 			ctx.fillText("I",margin,height-margin);
 		},
 		"unsetResize": function(ctx, width, height, param) {
