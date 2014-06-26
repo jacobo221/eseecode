@@ -1,6 +1,6 @@
 ## 2.0 (on the works)
 
- * *Milestone*: Purely graphical programming in levels 1 and 2
+ *Milestone: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface
  * Add animations capability
 
@@ -25,7 +25,7 @@
 
 ## 1.5 (2014-06-01)
 
- * *Milestone reached*: Allow interactive developments
+ *Milestone reached: Allow interactive developments*
  * Synthax and execution errors handling and highlighting
  * Introduced the instruction "repeat"
  * Code now is run in persistive state so real interactive applications can now be developped
@@ -43,7 +43,7 @@
 
 ## 1.0 (2014-04-20)
 
- * *Milestone reached*: 4 interchangable levels of development
+ *Milestone reached: 4 interchangable levels of development*
  * Can change between all levels indistinctively
  * Now uses Jison http://zaach.github.io/jison/ to parse the code. Thanks to C. J. Ihrig for his jsparser! http://cjihrig.com/blog/creating-a-javascript-parser/
  * Beautify user's code in level4
@@ -83,8 +83,8 @@
  * Ability to run step by step
  * A customizable grid is available to help measure
 
-## 0.1 (2014-12-05)
+## 0.1 (2013-12-05)
 
- * *Milestone reached*: Prototype
+ *Milestone reached: Prototype*
  * Level 4 working
  * Instructions and API in place
