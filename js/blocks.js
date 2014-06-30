@@ -30,11 +30,6 @@
 	 * @example cancelFloatingBlock()
 	 */
 	function cancelFloatingBlock(event) {
-		if (event && event.type == "keydown") {
-			if (event.keyCode != 27) {
-				return;
-			}
-		}
 		if ($_eseecode.session.floatingBlock.div) {
 			if ($_eseecode.session.floatingBlock.div.parentNode == document.body) { // it could be that the div has been reassigned to the console
 				deleteBlock($_eseecode.session.floatingBlock.div);
@@ -48,7 +43,6 @@
 		if (!isTouchDevice()) {
 			document.body.removeEventListener("mouseup", unclickBlock, false);
 			document.body.removeEventListener("mousemove", moveBlock, false);
-			document.body.removeEventListener("keydown", cancelFloatingBlock, false);
 		} else {
 			document.body.removeEventListener("touchend", unclickBlock, false);
 			document.body.removeEventListener("touchmove", moveBlock, false);
@@ -67,7 +61,7 @@
 	 */
 	function clickBlock(event) {
 		if ($_eseecode.session.breakpointHandler) {
-			addBreakpointEvent(event);
+			addBreakpointEventEnd(event);
 			return;
 		}
 		unhighlight();
@@ -144,7 +138,6 @@
 			if (!isTouchDevice()) {
 				document.body.addEventListener("mouseup", unclickBlock, false);
 				document.body.addEventListener("mousemove", moveBlock, false);
-				document.body.addEventListener("keydown", cancelFloatingBlock, false);
 			} else {
 				document.body.addEventListener("touchend", unclickBlock, false);
 				document.body.addEventListener("touchmove", moveBlock, false);
@@ -199,19 +192,11 @@
 				position = Math.floor(position);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = position;
 				if (($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition === $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) || (isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) && isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition) && $_eseecode.session.blocksUndo[blocksUndoIndex].divPosition-1 == $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition)) { // Nothing changed: Note that moving a block right below has no effect
-					action = "setup";
 					// We aren't using the floating block
 					div = $_eseecode.session.floatingBlock.fromDiv;
 					divId = div.id;
-					var setupChanges = setupBlock(div);
-					if (setupChanges.length > 0) {
-						// Update undo array
-						$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
-						// Update the block icon
-						paintBlock(div);
-					} else {
-						action = "cancel";
-					}
+					action = "setup";
+					setupBlock(div, false);
 				} else if ($_eseecode.session.floatingBlock.fromDiv && positionIsInBlock(consoleDiv, $_eseecode.session.floatingBlock.fromDiv, position)) {
 					action = "cancel";
 				} else {
@@ -222,7 +207,7 @@
 					} else {
 						action = "add";
 						if (level == "level2" || level == "level3") {
-							setupBlock(div);
+							setupBlock(div, true);
 						}
 						paintBlock(div);
 					}
@@ -487,78 +472,180 @@
 	}
 
 	/**
-	 * Asks the user to setup the parameters of the instruction associated with the block. Returns a list of parameter changes in an array with the format ["param"+paramNumber, old_value, new_value]
+	 * Asks the user to setup the parameters of the instruction associated with the block
 	 * @private
 	 * @param {!HTMLElement} div Block div
-	 * @return {Array<String, String, String>}
 	 * @example setupBlock(document.getElementById("div-123123123"))
 	 */
-	function setupBlock(div) {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+	function setupBlock(div, addBlock) {
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var instructionName = instruction.name;
-		var setupChanges = [];
+		var parameterInputs = [];
 		var paramNumber = 1; // parameters[0] is usually "param1"
 		for (var i=0; i<instruction.parameters.length; i++) {
 			var parameter = instruction.parameters[i];
-			var parameterName = _(parameter.name);
+			parameterInputs[i] = {};
+			parameterInputs[i].name = _(parameter.name);
+			parameterInputs[i].id = paramNumber;
 			var defaultValue = parameter.default;
-			var value = undefined;
 			if (i==0 && instruction.validate) {
 				paramNumber = 0;
+				parameterInputs[i].id = paramNumber;
 				// This instruction requires an identifier
 				if (div.getAttribute("param"+paramNumber)) {
-					defaultValue = div.getAttribute("param"+paramNumber);
+					parameterInputs[i].defaultValue = div.getAttribute("param"+paramNumber);
 				} else {
 					// Do not offer any default for identifiers
-					defaultValue = "";
+					parameterInputs[i].defaultValue = "";
 				}
-				do {
-					value = window.prompt(_("Enter a text to use as %s. The %s should easily relate to the use you are going to give to the block",[parameterName,parameterName])+":",defaultValue);
-					if (value === null) {
-						if (defaultValue) {
-							value = defaultValue;
-						} else {
-							var d = new Date();
-							value = instructionName+"_"+(d.getTime()*100+Math.floor(Math.random()*100)).toString(26);
-						}
-					}
-				} while (!instruction.validate(value));
-				div.setAttribute("param"+paramNumber,value);
-				if (value !== defaultValue) {
-					setupChanges.push([ "param"+paramNumber, defaultValue, value ]);
-				}
+				parameterInputs[i].validate = instruction.validate;
 				paramNumber++;
 				continue;
 			}
-			var helpText = ordinal(paramNumber)+" "+_("enter the value for %s's parameter",[instructionName+"()"])+" \""+parameterName+"\"";
 			if (div.getAttribute("param"+paramNumber) !== undefined) {
 				defaultValue = div.getAttribute("param"+paramNumber);
 			}
 			if (defaultValue === undefined || defaultValue === null) {
 				defaultValue = "";
 			}
-			if (level == "level2" && parameter.tip) {
+			parameterInputs[i].defaultValue = defaultValue;
+			parameterInputs[i].tip = parameter.tip;
+			paramNumber++;
+		} 
+		if (parameterInputs.length > 0) {
+			msgBoxParameters(div, parameterInputs, addBlock);
+		}
+	}
+
+	/**
+	 * Asks the user to setup the parameters passed
+	 * @private
+	 * @param {!HTMLElement} div Block div
+	 * @param {Array<{id:Number,name:String,defaultValue:String|Number,tip:String}>} parameters Parameters to set up
+	 * @param {Boolean} addBlock Indicates whether the block is a new block or we are setting up an existing block
+	 * @example msgBoxParameters(document.getElementById("div-123123123"), parameters)
+	 */
+	function msgBoxParameters(div, parameters, addBlock) {
+		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		var instructionName = instruction.name;
+		var msgDiv = document.createElement("div");
+		var input = document.createElement("input");
+		input.id = "msgBoxParametersDiv";
+		input.value = div.id;
+		input.type = "hidden";
+		msgDiv.appendChild(input);
+		input = document.createElement("input");
+		input.id = "msgBoxParametersAdd";
+		input.value = addBlock;
+		input.type = "hidden";
+		msgDiv.appendChild(input);
+		for (var i=0; i<parameters.length; i++) {
+			var parameter = parameters[i];
+			var textDiv = document.createElement("p");
+			var helpText = _("enter the value for %s's parameter",[instructionName+"()"])+" \""+_(parameter.name)+"\"";
+			if (parameter.id > 0) {
+				helpText = ordinal(parameter.id)+" "+helpText;
+			} else {
+				helpText = helpText.charAt(0).toUpperCase() + helpText.slice(1);
+			}
+			if (parameter.tip) {
 				helpText += ".\n"+_(parameter.tip);
 			}
-			helpText += ":";
-			if (level == "level2" || level == "level3") {
-				value = window.prompt(helpText, defaultValue);
-				//var value = setupParameterLevel3(div.id, paramNumber, instructionName, parameterName, defaultValue, parameter.type);
+			helpText += ":<br />";
+			var span = document.createElement("span");
+			span.innerHTML += helpText;
+			textDiv.appendChild(span);
+			input = document.createElement("input");
+			input.id = "msgBoxParameters"+parameter.id;
+			input.value = parameter.defaultValue;
+			input.type = "text";
+			input.style.width = "100px";
+			textDiv.appendChild(input);
+			input = document.createElement("input");
+			input.id = "msgBoxParameters"+parameter.id+"Default";
+			input.value = parameter.defaultValue;
+			input.type = "hidden";
+			textDiv.appendChild(input);
+			msgDiv.appendChild(textDiv);
+		}
+		input = document.createElement("input");
+		input.id = "msgBoxParametersCount";
+		input.value = parameters.length;
+		input.type = "hidden";
+		msgDiv.appendChild(input);
+		msgBox(msgDiv, {acceptAction:msgBoxParametersAccept,cancelAction:msgBoxParametersCancel,focus:"msgBoxParameters"+parameters[0].id});
+	}
+
+	/**
+	 * Takes the parameters from a msgBox and applies them in the block. You probably want to call msgBoxClose() here
+	 * @see msgBoxParameters
+	 * @see msgBoxClose
+	 * @private
+	 * @param {Object} event Event
+	 * @example msgBoxParametersAccept()
+	 */
+	function msgBoxParametersAccept(event) {
+		var setupChanges = [];
+		var divId = document.getElementById("msgBoxParametersDiv").value;
+		var div = document.getElementById(divId);
+		var parametersCount = document.getElementById("msgBoxParametersCount").value;
+		var paramNumber = 1;
+		if (document.getElementById("msgBoxParameters0")) {
+			paramNumber = 0;
+		}
+		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		if (instruction.validate) {
+			var value = document.getElementById("msgBoxParameters0").value;
+			if (!instruction.validate(value)) {
+				alert(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[0].name)]));
+				return;
 			}
-			// If user clicked "cancel" use default parameter
-			if (value === null) {
-				value = defaultValue;
-			} else if (value === undefined) {
-				value = "";
+		}
+		for (var i=0; i<parametersCount; i++) {
+			if (instruction.parameters[i] && instruction.parameters[i].validate) {
+				var value = document.getElementById("msgBoxParameters"+paramNumber).value;
+				if (!instruction.parameters[i].validate(value)) {
+					alert(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
+				}
+				return;
 			}
-			div.setAttribute("param"+paramNumber, value);
+		}
+		for (var i=0; i<parametersCount; i++) {
+			var value = document.getElementById("msgBoxParameters"+paramNumber).value;
+			var defaultValue = document.getElementById("msgBoxParameters"+paramNumber+"Default").value;
 			if (value !== defaultValue) {
-				setupChanges.push([ "param"+paramNumber, defaultValue, value ]);
+				div.setAttribute("param"+paramNumber, value);
+				setupChanges.push(["param"+paramNumber, defaultValue, value]);
 			}
 			paramNumber++;
 		}
-		return setupChanges;
+		if (setupChanges.length > 0 && document.getElementById("msgBoxParametersAdd").value !== "true") {
+			// Update undo array
+			var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
+			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+		}
+		// Update the block icon
+		paintBlock(div);
+		msgBoxClose();
+	}
+
+	/**
+	 * Cancels a msgBoxParameters. You probably want to call msgBoxClose() here
+	 * @see msgBoxParameters
+	 * @see msgBoxClose
+	 * @private
+	 * @param {Object} event Event
+	 * @example msgBoxParametersCancel()
+	 */
+	function msgBoxParametersCancel(event) {
+		if (document.getElementById("msgBoxParametersAdd").value === "true") {
+			var divId = document.getElementById("msgBoxParametersDiv").value;
+			var div = document.getElementById(divId);
+			deleteBlock(div);
+			$_eseecode.session.blocksUndo.pop();
+			$_eseecode.session.blocksUndo[0]--;
+		}
+		msgBoxClose();
 	}
 
 	/**

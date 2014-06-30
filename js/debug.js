@@ -151,7 +151,6 @@
 		tabdiv.addEventListener("touchstart",addBreakpointEventEnd,false);
 		document.body.addEventListener("mousedown",addBreakpointEventCancel,false);
 		document.body.addEventListener("touchstart",addBreakpointEventCancel,false);
-		document.body.addEventListener("keydown",keyboardShortcuts,false);
 	}
 
 	/**

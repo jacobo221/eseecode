@@ -246,5 +246,8 @@ $_eseecode.i18n.available.es = {
 	"window": "ventana",
 	"Wipes the canvas": "Limpia la capa",
 	"pixels": "píxeles",
-	"comment": "comentario"
+	"comment": "comentario",
+	"Accept": "Aceptar",
+	"Cancel": "Cancelar",
+	"The value for parameter \"%s\" is invalid!": "¡El valor del parámetro \"%s\" es inválido!"
 }

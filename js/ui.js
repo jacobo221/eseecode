@@ -54,37 +54,84 @@
 	/**
 	 * Shows a message box overlapping all the platform's user interface
 	 * @private
-	 * @param {String} text Message to show in the message box
-	 * @param {function()} actionOk Function to run when the user clicks the OK button in the message box 
+	 * @param {String|HTMLElement} text Message to show in the message box
+	 * @param {{acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String}} config Configuration parameters for the message box
 	 * @example msgBox("Alert!")
 	 */
-	function msgBox(text, actionOk) {
+	function msgBox(text, config) {
 		var mainBlock = document.getElementById("eseecode");
 		var div = document.createElement("div");
 		div.id = "msgBoxWrapper";
 		var innerDiv = document.createElement("div");
 		innerDiv.id = "msgBox";
-		innerDiv.innerHTML = text+"<br /"+"><br /"+">";
+		var textDiv;
+		if (typeof text === "string") {
+			textDiv = document.createElement("div");
+			textDiv.innerHTML = text;
+		} else {
+			textDiv = text;
+		}
+		textDiv.style.overflowY = "auto";
+		textDiv.style.width = "auto";
 		var buttonDiv = document.createElement("div");
 		buttonDiv.setAttribute("align","center");
-		buttonDiv.style.width = "100%";
+		buttonDiv.style.width = "100%"
+		buttonDiv.style.margin = "5px 0px 5px 0px";
 		var input = document.createElement("input");
-		input.type = "button";
-		input.value = "OK";
-		input.autofocus = true;
+		input.type = "submit";
+		if (config && config.acceptName) {
+			input.value = config.acceptName;
+		} else {
+			input.value = _("Accept");
+		}
+		if (!config || !config.focus) {
+			input.autofocus = true;
+		}
+		if (config && config.acceptAction) {
+			input.addEventListener("click",config.acceptAction);
+		} else {
+			input.addEventListener("click",msgBoxClose);
+		}
 		buttonDiv.appendChild(input);
-		innerDiv.appendChild(buttonDiv);
+		if (config && (config.cancel || config.cancelName || config.cancelAction)) {
+			input = document.createElement("input");
+			input.type = "button";
+			if (config && config.cancelName) {
+				input.value = config.cancelName;
+			} else {
+				input.value = _("Cancel");
+			}
+			if (config.cancelAction) {
+				input.addEventListener("click",config.cancelAction);
+			} else {
+				input.addEventListener("click",msgBoxClose);
+			}
+			buttonDiv.appendChild(input);
+		}
+		var form = document.createElement("form");
+		form.addEventListener("submit",function(e) { e.preventDefault(); return false; });
+		form.appendChild(textDiv);
+		form.appendChild(buttonDiv);
+		innerDiv.appendChild(form);
 		div.appendChild(innerDiv);
 		document.getElementById("eseecode").appendChild(div);
-		if (actionOk) {
-			input.addEventListener("click",actionOk);
+		textDiv.style.height = (innerDiv.offsetHeight-buttonDiv.offsetHeight-40)+"px";
+		if (config && config.focus) {
+			document.getElementById(config.focus).focus();
 		}
-		input.addEventListener("click",function() {
-			document.getElementById("eseecode").removeChild(document.getElementById("msgBoxWrapper"));
-			if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
-				ace.edit("console-write").focus();
-			}
-		})
+	}
+
+	/**
+	 * Closes the msgBox dialog
+	 * @see msgBox
+	 * @private
+	 * @example msgBoxClose()
+	 */
+	function msgBoxClose() {
+		document.getElementById("eseecode").removeChild(document.getElementById("msgBoxWrapper"));
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+			ace.edit("console-write").focus();
+		}
 	}
 
 	/**
@@ -1150,8 +1197,20 @@
 	 */
 	function keyboardShortcuts(event) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
-		if ($_eseecode.session.breakpointHandler && event && event.type == "keydown" && event.keyCode == 27) {
-			addBreakpointEventCancel();
+		if (event && event.type == "keydown" && event.keyCode == 27) {
+			if ($_eseecode.session.breakpointHandler) {
+				addBreakpointEventCancel();
+			}
+			if ($_eseecode.session.floatingBlock.div) {
+				cancelFloatingBlock(event);
+			}
+			if (document.getElementById("msgBoxWrapper")) {
+				if (document.getElementById("msgBoxParametersDiv")) {
+					msgBoxParametersCancel();
+				} else {
+					msgBoxClose();
+				}
+			}
 		} else if (mode == "blocks") {
 			if (event && event.type == "keydown") {
 				if (event.which === 90 && event.ctrlKey && !event.shiftKey) { // CTRL+Z

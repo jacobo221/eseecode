@@ -249,5 +249,8 @@ $_eseecode.i18n.available.ca = {
 	"window": "finestra",
 	"Wipes the canvas": "Neteja la capa",
 	"pixels": "píxels",
-	"comment": "comentari"
+	"comment": "comentari",
+	"Accept": "Acceptar",
+	"Cancel": "Cancel·lar",
+	"The value for parameter \"%s\" is invalid!": "El valor del paràmetre \"%s\" és invàlid!"
 }
