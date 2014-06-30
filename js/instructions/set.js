@@ -64,7 +64,7 @@
 		{ name: "goToCenter", category: "cursor", parameters: [], tip: "Moves to the center of the canvas", show: ["level1","level2","level3","level4"] },
 		{ name: "goToLowLeft", category: "cursor", parameters: [], tip: "Moves to the lower left of the canvas", show: ["level1","level2","level3","level4"] },
 		{ name: "goToLowRight", category: "cursor", parameters: [], tip: "Moves to the lower right of the canvas", show: ["level1","level2","level3","level4"] },
-		{ name: "goTo", category: "cursor", parameters: [{name: "posx", default: 0, type: "int", tip: "Set X coordinate to go to"},{name: "posy",default: 0, type: "int", tip: "Set Y coordinate to go to"}], tip: "Moves to the specified coordinates in the canvas", show: ["level2","level3","level4"] },
+		{ name: "goTo", category: "cursor", parameters: [{name: "posx", default: 0, type: "int", tip: "Set X coordinate to go to"},{name: "posy", default: 0, type: "int", tip: "Set Y coordinate to go to"}], tip: "Moves to the specified coordinates in the canvas", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level1","level2"] },
 		{ name: "setSize", category: "cursor", parameters: [{name: "size", default: 16, type: "int"}], tip: "Sets the drawing size to very thick", show: ["level1"] },
 		{ name: "setSize", category: "cursor", parameters: [{name: "size", default: 9, type: "int"}], tip: "Sets the drawing size to thicker", show: ["level1"]},

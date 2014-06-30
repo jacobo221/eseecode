@@ -1311,7 +1311,7 @@
 					//}
 					div.setAttribute("param"+(i+1),param);
 				}
-				if (param) {
+				if (param !== undefined) {
 					parameters.push(param);
 				}
 			}
