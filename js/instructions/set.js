@@ -2,16 +2,16 @@
 
 	/**
 	 * Public instruction set
-	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [default]:String, [tip]:String}>, [tip]:String, show:Array<String>, [return]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>, [validate]:Boolean|function(String):Boolean}>}
+	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [default]:String, [tip]:String}>, [tip]:String, show:Array<String>, [return]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>, [validate]:function(String):Boolean}>}
 	 * @example { name: "forward", category: "cursor", parameters: [{name: "pixels",default: 100, type: "int", tip: "How many pixels do you want to move forward?"}], tip: "Moves forward", show: ["level2","level3","level4"] }
 	 */
 	$_eseecode.instructions.set = [
 		{ name: "null", category: "internal", parameters: [{name: "text", type: "string"}], show: [], code: { noName: true, noBrackets: true } },
-		{ name: "nullChild", category: "internal", parameters: null, show: [], dummy: true, code: { noName: true, noBrackets: true, unindent: true }, validate: true },
+		{ name: "nullChild", category: "internal", parameters: null, show: [], dummy: true, code: { noName: true, noBrackets: true, unindent: true }, validate: function() { return true; } },
 		{ name: "unknownFunction", category: "internal", parameters: [{name: "parameters...", type: "string"}], show: [], code: { noName: true } },
 		{ name: "object", category: "other", parameters: null, return: "object", show: [], block: ["endObject"], nameRewrite: { level3: "", level4: "" }, code: { prefix: "{ " } },
 		{ name: "comment", category: "other", parameters: [{name: "comment", type: "string"}], tip: "Comment text, ignored during execution", show: ["level3","level4"], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "//", level4: "//" }, code: { space: true, noBrackets: true }, validate: function() { return true } },
-		{ name: "commentmultiline", category: "other", parameters: [{name: "comment", type: "string"}], tip: "Comment text, ignored during execution", show: [], block: ["endComment"], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "/*", level4: "/*" }, code: { space: true, noBrackets: true }, validate: true },
+		{ name: "commentmultiline", category: "other", parameters: [{name: "comment", type: "string"}], tip: "Comment text, ignored during execution", show: [], block: ["endComment"], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "/*", level4: "/*" }, code: { space: true, noBrackets: true }, validate: function() { return true; } },
 		{ name: "commentmultilinesingle", category: "other", parameters: [{name: "comment", type: "string"}], tip: "Comment text, ignored during execution", show: [], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "/*", level4: "/*" }, code: { space: true, noBrackets: true, suffix: " */" }, validate: function() { return true } },
 		{ name: "beginShape", category: "cursor", parameters: [], tip: "Begins a shape definition", show: ["level2","level3","level4"] },
 		{ name: "endShape", category: "cursor", parameters: [], tip: "Ends a shape definition", show: ["level2","level3","level4"] },
