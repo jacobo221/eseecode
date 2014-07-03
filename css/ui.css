@@ -27,6 +27,11 @@
 		border-top-width: 0px;
 		border-bottom-width: 0px;
 	}
+	.separator {
+		border-bottom: 1px solid #FFFFFF;
+		clear: both;
+		height: 0px;
+	}
 	.tab {
 		float: right;
 		width: 60px;
