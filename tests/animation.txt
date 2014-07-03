@@ -1,3 +1,50 @@
+function hideAll() {
+	repeat (8) {
+		hide(repeatCount + 2)
+	}
+}
+
+function up() {
+	if (getLayerVisibility(6)) {
+		hideAll()
+		show(7)
+	} else {
+			hideAll()
+			show(6)
+	}
+}
+
+function down() {
+	if (getLayerVisibility(8)) {
+		hideAll()
+		show(9)
+	} else {
+			hideAll()
+			show(8)
+	}
+}
+
+function right() {
+	if (getLayerVisibility(2)) {
+		hideAll()
+		show(3)
+	} else {
+			hideAll()
+			show(2)
+	}
+}
+
+function left() {
+	if (getLayerVisibility(4)) {
+		hideAll()
+		show(5)
+	} else {
+			hideAll()
+			show(4)
+	}
+	show(1)
+}
+
 goTo(200, 100)
 beginShape()
 setColor("#FF6600")
@@ -8,7 +55,6 @@ unsetColor()
 forward(25)
 setColor("#000000")
 forward(150)
-
 use()
 goTo(225, 100)
 beginShape()
@@ -39,7 +85,6 @@ forward(35)
 turnRight(45)
 forward(40)
 hide()
-
 use()
 goTo(225, 100)
 beginShape()
@@ -71,17 +116,14 @@ forward(35)
 turnRight(45)
 forward(40)
 hide(3)
-
 use()
-image(getCanvasLayerImage(2), 0, 0)
+image(getLayerImage(2), 0, 0)
 flipHorizontally()
 hide()
-
 use()
-image(getCanvasLayerImage(3), 0, 0)
+image(getLayerImage(3), 0, 0)
 flipHorizontally()
 hide()
-
 use()
 goTo(200, 275)
 turnRight(75)
@@ -107,7 +149,6 @@ forward(25)
 turnLeft(15)
 forward(25)
 hide()
-
 use()
 goTo(200, 275)
 turnRight(75)
@@ -133,9 +174,8 @@ forward(25)
 turnLeft(15)
 forward(50)
 hide()
-
 use()
-image(getCanvasLayerImage(6), 0, 0)
+image(getLayerImage(6), 0, 0)
 goTo(200, 100)
 beginShape()
 arc(2, 360)
@@ -149,9 +189,8 @@ beginShape()
 arc(4, 360)
 endShape()
 hide()
-
 use()
-image(getCanvasLayerImage(7), 0, 0)
+image(getLayerImage(7), 0, 0)
 goTo(200, 100)
 beginShape()
 arc(2, 360)
@@ -165,53 +204,9 @@ beginShape()
 arc(4, 360)
 endShape()
 hide()
-
-function hideAll() {
-	repeat(8) {
-		hide(repeatCount+2)
-	}
-}
-function up() {
-	if (getCanvasLayerVisibility(6)) {
-		hideAll()
-		show(7)
-	} else {
-		hideAll()
-		show(6)
-	}
-}
-function down() {
-	if (getCanvasLayerVisibility(8)) {
-		hideAll()
-		show(9)
-	} else {
-		hideAll()
-		show(8)
-	}
-}
-function right() {
-	if (getCanvasLayerVisibility(2)) {
-		hideAll()
-		show(3)
-	} else {
-		hideAll()
-		show(2)
-	}
-}
-function left() {
-	if (getCanvasLayerVisibility(4)) {
-		hideAll()
-		show(5)
-	} else {
-		hideAll()
-		show(4)
-	}
-	show(1)
-}
-
-windowButtonCreate(1, "up", "^", 125, 100, "up()")
-windowButtonCreate(1, "down", "v", 125, 200, "down()")
-windowButtonCreate(1, "right", ">", 175, 150, "right()")
-windowButtonCreate(1, "left", "<", 75, 150, "left()")
-
+windowButtonCreate(1, "up", "^", 125, 100, "animate(0.5,\"up()\")")
+windowButtonCreate(1, "down", "v", 125, 200, "animate(0.5,\"down()\")")
+windowButtonCreate(1, "right", ">", 175, 150, "animate(0.5,\"right()\")")
+windowButtonCreate(1, "left", "<", 75, 150, "animate(0.5,\"left()\")")
 show(2)
+
