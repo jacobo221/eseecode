@@ -51,23 +51,40 @@
 		return div;
 	}
 
-	ast.ProgramNode.prototype.makeBlocks = function(level,parentDiv) {
+	function isFunctionComment(elements, i) {
+		var itIs = false;
+		for (i = i+1; i < elements.length; i++) {
+			if (elements[i].type !== "Comment") {
+				if (elements[i].type === "FunctionDeclaration") {
+					itIs = true;
+				} else {
+					itIs = false;
+				}
+				break;
+			}
+		}
+		return itIs;
+	}
+
+	ast.ProgramNode.prototype.makeBlocks = function(level, parentDiv) {
 		var elements = this.body;
+		var unparsedLines = [];
 		// First dump all FunctionDeclaration's to comply with "use strict"...
 		for (var i = 0, len = elements.length; i < len; i++) {
-			if (elements[i].type === "FunctionDeclaration") {
+			if (elements[i].type === "FunctionDeclaration" || (elements[i].type === "Comment" && isFunctionComment(elements, i))) {
 				elements[i].makeBlocks(level,parentDiv);
+			} else {
+				unparsedLines.push(i);
 			}
 		}
 		// ...Then dump the rest of the code
-		for (var i = 0, len = elements.length; i < len; i++) {
-			if (elements[i].type !== "FunctionDeclaration") {
-				elements[i].makeBlocks(level,parentDiv);
-			}
+		for (var i = 0, len = unparsedLines.length; i < len; i++) {
+			var line = unparsedLines[i];
+			elements[line].makeBlocks(level, parentDiv);
 		}
 	}
 
-	ast.EmptyStatementNode.prototype.makeBlocks = function(level,parentDiv) {
+	ast.EmptyStatementNode.prototype.makeBlocks = function(level, parentDiv) {
 		return;
 	}
 

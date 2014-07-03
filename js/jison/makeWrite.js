@@ -59,21 +59,37 @@
 		return firstPos > secondPos;
 	}
 
+	function isFunctionComment(elements, i) {
+		var itIs = false;
+		for (i = i+1; i < elements.length; i++) {
+			if (elements[i].type !== "Comment") {
+				if (elements[i].type === "FunctionDeclaration") {
+					itIs = true;
+				} else {
+					itIs = false;
+				}
+				break;
+			}
+		}
+		return itIs;
+	}
+
 	ast.ProgramNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var elements = this.body;
 		var str = "";
-
+		var unparsedLines = [];
 		// First dump all FunctionDeclaration's to comply with "use strict"...
 		for (var i = 0, len = elements.length; i < len; i++) {
-			if (elements[i].type === "FunctionDeclaration") {
+			if (elements[i].type === "FunctionDeclaration" || (elements[i].type === "Comment" && isFunctionComment(elements, i))) {
 				str += elements[i].makeWrite(level, indent, indentChar, realCode) + "\n";
+			} else {
+				unparsedLines.push(i);
 			}
 		}
 		// ...Then dump the rest of the code
-		for (var i = 0, len = elements.length; i < len; i++) {
-			if (elements[i].type !== "FunctionDeclaration") {
-				str += elements[i].makeWrite(level, indent, indentChar, realCode) + "\n";
-			}
+		for (var i = 0, len = unparsedLines.length; i < len; i++) {
+			var line = unparsedLines[i];
+			str += elements[line].makeWrite(level, indent, indentChar, realCode) + "\n";
 		}
 		return str;
 	};
