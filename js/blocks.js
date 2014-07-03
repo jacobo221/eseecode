@@ -355,7 +355,7 @@
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
-			consoleDiv.innerHTML = "";
+			removeBlocksTips();
 		}
 		var parentDiv = consoleDiv;
 		if (parent) {

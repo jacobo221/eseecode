@@ -254,7 +254,7 @@
 		if ($_eseecode.modes.console[id].div == "write") {
 			ace.edit("console-write").focus();
 		} else {
-			checkAndAddConsoleTip(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
+			checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
 		}
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.changesInCode) {
 			$_eseecode.session.changesInCode = false;
@@ -1225,14 +1225,87 @@
 	}
 
 	/**
-	 * Adds the console tip if no code exists
+	 * Adds the console and dialog tips for blocks if no code exists
 	 * @private
-	 * @example checkAndAddConsoleTip()
+	 * @example checkAndAddBlocksTips()
 	 */
-	function checkAndAddConsoleTip() {
+	function checkAndAddBlocksTips() {
 		var consoleDiv = document.getElementById("console-blocks");
-		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == 'console-blocks-tip') {
-			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;display:table-cell;text-align:center;vertical-align:middle;padding:0px 10px 0px 10px;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;height:"+(consoleDiv.clientHeight)+"px'>"+_("Drop some blocks here to start programming!")+"</div>";
+		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == "console-blocks-tip") {
+			// Console tip
+			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;display:table-cell;text-align:center;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;padding:"+(consoleDiv.clientHeight/2-10)+"px 10px 0px 10px'>"+_("Drop some blocks here to start programming!")+"</div>";
+			// Dialog highlight first block to use
+			if ($_eseecode.modes.console[$_eseecode.modes.console[0]].name === "level1") {
+				var startInstructionId = getInstructionSetIdFromName("goToCenter");
+				var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
+				while (startInstructionDiv !== null) {
+					if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
+						break;
+					}
+					startInstructionDiv = startInstructionDiv.nextSibling;
+				}
+				if (startInstructionDiv !== null) {
+					var style = "3px solid #FF5555";
+					$_eseecode.session.tipInterval = setInterval(function() {
+							if (startInstructionDiv.style.border === "") {
+								startInstructionDiv.style.border = style;
+							} else {
+								startInstructionDiv.style.border = "";
+							}
+						},350);
+					// Arrow
+					var tipDiv = document.getElementById("console-blocks-tip");
+					var canvas = document.createElement("canvas");
+					canvas.width = consoleDiv.clientWidth;
+					canvas.height = consoleDiv.clientHeight-tipDiv.offsetHeight-5;
+					var arrowHeight = startInstructionDiv.offsetTop-tipDiv.offsetTop+startInstructionDiv.offsetHeight/2;
+					if (arrowHeight > canvas.height) {
+						arrowHeight = canvas.height;
+					}
+					var ctx = canvas.getContext("2d");
+					var margin = 10;
+					ctx.strokeStyle = "#FF5555";
+					ctx.fillStyle = "#FF5555";
+					ctx.lineWidth = '10';
+					ctx.moveTo(consoleDiv.clientWidth/2, margin);
+					ctx.lineTo(consoleDiv.clientWidth/2, arrowHeight-margin);
+					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight-margin);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.moveTo(consoleDiv.clientWidth-margin, arrowHeight-margin);
+					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight);
+					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight-margin*2);
+					ctx.closePath();
+					ctx.fill();
+					consoleDiv.appendChild(canvas);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Removes the console and dialog tips for blocks
+	 * @private
+	 * @example removeBlocksTips()
+	 */
+	function removeBlocksTips() {
+		// Remove console tip
+		var consoleDiv = document.getElementById("console-blocks");
+		consoleDiv.innerHTML = "";
+		// Remove dialog highlight
+		if ($_eseecode.session.tipInterval) {
+			clearInterval($_eseecode.session.tipInterval);
+		}
+		var startInstructionId = getInstructionSetIdFromName("goToCenter");
+		var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
+		while (startInstructionDiv !== null) {
+			if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
+				break;
+			}
+			startInstructionDiv = startInstructionDiv.nextSibling;
+		}
+		if (startInstructionDiv !== null) {
+			startInstructionDiv.style.border = "";
 		}
 	}
 
@@ -1655,7 +1728,7 @@
 		    console.removeChild(console.lastChild);
 		}
 		cancelFloatingBlock();
-		checkAndAddConsoleTip();
+		checkAndAddBlocksTips();
 	}
 
 	/**

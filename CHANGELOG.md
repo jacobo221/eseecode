@@ -3,6 +3,7 @@
  *Milestone: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface
  * Add animations capability
+ * Enforced the tip to start programming
 
 ## 1.7 (2014-06-18)
 
