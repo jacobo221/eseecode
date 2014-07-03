@@ -1094,6 +1094,7 @@
 	 * @example smoothScroll()
 	 */
 	function smoothScroll(div, height, startTop) {
+		clearTimeout($_eseecode.session.scrollTimeout); // This is to prevent two scroll timeouts tunning at the same time
 		if (!startTop) {
 			startTop = div.scrollTop;
 		}
@@ -1111,7 +1112,7 @@
 		}
 		div.scrollTop += increment;
 		if (div.scrollTop != height) {
-			setTimeout(function() { smoothScroll(div, height, startTop) }, 1);
+			$_eseecode.session.scrollTimeout = setTimeout(function() { smoothScroll(div, height, startTop) }, 1);
 		}
 	}
 
