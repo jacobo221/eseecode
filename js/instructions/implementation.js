@@ -1268,14 +1268,14 @@
 	 * It will run a code on every specified time until the code returns false or an amount of times is specified
 	 * @since 2.0
 	 * @public
-	 * @param {Number} seconds Seconds between each code run
 	 * @param {String} command Code to run on every 
+	 * @param {Number} seconds Seconds between each code run
 	 * @param {Number} [count] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
 	 * @return {Number}
 	 * @example animate(0.25, "stepForward()")
 	 */
-	function animate(seconds, command, count, timeoutHandlersIndex) {
+	function animate(command, seconds, count, timeoutHandlersIndex) {
 		var returnValue;
 		try {
 			returnValue = eval(command);
@@ -1289,7 +1289,7 @@
 			timeoutHandlersIndex = $_eseecode.session.timeoutHandlers.length;
 		}
 		if (count > 1 || (count === undefined && returnValue !== false)) {
-			$_eseecode.session.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() { animate(seconds, command, (count !== undefined)?count-1:count, timeoutHandlersIndex); },seconds*1000);
+			$_eseecode.session.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() { animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex); },seconds*1000);
 		}
 		return timeoutHandlersIndex;
 	}

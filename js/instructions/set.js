@@ -112,7 +112,7 @@
 		{ name: "show", category: "canvas", parameters: [{name: "canvasId",default: undefined, type: "int"}], tip: "Shows the canvas", show: ["level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level1"] },
 		{ name: "use", category: "canvas", parameters: [{name: "id", default: 1, type: "int"}], return: "string", tip: "Switches the active canvas, returns the name of the new current canvas", show: ["level3","level4"] },
-		{ name: "animate", category: "canvas", parameters: [{name: "seconds", default: 1, type: "int"},{name: "action", default: "", type: "string"},{name: "maxTimes", default: 1, type: "int"}], tip: "Runs the action every seconds seconds up to maxTimes", show: ["level3","level4"] },
+		{ name: "animate", category: "canvas", parameters: [{name: "action", default: "", type: "string"},{name: "seconds", default: 1, type: "int"},{name: "maxTimes", default: 1, type: "int"}], tip: "Runs the action every seconds seconds up to maxTimes", show: ["level3","level4"] },
 		{ name: "unanimate", category: "canvas", parameters: [{name: "handlerId", default: 0, type: "int"}], tip: "Stops an animation", show: ["level3","level4"] },
 		{ name: "if", category: "flow", parameters: [{name: "condition", default: true, type: "bool", tip: "When should the code be triggered?"}], tip: "Conditional execution", show: ["level2","level3","level4"], block: ["end"], code: { space: true, suffix: " {" } },
 		{ name: "ifelse", category: "flow", parameters: [{name: "condition", default: true, type: "bool"}], tip: "Conditional execution", show: ["level3"], block: ["else","end"], nameRewrite: { level1: "if", level2: "if", level3: "if", level4: "if" }, code: { space: true, suffix: " {" } },
