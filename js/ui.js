@@ -621,6 +621,14 @@
 		} else {
 			color = "#000000";
 		}
+		// In IE11, because of the bug in its initial versions, we don't do shadowing, just plain color
+		if (!!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
+			if (darkness < 128) {
+				color = "#FFFFFF";
+			} else {
+				color = "#000000";
+			}
+		}
 		return color;
 	}
 
