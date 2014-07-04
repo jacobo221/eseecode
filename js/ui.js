@@ -1250,8 +1250,10 @@
 					$_eseecode.session.tipInterval = setInterval(function() {
 							if (startInstructionDiv.style.border === "") {
 								startInstructionDiv.style.border = style;
+								startInstructionDiv.style.marginBottom = "";
 							} else {
 								startInstructionDiv.style.border = "";
+								startInstructionDiv.style.marginBottom = "6px";
 							}
 						},350);
 					// Arrow
@@ -1307,6 +1309,7 @@
 		}
 		if (startInstructionDiv !== null) {
 			startInstructionDiv.style.border = "";
+			startInstructionDiv.style.marginBottom = "";
 		}
 	}
 
