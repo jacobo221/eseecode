@@ -481,27 +481,13 @@
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var instructionName = instruction.name;
 		var parameterInputs = [];
-		var paramNumber = 1; // parameters[0] is usually "param1"
+		var paramNumber = 1; // parameters[0] is "param1"
 		for (var i=0; i<instruction.parameters.length; i++) {
 			var parameter = instruction.parameters[i];
 			parameterInputs[i] = {};
 			parameterInputs[i].name = _(parameter.name);
 			parameterInputs[i].id = paramNumber;
 			var defaultValue = parameter.default;
-			if (i==0 && instruction.validate) {
-				paramNumber = 0;
-				parameterInputs[i].id = paramNumber;
-				// This instruction requires an identifier
-				if (div.getAttribute("param"+paramNumber)) {
-					parameterInputs[i].defaultValue = div.getAttribute("param"+paramNumber);
-				} else {
-					// Do not offer any default for identifiers
-					parameterInputs[i].defaultValue = "";
-				}
-				parameterInputs[i].validate = instruction.validate;
-				paramNumber++;
-				continue;
-			}
 			if (div.getAttribute("param"+paramNumber) !== undefined) {
 				defaultValue = div.getAttribute("param"+paramNumber);
 			}
@@ -579,24 +565,14 @@
 		var div = document.getElementById(divId);
 		var parametersCount = document.getElementById("setupBlockCount").value;
 		var paramNumber = 1;
-		if (document.getElementById("setupBlock0")) {
-			paramNumber = 0;
-		}
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
-		if (instruction.validate) {
-			var value = document.getElementById("setupBlock0").value;
-			if (!instruction.validate(value)) {
-				alert(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[0].name)]));
-				return;
-			}
-		}
 		for (var i=0; i<parametersCount; i++) {
 			if (instruction.parameters[i] && instruction.parameters[i].validate) {
 				var value = document.getElementById("setupBlock"+paramNumber).value;
 				if (!instruction.parameters[i].validate(value)) {
 					alert(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
+					return;
 				}
-				return;
 			}
 		}
 		for (var i=0; i<parametersCount; i++) {

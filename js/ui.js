@@ -1214,8 +1214,8 @@
 				cancelFloatingBlock(event);
 			}
 			if (document.getElementById("msgBoxWrapper")) {
-				if (document.getElementById("msgBoxParametersDiv")) {
-					msgBoxParametersCancel();
+				if (document.getElementById("setupBlockDiv")) {
+					setupBlockCancel();
 				} else {
 					msgBoxClose();
 				}
@@ -1376,24 +1376,14 @@
 		var instructionSetId = div.getAttribute("instructionSetId");
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		var parameters = [];
-		if (instruction.validate) {
-			parameters[0] = div.getAttribute("param0");
-		}
 		if (instruction.parameters !== null) {
 			var i;
 			for (i=0; i<instruction.parameters.length; i++) {
-				if (instruction.validate && i == instruction.parameters.length-1) {
-					// If the instruction requieres an identifier it was already asked, skip last parameter because it doesn't exist
-					continue;
-				}
 				var param = undefined;
 				if (div.getAttribute("param"+(i+1)) !== null) {
 					param = div.getAttribute("param"+(i+1));
 				} else if (instruction.parameters[i].default !== undefined) {
 					param = instruction.parameters[i].default;
-					//if (typeof param == "string") {
-					//	param = '"'+param+'"';
-					//}
 					div.setAttribute("param"+(i+1),param);
 				}
 				if (param !== undefined) {
@@ -1417,7 +1407,10 @@
 				text += instruction.name;
 			}
 		}
-		if (dialog && level != "level1" && level != "level2" && !instruction.validate) {
+		if (instruction.code && instruction.code.inSpace) {
+			text += " ";
+		}
+		if (dialog && level != "level1" && level != "level2") {
 			if (instruction.parameters !== null && (!instruction.code || !instruction.code.noBrackets)) {
 				if (instruction.code && instruction.code.space) {
 					text += " ";
@@ -1428,37 +1421,33 @@
 		if (dialog || (level != "level3" && level != "level4" && instruction.name != "unknownFunction")) {
 			return { parameters: parameters, text: text };
 		}
-		if (instruction.validate) {
-			if (!(instruction.code && (instruction.code.noName || instruction.code.noInSpace))) {
-				text += " ";
-			}
-			var param0 = div.getAttribute("param0");
-			if (param0 === null) {
-				div.setAttribute("param0","");
-			} else {
-				text += param0;
-			}
-		} else if (instruction.code && instruction.code.noName && div.getAttribute("param0")) {
-			text += div.getAttribute("param0");
-		}
-		if (instruction.parameters !== null && (!instruction.validate || instruction.parameters.length > 1)) {
-			if (instruction.code && instruction.code.space) {
-				text += " ";
-			}
-			if (!instruction.code || !instruction.code.noBrackets) {
-				text += "(";
-			}
+		if (instruction.parameters !== null) {
+			var bracketsStatus = null; // null indicates we haven't started yet
+			var bracketsExist = false;
 			for (i=0; i<parameters.length; i++) {
-				if (i==0 && instruction.validate) {
-					continue;
-				}
-				if ((i !== 0 && !instruction.validate) || (i>1 && instruction.validate)) {
+				if (!bracketsStatus && !instruction.parameters[i].noBrackets) {
+					if (instruction.code && instruction.code.space) {
+						text += " ";
+					}
+					text += "(";
+					bracketsStatus = true;
+					bracketsExist = true;
+				} else if (bracketsStatus && parameters[i].noBrackets) {
+					text += ") ";
+					bracketsStatus = false;
+				} else if (bracketsStatus !== null) {
 					text += ", ";
+				} else if (bracketsStatus === null) {
+					if (instruction.code && instruction.code.space) {
+						text += " ";
+					}
 				}
 				text += parameters[i];
 			}
-			if (!instruction.code || !instruction.code.noBrackets) {
+			if (bracketsStatus) {
 				text += ")";
+			} else if (!bracketsExist && (!instruction.code || !instruction.code.noBrackets)) {
+				text += "()";
 			}
 		}
 		if (instruction.code && instruction.code.prefix) {
@@ -1469,14 +1458,16 @@
 		}
 		// This overwrites all the "text" set above. It's specifically done for =,+,-,...
 		if (instruction.inorder) {
-			var firstParam = 0;
-			if (!instruction.validate) {
-				firstParam++;
+			text = div.getAttribute("param1");
+			if (instruction.code && instruction.code.inSpace) {
+				text += " ";
 			}
-			text = div.getAttribute("param"+firstParam)+" "+instruction.name;
-			firstParam++;
-			if (div.getAttribute("param"+firstParam)) {
-				text += " "+div.getAttribute("param"+firstParam);
+			text += instruction.name;
+			if (div.getAttribute("param2")) {
+				if (instruction.code && instruction.code.space) {
+					text += " ";
+				}
+				text += div.getAttribute("param2");
 			}
 		}
 		return { parameters: parameters, text: text };
@@ -1596,14 +1587,9 @@
 						}
 						// This overwrites all the "text" set above. It's specifically done for =,+,-,...
 						if (instruction.inorder) {
-							var firstParam = 0;
-							if (!instruction.validate) {
-								firstParam++;
-							}
-							div.innerHTML = _(instruction.parameters[firstParam].name)+" <b>"+instruction.name+"</b>";
-							firstParam++;
-							if (instruction.parameters[firstParam]) {
-								div.innerHTML += " "+_(instruction.parameters[firstParam].name);
+							div.innerHTML = _(instruction.parameters[0].name)+" <b>"+instruction.name+"</b>";
+							if (instruction.parameters[1]) {
+								div.innerHTML += " "+_(instruction.parameters[1].name);
 							}
 						}
 						if (instruction.block) {

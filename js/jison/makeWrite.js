@@ -583,7 +583,7 @@
 	};
 
 	ast.ConditionalExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		return "(" + this.test.makeWrite(level, "", "", realCode) + ") ? " + this.consequent.makeWrite(level, "", "", realCode) + " : " + this.alternate.makeWrite(level, "", "", realCode);
+		return this.test.makeWrite(level, "", "", realCode) + " ? " + this.consequent.makeWrite(level, "", "", realCode) + " : " + this.alternate.makeWrite(level, "", "", realCode);
 	};
 
 	ast.NewExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
