@@ -22,12 +22,12 @@
 	}
 	
 	/**
-	 * Returns in text the code from the blocks console
+	 * Returns as text the code from the blocks console
 	 * This function generates the pseudocode visible in level4
 	 * @private
 	 * @param {!HTMLElement} blockDiv Blocks console element
 	 * @param {String} [indentation=""] Initial indentation
-	 * @return {String}
+	 * @return {String} The code from the blocks console, as text
 	 * @example blocks2code(document.getElementById("console-blocks").firstChild)
 	 */
 	function blocks2code(blockDiv,indentation) {
@@ -71,7 +71,7 @@
 	 * Converts user code to executable code and returns it
 	 * @private
 	 * @param {String} pseudoCode User code to convert
-	 * @return {String}
+	 * @return {String} Executable code
 	 * @example eval(code2run("repeat(4){forward(100)}"))
 	 */
 	function code2run(pseudoCode) {

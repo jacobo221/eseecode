@@ -6,7 +6,7 @@
 	 * @private
 	 * @param {String} level Level name
 	 * @param {!HTMLElement} div Div element
-	 * @return {{width:Number, height:Number}}
+	 * @return {{width:Number, height:Number}} Block's height in the given level
 	 * @example blockSize("level2", document.getElementById("div-123213213"))
 	 */
 	function blockSize(level, div) {
@@ -254,7 +254,7 @@
 	 * @param {!HTMLElement} consoleDiv Blocks console div
 	 * @param {!HTMLElement} div Block div
 	 * @param {Number} position Position to check if it is inside div
-	 * @return {Boolean}
+	 * @return {Boolean} true if the position-th position in the code is inside div
 	 * @example positionIsInBlock(document.getElementById("console-blocks"), document.getElementById("div-1231231231"), 34)
 	 */
 	function positionIsInBlock(consoleDiv, div, position) {
@@ -292,7 +292,7 @@
 	 * @private
 	 * @param {!HTMLElement} div Block in which to search for targetDiv
 	 * @param {!HTMLElement} targetDiv Block to search for in div
-	 * @return {{found:Boolean, count:Number}}
+	 * @return {{found:Boolean, count:Number}} In found if targetDiv was found in div and in count the position of targetDiv in div
 	 * @example recursiveCount(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
 	function recursiveCount(div, targetDiv) {
@@ -398,7 +398,7 @@
 	 * @private
 	 * @param {!HTMLElement} currentDiv Block in which to search for targetDiv
 	 * @param {!HTMLElement} targetDiv Block to search for in div
-	 * @return {{found:Boolean, count:Number}}
+	 * @return {{found:Boolean, count:Number}} In found if targetDiv was found in currentDiv or its siblings and in count its position
 	 * @example searchBlockPosition(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
 	function searchBlockPosition(currentDiv, targetDiv) {
@@ -423,7 +423,7 @@
 	 * @param {!HTMLElement} element Block in which to search for
 	 * @param {Number} position Position to return the block from
 	 * @param {Number} count Initial counter (position of element)
-	 * @return {{element:HTMLElement, count:Number}}
+	 * @return {{element:HTMLElement, count:Number}} In element the position-th element in element or its siblings. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
 	 * @example searchBlockByPosition(document.getElementById("console-blocks").firstChild, 12, 1)
 	 */
 	function searchBlockByPosition(element, position, count) {
@@ -462,7 +462,7 @@
 	/**
 	 * Returns a new valid and unique block id
 	 * @private
-	 * @return {String}
+	 * @return {String} A valid and unique block id
 	 * @example var id = newDivId()
 	 */
 	function newDivId() {

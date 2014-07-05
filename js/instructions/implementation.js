@@ -338,7 +338,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {String} id Input box id
-	 * @return {String}
+	 * @return {String} Value in the window input box
 	 * @example windowInputGet("i1")
 	 */
 	function windowInputGet(id) {
@@ -354,7 +354,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {String} id Static text id
-	 * @return {String}
+	 * @return {String} Text in the window static text
 	 * @example windowTextGet("t2")
 	 */
 	function windowTextGet(id) {
@@ -406,7 +406,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} id Layer id
-	 * @return {String}
+	 * @return {String} Layer name
 	 * @example getLayerName(2)
 	 */
 	function getLayerName(id) {
@@ -423,7 +423,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} id Layer id
-	 * @return {Boolean}
+	 * @return {Boolean} Whether the specified layer is visible or hidden
 	 * @example getLayerVisibility(2)
 	 */
 	function getLayerVisibility(id) {
@@ -440,7 +440,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} id Layer id
-	 * @return {String}
+	 * @return {String} Image in the specified layer
 	 * @example getLayerImage(2)
 	 */
 	function getLayerImage(id) {
@@ -640,7 +640,7 @@
 	 * Returns a random color
 	 * @since 1.0
 	 * @public
-	 * @return {String}
+	 * @return {String} A random color
 	 * @example getRandomColor()
 	 */
 	function getRandomColor() {
@@ -649,11 +649,11 @@
 	}
 
 	/**
-	 * Returns a possitive random integer number
+	 * Returns a positive random integer number
 	 * @since 1.0
 	 * @public
 	 * @param {Number} number The highest number desired
-	 * @return {Number}
+	 * @return {Number} A positive random integer number
 	 * @example getRandomNumber(100)
 	 */
 	function getRandomNumber(number) {
@@ -666,7 +666,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
-	 * @return {Number}
+	 * @return {Number} Sine of an angle
 	 * @example getSine(90)
 	 */
 	function getSine(angle) {
@@ -679,7 +679,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
-	 * @return {Number}
+	 * @return {Number} Arcsine of an angle
 	 * @example getArcsine(90)
 	 */
 	function getArcsine(angle) {
@@ -705,7 +705,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
-	 * @return {Number}
+	 * @return {Number} Arccosine of an angle
 	 * @example getArccosine(90)
 	 */
 	function getArccosine(angle) {
@@ -718,7 +718,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
-	 * @return {Number}
+	 * @return {Number} Tangent of an angle
 	 * @example getTangent(90)
 	 */
 	function getTangent(angle) {
@@ -731,7 +731,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
-	 * @return {Number}
+	 * @return {Number} Arctangent of an angle
 	 * @example getArctangent(90)
 	 */
 	function getArctangent(angle) {
@@ -744,7 +744,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} number Number
-	 * @return {Number}
+	 * @return {Number} Square root of the number
 	 * @example getSquareRoot(9)
 	 */
 	function getSquareRoot(number) {
@@ -756,7 +756,7 @@
 	 * Returns the width of the layer
 	 * @since 1.0
 	 * @public
-	 * @return {Number}
+	 * @return {Number} Width of the layer
 	 * @example getLayerWidth()
 	 */
 	function getLayerWidth() {
@@ -768,7 +768,7 @@
 	 * Returns the height of the layer
 	 * @since 1.0
 	 * @public
-	 * @return {Number}
+	 * @return {Number} Height of the layer
 	 * @example getLayerHeight()
 	 */
 	function getLayerHeight() {
@@ -781,7 +781,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number}
+	 * @return {Number} The layer's cursor's position's X coordinate
 	 * @example getX()
 	 */
 	function getX(id) {
@@ -799,7 +799,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number}
+	 * @return {Number} The layer's cursor's position's Y coordinate
 	 * @example getY()
 	 */
 	function getY(id) {
@@ -818,7 +818,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number}
+	 * @return {Number} The layer's cursor's position's angle
 	 * @example getAngle()
 	 */
 	function getAngle(id) {
@@ -1139,7 +1139,7 @@
 	 * @param {Number} red Red component in the range [0,255]
 	 * @param {Number} green Green component in the range [0,255]
 	 * @param {Number} blue Blue component in the range [0,255]
-	 * @return {String}
+	 * @return {String} Color
 	 * @example getRGB(0,128,256)
 	 */
 	function getRGB(red, green, blue) {
@@ -1152,7 +1152,6 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} index Transparency index in the range [0,1]
-	 * @return {String}
 	 * @example setInvisible(0.5)
 	 */
 	function setInvisible(index) {
@@ -1164,7 +1163,6 @@
 	 * Unsets the layer transparency, back to opaque
 	 * @since 1.0
 	 * @public
-	 * @return {String}
 	 * @example unsetInvisible()
 	 */
 	function unsetInvisible() {
@@ -1272,7 +1270,7 @@
 	 * @param {Number} seconds Seconds between each code run
 	 * @param {Number} [count] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
-	 * @return {Number}
+	 * @return {Number} Animation handler
 	 * @example animate(0.25, "stepForward()")
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
@@ -1313,7 +1311,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id. If unset it switches to a new layer
-	 * @return {Number}
+	 * @return {Number} Layer name
 	 * @example use()
 	 */
 	function use(id) {

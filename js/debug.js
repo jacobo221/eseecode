@@ -3,7 +3,7 @@
 	/**
 	 * Checks the layers list and returns the debug layers list content
 	 * @private
-	 * @return {String}
+	 * @return {String} Debug layers list content
 	 * @example debugLayers()
 	 */
 	function debugLayers() {

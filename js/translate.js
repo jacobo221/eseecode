@@ -6,7 +6,7 @@
 	 * @private
 	 * @param {String} text Text to translate
 	 * @param {Array<String>} [params] Parameters to instert into the text replacing '%s'
-	 * @return {String}
+	 * @return {String} The translated string
 	 * @example _("text")
 	 */
 	function _(text, params) {

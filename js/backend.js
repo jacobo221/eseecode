@@ -5,7 +5,7 @@
 	 * The created layer can be accessed via $_eseecode.canvasArray[id]
 	 * @private
 	 * @param {Number} [id] Layer id (if blank it creates a new id)
-	 * @returns {!Object}
+	 * @return {!Object} Layer in the whiteboard
 	 * @example $_eseecode.currentCanvas = getCanvas(id)
 	 */
 	function getCanvas(id) {
@@ -76,7 +76,7 @@
 	 * The created window can be accessed via $_eseecode.windowsArray[id]
 	 * @private
 	 * @param {Number} [id] Window id (if blank it creates a new id)
-	 * @returns {!HTMLElement}
+	 * @return {!HTMLElement} Div HTML element representing the Window
 	 * @example $_eseecode.currentWiundow = getWindow(id)
 	 */
 	function getWindow(id) {
@@ -111,7 +111,7 @@
 	/** Switches the currently active layer, returns the layer
 	 * @private
 	 * @param {Number} [id] Layer id
-	 * @return {!Object}
+	 * @return {!Object} The layer
 	 * @example switchCanvas(3)
 	 */
 	function switchCanvas(id) {
@@ -270,7 +270,7 @@
 	/**
 	 * Returns if the device is a touch device or not
 	 * @private
-	 * @return {Boolean}
+	 * @return {Boolean} Whether the device is a touch device or not
 	 * @example isTouchDevice()
 	 */
 	function isTouchDevice() {

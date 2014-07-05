@@ -607,7 +607,7 @@
 	 * Returns a readable text color given a background color
 	 * @private
 	 * @param {String} backgroundColor Background color
-	 * @return {String}
+	 * @return {String} Readable text
 	 * @example readableText("#123456")
 	 */
 	function readableText(backgroundColor) {
@@ -1013,7 +1013,7 @@
 	 * @private
 	 * @param instructionName Name of the instruction to search
 	 * @param startId Index to start from. Useful when an instruction appears several times in the set and we want to skip the ones we've seen
-	 * @return {Number}
+	 * @return {Number} Index of the given instruction
 	 * @example getInstructionSetIdFromName("forward")
 	 */
 	function getInstructionSetIdFromName(instructionName, startId) {
@@ -1127,7 +1127,7 @@
 	/**
 	 * Check if the code in the console is empty
 	 * @private
-	 * @return {Boolean}
+	 * @return {Boolean} Whether the console is empty of code
 	 * @example codeIsEmpty("ca")
 	 */
 	function codeIsEmpty() {
@@ -1325,7 +1325,7 @@
 	 * Returns a list of all variables declared before and in the scope of div
 	 * @private
 	 * @param {!HTMLElement} div Block div
-	 * @return {Array<String>}
+	 * @return {Array<String>} List of all variables declared before and in the scope of div
 	 * @example getVariables(document.getElementById("div-123123123"))
 	 */
 	function getVariables(div) {
@@ -1349,7 +1349,7 @@
 	 * Returns a list of all eSeeCode functions declared in the code that return a specific type of value
 	 * @private
 	 * @param {!HTMLElement} div Block div
-	 * @return {Array<String>}
+	 * @return {Array<String>} List of all eSeeCode functions declared in the code that return a specific type of value
 	 * @example getFunctions("int"))
 	 */
 	function getFunctions(type) {
@@ -1369,7 +1369,7 @@
 	 * @param {String} level Current level name
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
-	 * @return {{parameters:Array<String>, text:String}
+	 * @return {{parameters:Array<String>, text:String} Parameters of a block, or the default parameters if none were set
 	 * @example loadParameters("level2", document.getElementById("div-123123123"))
 	 */
 	function loadParameters(level, div, dialog) {

@@ -4,7 +4,7 @@
 	 * Returns the absolute position where a mouse event has been triggered
 	 * @private
 	 * @param {!Object} event Event
-	 * @return {{x:Number, y:Number}}
+	 * @return {{x:Number, y:Number}} Absolute position where a mouse event has been triggered
 	 * @example alert(eventPosition(event))
 	 */
 	function eventPosition(event) {
@@ -32,7 +32,7 @@
 	 * Returns the ordinal name of a number
 	 * @private
 	 * @param {Number} number Number
-	 * @return {String}
+	 * @return {String} Ordinal name of a number
 	 * @example var text = ordinal(3)
 	 */
 	function ordinal(number) {

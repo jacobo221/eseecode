@@ -3,7 +3,7 @@
 	/**
 	 * Returns the user's code
 	 * @public
-	 * @return {String}
+	 * @return {String} User code
 	 * @example downloadCode()
 	 */
 	function downloadCode() {
