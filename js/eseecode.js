@@ -42,7 +42,7 @@
 			breakpointCounterLimit: 0,
 			step: 1,
 			stepped: false,
-			timeLimit: 3,
+			timeLimit: 10,
 			programCounter: 0,
 			programCounterLimit: 0,
 			endLimit: undefined,
