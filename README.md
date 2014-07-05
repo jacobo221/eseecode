@@ -9,6 +9,11 @@ The platform offers **4 different levels** of programming, from a pure **graphic
 
 The language is based on JavaScript (although this base is well hidden) so after mastering in Level4 the user can program freely on a real programming language like JavaScript.
 
+How to use it
+-------------
+
+A user manual is available at [http://www.eseecode.com](http://eseecode.com).
+
 Contributing
 ------------
 
