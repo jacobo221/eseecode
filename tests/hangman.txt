@@ -26,22 +26,22 @@ function tryLetter() {
 				alert("YOU WIN!")
 			}
 		} else {
-				var layer = 2
-				while (getCanvasLayerVisibility(layer)) {
-					layer = layer + 1
-				}
-				show(layer)
-				var letters
-				if (!(letters = windowTextGet("t3"))) {
-					windowTextCreate(1, "t3", "Failed letters: " + letter, 20, 150, undefined, true)
-				} else {
-						windowTextEdit("t3", letters + " " + letter)
-				}
-				fails = fails + 1
-				if (fails == 8) {
-					alert("You lost...")
-					restart()
-				}
+			var layer = 2
+			while (getLayerVisibility(layer)) {
+				layer = layer + 1
+			}
+			show(layer)
+			var letters
+			if (!(letters = windowTextGet("t3"))) {
+				windowTextCreate(1, "t3", "Failed letters: " + letter, 20, 150, undefined, true)
+			} else {
+					windowTextEdit("t3", letters + " " + letter)
+			}
+			fails = fails + 1
+			if (fails == 8) {
+				alert("You lost...")
+				restart()
+			}
 		}
 	}
 	windowInputSet("letter", "")

@@ -41,5 +41,5 @@ goToCenter()
 setSize(1)
 repeat (360) {
  setColor(getRGB(getRandomNumber(100), getRandomNumber(100), getRandomNumber(200)))
- line(getCanvasWidth()/2+getSine(254*repeatCount)*150, getCanvasWidth()/2+getSine(201*repeatCount)*150)
+ line(getLayerWidth()/2+getSine(254*repeatCount)*150, getLayerWidth()/2+getSine(201*repeatCount)*150)
 }
