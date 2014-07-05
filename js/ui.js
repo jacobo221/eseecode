@@ -42,10 +42,14 @@
 			var consoleWidth = Math.ceil((widthLeft-margin)/100/2)*100;
 			consoleColumn.style.width = consoleWidth+"px";
 			dialogColumn.style.width = (widthLeft-consoleWidth-margin)+"px";
+			ace.edit("console-write").session.setUseWrapMode(true);
+			ace.edit("console-write").session.setWrapLimitRange(36, 36);
 		} else {
 			dialogColumn.style.display = "none";
 			var margin = marginWidth*(2+1);
 			consoleColumn.style.width = (widthLeft-margin)+"px";
+			ace.edit("console-write").session.setUseWrapMode(true);
+			ace.edit("console-write").session.setWrapLimitRange(70, 70);
 		}
 		switchDialogMode();
 		ace.edit("console-write").resize();
