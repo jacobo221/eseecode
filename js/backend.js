@@ -170,7 +170,7 @@
 	 */
 	function setSizeStyle(size, context) {
 		if (size === undefined) {
-			color = $_eseecode.currentCanvas.style.size;
+			size = $_eseecode.currentCanvas.style.size;
 		}
 		if (context === undefined) {
 			context = $_eseecode.currentCanvas.context;
