@@ -1287,6 +1287,8 @@
 		}
 		if (timeoutHandlersIndex === undefined) {
 			timeoutHandlersIndex = $_eseecode.session.timeoutHandlers.length;
+		} else {			
+			clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
 		}
 		if (count > 1 || (count === undefined && returnValue !== false)) {
 			$_eseecode.session.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() { animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex); },seconds*1000);
