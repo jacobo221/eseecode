@@ -1407,7 +1407,7 @@
 				text += instruction.name;
 			}
 		}
-		if (instruction.code && instruction.code.inSpace) {
+		if (instruction.code && instruction.code.space) {
 			text += " ";
 		}
 		if (dialog && level != "level1" && level != "level2") {
@@ -1459,7 +1459,7 @@
 		// This overwrites all the "text" set above. It's specifically done for =,+,-,...
 		if (instruction.inorder) {
 			text = div.getAttribute("param1");
-			if (instruction.code && instruction.code.inSpace) {
+			if (instruction.code && instruction.code.space) {
 				text += " ";
 			}
 			text += instruction.name;

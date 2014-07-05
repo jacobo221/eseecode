@@ -2,7 +2,7 @@
 
 	/**
 	 * Public instruction set
-	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [default]:String, [tip]:String, [validate]:function(String):Boolean, [noBrackets]:Boolean}>, [tip]:String, show:Array<String>, [return]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [inSpace]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>}>}
+	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [default]:String, [tip]:String, [validate]:function(String):Boolean, [noBrackets]:Boolean}>, [tip]:String, show:Array<String>, [return]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>}>}
 	 * @example { name: "forward", category: "cursor", parameters: [{name: "pixels",default: 100, type: "int", tip: "How many pixels do you want to move forward?"}], tip: "Moves forward", show: ["level2","level3","level4"] }
 	 */
 	$_eseecode.instructions.set = [
@@ -36,7 +36,7 @@
 		{ name: "turnRight", category: "cursor", parameters: [{name: "degrees", default: 15, type: "int"}], tip: "Turns 15 degrees right", show: ["level1"] },
 		{ name: "turnReset", category: "cursor", parameters: [], tip: "Resets the angle to initial rotation", show: ["level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level1","level2"] },
-		{ name: "=", category: "value", parameters: [{name: "variable", type: "var", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true},{name: "value", default: undefined, type: "var", noBrackets: true}], return: "var", tip: "Assigns a value to a variable", show: ["level3","level4"], inorder: true, code: { inSpace: true, space: true, noBrackets: true } },
+		{ name: "=", category: "value", parameters: [{name: "variable", type: "var", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true},{name: "value", default: undefined, type: "var", noBrackets: true}], return: "var", tip: "Assigns a value to a variable", show: ["level3","level4"], inorder: true, code: { space: true, noBrackets: true } },
 		{ name: "getArccosine", category: "value", parameters: [{name: "degrees", default: 90, type: "int"}], return: "int", tip: "Returns the arccosine", show: ["level3","level4"] },
 		{ name: "getArcsine", category: "value", parameters: [{name: "degrees", default: 90, type: "int"}], return: "int", tip: "Returns the arcsine", show: ["level3","level4"] },
 		{ name: "getArctangent", category: "value", parameters: [{name: "degrees", default: 90, type: "int"}], return: "int", tip: "Returns the arctangent", show: ["level3","level4"] },
@@ -143,7 +143,7 @@
 		{ name: "continue", category: "flow", parameters: [{name: "value", type: "string"}], tip: "Skip to next loop iteration", show: [], code: { space: true, noBrackets: true } },
 		{ name: "var", category: "objects", parameters: [{name: "identifier", type: "string", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true}], tip: "Declare a new variable", show: ["level3","level4"], code: { space: true, noBrackets: true } },
 		{ name: "array", category: "objects", parameters: [{name: "identifier", type: "string", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true}], tip: "Declare a new array", show: ["level3","level4"], code: { space: true, noBrackets: true } },
-		{ name: "function", category: "objects", parameters: [{name: "identifier", type: "string", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true},{name: "parameters...", type: "string"}], tip: "Declares a new function", show: ["level3","level4"], block: ["end"], code: { inSpace: true, suffix: " {" } },
+		{ name: "function", category: "objects", parameters: [{name: "identifier", type: "string", validate: function(variable){ return (variable.match(/^[A-Za-z][A-Za-z_0-9]*$/)); }, noBrackets: true},{name: "parameters...", type: "string"}], tip: "Declares a new function", show: ["level3","level4"], block: ["end"], code: { space: true, suffix: " {" } },
 		{ name: "windowButtonCreate", category: "window", parameters: [{name: "window",default: 1, type: "int"},{name: "id",default: 1, type: "int"},{name: "text",default: "\"Click me!\"", type: "string"},{name: "posx",default: 0, type: "int"},{name: "posy",default: 0, type: "int"},{name: "action", type: "string"}], tip: "Creates a button in a window", show: ["level3","level4"] },
 		{ name: "windowButtonEdit", category: "window", parameters: [{name: "id",default: 1, type: "int"},{name: "text",default: "Click me!", type: "string"},{name: "posx",default: 0, type: "int"},{name: "posy",default: 0, type: "int"},{name: "action", type: "string"}], tip: "Modifies a button in a window", show: ["level3","level4"] },
 		{ name: "windowButtonHide", category: "window", parameters: [{name: "id",default: 1, type: "int"}], tip: "Hides a button in a window", show: ["level3","level4"] },
