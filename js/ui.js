@@ -1745,8 +1745,14 @@
 		}
 		document.getElementById('console-write').style.fontSize = $_eseecode.setup.blockHeight.level3+"px";
 		var editor = ace.edit("console-write");
+    		ace.require("ace/ext/language_tools");
 		editor.setTheme("ace/theme/chrome");
 		editor.getSession().setMode("ace/mode/javascript");
+		editor.setOptions({
+			enableBasicAutocompletion: true,
+			enableSnippets: true,
+			enableLiveAutocompletion: true
+		});
 		editor.renderer.setShowGutter(false);
 		// Only update code if it changed, to avoid adding empty changes into the ACE undo queue
 		if (code != ace.edit("console-write").getValue()) {

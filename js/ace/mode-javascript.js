@@ -123,7 +123,7 @@ var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocComme
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var JavaScriptHighlightRules = function() {
-    var keywordMapper = this.createKeywordMapper({
+    var keywords = {
         "variable.language":
             "Array|Boolean|Date|Function|Iterator|Number|Object|RegExp|String|Proxy|"  + // Constructors
             "Namespace|QName|XML|XMLList|"                                             + // E4X
@@ -148,7 +148,25 @@ var JavaScriptHighlightRules = function() {
         "support.function":
             "alert",
         "constant.language.boolean": "true|false"
-    }, "identifier");
+    };
+    for (var i=0; i<$_eseecode.instructions.set.length; i++) {
+        if ($_eseecode.instructions.set[i].category === "objects" ||
+          $_eseecode.instructions.set[i].category === "flow") {
+            keywords["keyword"] += "|"+$_eseecode.instructions.set[i].name;
+        }
+    }
+    for (var i=0; i<$_eseecode.instructions.set.length; i++) {
+        if ($_eseecode.instructions.set[i].category !== "objects" &&
+          $_eseecode.instructions.set[i].category !== "flow" &&
+          $_eseecode.instructions.set[i].category !== "other" &&
+          $_eseecode.instructions.set[i].category !== "internal" &&
+          $_eseecode.instructions.set[i].category !== "userdefined" &&
+          $_eseecode.instructions.set[i].category !== "custom") {
+            keywords["variable.language"] += "|"+$_eseecode.instructions.set[i].name;
+        }
+    }
+    var keywordMapper = this.createKeywordMapper(keywords, "identifier");
+
     var kwBeforeRe = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield|void";
     var identifierRe = "[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*\\b";
 
