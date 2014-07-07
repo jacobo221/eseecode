@@ -5,7 +5,7 @@
 	 * @private
 	 * @param {!Object} event Event
 	 * @return {{x:Number, y:Number}} Absolute position where a mouse event has been triggered
-	 * @example alert(eventPosition(event))
+	 * @example var posX = eventPosition(event);
 	 */
 	function eventPosition(event) {
 		var pos = {x: 0, y: 0};

@@ -169,7 +169,7 @@
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"removeBreakpoint("+line+")\" checked /><b><a href=\"#\" onclick=\"updateBreakpoint("+line+")\">"+_("Line")+" "+line+"</a>:</b> <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"addBreakpointWatch("+line+")\" /><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"removeBreakpoint("+line+")\" checked /><a href=\"#\" onclick=\"updateBreakpoint("+line+")\" onmouseover=\"highlight("+line+",'breakpoint')\" onmouseover=\"unhighlight()\">"+_("Line")+" "+line+"</a>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"addBreakpointWatch("+line+")\" /><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
 			var divAnalyzer = document.getElementById("dialog-debug-analyzer");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
@@ -190,6 +190,9 @@
 				}
 			} else {
 				divAnalyzer.appendChild(div);
+			}
+			if ($_eseecode.session.highlight.lineNumber == line) {
+				document.getElementById("dialog-debug-analyzer-line"+line).style.fontWeight = "bold";
 			}
 		}
 	}
@@ -221,7 +224,6 @@
 				addBreakpointWatch(line, watch);
 			}
 		}
-		
 	}
 
 	/**
@@ -297,6 +299,56 @@
 		document.getElementById("dialog-debug-analyzer").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"addBreakpoint()\" />";
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			updateBreakpoint(breakpoint, breakpoint);
+		}
+	}
+
+	/**
+	 * Keeps track of the breakpoints in the level4 code. This function is to be called by Ace's change event
+	 * @private
+	 * @param {!Object} event Ace editor change event object
+	 * @example editor.on("change",updateWriteBreakpoints);
+	 */
+	function updateWriteBreakpoints(event) {
+		for (var breakpointLine in $_eseecode.session.breakpoints) {
+			breakpointLine = parseInt(breakpointLine);
+			if (event.data.action === "insertText") {
+				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+					// The breakpoint line has been split, update breakpoint
+					updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
+				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+					// A line was added before the breakpoint, update breakpoint
+					updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
+				}
+			} else if (event.data.action === "removeText" || event.data.action === "removeLines") {
+				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+					// The breakpoint line has been merged, update breakpoint
+					updateBreakpoint(breakpointLine, event.data.range.end.row);
+				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+					// A line was removed before the breakpoint, update breakpoint
+					updateBreakpoint(breakpointLine, breakpointLine - (event.data.range.end.row - event.data.range.start.row));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Keeps track of the breakpoints in the blocks code. This function is to be called by addBlock() and deleteBlock()
+	 * @private
+	 * @param {!Object} div Div of a block
+	 * @example updateBlocksBreakpoints(blockDiv);
+	 */
+	function updateBlocksBreakpoints(blockDiv, action) {
+		var consoleDiv = document.getElementById("console-blocks");
+		for (var breakpointLine in $_eseecode.session.breakpoints) {
+			breakpointLine = parseInt(breakpointLine);
+			var line = searchBlockPosition(consoleDiv.firstChild, blockDiv).count;
+			if (line <= breakpointLine) {
+				if (action === "addBlock") {
+					updateBreakpoint(breakpointLine, breakpointLine + 1);
+				} else if (action === "deleteBlock") {
+					updateBreakpoint(breakpointLine, breakpointLine - 1);
+				}
+			}
 		}
 	}
 

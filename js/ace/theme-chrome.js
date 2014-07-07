@@ -114,11 +114,15 @@ color:rgb(185, 6, 144);\
 .ace-chrome .ace_marker-layer .ace_selection {\
 background: rgb(181, 213, 255);\
 }\
+.ace-chrome .ace_marker-layer .ace_stack {\
+background: rgb(164, 229, 101);\
+}\
 .ace-chrome .ace_marker-layer .ace_step {\
 background: rgb(252, 255, 0);\
 }\
-.ace-chrome .ace_marker-layer .ace_stack {\
-background: rgb(164, 229, 101);\
+.ace-chrome .ace_marker-layer .ace_breakpoint {\
+background: rgb(150, 255, 150);\
+position: absolute;\
 }\
 .ace-chrome .ace_marker-layer .ace_bracket {\
 margin: -1px 0 0 -1px;\

@@ -5,6 +5,9 @@
  * Add animations capability
  * Autocomplete in level4
  * Enforced the tip to start programming
+ * Breakpoints are now dynamic (they are followed through code changes)
+ * Highlight breakpoint in debug windows when execution reaches it
+ * Highlight breakpoint in code onmouseover
 
 ## 1.7 (2014-06-18)
 

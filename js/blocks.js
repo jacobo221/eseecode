@@ -224,7 +224,7 @@
 			$_eseecode.session.blocksUndo[blocksUndoIndex].div = div;
 		} else { // The block is dropped
 			if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog	
-				$_eseecode.session.floatingBlock.fromDiv.parentNode.removeChild($_eseecode.session.floatingBlock.fromDiv);
+				deleteBlock($_eseecode.session.floatingBlock.fromDiv);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = false;
 			} else {
 				action = "cancel";
@@ -356,6 +356,9 @@
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
 			removeBlocksTips();
+			// Ensure that we do not add the block with the tip red border
+			blockDiv.style.border = "";
+			blockDiv.style.marginBottom = "";
 		}
 		var parentDiv = consoleDiv;
 		if (parent) {
@@ -391,6 +394,7 @@
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
 		paintBlock(blockDiv);
+		updateBlocksBreakpoints(blockDiv, "addBlock");
 	}
 
 	/**
@@ -452,6 +456,8 @@
 	 * @example deleteBlock(document.getElementById("div-123123123"))
 	 */
 	function deleteBlock(div) {
+		// We must do this before we delete the block
+		updateBlocksBreakpoints(div, "deleteBlock");
 		var consoleDiv = document.getElementById("console-blocks");
 		div.parentNode.removeChild(div);
 		if (!consoleDiv.firstChild) {
@@ -475,9 +481,10 @@
 	 * Asks the user to setup the parameters of the instruction associated with the block
 	 * @private
 	 * @param {!HTMLElement} div Block div
+	 * @param {Boolean} blockId Whether the block is being added or modified
 	 * @example setupBlock(document.getElementById("div-123123123"))
 	 */
-	function setupBlock(div, addBlock) {
+	function setupBlock(div, blockId) {
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var instructionName = instruction.name;
 		var parameterInputs = [];
@@ -510,7 +517,7 @@
 			msgDiv.appendChild(input);
 			input = document.createElement("input");
 			input.id = "setupBlockAdd";
-			input.value = addBlock;
+			input.value = blockId;
 			input.type = "hidden";
 			msgDiv.appendChild(input);
 			for (var i=0; i<parameterInputs.length; i++) {

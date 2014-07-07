@@ -1,5 +1,4 @@
 "use strict;"
-
 	/**
 	 * Links an A HTML element to the current whiteboard export drawing
 	 * @private
@@ -133,7 +132,7 @@
 	 */
 	function msgBoxClose() {
 		document.getElementById("eseecode").removeChild(document.getElementById("msgBoxWrapper"));
-		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
 			ace.edit("console-write").focus();
 		}
 	}
@@ -965,6 +964,8 @@
 			var style;
 			if (reason == "error") {
 				style = "ace_stack";
+			} else if (reason == "breakpoint") {
+				style = "ace_breakpoint";
 			} else {
 				style = "ace_step";
 			}
@@ -1754,6 +1755,7 @@
 			enableLiveAutocompletion: true
 		});
 		editor.renderer.setShowGutter(false);
+		editor.setHighlightActiveLine(true);
 		// Only update code if it changed, to avoid adding empty changes into the ACE undo queue
 		if (code != ace.edit("console-write").getValue()) {
 			// We must unset writeChanged call on ace change event otherwise it unhighlights the code
@@ -1767,10 +1769,12 @@
 	/**
 	 * Added as a listener it informs $_eseecode.session.changesInCode that the code in write console changed
 	 * @private
+	 * @param {!Object} event Ace editor change event object
 	 * @example writeChanged()
 	 */
-	function writeChanged() {
+	function writeChanged(event) {
 		$_eseecode.session.changesInCode = "write";
 		unhighlight();
+		updateWriteBreakpoints(event);
 	}
 
