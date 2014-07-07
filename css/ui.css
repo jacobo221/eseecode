@@ -116,6 +116,9 @@
 	#console-tabdiv {
 		clear: both;
 	}
+	#console-write {
+		position: relative;
+	}
 	#console-write.breakpointHandler div {
 		cursor: crosshair !important;
 	}
