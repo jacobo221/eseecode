@@ -532,6 +532,8 @@
 				msgDiv.appendChild(msgTab);
 				var iconDiv = document.createElement("div");
 				iconDiv.id = "setupBlockIcon";
+				iconDiv.className = "block";
+				iconDiv.style.float = "left";
 				iconDiv.setAttribute("instructionSetId", instructionSetId);
 				var icon = document.createElement("canvas");
 				paintBlock(iconDiv, false, false);
@@ -591,24 +593,35 @@
 	 * @example setupBlockVisual(true)
 	 */
 	function setupBlockVisual(visualMode) {
-		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
 		var iconDiv = document.getElementById("setupBlockIcon");
+		if (!visualMode) {
+			iconDiv.style.display = "none";
+		} else {
+			iconDiv.style.display = "block";
+		}
+		var updateIcon = function() {		
+			iconDiv.innerHTML = "";	
+			for (var i=0; i<parametersCount; i++) {
+				iconDiv.setAttribute("param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
+				paintBlock(iconDiv, false, false);
+			}
+		}
+		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
 		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
 		var parameters = instruction.parameters;
 		var parametersCount = document.getElementById("setupBlockCount").value;
-		var paramNumber = 1;
 		for (var i=0; i<parametersCount; i++) {
 			var parameter = parameters[i];
 			var parameterInputId = "setupBlock"+(i+1);
 			var input = document.getElementById(parameterInputId);
 			var div = document.getElementById(parameterInputId+"Visual");
 			div.innerHTML = "";
-			iconDiv.innerHTML = "";
 			if (!visualMode) {
 				input.style.display = "block";
 				continue;
+			} else {
+				input.style.display = "none";
 			}
-			input.style.display = "none";
 			var defaultValue = input.value;
 			if (parameter.type === "text") {
 				var element;
@@ -619,7 +632,7 @@
 					}
 					element.value = defaultValue;
 				}
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"'+this.value+'"';});
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"'+this.value+'"';updateIcon();});
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined) {
@@ -630,7 +643,7 @@
 					}
 					elementInput.min = parameter.minValue;
 					elementInput.max = parameter.maxValue;
-					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId+"VisualSpan").innerHTML=this.value;document.getElementById(parameterInputId).value=this.value;});
+					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId+"VisualSpan").innerHTML=this.value;document.getElementById(parameterInputId).value=this.value;updateIcon();});
 					element.appendChild(elementInput);
 					var elementSpace = document.createElement("span");
 					elementSpace.innerHTML = "  ";
@@ -650,7 +663,7 @@
 					elementMinus.type = "button";
 					elementMinus.value = "-";
 					elementMinus.style.width = "50px";
-					elementMinus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val-stepValue;elem.dispatchEvent(new Event('change'))});
+					elementMinus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val-stepValue;elem.dispatchEvent(new Event('change'));});
 					element.appendChild(elementMinus);
 					var elementInput = document.createElement("input");
 					elementInput.id = parameterInputId+"VisualInput";
@@ -665,13 +678,13 @@
 						elementInput.max = parameter.maxValue;
 					}
 					element.step = parameter.stepValue;
-					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;});
+					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;updateIcon();});
 					element.appendChild(elementInput);
 					var elementPlus = document.createElement("input");
 					elementPlus.type = "button";
 					elementPlus.value = "+";
 					elementPlus.style.width = "50px";
-					elementPlus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val+stepValue;elem.dispatchEvent(new Event('change'))});
+					elementPlus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val+stepValue;elem.dispatchEvent(new Event('change'));});
 					element.appendChild(elementPlus);
 				}
 			} else if (parameter.type === "bool") {
@@ -682,7 +695,7 @@
 				} else {
 					element.value = "true";
 				}
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=(this.value==="false")?false:true;});
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=(this.value==="false")?false:true;updateIcon();});
 			} else if (parameter.type === "color") {
 				element = document.createElement("input");
 				if (defaultValue !== undefined) {
@@ -690,16 +703,15 @@
 				}
 				element.className = "color";
 				jscolor.color(element, {});
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"#'+this.value+'"';});
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"#'+this.value+'"';updateIcon();});
 			} else {
 				element = document.createElement("input");
 				element.style.width = "480px";
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;});
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;updateIcon();});
 			}
 			div.appendChild(element);
-			paramNumber++;
 		}
-		paintBlock(iconDiv, false, false);
+		updateIcon();
 		return div;
 	}
 

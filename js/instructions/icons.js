@@ -946,6 +946,9 @@
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
+			} else if (param < 0) {
+				this["turnRight"](ctx, width, height, [-param]);
+				return;
 			}
 			var maxparam = 360;
 			if (!isNumber(param) || param > maxparam*0.85) {
@@ -998,6 +1001,9 @@
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
+			} else if (param < 0) {
+				this["turnLeft"](ctx, width, height, [-param]);
+				return;
 			}
 			var maxparam = 360;
 			if (isNumber(param) && param < 0) {

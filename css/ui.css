@@ -73,6 +73,7 @@
 		height: 400px;
 	}
 	#console .program {
+		width: inherit;
 		overflow: auto;
 		border-top-right-radius: 10px;
 	}
