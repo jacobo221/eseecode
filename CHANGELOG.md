@@ -2,7 +2,7 @@
 
  *Milestone: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface
- * Add animations capability
+ * Add basic animations capability
  * Autocomplete in level4
  * Enforced the tip to start programming
  * Breakpoints are now dynamic (they are followed through code changes)
