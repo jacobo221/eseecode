@@ -84,7 +84,7 @@
 		{ name: "rotateLeft", category: "canvas", parameters: [{name: "degrees", default: 90, type: "number"},{name: "axis", type: "number"}], tip: "Rotates the canvas left (offset canvas parts will be lost)", show: ["level3","level4"] },
 		{ name: "rotateRight", category: "canvas", parameters: [{name: "degrees", default: 90, type: "number"},{name: "axis", type: "number"}], tip: "Rotates the canvas right (offset canvas parts will be lost)", show: ["level3","level4"] },
 		{ name: "scale", category: "canvas", parameters: [{name: "horizontal", default: 0.5, type: "number"},{name: "vertical", default: 0.5, type: "number"},{name: "axis", type: "number"}], tip: "Scales the canvas (offset canvas parts will be lost)", show: ["level3","level4"] },
-		{ name: "setSize", category: "cursor", parameters: [{name: "size", default: 16, type: "number", tip: "Which size in pixels do you want to set?"}], tip: "Sets the drawing size", show: ["level2","level3","level4"] },
+		{ name: "setSize", category: "cursor", parameters: [{name: "size", default: 16, type: "number", minValue: 0, tip: "Which size in pixels do you want to set?"}], tip: "Sets the drawing size", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level2"] },
 		{ name: "setInvisible", category: "cursor", parameters: [{name: "index", type: "number", default: 0.5, stepValue: 0.05, minValue: 0, maxValue: 1, tip: "From 0 (invisible] to 1 (opaque), how invisible do you want to draw?"}], tip: "Sets the drawing transparency value", show: ["level2","level3","level4"] },
 		{ name: "unsetInvisible", category: "cursor", parameters: [], top: "Sets the drawing transparency to opaque", show: ["level2","level3","level4"] },

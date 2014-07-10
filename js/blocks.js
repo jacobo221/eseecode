@@ -530,7 +530,7 @@
 			if (level === "level2") {
 				var msgTab = document.createElement("div");
 				msgTab.className = "msgBox-tabs";
-				msgTab.innerHTML = "<a href=\"javascript:setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"javascript:setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+				msgTab.innerHTML = "<a href=\"#\" onclick=\"setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
 				msgDiv.appendChild(msgTab);
 				var iconDiv = document.createElement("div");
 				iconDiv.id = "setupBlockIcon";
@@ -697,9 +697,9 @@
 						var val;
 						if (isNumber(elem.value)) {
 							val = parseInt(elem.value);
-						} else if (elem.getAttribute("min") !== undefined) {
+						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min")
-						} else if (elem.getAttribute("max") !== undefined) {
+						} else if (elem.getAttribute("max")) {
 							val = elem.getAttribute("max");
 						} else {
 							val = 0;
@@ -708,7 +708,7 @@
 						if (elem.step !== undefined) {
 							stepValue = parseInt(elem.step);
 						}
-						elem.value = val - stepValue;
+						elem.value = parseInt(val) - stepValue;
 						if (elem.getAttribute("min") && elem.value < elem.getAttribute("min")) {
 							elem.value = elem.getAttribute("min");
 						}
@@ -747,9 +747,9 @@
 						var val;
 						if (isNumber(elem.value)) {
 							val = parseInt(elem.value);
-						} else if (elem.getAttribute("min") !== undefined) {
+						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min");
-						} else if (elem.getAttribute("max") !== undefined) {
+						} else if (elem.getAttribute("max")) {
 							val = elem.getAttribute("max");
 						} else {
 							val = 0;
