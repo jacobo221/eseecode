@@ -15,7 +15,7 @@
 			},
 			version: {
 				text: "2.0",
-				link: "changelog.txt"
+				link: "CHANGELOG.md"
 			},
 			author: {
 				text: "Jacobo Vilella Vilahur",

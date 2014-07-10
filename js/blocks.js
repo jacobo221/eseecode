@@ -677,8 +677,17 @@
 					elementMinus.addEventListener("click", function() {
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
-						var val = parseInt(elem.value);
-						elem.value = val-stepValue;
+						var val;
+						if (isNumber(elem.value)) {
+							val = parseInt(elem.value);
+						} else if (elem.min !== undefined) {
+							val = elem.min;
+						} else if (elem.max !== undefined) {
+							val = elem.max;
+						} else {
+							val = 0;
+						}
+						elem.value = val - stepValue;
 						elem.dispatchEvent(new Event('change'));
 					});
 					element.appendChild(elementMinus);
@@ -708,7 +717,16 @@
 					elementPlus.addEventListener("click", function() {
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
-						var val = parseInt(elem.value);
+						var val;
+						if (isNumber(elem.value)) {
+							val = parseInt(elem.value);
+						} else if (elem.min !== undefined) {
+							val = elem.min;
+						} else if (elem.max !== undefined) {
+							val = elem.max;
+						} else {
+							val = 0;
+						}
 						elem.value = val + stepValue;
 						elem.dispatchEvent(new Event('change'));
 					});
