@@ -688,6 +688,9 @@
 							val = 0;
 						}
 						elem.value = val - stepValue;
+						if (elem.min !== undefined && elem.value < elem.min) {
+							elem.value = elem.min;
+						}
 						elem.dispatchEvent(new Event('change'));
 					});
 					element.appendChild(elementMinus);
@@ -728,6 +731,9 @@
 							val = 0;
 						}
 						elem.value = val + stepValue;
+						if (elem.max !== undefined && elem.value < elem.max) {
+							elem.value = elem.max;
+						}
 						elem.dispatchEvent(new Event('change'));
 					});
 					element.appendChild(elementPlus);
