@@ -44,6 +44,7 @@
 		text-align: center;
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
+		text-decoration: none;
 	}
 	.tab a {
 		background-color: inherit;
@@ -84,9 +85,13 @@
 		border: 1px solid #666666;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
+		width: initial;
 	}
 	#console-buttons {
 		text-align: center;
+	}
+	#console-buttons div {
+		width: inherit;
 	}
 	#console-buttons div:not(:first-child):not(:last-child)  {
 		width: 50%;
@@ -122,29 +127,13 @@
 	#console-write.breakpointHandler div {
 		cursor: crosshair !important;
 	}
-	#dialog-debug-layers, #dialog-debug-analyzer {
-		float: left;
-		width: auto;
-	}
-	#dialog-debug-layers-help, #dialog-debug-analyzer-help {
-		float: right;
-		font-weight: bold;
-		width: 10px;
-		margin: 0px 0px 0px 0px;
-		cursor: help;
-	}
-	#dialog-debug-layers-title, #dialog-debug-analyzer-title {
-		padding: 3px 0px 3px 0px;
-		border-bottom: 1px solid #000000;
-		text-align: center;
-		font-weight: bold;
-		background-color: #CCCCCC;
-		color: inherit;
-	}
 	#dialog {
 		border-top-left-radius: 10px;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
+	}
+	#dialog>div {
+		width: inherit;
 	}
 	#dialog .program {
 		background-color: #E9E9E9;
@@ -165,9 +154,24 @@
 		padding: 0px 0px 0px 0px;
 		margin: 0px 0px 2px 2px;
 	}
-	#dialog-debug.program {
-		border-bottom-left-radius: 0px;
-		border-bottom-right-radius: 0px;
+	#dialog-debug-layers, #dialog-debug-analyzer {
+		float: left;
+		width: auto;
+	}
+	#dialog-debug-layers-help, #dialog-debug-analyzer-help {
+		float: right;
+		font-weight: bold;
+		width: 10px;
+		margin: 0px 0px 0px 0px;
+		cursor: help;
+	}
+	#dialog-debug-layers-title, #dialog-debug-analyzer-title {
+		padding: 3px 0px 3px 0px;
+		border-bottom: 1px solid #000000;
+		text-align: center;
+		font-weight: bold;
+		background-color: #CCCCCC;
+		color: inherit;
 	}
 	#dialog-setup {
 		text-align: center;
@@ -178,6 +182,9 @@
 	#dialog-tabs {
 		height: 23px;
 		text-align: center;
+	}
+	#dialog-tabs div {
+		width: auto;
 	}
 	#dialog-tabs-setup {
 		width: 20px;
@@ -269,13 +276,33 @@
 		white-space: pre-line;
 		font-family: "Courier New", Courier, monospace;	
 	}
+	#msgBox .msgBox-tabs {
+		clear: both;
+		text-align: right;
+	}
+	#msgBox .msgBox-tabs a {
+		margin: 2px 0px 0px 0px;
+		padding: 2px 3px 0px 3px;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		text-decoration: none;
+		font-weight: bold;
+		border: 2px solid #123456;
+	}
+	#msgBox .msgBox-tabs a:hover {
+		margin: 0px 0px 0px 0px;
+		background-color: #789ABC;
+		color: inherit;
+		font-weight: bold;
+	}
 	#msgBoxWrapper {
 		position: absolute;
 		top: 0px;
 		left: 0px;
 		width: 980px;
 		height: 100%;
-		z-index: 20000;
+		z-index: 9999; /* jscolor uses z-index 10000 */
 		border: 0px solid black;
 		background-color: rgba(0,0,0,0.4);
 	}

@@ -10,9 +10,6 @@
 		margin: 0px 0px 0px 0px;
 		min-width: 1000px !important;
 	}
-	div, textarea {
-		width: inherit;
-	}
 	h1 {
 		font-size: 30px;
 		background-color: inherit;

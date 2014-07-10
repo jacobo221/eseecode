@@ -492,6 +492,9 @@
 		for (var i=0; i<instruction.parameters.length; i++) {
 			var parameter = instruction.parameters[i];
 			parameterInputs[i] = {};
+			for (var key in parameter) {
+				parameterInputs[i][key] = parameter[key];
+			}
 			parameterInputs[i].name = _(parameter.name);
 			parameterInputs[i].id = paramNumber;
 			var defaultValue = parameter.default;
@@ -501,15 +504,16 @@
 			if (defaultValue === undefined || defaultValue === null) {
 				defaultValue = "";
 			}
-			parameterInputs[i].defaultValue = defaultValue;
-			parameterInputs[i].tip = parameter.tip;
+			parameterInputs[i].default = defaultValue;
 			paramNumber++;
 		} 
-		if (parameterInputs.length > 0) {
+		if (parameterInputs.length > 0) {		
 			// We have parameters to ask for. Create a msgBox
-			var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+			var instructionSetId = div.getAttribute("instructionSetId");
+			var instruction = $_eseecode.instructions.set[instructionSetId];
 			var instructionName = instruction.name;
 			var msgDiv = document.createElement("div");
+			msgDiv.className = "msgBox-tab";
 			var input = document.createElement("input");
 			input.id = "setupBlockDiv";
 			input.value = div.id;
@@ -520,9 +524,23 @@
 			input.value = blockId;
 			input.type = "hidden";
 			msgDiv.appendChild(input);
+			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+			if (level === "level2") {
+				var msgTab = document.createElement("div");
+				msgTab.className = "msgBox-tabs";
+				msgTab.innerHTML = "<a href=\"javascript:setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"javascript:setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+				msgDiv.appendChild(msgTab);
+				var iconDiv = document.createElement("div");
+				iconDiv.id = "setupBlockIcon";
+				iconDiv.setAttribute("instructionSetId", instructionSetId);
+				var icon = document.createElement("canvas");
+				paintBlock(iconDiv, false, false);
+				iconDiv.appendChild(icon);
+				msgDiv.appendChild(iconDiv);
+			}
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
-				var textDiv = document.createElement("p");
+				var textDiv = document.createElement("div");
 				var helpText = _("enter the value for %s's parameter",[instructionName+"()"])+" \""+_(parameter.name)+"\"";
 				if (parameter.id > 0) {
 					helpText = ordinal(parameter.id)+" "+helpText;
@@ -538,13 +556,18 @@
 				textDiv.appendChild(span);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id;
-				input.value = parameter.defaultValue;
+				input.value = parameter.default;
 				input.type = "text";
 				input.style.width = "100px";
+				if (level === "level2") {
+					var div = document.createElement("div");
+					div.id = input.id+"Visual";
+					textDiv.appendChild(div);
+				}
 				textDiv.appendChild(input);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id+"Default";
-				input.value = parameter.defaultValue;
+				input.value = parameter.default;
 				input.type = "hidden";
 				textDiv.appendChild(input);
 				msgDiv.appendChild(textDiv);
@@ -555,7 +578,129 @@
 			input.type = "hidden";
 			msgDiv.appendChild(input);
 			msgBox(msgDiv, {acceptAction:setupBlockAccept,cancelAction:setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
+			if (level === "level2") {
+				setupBlockVisual("Basic", instruction.parameters);
+			}
 		}
+	}
+
+	/**
+	 * Adds or removes the visual parameters setup in parameters setup dialog
+	 * @private
+	 * @param {Boolean} visualMode Whether to show visual setup or not
+	 * @example setupBlockVisual(true)
+	 */
+	function setupBlockVisual(visualMode) {
+		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
+		var iconDiv = document.getElementById("setupBlockIcon");
+		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+		var parameters = instruction.parameters;
+		var parametersCount = document.getElementById("setupBlockCount").value;
+		var paramNumber = 1;
+		for (var i=0; i<parametersCount; i++) {
+			var parameter = parameters[i];
+			var parameterInputId = "setupBlock"+(i+1);
+			var input = document.getElementById(parameterInputId);
+			var div = document.getElementById(parameterInputId+"Visual");
+			div.innerHTML = "";
+			iconDiv.innerHTML = "";
+			if (!visualMode) {
+				input.style.display = "block";
+				continue;
+			}
+			input.style.display = "none";
+			var defaultValue = input.value;
+			if (parameter.type === "text") {
+				var element;
+				element = document.createElement("input");
+				if (defaultValue !== undefined) {
+					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
+						defaultValue = defaultValue.substring(1,defaultValue.length-1);
+					}
+					element.value = defaultValue;
+				}
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"'+this.value+'"';});
+			} else if (parameter.type === "number") {
+				element = document.createElement("div");
+				if (parameter.minValue !== undefined && parameter.maxValue !== undefined) {
+					var elementInput = document.createElement("input");
+					elementInput.type = "range";
+					if (defaultValue !== undefined) {
+						elementInput.value = defaultValue;
+					}
+					elementInput.min = parameter.minValue;
+					elementInput.max = parameter.maxValue;
+					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId+"VisualSpan").innerHTML=this.value;document.getElementById(parameterInputId).value=this.value;});
+					element.appendChild(elementInput);
+					var elementSpace = document.createElement("span");
+					elementSpace.innerHTML = "  ";
+					element.appendChild(elementSpace);
+					var elementSpan = document.createElement("span");
+					elementSpan.id = parameterInputId+"VisualSpan";
+					if (defaultValue !== undefined) {
+						elementSpan.innerHTML = defaultValue;
+					}
+					element.appendChild(elementSpan);
+				} else {
+					var stepValue = 1;
+					if (parameter.stepValue !== undefined) {
+						stepValue = parameter.stepValue;
+					}
+					var elementMinus = document.createElement("input");
+					elementMinus.type = "button";
+					elementMinus.value = "-";
+					elementMinus.style.width = "50px";
+					elementMinus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val-stepValue;elem.dispatchEvent(new Event('change'))});
+					element.appendChild(elementMinus);
+					var elementInput = document.createElement("input");
+					elementInput.id = parameterInputId+"VisualInput";
+					elementInput.type = "number";
+					if (defaultValue !== undefined) {
+						elementInput.value = defaultValue;
+					}
+					if (parameter.minValue !== undefined) {
+						elementInput.min = parameter.minValue;
+					}
+					if (parameter.maxValue !== undefined) {
+						elementInput.max = parameter.maxValue;
+					}
+					element.step = parameter.stepValue;
+					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;});
+					element.appendChild(elementInput);
+					var elementPlus = document.createElement("input");
+					elementPlus.type = "button";
+					elementPlus.value = "+";
+					elementPlus.style.width = "50px";
+					elementPlus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val+stepValue;elem.dispatchEvent(new Event('change'))});
+					element.appendChild(elementPlus);
+				}
+			} else if (parameter.type === "bool") {
+				element = document.createElement("select");
+				element.innerHTML = "<option value='true'>true</option><option value='false'>false</option	>";
+				if (defaultValue === "false") {
+					element.value = "false";
+				} else {
+					element.value = "true";
+				}
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=(this.value==="false")?false:true;});
+			} else if (parameter.type === "color") {
+				element = document.createElement("input");
+				if (defaultValue !== undefined) {
+					element.value = defaultValue;
+				}
+				element.className = "color";
+				jscolor.color(element, {});
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"#'+this.value+'"';});
+			} else {
+				element = document.createElement("input");
+				element.style.width = "480px";
+				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;});
+			}
+			div.appendChild(element);
+			paramNumber++;
+		}
+		paintBlock(iconDiv, false, false);
+		return div;
 	}
 
 	/**

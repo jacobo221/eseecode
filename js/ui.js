@@ -1355,7 +1355,7 @@
 	 * @private
 	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String>} List of all eSeeCode functions declared in the code that return a specific type of value
-	 * @example getFunctions("int"))
+	 * @example getFunctions("number"))
 	 */
 	function getFunctions(type) {
 		var values = [];
