@@ -644,15 +644,25 @@
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined) {
 					var elementInput = document.createElement("input");
 					elementInput.type = "range";
-					if (defaultValue !== undefined) {
-						elementInput.value = defaultValue;
+					if (parameter.stepValue !== undefined) {
+						stepValue = parameter.stepValue;
 					}
-					elementInput.min = parameter.minValue;
-					elementInput.max = parameter.maxValue;
+					var valueEscalation = 1;
+					if (stepValue < 1) {
+						// Number inputs only accept integers, so escalate
+						valueEscalation = 1/stepValue;
+					}
+					element.step = stepValue*valueEscalation;
+					if (defaultValue !== undefined) {
+						elementInput.value = defaultValue*valueEscalation;
+					}
+					elementInput.min = parameter.minValue*valueEscalation;
+					elementInput.max = parameter.maxValue*valueEscalation;
+					elementInput.setAttribute("valueEscalation", valueEscalation);
 					elementInput.addEventListener("change", function() {
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-						document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value;
-						document.getElementById(parameterInputId).value = this.value;
+						document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseInt(this.getAttribute("valueEscalation"));
+						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
 						updateIcon();
 					});
 					element.appendChild(elementInput);
@@ -670,11 +680,18 @@
 					if (parameter.stepValue !== undefined) {
 						stepValue = parameter.stepValue;
 					}
+					var valueEscalation = 1;
+					if (stepValue < 1) {
+						// Number inputs only accept integers, so escalate
+						valueEscalation = 1/stepValue;
+					}
 					var elementMinus = document.createElement("input");
 					elementMinus.type = "button";
 					elementMinus.value = "-";
 					elementMinus.style.width = "50px";
+					elementMinus.setAttribute("valueEscalation", valueEscalation);
 					elementMinus.addEventListener("click", function() {
+						var valueEscalation = parseInt(this.getAttribute("valueEscalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
@@ -687,9 +704,13 @@
 						} else {
 							val = 0;
 						}
+						var stepValue = 1;
+						if (elem.step !== undefined) {
+							stepValue = parseInt(elem.step);
+						}
 						elem.value = val - stepValue;
-						if (elem.min !== undefined && elem.value < elem.min) {
-							elem.value = elem.min;
+						if (elem.getAttribute("min") && elem.value < elem.getAttribute("min")) {
+							elem.value = elem.getAttribute("min");
 						}
 						elem.dispatchEvent(new Event('change'));
 					});
@@ -698,18 +719,19 @@
 					elementInput.id = parameterInputId+"VisualInput";
 					elementInput.type = "number";
 					if (defaultValue !== undefined) {
-						elementInput.value = defaultValue;
+						elementInput.value = defaultValue*valueEscalation;
 					}
 					if (parameter.minValue !== undefined) {
-						elementInput.min = parameter.minValue;
+						elementInput.min = parameter.minValue*valueEscalation;
 					}
 					if (parameter.maxValue !== undefined) {
-						elementInput.max = parameter.maxValue;
+						elementInput.max = parameter.maxValue*valueEscalation;
 					}
-					element.step = parameter.stepValue;
+					elementInput.step = stepValue*valueEscalation;
+					elementInput.setAttribute("valueEscalation", valueEscalation);
 					elementInput.addEventListener("change", function() {
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-						document.getElementById(parameterInputId).value = this.value;
+						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
 						updateIcon();
 					});
 					element.appendChild(elementInput);
@@ -717,7 +739,9 @@
 					elementPlus.type = "button";
 					elementPlus.value = "+";
 					elementPlus.style.width = "50px";
+					elementPlus.setAttribute("valueEscalation", valueEscalation);
 					elementPlus.addEventListener("click", function() {
+						var valueEscalation = parseInt(this.getAttribute("valueEscalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
@@ -730,9 +754,13 @@
 						} else {
 							val = 0;
 						}
+						var stepValue = 1;
+						if (elem.step !== undefined) {
+							stepValue = parseInt(elem.step);
+						}
 						elem.value = val + stepValue;
-						if (elem.max !== undefined && elem.value < elem.max) {
-							elem.value = elem.max;
+						if (elem.getAttribute("max") && elem.value > elem.getAttribute("max")) {
+							elem.value = elem.getAttribute("max");
 						}
 						elem.dispatchEvent(new Event('change'));
 					});
@@ -740,7 +768,7 @@
 				}
 			} else if (parameter.type === "bool") {
 				element = document.createElement("select");
-				element.innerHTML = "<option value='true'>true</option><option value='false'>false</option	>";
+				element.innerHTML = "<option value='true'>true</option><option value='false'>false</option>";
 				if (defaultValue === "false") {
 					element.value = "false";
 				} else {
