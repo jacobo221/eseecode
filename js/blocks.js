@@ -632,7 +632,11 @@
 					}
 					element.value = defaultValue;
 				}
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"'+this.value+'"';updateIcon();});
+				element.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = '"'+this.value+'"';
+					updateIcon();
+				});
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined) {
@@ -643,7 +647,12 @@
 					}
 					elementInput.min = parameter.minValue;
 					elementInput.max = parameter.maxValue;
-					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId+"VisualSpan").innerHTML=this.value;document.getElementById(parameterInputId).value=this.value;updateIcon();});
+					elementInput.addEventListener("change", function() {
+						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+						document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value;
+						document.getElementById(parameterInputId).value = this.value;
+						updateIcon();
+					});
 					element.appendChild(elementInput);
 					var elementSpace = document.createElement("span");
 					elementSpace.innerHTML = "  ";
@@ -663,7 +672,13 @@
 					elementMinus.type = "button";
 					elementMinus.value = "-";
 					elementMinus.style.width = "50px";
-					elementMinus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val-stepValue;elem.dispatchEvent(new Event('change'));});
+					elementMinus.addEventListener("click", function() {
+						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+						var elem = document.getElementById(parameterInputId+"VisualInput");
+						var val = parseInt(elem.value);
+						elem.value = val-stepValue;
+						elem.dispatchEvent(new Event('change'));
+					});
 					element.appendChild(elementMinus);
 					var elementInput = document.createElement("input");
 					elementInput.id = parameterInputId+"VisualInput";
@@ -678,13 +693,23 @@
 						elementInput.max = parameter.maxValue;
 					}
 					element.step = parameter.stepValue;
-					elementInput.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;updateIcon();});
+					elementInput.addEventListener("change", function() {
+						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+						document.getElementById(parameterInputId).value = this.value;
+						updateIcon();
+					});
 					element.appendChild(elementInput);
 					var elementPlus = document.createElement("input");
 					elementPlus.type = "button";
 					elementPlus.value = "+";
 					elementPlus.style.width = "50px";
-					elementPlus.addEventListener("click",function(){var elem=document.getElementById(parameterInputId+"VisualInput");var val=parseInt(elem.value); elem.value=val+stepValue;elem.dispatchEvent(new Event('change'));});
+					elementPlus.addEventListener("click", function() {
+						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+						var elem = document.getElementById(parameterInputId+"VisualInput");
+						var val = parseInt(elem.value);
+						elem.value = val + stepValue;
+						elem.dispatchEvent(new Event('change'));
+					});
 					element.appendChild(elementPlus);
 				}
 			} else if (parameter.type === "bool") {
@@ -695,7 +720,11 @@
 				} else {
 					element.value = "true";
 				}
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=(this.value==="false")?false:true;updateIcon();});
+				element.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = (this.value === "false")?false:true;
+					updateIcon();
+				});
 			} else if (parameter.type === "color") {
 				element = document.createElement("input");
 				if (defaultValue !== undefined) {
@@ -703,11 +732,19 @@
 				}
 				element.className = "color";
 				jscolor.color(element, {});
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value='"#'+this.value+'"';updateIcon();});
+				element.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = '"#'+this.value+'"';
+					updateIcon();
+				});
 			} else {
 				element = document.createElement("input");
 				element.style.width = "480px";
-				element.addEventListener("change",function(){document.getElementById(parameterInputId).value=this.value;updateIcon();});
+				element.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = this.value;
+					updateIcon();
+				});
 			}
 			div.appendChild(element);
 		}
