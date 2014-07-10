@@ -230,10 +230,12 @@
 				action = "cancel";
 			}
 		}
-		if ($_eseecode.session.floatingBlock.div.classList) {
-			$_eseecode.session.floatingBlock.div.classList.remove("floatingBlock");
-		} else {			
-			$_eseecode.session.floatingBlock.div.className = $_eseecode.session.floatingBlock.div.className.replace(/\s+floatingBlock/,"");
+		if ($_eseecode.session.floatingBlock.div) {
+			if ($_eseecode.session.floatingBlock.div.classList) {
+				$_eseecode.session.floatingBlock.div.classList.remove("floatingBlock");
+			} else {			
+				$_eseecode.session.floatingBlock.div.className = $_eseecode.session.floatingBlock.div.className.replace(/\s+floatingBlock/,"");
+			}
 		}
 		cancelFloatingBlock();
 		if (action == "cancel") {

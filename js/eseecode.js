@@ -14,7 +14,7 @@
 				link: undefined
 			},
 			version: {
-				text: "1.7",
+				text: "2.0",
 				link: "changelog.txt"
 			},
 			author: {
