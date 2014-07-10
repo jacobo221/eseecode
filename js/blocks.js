@@ -697,10 +697,10 @@
 						var val;
 						if (isNumber(elem.value)) {
 							val = parseInt(elem.value);
-						} else if (elem.min !== undefined) {
-							val = elem.min;
-						} else if (elem.max !== undefined) {
-							val = elem.max;
+						} else if (elem.getAttribute("min") !== undefined) {
+							val = elem.getAttribute("min")
+						} else if (elem.getAttribute("max") !== undefined) {
+							val = elem.getAttribute("max");
 						} else {
 							val = 0;
 						}
@@ -747,10 +747,10 @@
 						var val;
 						if (isNumber(elem.value)) {
 							val = parseInt(elem.value);
-						} else if (elem.min !== undefined) {
-							val = elem.min;
-						} else if (elem.max !== undefined) {
-							val = elem.max;
+						} else if (elem.getAttribute("min") !== undefined) {
+							val = elem.getAttribute("min");
+						} else if (elem.getAttribute("max") !== undefined) {
+							val = elem.getAttribute("max");
 						} else {
 							val = 0;
 						}
@@ -758,7 +758,7 @@
 						if (elem.step !== undefined) {
 							stepValue = parseInt(elem.step);
 						}
-						elem.value = val + stepValue;
+						elem.value = parseInt(val) + stepValue;
 						if (elem.getAttribute("max") && elem.value > elem.getAttribute("max")) {
 							elem.value = elem.getAttribute("max");
 						}
