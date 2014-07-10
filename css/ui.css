@@ -80,21 +80,13 @@
 		float: left;
 	}
 	#console-buttons, #dialog-debug-command {
+		display: table;
 		background-color: #AAAAAA;
 		color: inherit;
 		border: 1px solid #666666;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
 		width: initial;
-	}
-	#console-buttons {
-		text-align: center;
-	}
-	#console-buttons div {
-		width: inherit;
-	}
-	#console-buttons div:not(:first-child):not(:last-child)  {
-		width: 50%;
 	}
 	#console-buttons canvas {
 		margin: 3px 10px 0px 10px;
@@ -110,6 +102,12 @@
 	#console-buttons div {
 		display: table-cell;
 		text-align: center;
+	}
+	#console-buttons div:first-child, #console-buttons div:last-child  {
+		width: 75px;
+	}
+	#console-buttons div:not(:first-child):not(:last-child)  {
+		width: 150px;
 	}
 	#console-blocks-tip {
 		border-radius: 0px !important;
@@ -248,6 +246,7 @@
 		text-align: left;
 		font-size: 10px;
 		float: left;
+		width: inherit;
 	}
 	#header div {
 		display: inline;
