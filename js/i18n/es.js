@@ -251,6 +251,8 @@ $_eseecode.i18n.available.es = {
 	"Cancel": "Cancelar",
 	"true": "verdadero",
 	"false": "falso",
+	"Basic": "Básico",
+	"Advanced": "Avanzado",
 	"The value for parameter \"%s\" is invalid!": "¡El valor del parámetro \"%s\" es inválido!",
 	"How many pixels do you want to move forward?": "¿Cuantos píxeles moverte hacia adelante?",
 	"How many degrees do you want to turn?": "¿Cuantos grados quieres girar?",

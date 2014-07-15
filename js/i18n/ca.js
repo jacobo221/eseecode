@@ -254,6 +254,8 @@ $_eseecode.i18n.available.ca = {
 	"Cancel": "Cancel·lar",
 	"true": "cert",
 	"false": "fals",
+	"Basic": "Bàsic",
+	"Advanced": "Avançat",
 	"The value for parameter \"%s\" is invalid!": "El valor del paràmetre \"%s\" és invàlid!",
 	"How many pixels do you want to move forward?": "Quants píxels vols moure't endavant?",
 	"How many degrees do you want to turn?": "Quants graus vols girar?",
