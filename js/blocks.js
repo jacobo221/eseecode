@@ -625,9 +625,21 @@
 				input.style.display = "none";
 			}
 			var defaultValue = input.value;
+			var supportedInputs = { range: false, number: false, color: false };
+			var testDiv = document.createElement("input");
+			for (var key in supportedInputs) {
+				testDiv.setAttribute("type", key);
+				if (testDiv.getAttribute("type") === key) {
+					supportedInputs[key] = true;
+				}
+			}
+console.log(supportedInputs)
+			var visualTypeSupportedByBrowser = false;
 			if (parameter.type === "text") {
+				visualTypeSupportedByBrowser = true;
 				var element;
 				element = document.createElement("input");
+				element.type = "text";
 				if (defaultValue !== undefined) {
 					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
 						defaultValue = defaultValue.substring(1,defaultValue.length-1);
@@ -641,7 +653,8 @@
 				});
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
-				if (parameter.minValue !== undefined && parameter.maxValue !== undefined) {
+				if (parameter.minValue !== undefined && parameter.maxValue !== undefined && supportedInputs["range"]) {
+					visualTypeSupportedByBrowser = true;
 					var elementInput = document.createElement("input");
 					elementInput.type = "range";
 					if (parameter.stepValue !== undefined) {
@@ -675,7 +688,8 @@
 						elementSpan.innerHTML = defaultValue;
 					}
 					element.appendChild(elementSpan);
-				} else {
+				} else if (supportedInputs["range"]) {
+					visualTypeSupportedByBrowser = true;
 					var stepValue = 1;
 					if (parameter.stepValue !== undefined) {
 						stepValue = parameter.stepValue;
@@ -767,6 +781,7 @@
 					element.appendChild(elementPlus);
 				}
 			} else if (parameter.type === "bool") {
+				visualTypeSupportedByBrowser = true;
 				element = document.createElement("select");
 				element.innerHTML = "<option value='true'>true</option><option value='false'>false</option>";
 				if (defaultValue === "false") {
@@ -780,18 +795,29 @@
 					updateIcon();
 				});
 			} else if (parameter.type === "color") {
+				visualTypeSupportedByBrowser = true;
 				element = document.createElement("input");
 				if (defaultValue !== undefined) {
 					element.value = defaultValue;
 				}
-				element.className = "color";
-				jscolor.color(element, {});
+				if (supportedInputs["color"]) {
+					element.type = "color";
+				} else {
+					// Use jsColor
+					element.className = "color";
+					jscolor.color(element, {});
+				}
 				element.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
-					document.getElementById(parameterInputId).value = '"#'+this.value+'"';
+					var value = this.value;
+					if (value.charAt(0) !== "#") {
+						value = "#"+value;
+					}
+					document.getElementById(parameterInputId).value = '"'+value+'"';
 					updateIcon();
 				});
-			} else {
+			}
+			if (!visualTypeSupportedByBrowser) {
 				element = document.createElement("input");
 				element.style.width = "480px";
 				element.addEventListener("change", function() {
@@ -900,7 +926,7 @@
 			} else {
 				handler = "touchstart";
 			}
-			div.addEventListener(handler,clickBlock);
+			div.addEventListener(handler, clickBlock);
 		} else {
 			if (level == "level1") {
 				var handler;
