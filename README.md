@@ -40,4 +40,5 @@ This project would have never been possible without the following projects which
 * [Ace](http://ace.c9.io/)
 * [Jison](http://zaach.github.io/jison/)
 * [jsParser](http://cjihrig.com/blog/creating-a-javascript-parser/)
+* [fontDetect](http://www.lalit.org/lab/javascript-css-font-detect/)
 * [jsColor](http://jscolor.com/)

@@ -103,7 +103,7 @@
 		{ name: "unsetBold", category: "cursor", parameters: [], tip: "Unsets the bold property for future text", show: ["level2","level3","level4"] },
 		{ name: "line", category: "cursor", parameters: [{name: "destinationx", default: 0, type: "number", tip: "Set X coordinate to go to"},{name: "destinationy", default: 0, tip: "Set Y coordinate to go to"}], tip: "Draws a line from current position to specified coordinates", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level2"] },
-		{ name: "setFont", category: "cursor", parameters: [{name: "font", default: "\"Comic Sans MS\"", type: "text", tip: "Which font do you want to use?" }], tip: "Sets the font for future text", show: ["level2","level3","level4"] },
+		{ name: "setFont", category: "cursor", parameters: [{name: "font", default: "\"Comic Sans MS\"", type: "font", tip: "Which font do you want to use?" }], tip: "Sets the font for future text", show: ["level2","level3","level4"] },
 		{ name: "unsetFont", category: "cursor", parameters: [], tip: "Resets the font for future text", show: ["level2","level3","level4"] },
 		{ name: "write", category: "cursor", parameters: [{name: "text", default: "\"Hello!\"", type: "text", tip: "Which text do you want to write?"}], tip: "Draws text", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level2"] },

@@ -645,6 +645,28 @@
 					document.getElementById(parameterInputId).value = '"'+this.value+'"';
 					updateIcon();
 				}, false);
+			} else if (parameter.type === "font") {
+				visualTypeSupportedByBrowser = true;
+				var fonts = ["monospace", "serif", "sans-serif", "fantasy", "Arial", "Arial Black", "Arial Narrow", "Arial Rounded MT Bold", "Bookman Old Style", "Bradley Hand ITC", "Century", "Century Gothic", "Comic Sans MS", "Courier", "Courier New", "Georgia", "Gentium", "Impact", "King", "Lucida Console", "Lalit", "Modena", "Monotype Corsiva", "Papyrus", "Tahoma", "TeX", "Times", "Times New Roman", "Trebuchet MS", "Verdana", "Verona" ];
+				var fontDetect = new Detector();
+				element = document.createElement("select");
+				for (var j = 0; j < fonts.length; j++) {
+					if (fontDetect.detect(fonts[j])) {
+						element.innerHTML += "<option value='"+j+"'>"+fonts[j]+"</option>";
+					}
+				}
+				if (defaultValue !== undefined) {
+					for (var j = 0; j < fonts.length; j++) {
+						if ('"'+fonts[j]+'"' === defaultValue) {
+							element.value = j;
+						}
+					}
+				}
+				element.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = '"'+fonts[this.value]+'"';
+					updateIcon();
+				}, false);
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined && supportedInputs["range"]) {
