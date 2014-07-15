@@ -91,9 +91,9 @@
 			input.autofocus = true;
 		}
 		if (config && config.acceptAction) {
-			input.addEventListener("click",config.acceptAction);
+			input.addEventListener("click", config.acceptAction, false);
 		} else {
-			input.addEventListener("click",msgBoxClose);
+			input.addEventListener("click", msgBoxClose, false);
 		}
 		buttonDiv.appendChild(input);
 		if (config && (config.cancel || config.cancelName || config.cancelAction)) {
@@ -105,14 +105,14 @@
 				input.value = _("Cancel");
 			}
 			if (config.cancelAction) {
-				input.addEventListener("click",config.cancelAction);
+				input.addEventListener("click", config.cancelAction, false);
 			} else {
-				input.addEventListener("click",msgBoxClose);
+				input.addEventListener("click", msgBoxClose, false);
 			}
 			buttonDiv.appendChild(input);
 		}
 		var form = document.createElement("form");
-		form.addEventListener("submit",function(e) { e.preventDefault(); return false; });
+		form.addEventListener("submit", function(e) { e.preventDefault(); return false; }, false);
 		form.appendChild(textDiv);
 		form.appendChild(buttonDiv);
 		innerDiv.appendChild(form);
@@ -323,7 +323,7 @@
 		}
 		var radio = (height-margin*2)/2;
 		ctx.beginPath();
-		ctx.arc(width/2,height/2,(height-margin*2)/2,0,360*Math.PI/180,false);
+		ctx.arc(width/2, height/2, (height-margin*2)/2, 0, 360*Math.PI/180, false);
 		ctx.closePath();
 		ctx.stroke();
 		ctx.save();
@@ -363,19 +363,19 @@
 		var border = document.getElementById("header").clientHeight/2;
 		var gradient = ctx.createLinearGradient(0,border,0,0);
 		gradient.addColorStop(0,"#123456");
-		gradient.addColorStop(1,"transparent");
+		gradient.addColorStop(1, "rgba(0,0,0,0)");
 		ctx.fillStyle = gradient;
 		ctx.fillRect(0,0,width,border);
 		gradient = ctx.createLinearGradient(0,height-border,0,height);
 		gradient.addColorStop(0,"#123456");
-		gradient.addColorStop(1,"transparent");
+		gradient.addColorStop(1,"rgba(0,0,0,0)");
 		ctx.fillStyle = gradient;
 		ctx.fillRect(0,height-border,width,height);
 		ctx.fillStyle = "#123456";
 		ctx.fillRect(0,border,width,height-border*2);
 		src = canvas.toDataURL();
 		div.style.backgroundImage = "url("+src+")";
-		div.style.backgroundColor = "transparent";
+		div.style.backgroundColor = "rgba(0,0,0,0)";
 		// Console background
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
@@ -404,7 +404,7 @@
 			var y = Math.floor(Math.random()*height);
 			var size = Math.floor(Math.random()*widthMax);
 			ctx.beginPath()
-			ctx.arc(x,y,size,0,2*Math.PI);
+			ctx.arc(x, y, size, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		}
@@ -484,7 +484,7 @@
 		ctx.strokeStyle = "#997700";
 		ctx.beginPath();
 		ctx.lineWidth = 10;
-		ctx.arc(width-marginX*2,height-margin,(height-margin*2)/2,0,-90*Math.PI/180,true);
+		ctx.arc(width-marginX*2, height-margin, (height-margin*2)/2, 0, -90*Math.PI/180, true);
 		ctx.lineTo(marginX,height/2);
 		ctx.stroke();
 		ctx.closePath();
@@ -544,8 +544,8 @@
 		margin = width/8;
 		ctx.fillStyle = "#FF0000";
 		ctx.beginPath();
-		ctx.arc(width/2,height/2+margin/8,height/2-margin/2,0,270*Math.PI/180);
-		ctx.arc(width/2,height/2+margin/8,(height-margin)/2-lineWidth,270*Math.PI/180,0,true);
+		ctx.arc(width/2, height/2+margin/8, height/2-margin/2, 0, 270*Math.PI/180, false);
+		ctx.arc(width/2, height/2+margin/8, (height-margin)/2-lineWidth, 270*Math.PI/180, 0, true);
 		ctx.fill();
 		ctx.closePath();
 		ctx.beginPath();
@@ -577,7 +577,7 @@
 		ctx.strokeStyle = "#997700";
 		ctx.beginPath();
 		ctx.lineWidth = 10;
-		ctx.arc(marginX*2,height-margin,(height-margin*2)/2,180*Math.PI/180,-90*Math.PI/180,false);
+		ctx.arc(marginX*2, height-margin, (height-margin*2)/2, 180*Math.PI/180, -90*Math.PI/180, false);
 		ctx.lineTo(width-marginX,height/2);
 		ctx.stroke();
 		ctx.closePath();
@@ -729,7 +729,7 @@
 		gradient.addColorStop(1,'rgb(103,137,171)');
 		ctx.fillStyle = gradient;
 		ctx.beginPath();
-		ctx.arc(orgx,orgy,size/2,2*Math.PI,0,false);
+		ctx.arc(orgx, orgy, size/2, 2*Math.PI, 0, false);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
@@ -832,20 +832,20 @@
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(orgx,orgy,size/2,2*Math.PI,0,false);
+			ctx.arc(orgx, orgy, size/2, 2*Math.PI, 0, false);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(orgx,orgy,size/2+2,angle-Math.PI/1.5,angle+Math.PI/1.5,true);
+			ctx.arc(orgx, orgy, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
 			ctx.stroke();
 			ctx.lineWidth = 2;
 			ctx.beginPath();
-			ctx.arc(orgx,orgy,size/2+5,angle-Math.PI/1.4,angle+Math.PI/1.4,true);
+			ctx.arc(orgx, orgy, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
 			ctx.stroke();
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-			ctx.arc(orgx,orgy,size/2+9,angle-Math.PI/1.3,angle+Math.PI/1.3,true);
+			ctx.arc(orgx, orgy, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
 			ctx.stroke();
 		} else {
 			var turtleCanvas = document.createElement("canvas");
@@ -1062,7 +1062,7 @@
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			var uploadButton = document.createElement("input");
 			uploadButton.type = "file";
-			uploadButton.addEventListener('change', loadCodeFile, false);
+			uploadButton.addEventListener("change", loadCodeFile, false);
 			uploadButton.style.display = "none";
 			document.body.appendChild(uploadButton);
 			uploadButton.click();
