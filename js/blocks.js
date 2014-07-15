@@ -499,14 +499,14 @@
 			}
 			parameterInputs[i].name = _(parameter.name);
 			parameterInputs[i].id = paramNumber;
-			var defaultValue = parameter.default;
+			var defaultValue = parameter.initial;
 			if (div.getAttribute("param"+paramNumber) !== undefined) {
 				defaultValue = div.getAttribute("param"+paramNumber);
 			}
 			if (defaultValue === undefined || defaultValue === null) {
 				defaultValue = "";
 			}
-			parameterInputs[i].default = defaultValue;
+			parameterInputs[i].initial = defaultValue;
 			paramNumber++;
 		} 
 		if (parameterInputs.length > 0) {		
@@ -555,7 +555,7 @@
 				textDiv.appendChild(span);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id;
-				input.value = parameter.default;
+				input.value = parameter.initial;
 				input.type = "text";
 				input.style.width = "100px";
 				if (level === "level2") {
@@ -566,7 +566,7 @@
 				textDiv.appendChild(input);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id+"Default";
-				input.value = parameter.default;
+				input.value = parameter.initial;
 				input.type = "hidden";
 				textDiv.appendChild(input);
 				msgDiv.appendChild(textDiv);

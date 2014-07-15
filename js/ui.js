@@ -1387,8 +1387,8 @@
 				var param = undefined;
 				if (div.getAttribute("param"+(i+1)) !== null) {
 					param = div.getAttribute("param"+(i+1));
-				} else if (instruction.parameters[i].default !== undefined) {
-					param = instruction.parameters[i].default;
+				} else if (instruction.parameters[i].initial !== undefined) {
+					param = instruction.parameters[i].initial;
 					div.setAttribute("param"+(i+1),param);
 				}
 				if (param !== undefined) {

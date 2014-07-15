@@ -28,7 +28,7 @@
 		},
 		i18n: {
 			available: {
-				default: { name: "English" }
+				initial: { name: "English" }
 			},
 			current: "default"
 		},
