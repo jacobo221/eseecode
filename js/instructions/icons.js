@@ -272,7 +272,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin+(width-margin*2)*param1/whiteboard.offsetWidth,margin+(height-margin*2)*param2/whiteboard.offsetHeight,height/20,startAngle,endAngle);
+			ctx.arc(margin+(width-margin*2)*param1/$_eseecode.whiteboard.offsetWidth,margin+(height-margin*2)*param2/$_eseecode.whiteboard.offsetHeight,height/20,startAngle,endAngle);
 			ctx.fill();
 		},
 		"goToCenter": function(ctx, width, height, param) {
