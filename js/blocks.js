@@ -633,7 +633,6 @@
 					supportedInputs[key] = true;
 				}
 			}
-console.log(supportedInputs)
 			var visualTypeSupportedByBrowser = false;
 			if (parameter.type === "text") {
 				visualTypeSupportedByBrowser = true;
@@ -829,7 +828,6 @@ console.log(supportedInputs)
 			div.appendChild(element);
 		}
 		updateIcon();
-		return div;
 	}
 
 	/**
