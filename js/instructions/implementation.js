@@ -533,7 +533,7 @@
 	 * @example rotateRight(90)
 	 */
 	function rotateRight(degrees, axis) {
-		var canvasSize = whiteboard.offsetWidth;
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var tempCanvas = document.createElement("canvas");
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
@@ -580,7 +580,7 @@
 	function scale(horizontal, vertical, axis) {
 		var color = $_eseecode.currentCanvas.style.color;
 		var size = $_eseecode.currentCanvas.style.size;
-		var canvasSize = whiteboard.offsetWidth;
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var tempCanvas = document.createElement("canvas");
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
@@ -760,7 +760,7 @@
 	 * @example getLayerWidth()
 	 */
 	function getLayerWidth() {
-		var canvasSize = whiteboard.clientWidth;
+		var canvasSize = $_eseecode.whiteboard.clientWidth;
 		return canvasSize;
 	}
 
@@ -772,7 +772,7 @@
 	 * @example getLayerHeight()
 	 */
 	function getLayerHeight() {
-		var canvasSize = whiteboard.clientHeight;
+		var canvasSize = $_eseecode.whiteboard.clientHeight;
 		return canvasSize;
 	}
 
@@ -959,7 +959,7 @@
 			angle = 0;
 		}
 		// We must create a new canvas and merge, otherwise if writeAt was called in the middle of a shape it would break the shape
-		var canvasSize = whiteboard.offsetWidth;
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var tempCanvas = document.createElement("canvas");
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
