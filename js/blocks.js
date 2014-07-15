@@ -545,16 +545,11 @@
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
 				var textDiv = document.createElement("div");
-				var helpText = _("enter the value for %s's parameter",[instructionName+"()"])+" \""+_(parameter.name)+"\"";
-				if (parameter.id > 0) {
-					helpText = ordinal(parameter.id)+" "+helpText;
-				} else {
-					helpText = helpText.charAt(0).toUpperCase() + helpText.slice(1);
-				}
+				var helpText = _("Enter the value for %s's %s parameter",[instructionName+"()", ordinal(parameter.id)])+" \""+_(parameter.name)+"\"";
 				if (parameter.tip) {
-					helpText += ".\n"+_(parameter.tip);
+					helpText += ".\n<b>"+_(parameter.tip);
 				}
-				helpText += ":<br />";
+				helpText += "</b>:<br />";
 				var span = document.createElement("span");
 				span.innerHTML += helpText;
 				textDiv.appendChild(span);
