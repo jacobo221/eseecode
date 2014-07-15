@@ -782,7 +782,7 @@
 			} else if (parameter.type === "bool") {
 				visualTypeSupportedByBrowser = true;
 				element = document.createElement("select");
-				element.innerHTML = "<option value='true'>true</option><option value='false'>false</option>";
+				element.innerHTML = "<option value='true'>"+_("true")+"</option><option value='false'>"+_("false")+"</option>";
 				if (defaultValue === "false") {
 					element.value = "false";
 				} else {
