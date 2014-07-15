@@ -132,7 +132,7 @@
 		} else {
 			handler = "touchstart";
 		}
-		$_eseecode.session.floatingBlock.div.removeEventListener(handler,clickBlock);
+		$_eseecode.session.floatingBlock.div.removeEventListener(handler, clickBlock, false);
 		if (level != "level1") {
 			// firefox is unable to use the mouse event handler if it is called from HTML handlers, so here we go
 			if (!isTouchDevice()) {
@@ -282,7 +282,7 @@
 		}
 		if (div.tagName === "DIV") {
 			if (!$_eseecode.instructions.set[div.getAttribute("instructionSetId")].dummy) {
-				div.addEventListener(handler,callPointer);
+				div.addEventListener(handler,callPointer,false);
 			}
 		}
 		recursiveAddEventListener(div.firstChild,handler,callPointer);
@@ -649,7 +649,7 @@
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = '"'+this.value+'"';
 					updateIcon();
-				});
+				}, false);
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined && supportedInputs["range"]) {
@@ -676,7 +676,7 @@
 						document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseInt(this.getAttribute("valueEscalation"));
 						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
 						updateIcon();
-					});
+					}, false);
 					element.appendChild(elementInput);
 					var elementSpace = document.createElement("span");
 					elementSpace.innerHTML = "  ";
@@ -726,7 +726,7 @@
 							elem.value = elem.getAttribute("min");
 						}
 						elem.dispatchEvent(new Event('change'));
-					});
+					}, false);
 					element.appendChild(elementMinus);
 					var elementInput = document.createElement("input");
 					elementInput.id = parameterInputId+"VisualInput";
@@ -746,7 +746,7 @@
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
 						updateIcon();
-					});
+					}, false);
 					element.appendChild(elementInput);
 					var elementPlus = document.createElement("input");
 					elementPlus.type = "button";
@@ -776,7 +776,7 @@
 							elem.value = elem.getAttribute("max");
 						}
 						elem.dispatchEvent(new Event('change'));
-					});
+					}, false);
 					element.appendChild(elementPlus);
 				}
 			} else if (parameter.type === "bool") {
@@ -792,7 +792,7 @@
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = (this.value === "false")?false:true;
 					updateIcon();
-				});
+				}, false);
 			} else if (parameter.type === "color") {
 				visualTypeSupportedByBrowser = true;
 				element = document.createElement("input");
@@ -814,7 +814,7 @@
 					}
 					document.getElementById(parameterInputId).value = '"'+value+'"';
 					updateIcon();
-				});
+				}, false);
 			}
 			if (!visualTypeSupportedByBrowser) {
 				element = document.createElement("input");
@@ -823,7 +823,7 @@
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = this.value;
 					updateIcon();
-				});
+				}, false);
 			}
 			div.appendChild(element);
 		}
@@ -924,7 +924,7 @@
 			} else {
 				handler = "touchstart";
 			}
-			div.addEventListener(handler, clickBlock);
+			div.addEventListener(handler, clickBlock, false);
 		} else {
 			if (level == "level1") {
 				var handler;
@@ -933,7 +933,7 @@
 				} else {
 					handler = "touchstart";
 				}
-				div.removeEventListener(handler,clickBlock);
+				div.removeEventListener(handler, clickBlock, false);
 			} else if (level == "level2" || level == "level3") {
 				var handler;
 				if (!isTouchDevice()) {
@@ -941,7 +941,7 @@
 				} else {
 					handler = "touchstart";
 				}
-				div.addEventListener(handler,clickBlock);
+				div.addEventListener(handler, clickBlock, false);
 			}
 		}
 	}

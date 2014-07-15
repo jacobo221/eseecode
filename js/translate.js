@@ -163,6 +163,6 @@
 			var option = document.createElement("option");
 			option.text = $_eseecode.i18n.available[langKey].name;
 			option.value = langKey;
-			select.add(option);
+			select.add(option, null);
 		}
 	}

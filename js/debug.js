@@ -107,10 +107,10 @@
 		var tabdiv = document.getElementById("console-tabdiv");
 		tabdiv.style.webkitFilter = "";
 		tabdiv.style.filter = "";
-		tabdiv.removeEventListener("mousedown",addBreakpointEventEnd);
-		tabdiv.removeEventListener("touchstart",addBreakpointEventEnd);
-		document.body.removeEventListener("mousedown",addBreakpointEventCancel);
-		document.body.removeEventListener("touchstart",addBreakpointEventCancel);
+		tabdiv.removeEventListener("mousedown", addBreakpointEventEnd, false);
+		tabdiv.removeEventListener("touchstart", addBreakpointEventEnd, false);
+		document.body.removeEventListener("mousedown", addBreakpointEventCancel, false);
+		document.body.removeEventListener("touchstart", addBreakpointEventCancel, false);
 		document.body.style.cursor = "auto";
 		var consoleDiv = document.getElementById("console-blocks");
 		var consoleDiv2 = document.getElementById("console-write");
@@ -147,10 +147,10 @@
 		var tabdiv = document.getElementById("console-tabdiv");
 		tabdiv.style.webkitFilter = "invert(0.9)";
 		tabdiv.style.filter = "invert(90%)";
-		tabdiv.addEventListener("mousedown",addBreakpointEventEnd,false);
-		tabdiv.addEventListener("touchstart",addBreakpointEventEnd,false);
-		document.body.addEventListener("mousedown",addBreakpointEventCancel,false);
-		document.body.addEventListener("touchstart",addBreakpointEventCancel,false);
+		tabdiv.addEventListener("mousedown", addBreakpointEventEnd, false);
+		tabdiv.addEventListener("touchstart", addBreakpointEventEnd, false);
+		document.body.addEventListener("mousedown", addBreakpointEventCancel, false);
+		document.body.addEventListener("touchstart", addBreakpointEventCancel, false);
 	}
 
 	/**

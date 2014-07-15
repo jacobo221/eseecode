@@ -38,7 +38,7 @@
 			var startAngle = 0;
 			var endAngle = param2*Math.PI/180;
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,radius,startAngle,endAngle);
+			ctx.arc(width/2, height/2, radius, startAngle, endAngle, false);
 			ctx.stroke();
 			ctx.closePath();
 		},
@@ -82,9 +82,9 @@
 			ctx.closePath();
 			ctx.fillStyle = '#000000';
 			ctx.beginPath();
-			ctx.arc(margin,height/2,2,startAngle,endAngle);
-			ctx.arc(margin,margin+3*(height-margin*2)/4,2,startAngle,endAngle);
-			ctx.arc(margin,height-margin,2,startAngle,endAngle);
+			ctx.arc(margin, height/2, 2, startAngle, endAngle, false);
+			ctx.arc(margin, margin+3*(height-margin*2)/4, 2, startAngle, endAngle, false);
+			ctx.arc(margin, height-margin, 2, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"clean": function(ctx, width, height, param) {
@@ -138,9 +138,9 @@
 			ctx.closePath();
 			ctx.fillStyle = '#000000';
 			ctx.beginPath();
-			ctx.arc(width-margin,height/2,2,startAngle,endAngle);
-			ctx.arc(width-margin,margin+(height-margin*2)/4,2,startAngle,endAngle);
-			ctx.arc(width-margin,margin,2,startAngle,endAngle);
+			ctx.arc(width-margin, height/2,2, startAngle, endAngle, false);
+			ctx.arc(width-margin, margin+(height-margin*2)/4, 2, startAngle, endAngle, false);
+			ctx.arc(width-margin, margin, 2, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"flipHorizontally": function(ctx, width, height, param) {
@@ -272,7 +272,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin+(width-margin*2)*param1/$_eseecode.whiteboard.offsetWidth,margin+(height-margin*2)*param2/$_eseecode.whiteboard.offsetHeight,height/20,startAngle,endAngle);
+			ctx.arc(margin+(width-margin*2)*param1/$_eseecode.whiteboard.offsetWidth, margin+(height-margin*2)*param2/$_eseecode.whiteboard.offsetHeight,height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"goToCenter": function(ctx, width, height, param) {
@@ -281,7 +281,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,height/20,startAngle,endAngle);
+			ctx.arc(width/2, height/2, height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"goToLowLeft": function(ctx, width, height, param) {
@@ -290,7 +290,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin,height-margin,height/20,startAngle,endAngle);
+			ctx.arc(margin, height-margin, height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"goToLowRight": function(ctx, width, height, param) {
@@ -299,7 +299,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(width-margin,height-margin,height/20,startAngle,endAngle);
+			ctx.arc(width-margin, height-margin, height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"goToUpLeft": function(ctx, width, height, param) {
@@ -308,7 +308,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin,margin,height/20,startAngle,endAngle);
+			ctx.arc(margin, margin, height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"goToUpRight": function(ctx, width, height, param) {
@@ -317,7 +317,7 @@
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(width-margin,margin,height/20,startAngle,endAngle);
+			ctx.arc(width-margin, margin, height/20, startAngle, endAngle, false);
 			ctx.fill();
 		},
 		"hide": function(ctx, width, height, param) {
@@ -346,7 +346,7 @@
 				var endAngle = Math.random()*2*Math.PI;
 				ctx.fillStyle = "rgb("+parseInt(256*Math.random())+","+parseInt(256*Math.random())+","+parseInt(256*Math.random())+")";
 				ctx.beginPath();
-				ctx.arc(margin/2+(width-margin)*Math.random(),margin+(height-margin*2)*Math.random(),(height-margin*2)/2*Math.random(),startAngle,endAngle);
+				ctx.arc(margin/2+(width-margin)*Math.random(), margin+(height-margin*2)*Math.random(), (height-margin*2)/2*Math.random(), startAngle, endAngle, false);
 				ctx.fill();
 			}
 			ctx.restore();
@@ -446,7 +446,7 @@
 			ctx.stroke();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.arc(width/2+squareWidth,height/2+squareHeight,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(width/2+squareWidth, height/2+squareHeight, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		},
@@ -476,7 +476,7 @@
 			ctx.stroke();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.arc(width/2+squareWidth,height/2+squareHeight,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(width/2+squareWidth, height/2+squareHeight, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		},
@@ -506,7 +506,7 @@
 			ctx.stroke();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.arc(width/2+squareWidth,height/2+squareHeight,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(width/2+squareWidth, height/2+squareHeight, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		},
@@ -536,7 +536,7 @@
 			ctx.stroke();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.arc(width/2+squareWidth,height/2+squareHeight,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(width/2+squareWidth, height/2+squareHeight, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		},
@@ -566,7 +566,7 @@
 			ctx.stroke();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.arc(width/2+squareWidth,height/2+squareHeight,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(width/2+squareWidth, height/2+squareHeight, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 			ctx.closePath();
 		},
@@ -699,7 +699,7 @@
 			ctx.lineWidth = 3;
 			var startAngle = 0;
 			var endAngle = param1*Math.PI/180;
-			ctx.arc(width/2,height/2,(height-margin)/2,startAngle,endAngle);
+			ctx.arc(width/2, height/2, (height-margin)/2, startAngle, endAngle, false);
 			ctx.stroke();
 			ctx.closePath();
 			var COx, COy; // vector from center to origin
@@ -710,7 +710,7 @@
 			var y = height/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 			ctx.beginPath();
 			ctx.fillStyle = "#000000";
-			ctx.arc(x,y,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(x, y, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 		},
 		"rotateRight": function(ctx, width, height, param) {
@@ -734,7 +734,7 @@
 			ctx.lineWidth = 3;
 			var startAngle = Math.PI;
 			var endAngle = param1*Math.PI/180;
-			ctx.arc(width/2,height/2,(height-margin)/2,startAngle,endAngle);
+			ctx.arc(width/2, height/2, (height-margin)/2, startAngle, endAngle, false);
 			ctx.stroke();
 			ctx.closePath();
 			var COx, COy; // vector from center to origin
@@ -745,7 +745,7 @@
 			var y = height/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 			ctx.beginPath();
 			ctx.fillStyle = "#000000";
-			ctx.arc(x,y,1.5*lineWidth,0,2*Math.PI);
+			ctx.arc(x, y, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
 		},
 		"scale": function(ctx, width, height, param) {
@@ -817,7 +817,7 @@
 			ctx.strokeStyle = "#000000";
 			ctx.moveTo(width/2,height/2);
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,height/3,startAngle,endAngle);
+			ctx.arc(width/2, height/2, height/3, startAngle, endAngle, false);
 			ctx.fill();
 			ctx.stroke();
 			ctx.closePath();
@@ -958,8 +958,8 @@
 			var endAngle = -90*Math.PI/180;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,height/2-margin,startAngle,endAngle);
-			ctx.arc(width/2,height/2,(height/2-margin)*(param/maxparam),endAngle,startAngle,true);
+			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2, (height/2-margin)*(param/maxparam), endAngle, startAngle, true);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
@@ -1016,8 +1016,8 @@
 			var endAngle = (param-90)*Math.PI/180;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,height/2-margin,startAngle,endAngle);
-			ctx.arc(width/2,height/2,(height/2-margin)*(param/maxparam),endAngle,startAngle,true);
+			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2, (height/2-margin)*(param/maxparam), endAngle, startAngle, true);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
@@ -1071,7 +1071,7 @@
 			ctx.strokeStyle = "#000000";
 			ctx.moveTo(width/2,height/2);
 			ctx.beginPath();
-			ctx.arc(width/2,height/2,height/3,startAngle,endAngle);
+			ctx.arc(width/2, height/2, height/3, startAngle, endAngle, false);
 			ctx.stroke();
 			ctx.closePath();
 			ctx.strokeStyle = "#AA0000";
