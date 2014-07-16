@@ -607,6 +607,18 @@
 		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
 		var parameters = instruction.parameters;
 		var parametersCount = document.getElementById("setupBlockCount").value;
+		var supportedInputs = { range: false, number: false, color: false };
+		var testDiv = document.createElement("input");
+		for (var key in supportedInputs) {
+			try {
+				testDiv.type = key;
+			} catch (excepion) {
+				// input.type = ... can throw exception in IE9 and below if the type is unsupported
+			}
+			if (testDiv.getAttribute("type") === key) {
+				supportedInputs[key] = true;
+			}
+		}
 		for (var i=0; i<parametersCount; i++) {
 			var parameter = parameters[i];
 			var parameterInputId = "setupBlock"+(i+1);
@@ -620,14 +632,6 @@
 				input.style.display = "none";
 			}
 			var defaultValue = input.value;
-			var supportedInputs = { range: false, number: false, color: false };
-			var testDiv = document.createElement("input");
-			for (var key in supportedInputs) {
-				testDiv.setAttribute("type", key);
-				if (testDiv.getAttribute("type") === key) {
-					supportedInputs[key] = true;
-				}
-			}
 			var visualTypeSupportedByBrowser = false;
 			if (parameter.type === "text") {
 				visualTypeSupportedByBrowser = true;
