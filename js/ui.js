@@ -1360,7 +1360,7 @@
 	function getFunctions(type) {
 		var values = [];
 		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
-			if ($_eseecode.instructions.set[i].return === type) {
+			if ($_eseecode.instructions.set[i].type === type) {
 				values.push($_eseecode.instructions.set[i].name);
 			}
 		}

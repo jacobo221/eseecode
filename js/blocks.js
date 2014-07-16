@@ -826,10 +826,10 @@
 				element.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					var value = this.value;
-					if (value.charAt(0) !== "#") {
-						value = "#"+value;
+					if (value.charAt(0) !== "#" && value.charAt(1) !== "#") { // Old Chrome versions will change type to "color" but use text input, so check for # in second char too
+						value = '"#'+value+'"';
 					}
-					document.getElementById(parameterInputId).value = '"'+value+'"';
+					document.getElementById(parameterInputId).value = value;
 					updateIcon();
 				}, false);
 			}
