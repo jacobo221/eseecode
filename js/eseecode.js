@@ -30,7 +30,7 @@
 			available: {
 				initial: { name: "English" }
 			},
-			current: "default"
+			current: "initial"
 		},
 		instructions: {
 			set: {},

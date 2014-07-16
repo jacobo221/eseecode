@@ -13,7 +13,7 @@
 		var langCurrent = $_eseecode.i18n.current;
 		var lang = $_eseecode.i18n.available[langCurrent];
 		if (!lang) {
-			lang = $_eseecode.i18n.available["default"];
+			lang = $_eseecode.i18n.available["initial"];
 		}
 		var translated;
 		if (lang[text]) {
@@ -33,8 +33,8 @@
 	/**
 	 * Switch translation
 	 * @private
-	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new langauge, it takes "default"
-	 * @param {Boolean} [force] Forces the language switch even if it is the same as the current language. If the language doens't exist it falls back to "default"
+	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new language, it takes "initial"
+	 * @param {Boolean} [force] Forces the language switch even if it is the same as the current language. If the language doens't exist it falls back to "initial"
 	 * @example switchLanguage("ca")
 	 */
 	function switchLanguage(lang, force) {
@@ -46,7 +46,7 @@
 				}
 			}
 			if (!lang) {
-				lang = "default";
+				lang = "initial";
 			}
 		}
 		lang = lang.toLowerCase();
@@ -57,7 +57,7 @@
 		// Check the translation is available
 		if (!$_eseecode.i18n.available[lang]) {
 			if (force) {
-				lang = "default";
+				lang = "initial";
 			} else {
 				return;
 			}
