@@ -672,7 +672,7 @@
 				if (parameter.minValue !== undefined && parameter.maxValue !== undefined && supportedInputs["range"]) {
 					visualTypeSupportedByBrowser = true;
 					var elementInput = document.createElement("input");
-					elementInput.type = "range";
+					elementInput.setAttribute("type", "range");
 					if (parameter.stepValue !== undefined) {
 						stepValue = parameter.stepValue;
 					}
@@ -747,7 +747,7 @@
 					element.appendChild(elementMinus);
 					var elementInput = document.createElement("input");
 					elementInput.id = parameterInputId+"VisualInput";
-					elementInput.type = "number";
+					elementInput.setAttribute("type", "number");
 					if (defaultValue !== undefined) {
 						elementInput.value = defaultValue*valueEscalation;
 					}
@@ -817,7 +817,7 @@
 					element.value = defaultValue;
 				}
 				if (supportedInputs["color"]) {
-					element.type = "color";
+					element.setAttribute("type", "color");
 				} else {
 					// Use jsColor
 					element.className = "color";
