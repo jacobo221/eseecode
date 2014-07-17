@@ -1,0 +1,11 @@
+goTo(100, 100);
+repeat (8) {
+  turnRight(45);
+  repeat (3) {
+    repeat (90) {
+      forward(2);
+      turnRight(2);
+    }
+    turnRight(90);
+  }
+}

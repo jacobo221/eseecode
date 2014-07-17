@@ -1,0 +1,151 @@
+function changeWord() {
+	word = windowInputGet("secret")
+	windowInputSet("secret", "")
+	restart()
+}
+
+function tryLetter() {
+	var letter = windowInputGet("letter")
+	if (letter) {
+		var pos = word.indexOf(letter)
+		if (pos >= 0) {
+			use(1)
+			unsetColor()
+			repeat (pos) {
+				forward(20)
+			}
+			setColor("#0000CC")
+			setSize(16)
+			write(letter)
+			unsetColor()
+			repeat (pos) {
+				forward(-20)
+			}
+			rights = rights + 1
+			if (rights == word.length) {
+				alert("YOU WIN!")
+			}
+		} else {
+			var layer = 2
+			while (getLayerVisibility(layer)) {
+				layer = layer + 1
+			}
+			show(layer)
+			var letters
+			if (!(letters = windowTextGet("t3"))) {
+				windowTextCreate(1, "t3", "Failed letters: " + letter, 20, 150, undefined, true)
+			} else {
+					windowTextEdit("t3", letters + " " + letter)
+			}
+			fails = fails + 1
+			if (fails == 8) {
+				alert("You lost...")
+				restart()
+			}
+		}
+	}
+	windowInputSet("letter", "")
+}
+
+function restart() {
+	fails = 0
+	rights = 0
+	windowTextRemove("t3")
+	repeat (9) {
+		clean(repeatCount + 1)
+	}
+	use(1)
+	goTo(50, 350)
+	turnReset()
+	setSize(2)
+	repeat (word.length) {
+		setColor("#000000")
+		forward(10)
+		unsetColor()
+		forward(10)
+	}
+	repeat (word.length) {
+		forward(-20)
+	}
+	use(2)
+	turnReset()
+	goTo(150, 200)
+	setColor("#AAAAAA")
+	forward(70)
+	forward(-35)
+	turnLeft(90)
+	setColor("#A52A2A")
+	setSize(4)
+	forward(120)
+	hide()
+	use(3)
+	turnReset()
+	setSize(4)
+	goTo(185, 80)
+	setColor("#A52A2A")
+	forward(70)
+	hide()
+	use(4)
+	turnReset()
+	setSize(2)
+	goTo(250, 80)
+	turnRight(90)
+	setColor("#A52A2A")
+	forward(10)
+	setSize(4)
+	lineAt(185, 100, 200, 80)
+	hide()
+	use(5)
+	turnReset()
+	goTo(250, 95)
+	setColor("#FFA500")
+	arc(5, 360, 0, false)
+	hide()
+	use(6)
+	turnReset()
+	goTo(250, 100)
+	turnRight(90)
+	setColor("#FFA500")
+	forward(70)
+	hide()
+	use(7)
+	turnReset()
+	goTo(250, 125)
+	turnLeft(30)
+	setColor("#FFA500")
+	forward(20)
+	goTo(250, 125)
+	turnLeft(120)
+	setColor("#FFA500")
+	forward(20)
+	hide()
+	use(8)
+	turnReset()
+	goTo(250, 170)
+	turnRight(30)
+	setColor("#FFA500")
+	forward(20)
+	goTo(250, 170)
+	turnRight(120)
+	setColor("#FFA500")
+	forward(20)
+	hide()
+	use(9)
+	turnReset()
+	setColor("#A52A2A")
+	setSize(2)
+	lineAt(200, 80, 250, 100)
+	hide()
+}
+
+var word = "word"
+var fails = 0
+var rights = 0
+windowTextCreate(1, "t1", "Secret:", 20, 75, undefined, true)
+windowInputCreate(1, "secret", 70, 75, 70, 15, "text")
+windowButtonCreate(1, "b1", "Apply", 150, 75, "changeWord()")
+windowTextCreate(1, "t2", "Try letter:", 20, 100, undefined, true)
+windowInputCreate(1, "letter", 120, 100, 20, 15, "text")
+windowButtonCreate(1, "b2", "Try", 150, 100, "tryLetter()")
+restart()
+

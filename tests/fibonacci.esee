@@ -1,0 +1,8 @@
+function fibonacci(a, b, limit) {
+  if (limit != 0) {
+    arc(b, 90, 1);
+    fibonacci(b, a+b, limit-1);
+  }
+}
+goToCenter();
+fibonacci(1, 1, 12);
