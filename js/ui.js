@@ -1408,6 +1408,8 @@
 			    instruction.nameRewrite[level] !== undefined &&
 			    instruction.nameRewrite[level] !== null) {
 				text += instruction.nameRewrite[level];
+			} else if (div.getAttribute("instructionName") !== null) {
+				text += div.getAttribute("instructionName");
 			} else {
 				text += instruction.name;
 			}
