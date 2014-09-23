@@ -12,6 +12,7 @@
 	}
 	.blockTitle {
 		display: block;
+		white-space: nowrap;
 	}
 	.dummyBlock {
 		background-image: none;

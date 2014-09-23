@@ -4,6 +4,7 @@
 	var ast = parser.ast;
 
 	function appendBlock(level, instruction, parentDiv, params) {
+		var div = document.createElement('div');
 		var instructionSetId = getInstructionSetIdFromName(instruction);
 		if (instructionSetId < 0) {
 			instructionSetId = getInstructionSetIdFromName("unknownFunction");
@@ -15,11 +16,9 @@
 				}
 				parametersTexts += params[i];
 			}
-			params = new Array("");
-			params[0] = instruction;
-			params[1] = value;
+			params = [parametersTexts];
+			div.setAttribute("instructionName", instruction);
 		}
-		var div = document.createElement('div');
 		if (params) {
 			div.setAttribute("param1", ""); // At least force it to have one parameter
 			for (var i=0; i<params.length; i++) {

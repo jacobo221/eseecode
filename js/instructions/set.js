@@ -8,7 +8,7 @@
 	$_eseecode.instructions.set = [
 		{ name: "null", category: "internal", parameters: [{name: "text", type: "text", noBrackets: true}], show: [], code: { noName: true, noBrackets: true } },
 		{ name: "nullChild", category: "internal", parameters: [{name: "text", type: "text", noBrackets: true}], show: [], dummy: true, code: { noName: true, noBrackets: true, unindent: true } },
-		{ name: "unknownFunction", category: "internal", parameters: [{name: "parameters...", type: "text"}], show: [], code: { noName: true } },
+		{ name: "unknownFunction", category: "internal", parameters: [{name: "parameters...", type: "text"}], show: [] },
 		{ name: "object", category: "other", parameters: null, type: "object", show: [], block: ["endObject"], nameRewrite: { level3: "", level4: "" }, code: { prefix: "{ " } },
 		{ name: "comment", category: "other", parameters: [{name: "comment", type: "text", noBrackets: true}], tip: "Comment text, ignored during execution", show: ["level3","level4"], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "//", level4: "//" }, code: { space: true, noBrackets: true } },
 		{ name: "commentmultiline", category: "other", parameters: [{name: "comment", type: "text", noBrackets: true}], tip: "Comment text, ignored during execution", show: [], block: ["endComment"], nameRewrite: { level1: "Comment:", level2: "Comment:", level3: "/*", level4: "/*" }, code: { space: true, noBrackets: true } },
