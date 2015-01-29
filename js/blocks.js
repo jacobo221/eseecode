@@ -644,11 +644,13 @@
 					}
 					element.value = defaultValue;
 				}
-				element.addEventListener("change", function() {
+				var changeFunction = function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = '"'+this.value+'"';
 					updateIcon();
-				}, false);
+				};
+				element.addEventListener("change", changeFunction, false);
+				element.addEventListener("keyup", changeFunction, false);
 			} else if (parameter.type === "font") {
 				visualTypeSupportedByBrowser = true;
 				var fonts = ["monospace", "serif", "sans-serif", "fantasy", "Arial", "Arial Black", "Arial Narrow", "Arial Rounded MT Bold", "Bookman Old Style", "Bradley Hand ITC", "Century", "Century Gothic", "Comic Sans MS", "Courier", "Courier New", "Georgia", "Gentium", "Impact", "King", "Lucida Console", "Lalit", "Modena", "Monotype Corsiva", "Papyrus", "Tahoma", "TeX", "Times", "Times New Roman", "Trebuchet MS", "Verdana", "Verona" ];
