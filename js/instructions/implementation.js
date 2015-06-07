@@ -683,7 +683,7 @@
 	 * @example getArcsine(90)
 	 */
 	function getArcsine(angle) {
-		var value = Math.asin(angle*Math.PI/180);
+		var value = Math.asin(angle)*180/Math.PI;
 		return value;
 	}
 
@@ -709,7 +709,7 @@
 	 * @example getArccosine(90)
 	 */
 	function getArccosine(angle) {
-		var value = Math.acos(angle*Math.PI/180);
+		var value = Math.acos(angle)*180/Math.PI;
 		return value;
 	}
 
@@ -735,7 +735,7 @@
 	 * @example getArctangent(90)
 	 */
 	function getArctangent(angle) {
-		var value = Math.atan(angle*Math.PI/180);
+		var value = Math.atan(angle)*180/Math.PI;
 		return value;
 	}
 
