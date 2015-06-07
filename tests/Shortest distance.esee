@@ -1,0 +1,54 @@
+function drawPoints() {
+	//Draw points in Black
+	var i = 0
+	repeat (n) {
+		goTo(points[i].x, points[i].y)
+		beginShape()
+		arc(2, 360, 0, 0)
+		endShape()
+		i++
+	}
+}
+
+function distance(p1, p2) {
+	return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y))
+}
+
+var n = 70
+var xmax = 375
+var ymax = 375
+var points = []
+var animate = []
+for (var i = 0; i < n; ++i) {
+		points.push({x: Math.random() * (xmax - 1) + 1, y: Math.random() * (ymax - 1) + 1})
+
+}
+points.sort((function(a, b) {
+return a.x - b.x;
+}))
+drawPoints()
+var posi = 0, posj = 1
+animate.push({p1: points[posi], p2: points[posj], color: "green"})
+var minDist = distance(points[posi], points[posj])
+for (var i = 0; i < points.length; ++i) {
+		for (var j = i + 1; j < points.length; ++j) {
+				if (distance(points[i], points[j]) < minDist) {
+					minDist = distance(points[i], points[j])
+					posi = i
+					posj = j
+				}
+
+		}
+
+}
+setColor('red')
+goTo(points[posi].x, points[posi].y)
+beginShape()
+arc(2, 360, 0, 0)
+endShape()
+goTo(points[posj].x, points[posj].y)
+beginShape()
+arc(2, 360, 0, 0)
+endShape()
+goTo(points[posi].x, points[posi].y)
+line(points[posj].x, points[posj].y)

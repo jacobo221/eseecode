@@ -1,0 +1,102 @@
+function drawPoints() {
+	//Draw points in Black
+	var i = 0
+	repeat (n) {
+		goTo(points[i].x, points[i].y)
+		beginShape()
+		arc(2, 360, 0, 0)
+		endShape()
+		i++
+	}
+}
+
+function distance(p1, p2) {
+	return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y))
+}
+
+function closestPair(indA, indB) {
+	var indM = (indA + indB - ((indA + indB) % 2)) / 2
+	if (indB - indA < 2) {
+		return Infinity
+	}
+	if ((indB - indA) == 2) {
+		var dist = distance(points[indA], points[indA + 1])
+		if (dist < minAbsDist) {
+			minAbsDist = dist
+			bestPair.p1 = points[indA]
+			bestPair.p2 = points[indA + 1]
+		}
+		return dist
+	}
+	var d1 = closestPair(indA, indM)
+	var d2 = closestPair(indM, indB)
+	var d = Math.min(d1, d2)
+	var band = []
+	for (var i = indA; i < indB; ++i) {
+			if (Math.abs(points[i].x - points[indM].x) < d) {
+				band.push(points[i])
+			}
+
+	}
+	band.sort((function(a, b) {
+return a.y - b.y;
+}))
+	var indLast = 0
+	for (var i = 1; i < band.length; ++i) {
+			while ((indLast < i) && (band[i].y - band[indLast].y >= d)) {
+				++indLast
+			}
+			for (var j = indLast; j < i; ++j) {
+					var dist = distance(band[i], band[j])
+					if (dist < minAbsDist) {
+						minAbsDist = dist
+						bestPair.p1 = band[i]
+						bestPair.p2 = band[j]
+					}
+					d = Math.min(d, dist)
+
+			}
+
+	}
+	return d
+}
+
+var n = 10
+var xmax = 400
+var ymax = 400
+var points = []
+for (var i = 0; i < n; ++i) {
+		points.push({x: Math.random() * (xmax - 1) + 1, y: Math.random() * (ymax - 1) + 1})
+
+}
+points.sort((function(a, b) {
+return a.x - b.x;
+}))
+drawPoints()
+var bestPair = {p1: points[0], p2: points[1]}
+var minAbsDist = Infinity
+var posi = 0, posj = 1
+var minDist = distance(points[posi], points[posj])
+for (var i = 0; i < points.length; ++i) {
+		for (var j = i + 1; j < points.length; ++j) {
+				if (distance(points[i], points[j]) < minDist) {
+					minDist = distance(points[i], points[j])
+					posi = i
+					posj = j
+				}
+
+		}
+
+}
+closestPair(0, n)
+setColor('red')
+goTo(bestPair.p1.x, bestPair.p1.y)
+beginShape()
+arc(2, 360, 0, 0)
+endShape()
+goTo(bestPair.p2.x, bestPair.p2.y)
+beginShape()
+arc(2, 360, 0, 0)
+endShape()
+goTo(bestPair.p1.x, bestPair.p1.y)
+line(bestPair.p2.x, bestPair.p2.y)

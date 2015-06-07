@@ -1,0 +1,68 @@
+function drawPoints() {
+	//Draw points in Black
+	var i = 0
+	repeat (n) {
+		goTo(points[i].x, points[i].y)
+		beginShape()
+		arc(2, 360, 0, 0)
+		endShape()
+		i++
+	}
+}
+
+function distance(p1, p2) {
+	return Math.sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y))
+}
+
+var n = 30
+var xmax = 400
+var ymax = 400
+var points = []
+for (var i = 0; i < n; ++i) {
+		points.push({x: Math.random() * (xmax - 1) + 1, y: Math.random() * (ymax - 1) + 1})
+
+}
+points.sort((function(a, b) {
+return a.x - b.x;
+}))
+drawPoints()
+var origen = points[0]
+points.splice(0, 1)
+//remove origin
+//sort with respect to the angle
+points.sort((function(a, b) {
+return Math.atan2(a.y - origen.y, a.x - origen.x) - Math.atan2(b.y - origen.y, b.x - origen.x);
+}))
+points.splice(0, 0, origen)
+//add origin at the start and end of the polygon
+points.push(origen)
+var sol = []
+sol.push(points[0])
+sol.push(points[1])
+for (var i = 2; i < points.length; ++i) {
+		var u = sol.length - 1
+		//We build 2 vectors (with the last edge and the next possible edge)
+		var last = {a: sol[u].x - sol[u - 1].x, b: sol[u].y - sol[u - 1].y}
+		var next = {a: points[i].x - sol[u].x, b: points[i].y - sol[u].y}
+		var esq = last.a * next.b - (last.b * next.a)
+		//We compute last x next
+		while (esq < 0) {
+			sol.pop()
+			u--
+			last = {a: sol[u].x - sol[u - 1].x, b: sol[u].y - sol[u - 1].y}
+			next = {a: points[i].x - sol[u].x, b: points[i].y - sol[u].y}
+			esq = last.a * next.b - (last.b * next.a)
+		}
+		sol.push(points[i])
+
+}
+goTo(sol[0].x, sol[0].y)
+setColor('aquamarine')
+beginShape()
+for (var i = 1; i < sol.length; ++i) {
+		line(sol[i].x, sol[i].y)
+
+}
+endShape()
+setColor('black')
+drawPoints()

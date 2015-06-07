@@ -1,0 +1,31 @@
+function primer(n) {
+	var isPrime = true
+	var i = 1
+	var d = 0
+	repeat (n) {
+		if ((n % i) == 0) {
+			d++
+		}
+		i++
+	}
+	if (d == 2) {
+		return true
+	}
+	return false
+}
+
+goToCenter()
+setSize(10)
+var j = 0
+repeat (10) {
+	var i = 0
+	repeat (10) {
+		setColor('blue')
+		if (primer(i * 10 + j)) {
+			setColor('red')
+		}
+		writeAt(i * 10 + j, 10 + j * 30, i * 30 + 20, 0)
+		i++
+	}
+	j++
+}
