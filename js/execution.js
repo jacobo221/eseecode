@@ -214,7 +214,7 @@
 	 * @example execute()
 	 */
 	function execute(forceNoStep, inCode, justPrecode) {
-		if (!code) {
+		if (!inCode) {
 			resetSandbox();
 		}
 		var code;
