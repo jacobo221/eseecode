@@ -14,7 +14,7 @@
 				link: undefined
 			},
 			version: {
-				text: "2.0",
+				text: "2.1",
 				link: "CHANGELOG.md"
 			},
 			author: {

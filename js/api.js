@@ -23,9 +23,10 @@
 	 * Loads code into the console
 	 * @public
 	 * @param {String} code Code to upload
-	 * @example uploadCode("repeat(4){forward(100)}")
+	 * @param {Boolean} If true, runs code and stores it to be run before every execution of user code
+	 * @example uploadCode("repeat(4){forward(100)}",false)
 	 */
-	function uploadCode(code) {
+	function uploadCode(code,preload) {
 		if (!code) {
 			return;
 		}
@@ -46,10 +47,16 @@
 		} else {
 			msgBox(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in level4 mode",[level]));
 		}
-		if (mode == "blocks") {
-			program.makeBlocks(level,document.getElementById("console-blocks"));
-		} else if (mode == "write") {
-			resetWriteConsole(program.makeWrite(level,"","\t"));
+		if (preload === true) {
+			$_eseecode.execution.precode = code;
+			execute();
+		} else {
+		        if (mode == "blocks") {
+			        program.makeBlocks(level,document.getElementById("console-blocks"));
+		        } else if (mode == "write") {
+			        resetWriteConsole(program.makeWrite(level,"","\t"));
+		        }
+		        resetCanvas();
 		}
-		resetCanvas();
 	}
+
