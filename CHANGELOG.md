@@ -1,4 +1,15 @@
-## 2.0 (on the works)
+## 2.1 (ongoing work)
+ * Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
+ * Pre-run instructions through API for exercise
+ * Focus back to code when clicking instruction in dialog
+ * Added some interesting mathematical examples by Joan Alemany Flos
+ * Bug: FlipHoritzontally was not working correctly
+ * Bug: Fix scale() icon was broken
+Known bugs:
+ - Unable to convert function calls from level4 to level3 and call() in dialog in level4 was showing identifier as a regular parameter
+ - Preload code + step-by-step noto working well together
+
+## 2.0 (2015-01-29)
 
  *Milestone: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface

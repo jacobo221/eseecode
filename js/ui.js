@@ -1184,6 +1184,7 @@
 		resizeConsole(true);
 		initConsole();
 		resetCanvas();
+		executePrecode();
 		resetDebug();
 		initSetup();
 		resetLanguageSelect();
@@ -1274,7 +1275,7 @@
 					var canvas = document.createElement("canvas");
 					canvas.width = consoleDiv.clientWidth;
 					canvas.height = consoleDiv.clientHeight-tipDiv.offsetHeight-5;
-					var arrowHeight = startInstructionDiv.offsetTop-tipDiv.offsetTop+startInstructionDiv.offsetHeight/2;
+					var arrowHeight = startInstructionDiv.offsetTop-tipDiv.offsetTop+startInstructionDiv.offsetHeight/2-185;
 					if (arrowHeight > canvas.height) {
 						arrowHeight = canvas.height;
 					}
@@ -1492,37 +1493,67 @@
 		var instructions = $_eseecode.instructions.set;
 		var width = $_eseecode.setup.blockWidth[level];
 		var height = $_eseecode.setup.blockHeight[level];
+		var urlParts = window.location.href.match(/(\?|&)instructions=([^&#]+)/);
 		var clearNext = false;
-		for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
-			var category = $_eseecode.instructions.categories[n].name;
-			var firstInCategory = true;
-			for (var i=0;i<$_eseecode.instructions.set.length;i++) {
-				// Only show instructions in the current category
-				if (category != $_eseecode.instructions.set[i].category) {
-					continue;
+                if (urlParts !== null) {
+                        // Check that there an explicit instruction set
+                        var instructions = urlParts[2].split(";");
+                        for (var i=0;i<instructions.length;i++) {	
+                                codeId = instructions[i];
+                                if (codeId == "blank") {
+                                        clearNext = true;
+                                        continue;
+                                }
+                                var div = document.createElement('div');
+                                if (clearNext) {
+                                        clearNext = false;
+                                        div.style.clear = "left";
+                                }
+                                dialog.appendChild(div);
+				var instruction = $_eseecode.instructions.set[getInstructionSetIdFromName(codeId)];
+				var newInstructionId = $_eseecode.instructions.set.length;
+				$_eseecode.instructions.set[newInstructionId] = clone(instruction);
+				var j = 0;
+				while (i+1+j < instructions.length && (isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
+					$_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
+					j++;
 				}
-				// See if this instruction is shown in this level
-				var show = false;
-				for (var j=0; j<$_eseecode.instructions.set[i].show.length; j++) {
-					if ($_eseecode.instructions.set[i].show[j] == level) {
-						show = true;
-						break;
-					}
-				}
-				if (show) {
-					var codeId = $_eseecode.instructions.set[i].name;
-					if (codeId == "blank") {
-						clearNext = true;
-						continue;
-					}
-					var div = document.createElement('div');
-					if (firstInCategory || clearNext) {
-						div.style.clear = "left";
-						firstInCategory = false;
-						clearNext = false;
-					}
-					dialog.appendChild(div);
-					createBlock(level,div,i,true);
+//alert(instructions[i] + " " + instructions[i].charAt(0));
+				i += j;
+                                createBlock(level,div,newInstructionId,true);
+                        }
+		} else {
+		        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
+			        var category = $_eseecode.instructions.categories[n].name;
+			        var firstInCategory = true;
+			        for (var i=0;i<$_eseecode.instructions.set.length;i++) {
+				        // Only show instructions in the current category
+				        if (category != $_eseecode.instructions.set[i].category) {
+					        continue;
+				        }
+				        // See if this instruction is shown in this level
+				        var show = false;
+				        for (var j=0; j<$_eseecode.instructions.set[i].show.length; j++) {
+					        if ($_eseecode.instructions.set[i].show[j] == level) {
+						        show = true;
+						        break;
+					        }
+				        }
+				        if (show) {
+					        var codeId = $_eseecode.instructions.set[i].name;
+					        if (codeId == "blank") {
+						        clearNext = true;
+						        continue;
+					        }
+					        var div = document.createElement('div');
+					        if (firstInCategory || clearNext) {
+						        div.style.clear = "left";
+						        firstInCategory = false;
+						        clearNext = false;
+					        }
+					        dialog.appendChild(div);
+					        createBlock(level,div,i,true);
+				        }
 				}
 			}
 		}
@@ -1645,6 +1676,7 @@
 			text += instruction.code.suffix;
 		}
 		ace.edit("console-write").insert(text);
+		ace.edit("console-write").focus();
 	}
 
 	/**
@@ -1671,6 +1703,7 @@
 		resetCanvas();
 		initProgramCounter(true);
 		unhighlight();
+		executePrecode();
 	}
 
 	/**

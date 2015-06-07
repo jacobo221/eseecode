@@ -47,7 +47,8 @@
 			programCounterLimit: 0,
 			endLimit: undefined,
 			startTime: undefined,
-			sandboxProperties: []
+			sandboxProperties: [],
+			precode: ""
 		},
 		codeFilename: "",
 		session: {

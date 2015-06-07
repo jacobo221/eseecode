@@ -83,7 +83,7 @@
 	}
 
 	/**
-	 * Resets and sets up internal configuration for a new cod execution
+	 * Resets and sets up internal configuration for a new code execution
 	 * @private
 	 * @param {Boolean|String} [resetStepLimit] true = restart the stepping, false = update the stepping, "disabled" = ignore the stepping
 	 * @example initProgramCounter()
@@ -210,14 +210,17 @@
 	 * @private
 	 * @param {Boolean} [forceNoStep] Whether or not to force to ignore the stepping
 	 * @param {String} [code] Code to run. If unset run the code in the console window
+	 * @param {Boolean} [justPrecode] Whether or not to ignore the usercode and just run the precode
 	 * @example execute()
 	 */
-	function execute(forceNoStep, code) {
+	function execute(forceNoStep, inCode, justPrecode) {
 		if (!code) {
 			resetSandbox();
 		}
+		var code;
 		var withStep;
-		if (forceNoStep || code) { // Code from events run without stepping
+		if (forceNoStep || inCode) { // Code from events run without stepping
+			code = inCode;
 			withStep = "disabled";
 		}
 		unhighlight();
@@ -256,11 +259,17 @@
 			resetCanvas();
 			resetBreakpointWatches();
 		}
-		code = code2run(code, !withStep);
+		var jsCode = "";
+		if (!inCode && $_eseecode.execution.precode) { // Don't load precode again when running the code of an event
+			jsCode += code2run($_eseecode.execution.precode)+";initProgramCounter("+(withStep=== "disabled"?'"disabled"':withStep)+");\n";
+		}
+		if (!justPrecode) {
+			jsCode += code2run(code);
+		}
 		var script = document.createElement("script");
 		script.id = "executionCode";
 		script.type = "text/javascript";
-		script.innerHTML = code;
+		script.innerHTML = jsCode;
 		var oldWindowProperties;
 		if (Object.getOwnPropertyNames) {
 			oldWindowProperties = Object.getOwnPropertyNames(window);
@@ -275,5 +284,17 @@
 		// if debug is open refresh it
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name == "debug") {
 			resetDebug();
+		}
+	}
+
+	/**
+	 * Runs precode
+	 * @private
+	 * @example executePrecode()
+	 */
+	function executePrecode() {
+		// Run precode if there is one
+		if ($_eseecode.execution.precode) {
+			execute("disabled", null, true);
 		}
 	}

@@ -751,6 +751,7 @@
 		"scale": function(ctx, width, height, param) {
 			var margin = 15;
 			var param1;
+			var param2;
 			if (param) {
 				param1 = param[0];
 				param2 = param[1];
