@@ -1496,7 +1496,7 @@
 		var urlParts = window.location.href.match(/(\?|&)instructions=([^&#]+)/);
 		var clearNext = false;
                 if (urlParts !== null) {
-                        // Check that there an explicit instruction set
+                        // Check that there is an explicit instruction set
                         var instructions = urlParts[2].split(";");
                         for (var i=0;i<instructions.length;i++) {	
                                 codeId = instructions[i];
@@ -1510,15 +1510,23 @@
                                         div.style.clear = "left";
                                 }
                                 dialog.appendChild(div);
-				var instruction = $_eseecode.instructions.set[getInstructionSetIdFromName(codeId)];
-				var newInstructionId = $_eseecode.instructions.set.length;
-				$_eseecode.instructions.set[newInstructionId] = clone(instruction);
+				var newInstructionId;
+				if ($_eseecode.instructions.custom.length > 0) { // Custom instructions are already loaded in the instructionSet
+					newInstructionId = $_eseecode.instructions.custom[i];
+				} else {
+				        var instruction = $_eseecode.instructions.set[getInstructionSetIdFromName(codeId)];
+				        newInstructionId = $_eseecode.instructions.set.length;
+				        $_eseecode.instructions.set[newInstructionId] = clone(instruction);
+				        $_eseecode.instructions.set[newInstructionId].show = [];
+					$_eseecode.instructions.custom[$_eseecode.instructions.custom.length-1] = newInstructionId;
+				}
 				var j = 0;
 				while (i+1+j < instructions.length && (isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
-					$_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
-					j++;
+                                        // Doing this when custom instructions have been previously created is redundant but dones't hurt and allows us to increase variable i skipping the parameters without duplicating code
+				        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
+				        j++;
 				}
-//alert(instructions[i] + " " + instructions[i].charAt(0));
+        //alert(instructions[i] + " " + instructions[i].charAt(0));
 				i += j;
                                 createBlock(level,div,newInstructionId,true);
                         }
