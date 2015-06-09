@@ -133,7 +133,7 @@
 				str += indent + "} else {";
 				str += realCodeAddition(realCode,this.loc.start.line);
 				str += "\n";
-				str += alternate.makeWrite(level, indent + indentChar, indentChar, realCode);
+				str += alternate.makeWrite(level, indent, indentChar, realCode);
 				str += indent + "}";
 			} else {
 				 // else if
