@@ -1058,13 +1058,15 @@
 	 */
 	function image(src, posx, posy, width, height) {
 		var img = new Image();
+		img.onload = function() {
+			if (typeof height === "undefined") {
+				$_eseecode.currentCanvas.context.drawImage(img, posx, posy);
+			} else {
+				$_eseecode.currentCanvas.context.drawImage(img, posx, posy, width, height);
+			}
+		}
 		if (src) {
 			img.src = src;
-		}
-		if (typeof height === "undefined") {
-			$_eseecode.currentCanvas.context.drawImage(img, posx, posy);
-		} else {
-			$_eseecode.currentCanvas.context.drawImage(img, posx, posy, width, height);
 		}
 	}
 

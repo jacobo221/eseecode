@@ -3,9 +3,12 @@
  * Pre-run instructions through API for exercise
  * Focus back to code when clicking instruction in dialog
  * Added some interesting mathematical examples by Joan Alemany Flos
- * Bug: FlipHoritzontally was not working correctly
- * Bug: Fix scale() icon was broken
- * Bug: Fix getArctangent(), getArcsine() and getArcCosine
+ * Added a shortcut to run the code: CTRL+I
+ * Fix: FlipHoritzontally was not working correctly
+ * Fix: image() needed refresh to load the image
+ * Fix: scale() icon was broken
+ * Fix: getArctangent(), getArcsine() and getArcCosine were broken
+ * Fix: else's inner block not being correctly indented
 Known bugs:
  - Unable to convert function calls from level4 to level3 and call() in dialog in level4 was showing identifier as a regular parameter
  - Preload code + step-by-step noto working well together
