@@ -1226,9 +1226,9 @@
 					msgBoxClose();
 				}
 			}
-		} else if (event.which === 73 && event.ctrlKey && !event.shiftKey) { // CTRL+I
+		} else if (event.which === 82 && event.ctrlKey && !event.shiftKey) { // CTRL+R
 			execute();
-			event.stopPropagation();
+			event.preventDefault();
 		} else if (mode == "blocks") {
 			if (event && event.type == "keydown") {
 				if (event.which === 90 && event.ctrlKey && !event.shiftKey) { // CTRL+Z

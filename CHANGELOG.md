@@ -5,7 +5,7 @@
  * Added some interesting mathematical examples by Joan Alemany Flos
  * Added some fractal examples adapted from the FMSLogo documentation
  * Added examples exercices showing the new embedding capabilities
- * Added a shortcut to run the code: CTRL+I
+ * Added a shortcut to run the code: CTRL+R
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
  * Fix: scale() icon was broken
