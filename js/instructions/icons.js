@@ -806,7 +806,7 @@
 			if (param) {
 				param = param[0];
 			}
-			if (param.indexOf('"') !== 0) {
+			if (param.indexOf('"') !== 0 && param.indexOf("'") !== 0) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);

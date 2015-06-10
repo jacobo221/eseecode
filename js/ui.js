@@ -1226,6 +1226,9 @@
 					msgBoxClose();
 				}
 			}
+		} else if (event.which === 73 && event.ctrlKey && !event.shiftKey) { // CTRL+I
+			execute();
+			event.stopPropagation();
 		} else if (mode == "blocks") {
 			if (event && event.type == "keydown") {
 				if (event.which === 90 && event.ctrlKey && !event.shiftKey) { // CTRL+Z
@@ -1522,11 +1525,10 @@
 				}
 				var j = 0;
 				while (i+1+j < instructions.length && (isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
-                                        // Doing this when custom instructions have been previously created is redundant but dones't hurt and allows us to increase variable i skipping the parameters without duplicating code
+                                        // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
 				        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
 				        j++;
 				}
-        //alert(instructions[i] + " " + instructions[i].charAt(0));
 				i += j;
                                 createBlock(level,div,newInstructionId,true);
                         }
