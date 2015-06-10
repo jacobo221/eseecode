@@ -1058,11 +1058,13 @@
 	 */
 	function image(src, posx, posy, width, height) {
 		var img = new Image();
+		var canvas = $_eseecode.currentCanvas;
+		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (typeof height === "undefined") {
-				$_eseecode.currentCanvas.context.drawImage(img, posx, posy);
+				canvas.context.drawImage(img, posx, posy);
 			} else {
-				$_eseecode.currentCanvas.context.drawImage(img, posx, posy, width, height);
+				canvas.context.drawImage(img, posx, posy, width, height);
 			}
 		}
 		if (src) {
