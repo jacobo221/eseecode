@@ -3,7 +3,8 @@
 <iframe id="eseecode-frame" width="1001" height="500" src="../index.html?level=4"></iframe>
 <script type="text/javascript">
 function testme() {
-document.getElementById('eseecode-frame').contentWindow.uploadCode('windowInputCreate(1,1,10,10,200,20);windowButtonCreate(1,2,"Prova",10,300,"writeAt(primer(windowInputGet(1)),20,20)");', true);
+document.getElementById('eseecode-frame').contentWindow.uploadCode('function func(n) { } setSize(15); var j = 0; repeat (10) { var i = 0; repeat (10) { setColor("blue"); if (func(i * 10 + j)) { setColor("red"); } if (i == 0) { writeAt(i * 10 + j, 18 + j * 40, 20 + i * 40, 0); } else { writeAt(i * 10 + j, 5 + j * 40, 20 + i * 40, 0); } i++; } j++; };');
+
 }
 window.addEventListener("load", testme);
 </script>
