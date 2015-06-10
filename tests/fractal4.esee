@@ -1,0 +1,21 @@
+function crisscross(size, depth) {
+	if (depth == 0) {
+		return
+	}
+	setColor(getRGB(depth * 50, depth * 50, depth * 50))
+	repeat (4) {
+		forward(size / 2)
+		crisscross(size / 3, depth - 1)
+		forward(size / 2)
+		forward(-size)
+		turnRight(45)
+		forward(size)
+		forward(-size)
+		turnRight(45)
+	}
+	setColor(getRGB((depth + 1) * 50, (depth + 1) * 50, (depth + 1) * 50))
+}
+
+goToCenter()
+crisscross(200, 4)
+

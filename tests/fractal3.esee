@@ -1,0 +1,44 @@
+function curly_fractal(size) {
+	if (size < 0.5) {
+		return
+	}
+	repeat (360) {
+		if (repeatCount == 5) {
+			turnLeft(90)
+			curly_fractal(size / 2)
+			turnRight(90)
+		}
+		if (repeatCount == 10) {
+			turnLeft(90)
+			curly_fractal(size / 5)
+			turnRight(90)
+		}
+		if (repeatCount == 15) {
+			turnLeft(90)
+			curly_fractal(size / 5)
+			turnRight(90)
+		}
+		if (repeatCount == 20) {
+			turnLeft(90)
+			curly_fractal(size / 4)
+			turnRight(90)
+		}
+		if (repeatCount == 25) {
+			turnLeft(90)
+			curly_fractal(size / 5)
+			turnRight(90)
+		}
+		if (repeatCount == 30) {
+			turnLeft(90)
+			curly_fractal(size / 8)
+			turnRight(90)
+		}
+		forward(size)
+		turnRight(repeatCount)
+	}
+	turnRight(180)
+}
+
+goToCenter()
+curly_fractal(10)
+

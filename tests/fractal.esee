@@ -1,0 +1,24 @@
+function snowflake_side(length, depth) {
+	if (depth == 0) {
+		forward(length)
+		return
+	}
+	snowflake_side(length / 3, depth - 1)
+	turnLeft(60)
+	snowflake_side(length / 3, depth - 1)
+	turnRight(120)
+	snowflake_side(length / 3, depth - 1)
+	turnLeft(60)
+	snowflake_side(length / 3, depth - 1)
+}
+
+function snowflake(length, depth) {
+	repeat (3) {
+		snowflake_side(length, depth)
+		turnRight(120)
+	}
+}
+
+goToCenter()
+snowflake(200, 4)
+

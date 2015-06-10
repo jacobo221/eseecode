@@ -3,6 +3,7 @@
  * Pre-run instructions through API for exercise
  * Focus back to code when clicking instruction in dialog
  * Added some interesting mathematical examples by Joan Alemany Flos
+ * Added some fractal examples adapted from the FMSLogo documentation
  * Added a shortcut to run the code: CTRL+I
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image

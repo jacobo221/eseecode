@@ -1,0 +1,17 @@
+function plant(size, angle) {
+	if (size < 1) {
+		return
+	}
+	turnRight(angle)
+	forward(size)
+	repeat (4) {
+		plant(size / 2, getRandomNumber(160) - 80)
+	}
+	forward(-size)
+	turnLeft(angle)
+}
+
+goToCenter()
+turnLeft(90)
+plant(50, 0)
+
