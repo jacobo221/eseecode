@@ -1,0 +1,11 @@
+<html>
+<body>
+<iframe id="eseecode-frame" width="1001" height="500" src="../index.html?level=4"></iframe>
+<script type="text/javascript">
+function testme() {
+document.getElementById('eseecode-frame').contentWindow.uploadCode('windowInputCreate(1,1,10,10,200,20);windowButtonCreate(1,2,"Prova",10,300,"writeAt(primer(windowInputGet(1)),20,20)");', true);
+}
+window.addEventListener("load", testme);
+</script>
+</body>
+</html>

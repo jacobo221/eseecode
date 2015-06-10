@@ -1,0 +1,11 @@
+<html>
+<body>
+<iframe id="eseecode-frame" width="1000" height="500" src="../index.html?instructions=forward;20;blank;turnLeft;9;turnRight;9&level=1"></iframe>
+<script type="text/javascript">
+function testme() {
+document.getElementById('eseecode-frame').contentWindow.uploadCode('image("http://www.theclevelandfan.com/images/stories/dots.gif",0,-2,400,400);use();goTo(50,25)', true);
+}
+window.addEventListener("load", testme);
+</script>
+</body>
+</html>
