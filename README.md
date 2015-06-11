@@ -31,7 +31,7 @@ The latest eSeeCode release is always available [here](https://github.com/jacobo
 Author and license
 ------------------
 
-eSeeCode project was created and is maintained by [Jacobo Vilella Vilahur](mailto:jacobo221@gmail.com) and released under the [GNU Lesser General Public License version 3 or later](https://gnu.org/licenses/gpl.html).
+eSeeCode project was created and is maintained by [Jacobo Vilella Vilahur](mailto:jvilella@eseecode.com) and released under the [GNU Lesser General Public License version 3 or later](https://gnu.org/licenses/gpl.html).
 
 Integrated projects
 -------------------
