@@ -1324,6 +1324,26 @@
 	}
 
 	/**
+	 * Creates a clone of the current layer in another layer, returns the layer name
+	 * @since 2.1
+	 * @public
+	 * @param {Number} [id] Layer id. If unset it creates it in a new layer
+	 * @return {Number} Layer name
+	 * @example snapshot()
+	 */
+	function snapshot(id) {
+		var currentCanvas = $_eseecode.currentCanvas;
+		var canvas = switchCanvas(id);
+		var imageClone = getLayerImage(currentCanvas.name);
+		image(imageClone, 0, 0);
+		canvas.turtle = clone(currentCanvas.turtle);
+		canvas.style = clone(currentCanvas.style);
+		canvas.shaping = clone(currentCanvas.shaping);
+		switchCanvas(currentCanvas.name);
+		return canvas.name;
+	}
+
+	/**
 	 * Sets the size of the future draw lines and text in the currently active layer
 	 * @since 1.0
 	 * @public

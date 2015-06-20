@@ -113,6 +113,7 @@
 		{ name: "unsetItalic", category: "cursor", parameters: [], tip: "Resets the italic property for future text", show: ["level2","level3","level4"] },
 		{ name: "show", category: "canvas", parameters: [{name: "canvasId", initial: undefined, type: "number"}], tip: "Shows the canvas", show: ["level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level1"] },
+		{ name: "snapshot", category: "canvas", parameters: [{name: "id", initial: undefined, type: "number"}], type: "text", tip: "creates a clone of the current canvas, returns the name of the clone canvas", show: ["level4"] },
 		{ name: "use", category: "canvas", parameters: [{name: "id", initial: 1, type: "number"}], type: "text", tip: "Switches the active canvas, returns the name of the new current canvas", show: ["level3","level4"] },
 		{ name: "animate", category: "canvas", parameters: [{name: "action", initial: "", type: "text"},{name: "seconds", initial: 1, type: "number"},{name: "maxTimes", initial: 1, type: "number"}], tip: "Runs the action every seconds seconds up to maxTimes", show: ["level3","level4"] },
 		{ name: "unanimate", category: "canvas", parameters: [{name: "handlerId", initial: 0, type: "number"}], tip: "Stops an animation", show: ["level3","level4"] },

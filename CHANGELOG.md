@@ -1,4 +1,5 @@
 ## 2.1 (ongoing work)
+ * Added instruction snapshot() (by request)
  * Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
  * Pre-run instructions through API for exercise
  * Focus back to code when clicking instruction in dialog
