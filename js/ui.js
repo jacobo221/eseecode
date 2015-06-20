@@ -11,7 +11,7 @@
 		canvas.height = 400;
 		var ctx = canvas.getContext("2d");
 		var layer = $_eseecode.canvasArray[0];
-		for (var i=0; layer; i++) {
+		while (layer) {
 			if (layer != $_eseecode.canvasArray[0]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
@@ -20,6 +20,40 @@
 		link.href = canvas.toDataURL();
 		var d = new Date();
 		link.download = "canvas-"+d.getTime()+".png";
+	}
+
+	/**
+	 * Links an A HTML element to an image containing all the layers
+	 * @private
+	 * @param {!HTMLElement} link HTML A element to add the link to
+	 * @example downloadLayers(document.body.createElement("a"))
+	 */
+	function downloadLayers(link) {
+		var encoder = new GIFEncoder();
+		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
+		encoder.setDelay(500); //go to next frame every n milliseconds 
+		encoder.start();
+
+		var layer = $_eseecode.canvasArray[1]; // We skip first frame which is the grid
+		while (layer) {
+			var canvas = document.createElement('canvas');
+			canvas.width = 400;
+			canvas.height = 400;
+			var ctx = canvas.getContext("2d");
+			if (layer != $_eseecode.canvasArray[0]) {
+				ctx.fillStyle="#FFFFFF";
+				ctx.fillRect(0,0,canvas.width,canvas.height);
+				ctx.drawImage(layer.canvas,0,0);
+			}
+			encoder.addFrame(ctx);
+			layer = layer.layerOver;
+		}
+		encoder.finish();
+		var binary_gif = encoder.stream().getData();
+		var data_url = 'data:image/gif;base64,'+encode64(binary_gif); 
+		link.href = data_url;
+		var d = new Date();
+		link.download = "layers-"+d.getTime()+".gif";
 	}
 
 	/**

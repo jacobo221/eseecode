@@ -42,3 +42,4 @@ This project would have never been possible without the following projects which
 * [jsParser](http://cjihrig.com/blog/creating-a-javascript-parser/)
 * [fontDetect](http://www.lalit.org/lab/javascript-css-font-detect/)
 * [jsColor](http://jscolor.com/)
+* [jsgif](http://github.com/antimatter15/jsgif/)

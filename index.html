@@ -37,6 +37,10 @@
 <script type="text/javascript" src="js/ace/ext-language_tools.js"></script>
 <script type="text/javascript" src="js/fontdetect/fontdetect.js"></script>
 <script type="text/javascript" src="js/jscolor/jscolor.js"></script>
+<script type="text/javascript" src="js/jsgif/LZWEncoder.js"></script>
+<script type="text/javascript" src="js/jsgif/NeuQuant.js"></script>
+<script type="text/javascript" src="js/jsgif/GIFEncoder.js"></script>
+<script type="text/javascript" src="js/jsgif/b64.js"></script> 
 </head>
 <body>
 <div id="eseecode">
@@ -113,7 +117,8 @@
 					<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
 				</div><br />
 				<div>
-					<a id="downloadImage" href="#" onclick="downloadCanvas(this)"></a>
+					<p><a id="downloadImage" href="#" onclick="downloadCanvas(this)"></a></p>
+					<p><a id="downloadLayers" href="#" onclick="downloadLayers(this)"></a></p>
 				</div>
 			</div>
 		</div>

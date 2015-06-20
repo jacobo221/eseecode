@@ -51,6 +51,7 @@ $_eseecode.i18n.available.es = {
 	"Line": "Línea",
 	"Grid": "Malla",
 	"Download whiteboard image": "Descargar la imagen de la pizarra",
+	"Download layers": "Descargar las capas",
 	"Pause every": "Pausar cada",
 	"instructions": "instrucciones",
 	"Stop execution after": "Detener la ejecución tras",

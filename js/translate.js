@@ -130,6 +130,7 @@
 		document.getElementById("setup-turtle-enable-label").innerHTML = _("Toggle cursor");
 		document.getElementById("setup-turtle-enable").title = _("Toggle cursor");
 		document.getElementById("downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
+		document.getElementById("downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
 		document.getElementById("setup-execute-step-title").innerHTML = _("Pause every")+" ";
 		document.getElementById("setup-execute-step").title = _("Number of instructions until pause");
 		document.getElementById("setup-execute-step-title2").innerHTML = " "+_("instructions")+" ";

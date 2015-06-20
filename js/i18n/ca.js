@@ -54,6 +54,7 @@ $_eseecode.i18n.available.ca = {
 	"Grid inter-line space": "Espai entre línies",
 	"Toggle cursor": "Mostrar/ocultar cursor",
 	"Download whiteboard image": "Descarregar la imatge de la pissarra",
+	"Download layers": "Descarregar les capes",
 	"Pause every": "Pausar cada",
 	"instructions": "instruccions",
 	"Stop execution after": "Aturar l'execució passats",

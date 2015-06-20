@@ -1,5 +1,6 @@
 ## 2.1 (ongoing work)
- * Added instruction snapshot() (by request)
+ * Added instruction snapshot() (by request from J.Alemany)
+ * Added options to download all layers as an animation (by request from J.Alemany)
  * Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
  * Pre-run instructions through API for exercise
  * Focus back to code when clicking instruction in dialog
