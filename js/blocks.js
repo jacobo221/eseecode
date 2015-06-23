@@ -545,11 +545,19 @@
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
 				var textDiv = document.createElement("div");
-				var helpText = _("Enter the value for %s's %s parameter",[instructionName+"()", ordinal(parameter.id)])+" \""+_(parameter.name)+"\"";
-				if (parameter.tip) {
-					helpText += ".\n<b>"+_(parameter.tip);
+				var helpText = "";
+				if (level != "level2") {
+					helpText += _("Enter the value for %s's %s parameter",[instructionName+"()", ordinal(parameter.id)])+" \""+_(parameter.name)+"\":\n";
 				}
-				helpText += "</b>:<br />";
+				var tipTrans = _(parameter.tip);
+				if (parameter.tip) {
+					helpText += "<b>"+tipTrans;
+				}
+				helpText += "</b>"
+				if (tipTrans.charAt(tipTrans.length-1) != '?') {
+					helpText += ":";
+				}
+				helpText += "<br />";
 				var span = document.createElement("span");
 				span.innerHTML += helpText;
 				textDiv.appendChild(span);
