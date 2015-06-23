@@ -1,0 +1,39 @@
+function drawTriangle(a, b, c, alfa) {
+	forward(a)
+	turnLeft(180 - alfa)
+	forward(c)
+	turnLeft(180 - (90 - alfa))
+	forward(b)
+}
+
+function error(a, b, c, d) {
+	return getSquareRoot((a - c) * (a - c) + (b - d) * (b - d))
+}
+
+function binaryDraw(lvalue, rvalue) {
+	if (rvalue - lvalue < 5e-10) {
+		return lvalue
+	}
+	var minvalue = (lvalue + rvalue) / 2
+	//are this necessary?
+	clean()
+	turnReset()
+	goToCenter()
+	writeAt(minvalue, 50, 50)
+	writeAt("generated with eSeeCode", 150, 300)
+	drawTriangle(150, 200, 250, minvalue)
+	snapshot()
+	if (getY() > 200) {
+		return binaryDraw(minvalue, rvalue)
+	} else {
+		return binaryDraw(lvalue, minvalue)
+	}
+}
+
+var alfamin = binaryDraw(0, 90)
+hide()
+clean()
+turnReset()
+goToCenter()
+drawTriangle(150, 200, 250, alfamin)
+writeAt(alfamin, 50, 50)
