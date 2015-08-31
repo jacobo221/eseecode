@@ -23,9 +23,6 @@
  * Fix: breakpoint is unhighlighted when resetting the canvas
  * Fix: Undesired tabs switches
  * Fix: unsetInvisible() had no tip
-Known bugs:
- - Unable to convert function calls from level4 to level3 and call() in dialog in level4 was showing identifier as a regular parameter
- - Preload code + step-by-step noto working well together
 
 ## 2.0 (2015-01-29)
 
