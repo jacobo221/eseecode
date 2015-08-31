@@ -79,7 +79,7 @@
 			printExecutionError(err);
 		}
 		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-		document.getElementById("execute-notes").innerHTML = _("Instructions executed")+": "+$_eseecode.execution.programCounter+" ("+executionTime+" "+_("secs")+")";
+		document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed")+": "+$_eseecode.execution.programCounter+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 	}
 
 	/**

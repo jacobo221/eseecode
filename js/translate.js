@@ -75,7 +75,9 @@
 			}
 			translator = _("Translated to %s by %s",[$_eseecode.i18n.available[lang].name,translator]);
 		}
-		document.getElementById("language-translator").innerHTML = translator;
+		if (document.getElementById("language-translator")) {
+			document.getElementById("language-translator").innerHTML = translator;
+		}
 	}
 
 	/**
@@ -93,9 +95,9 @@
 		document.getElementById("language-title").innerHTML = _("Select language")+": ";
 		document.getElementById("language-select").title = _("Select language");
 		document.getElementById("title").innerHTML = _($_eseecode.platform.name.text);
-		document.getElementById("author").innerHTML = _("v")+"<a href=\""+_($_eseecode.platform.version.link)+"\" target=\"_blank\">"+_($_eseecode.platform.version.text)+"</a><br />\
-		"+_("Author")+": "+"<a href=\""+_($_eseecode.platform.author.link)+"\" target=\"_blank\">"+_($_eseecode.platform.author.text)+"</a><br />\
-		"+_("Licensed under the")+" "+"<a href=\""+_($_eseecode.platform.license.link)+"\" target=\"_blank\">"+_($_eseecode.platform.license.text)+"</a></div>";
+		document.getElementById("dialog-setup-author").innerHTML = _("v")+"<a href=\""+_($_eseecode.platform.version.link)+"\" target=\"_blank\">"+_($_eseecode.platform.version.text)+"</a><br />"
+		//+_("Author")+": "+"<a href=\""+_($_eseecode.platform.author.link)+"\" target=\"_blank\">"+_($_eseecode.platform.author.text)+"</a><br />"
+		+_("Licensed under the")+" "+"<a href=\""+_($_eseecode.platform.license.link)+"\" target=\"_blank\">"+_($_eseecode.platform.license.text)+"</a></div>";
 		document.getElementById("loadcode").value = _("Load code");
 		document.getElementById("savecode").value = _("Save code");
 		document.getElementById("whiteboard").title = _("Whiteboard");
@@ -118,6 +120,9 @@
 		document.getElementById("dialog-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its cursor\n * toggle layer visibility\n * set the active layer\n * run commands");
 		document.getElementById("dialog-debug-analyzer-title").innerHTML = _("Analyzer")+":";
 		document.getElementById("dialog-debug-analyzer-help").title = _("Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops");
+		document.getElementById("dialog-debug-execute-title").innerHTML = _("Execution")+":";
+		document.getElementById("dialog-debug-execute-help").title = _("Execution statistics");
+		document.getElementById("dialog-debug-execute").innerHTML = "";
 		document.getElementById("dialog-debug-command-label").innerHTML = _("Command");
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
@@ -129,8 +134,9 @@
 		document.getElementById("setup-turtle-enable-title").innerHTML = _("Cursor")+":";
 		document.getElementById("setup-turtle-enable-label").innerHTML = _("Toggle cursor");
 		document.getElementById("setup-turtle-enable").title = _("Toggle cursor");
-		document.getElementById("downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
-		document.getElementById("downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
+		document.getElementById("setup-downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
+		document.getElementById("setup-downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
+		document.getElementById("setup-downloadLayers-interval-title").innerHTML = _("Interval (in msecs)")+": ";
 		document.getElementById("setup-execute-step-title").innerHTML = _("Pause every")+" ";
 		document.getElementById("setup-execute-step").title = _("Number of instructions until pause");
 		document.getElementById("setup-execute-step-title2").innerHTML = " "+_("instructions")+" ";

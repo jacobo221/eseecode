@@ -45,15 +45,7 @@
 <body>
 <div id="eseecode">
 	<div id="header">
-		<div id="language" class="column">			
-			<div id="language-translator"></div><br />
-			<div id="language-switch">
-				<span id="language-title"></span>
-				<select id="language-select" onChange="switchLanguage(document.getElementById('language-select').value)"></select>
-			</div>
-		</div>
 		<h1 id="title" class="column"></h1>
-		<div id="author"></div>
 	</div>
 	<div id="body">
 		<div id="whiteboard" class="column"></div>
@@ -98,6 +90,10 @@
 				<div id="dialog-debug-analyzer-title"></div>
 				<div id="dialog-debug-analyzer-help">?</div>
 				<div id="dialog-debug-analyzer"></div>
+				<div class="separator"></div>
+				<div id="dialog-debug-execute-title"></div>
+				<div id="dialog-debug-execute-help">?</div>
+				<div id="dialog-debug-execute"></div>
 			</div>
 			<div id="dialog-debug-command"><form id="dialog-debug-form" onsubmit="execute(true,document.getElementById('dialog-debug-command-input').value);return false;">
 				<label id="dialog-debug-command-label" for="dialog-debug-command-input"></label><input id="dialog-debug-command-input" type="text" />
@@ -105,9 +101,23 @@
 			</form></div>
 			<div id="dialog-setup" class="program">
 				<br />
+				<div id="language">
+					<!-- <div id="language-translator"></div><br /> -->
+					<div id="language-switch">
+						<span id="language-title"></span>
+						<select id="language-select" onChange="switchLanguage(document.getElementById('language-select').value)"></select>
+					</div>
+				</div>
+				<br />
 				<div id="filemenu">
 					<input type="button" id="loadcode" name="loadfile" onclick="loadCode()" />
 					<input type="button" id="savecode" name="savefile" onclick="saveCode()" />
+				</div>
+				<br />
+				<div id="setup-grid">
+					<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
+					<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" />
+					<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
 				</div>
 				<br />
 				<div id="setup-execute-step-buttons">
@@ -117,20 +127,11 @@
 					<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
 				</div><br />
 				<div>
-					<p><a id="downloadImage" href="#" onclick="downloadCanvas(this)"></a></p>
-					<p><a id="downloadLayers" href="#" onclick="downloadLayers(this)"></a></p>
+					<p><a id="setup-downloadImage" href="#" onclick="downloadCanvas(this)"></a></p>
+					<p><a id="setup-downloadLayers" href="#" onclick="downloadLayers(this)"></a><br /><span id="setup-downloadLayers-interval-title"></span> <input id="setup-downloadLayers-interval" type="number" value="500" min="0" /></p>
 				</div>
+				<div id="dialog-setup-author"></div>
 			</div>
-		</div>
-	</div>
-	<div id="footer">
-		<div id="setup-grid" class="column">
-			<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
-			<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" />
-			<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
-		</div>
-		<div id="setup-execute" class="column">
-			<div id="execute-notes"></div>
 		</div>
 	</div>
 </div>

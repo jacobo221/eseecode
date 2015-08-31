@@ -10,12 +10,23 @@
 		canvas.width = 400;
 		canvas.height = 400;
 		var ctx = canvas.getContext("2d");
+		ctx.fillStyle="#FFFFFF";
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		if (document.getElementById("setup-grid-enable").checked) {
+			drawGrid(ctx);
+		}
 		var layer = $_eseecode.canvasArray[0];
 		while (layer) {
 			if (layer != $_eseecode.canvasArray[0]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			layer = layer.layerUnder;
+		}
+		if (document.getElementById("setup-turtle-enable").checked) {
+			var id = $_eseecode.currentCanvas.name;
+			var posX = $_eseecode.canvasArray[id].turtle.x;
+			var posY = $_eseecode.canvasArray[id].turtle.y;
+			drawCursor(ctx, posX, posY, id);
 		}
 		link.href = canvas.toDataURL();
 		var d = new Date();
@@ -31,22 +42,40 @@
 	function downloadLayers(link) {
 		var encoder = new GIFEncoder();
 		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
-		encoder.setDelay(500); //go to next frame every n milliseconds 
+		var interval = document.getElementById("setup-downloadLayers-interval").value;
+		if (!isNumber(interval)) {
+			interval = 500;
+		}
+		encoder.setDelay(interval); //go to next frame every n milliseconds 
 		encoder.start();
 
-		var layer = $_eseecode.canvasArray[1]; // We skip first frame which is the grid
+		var i = 1;
+		var layer = $_eseecode.canvasArray[i]; // We skip first frame which is the grid
 		while (layer) {
 			var canvas = document.createElement('canvas');
 			canvas.width = 400;
 			canvas.height = 400;
 			var ctx = canvas.getContext("2d");
+			ctx.fillStyle="#FFFFFF";
+			ctx.fillRect(0,0,canvas.width,canvas.height);
+			if (document.getElementById("setup-grid-enable").checked) {
+				drawGrid(ctx);
+			}
 			if (layer != $_eseecode.canvasArray[0]) {
-				ctx.fillStyle="#FFFFFF";
-				ctx.fillRect(0,0,canvas.width,canvas.height);
 				ctx.drawImage(layer.canvas,0,0);
 			}
+			if (document.getElementById("setup-turtle-enable").checked) {
+				var posX = layer.turtle.x;
+				var posY = layer.turtle.y;
+				drawCursor(ctx, posX, posY, i);
+			}
+			// Watermark
+			ctx.font = "20px Arial";
+			ctx.strokeStyle="#99AAAAAA";
+			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),canvas.width/4,canvas.height-20);
 			encoder.addFrame(ctx);
 			layer = layer.layerOver;
+			i++;
 		}
 		encoder.finish();
 		var binary_gif = encoder.stream().getData();
@@ -286,7 +315,10 @@
 		} else {
 			$_eseecode.modes.console[id].tab.className += " tab-active";
 		}
-		switchDialogMode(id);
+		// Only change the dialog window if it is set to the blocks/code tab (not if it is windows, debug or setup)
+		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.indexOf("level") == 0) {
+			switchDialogMode(id);
+		}
 		// if write mode, focus in the textarea. Do this after switchDialogMode() in case the dialog tries to steal focus
 		if ($_eseecode.modes.console[id].div == "write") {
 			ace.edit("console-write").focus();
@@ -339,7 +371,7 @@
 			debugCommand.style.display = "block";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
 			debugCommandInput.style.width = (debugCommand.offsetWidth - document.getElementById("dialog-debug-command-button").offsetWidth - 15) +"px";
-			debugCommandInput.focus();
+			//debugCommandInput.focus();
 		} else {
 			document.getElementById("dialog-debug-command").style.display = "none";
 		}
@@ -387,9 +419,11 @@
 	function initUIElements() {
 		var canvas, ctx, div, width, height, src;
 		// Main background
+		div = document.getElementById("eseecode");
+		/*
+		// Gradient background
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
-		div = document.getElementById("eseecode");
 		width = div.clientWidth;
 		height = div.clientHeight;
 		canvas.width = width;
@@ -410,6 +444,8 @@
 		src = canvas.toDataURL();
 		div.style.backgroundImage = "url("+src+")";
 		div.style.backgroundColor = "rgba(0,0,0,0)";
+		*/
+		div.style.backgroundColor = "#123456";
 		// Console background
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
@@ -824,10 +860,29 @@
 		canvas.width = canvasSize;
 		canvas.height = canvasSize;
 		var context = canvas.getContext("2d");
+		if (document.getElementById("setup-grid-enable").checked) {
+			drawGrid(context);
+		}
 		var targetCanvas = $_eseecode.canvasArray[id];
 		context.drawImage(targetCanvas.canvas, 0, 0);
 		var posX = targetCanvas.turtle.x;
 		var posY = targetCanvas.turtle.y;
+		drawCursor(context, posX, posY, id);
+		div.appendChild(canvas);
+		$_eseecode.whiteboard.appendChild(div);
+	}
+
+	/**
+	 * Draws a cursor
+	 * @private
+	 * @param {Object} context Context object where to draw the cursor
+	 * @param {Number} posX X coordinate of the cursor
+	 * @param {Number} posY Y coordinate of the cursor
+	 * @param {Number} id Id of the layer
+	 * @example drawCursor(ctx, posX, posY, id)
+	 */
+	function drawCursor(context, posX, posY, id) {
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (posX < 0 || posX > canvasSize || posY < 0 || posY > canvasSize) {
 			var markerSize = 20;
 			var orgx = posX;
@@ -890,8 +945,6 @@
 			resetTurtle(id, turtleContext);
 			context.drawImage(turtleCanvas, 0, 0);
 		}
-		div.appendChild(canvas);
-		$_eseecode.whiteboard.appendChild(div);
 	}
 
 	/**
@@ -912,12 +965,21 @@
 	 * @example resetGrid(3)
 	 */
 	function resetGrid() {
-		var canvasSize = window.getComputedStyle(document.querySelector('#whiteboard')).getPropertyValue('width').replace("px","");
 		var ctx = $_eseecode.canvasArray[0].context;
 		clearCanvas(0);
-		if (!document.getElementById("setup-grid-enable").checked) {
-			return;
+		if (document.getElementById("setup-grid-enable").checked) {
+			drawGrid(ctx);
 		}
+	}
+
+	/**
+	 * Draws a grid
+	 * @private
+	 * @param {Object} context Context object where to draw the grid
+	 * @example drawGrid(ctx)
+	 */
+	function drawGrid(ctx) {
+		var canvasSize = window.getComputedStyle(document.querySelector('#whiteboard')).getPropertyValue('width').replace("px","");
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
@@ -1284,10 +1346,17 @@
 	function checkAndAddBlocksTips() {
 		var consoleDiv = document.getElementById("console-blocks");
 		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == "console-blocks-tip") {
+			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 			// Console tip
-			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;display:table-cell;text-align:center;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;padding:"+(consoleDiv.clientHeight/2-10)+"px 10px 0px 10px'>"+_("Drop some blocks here to start programming!")+"</div>";
+			var text = "";
+			if (level === "level1") {
+				text = _("Click some blocks to start programming!");
+			} else {
+				text = _("Drop some blocks here to start programming!");
+			}
+			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;display:table-cell;text-align:center;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;padding:"+(consoleDiv.clientHeight/2-10)+"px 10px 0px 10px'>"+text+"</div>";
 			// Dialog highlight first block to use
-			if ($_eseecode.modes.console[$_eseecode.modes.console[0]].name === "level1") {
+			if (level === "level1") {
 				var startInstructionId = getInstructionSetIdFromName("goToCenter");
 				var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 				while (startInstructionDiv !== null) {
@@ -1296,7 +1365,7 @@
 					}
 					startInstructionDiv = startInstructionDiv.nextSibling;
 				}
-				if (startInstructionDiv !== null) {
+				if (startInstructionDiv !== null && startInstructionDiv.offsetTop > 0) {
 					var style = "3px solid #FF5555";
 					$_eseecode.session.tipInterval = setInterval(function() {
 							if (startInstructionDiv.style.border === "") {
@@ -1747,6 +1816,7 @@
 		resetCanvas();
 		initProgramCounter(true);
 		unhighlight();
+		resetDebug();
 		executePrecode();
 	}
 
@@ -1756,7 +1826,7 @@
 	 * @example resetCanvas()
 	 */
 	function resetCanvas() {
-		document.getElementById("execute-notes").innerHTML = "";
+		document.getElementById("dialog-debug-execute").innerHTML = "";
 		var turtle = $_eseecode.canvasArray["turtle"]; // must check this before removing $_eseecode.canvasArray
 		// reset canvas
   		for(var i=0;i<$_eseecode.canvasArray.length;i++) {

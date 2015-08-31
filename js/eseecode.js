@@ -24,7 +24,11 @@
 			license: {
 				text: "GPLv3 or later",
 				link: "https://gnu.org/licenses/gpl.html"
-			}
+			},
+			web: {
+				text: "eSeeCode.org",
+				link: "http://www.eseecode.org"
+			},
 		},
 		i18n: {
 			available: {

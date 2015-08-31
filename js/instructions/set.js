@@ -82,7 +82,7 @@
 		{ name: "setSize", category: "cursor", parameters: [{name: "size", initial: 16, type: "number", minValue: 0, tip: "Which size in pixels do you want to set?"}], tip: "Sets the drawing size", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level2"] },
 		{ name: "setInvisible", category: "cursor", parameters: [{name: "index", type: "number", initial: 0.5, stepValue: 0.05, minValue: 0, maxValue: 1, tip: "From 0 (invisible] to 1 (opaque), how invisible do you want to draw?"}], tip: "Sets the drawing transparency value", show: ["level2","level3","level4"] },
-		{ name: "unsetInvisible", category: "cursor", parameters: [], top: "Sets the drawing transparency to opaque", show: ["level2","level3","level4"] },
+		{ name: "unsetInvisible", category: "cursor", parameters: [], tip: "Sets the drawing transparency to opaque", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "cursor", show: ["level1","level2"] },
 		{ name: "setColor", category: "cursor", parameters: [{name: "color", initial: "\"#FF0000\"", type: "color"}], tip: "Sets the drawing color to red", show: ["level1"] },
 		{ name: "setColor", category: "cursor", parameters: [{name: "color", initial: "\"#00FF00\"", type: "color"}], tip: "Sets the drawing color to green", show: ["level1"] },

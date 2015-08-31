@@ -10,6 +10,8 @@
  * Added examples exercices showing the new embedding capabilities
  * Added a shortcut to run the code: CTRL+R
  * Level1 has no text in blocks no more
+ * UI cleanup
+ * Download layer images hides/shows cursor and grid based on settings
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
@@ -18,6 +20,9 @@
  * Fix: else's inner block not being correctly indented
  * Fix: resetUI() was resetting the language also
  * Fix: tabs were scrolling the page
+ * Fix: breakpoint is unhighlighted when resetting the canvas
+ * Fix: Undesired tabs switches
+ * Fix: unsetInvisible() had no tip
 Known bugs:
  - Unable to convert function calls from level4 to level3 and call() in dialog in level4 was showing identifier as a regular parameter
  - Preload code + step-by-step noto working well together

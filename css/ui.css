@@ -153,11 +153,11 @@
 		padding: 0px 0px 0px 0px;
 		margin: 0px 0px 2px 2px;
 	}
-	#dialog-debug-layers, #dialog-debug-analyzer {
+	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute {
 		float: left;
 		width: auto;
 	}
-	#dialog-debug-layers-help, #dialog-debug-analyzer-help {
+	#dialog-debug-layers-help, #dialog-debug-analyzer-help, #dialog-debug-execute-help {
 		float: right;
 		font-weight: bold;
 		width: 10px;
@@ -167,7 +167,7 @@
 	#dialog-debug-layers-title {
 		position: relative;
 	}
-	#dialog-debug-layers-title, #dialog-debug-analyzer-title {
+	#dialog-debug-layers-title, #dialog-debug-analyzer-title, #dialog-debug-execute-title  {
 		padding: 3px 0px 3px 0px;
 		border-bottom: 1px solid #000000;
 		text-align: center;
@@ -177,9 +177,16 @@
 	}
 	#dialog-setup {
 		text-align: center;
+		position: relative;
 	}
 	#dialog-setup input[type="number"] {
 		width: 40px;
+	}
+	#dialog-setup-author {
+		position: absolute;
+		bottom: 0px;
+		width: 100%;
+		text-align: center;
 	}
 	#dialog-tabs {
 		height: 23px;
@@ -196,9 +203,6 @@
 		color: inherit;
 		height: inherit;
 	}
-	#execute-notes {
-		margin-top: 5px;
-	}
 	#eseecode {
 		width: 980px; /* iPad / Android default layout viewport */
 		height: 480px;
@@ -211,34 +215,13 @@
 		/* float: right; */
 		width: auto;
 	}
-	#filemenu input:hover, #footer input:hover {
+	#filemenu input:hover {
 		box-shadow: 0px 0px 5px #FFFFFF;
 	}
-	#footer, #header {
+	#header {
 		clear: both;
 		background-color: transparent;
 		color: #FFFFFF;
-	}
-	#footer {
-		text-align: center;
-		height: 20px;
-	}
-	#footer a, #header a {
-		background-color: inherit;
-		color: #FFFFFF;
-		font-weight: bold;
-	}
-	#footer a:hover, #header a:hover {
-		box-shadow: 0px 0px 5px #FFFFFF;
-		background-color: inherit;
-		color: #DDEECC;
-		border-radius: 5px;
-	}
-	#footer input[type="text"], #footer input[type="number"] {
-		width: 50px;
-	}
-	#footer .column {
-		height: auto;
 	}
 	#header {
 		height: 40px;
@@ -248,10 +231,26 @@
 		float: left;
 		width: inherit;
 	}
+	#header a {
+		background-color: inherit;
+		color: #FFFFFF;
+		font-weight: bold;
+	}
+	#header a:hover {
+		box-shadow: 0px 0px 5px #FFFFFF;
+		background-color: inherit;
+		color: #DDEECC;
+		border-radius: 5px;
+	}
 	#header div {
 		display: inline;
 		text-align: left;
 	}
+	#header>h1 {
+		width: 100%;
+		text-align: center;
+	}
+/*
 	#header>:first-child {
 		float: left;
 		margin-left: 25px;
@@ -263,9 +262,7 @@
 		width: auto;
 		margin-right: 25px;
 	}
-	#language {
-		float: left;
-	}
+*/
 	#msgBox {
 		position: relative;
 		margin: auto;
@@ -308,9 +305,6 @@
 		z-index: 9999; /* jscolor uses z-index 10000 */
 		border: 0px solid black;
 		background-color: rgba(0,0,0,0.4);
-	}
-	#setup-turtle-enable-title {
-		margin-left: 10px;
 	}
 	#whiteboard {
 		background-color: #FFFFFF;
