@@ -1222,7 +1222,7 @@
 		resetDebug();
 		initSetup();
 		resetLanguageSelect();
-		switchLanguage(undefined, true);
+		switchLanguage($_eseecode.i18n.current, true);
 		document.body.removeEventListener("keydown", keyboardShortcuts, false);
 		document.body.addEventListener("keydown", keyboardShortcuts, false);
 		return true;

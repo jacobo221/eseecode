@@ -87,7 +87,7 @@
 		for (var i=1; i<$_eseecode.modes.console.length; i++) {
 			var levelName = $_eseecode.modes.console[i].name;
 			var levelText = levelName.substr(0,1).toUpperCase()+levelName.substr(1);
-			document.getElementById("console-tabs-level"+i).innerHTML = "<a href=\"#\">"+_(levelText)+"</a>";
+			document.getElementById("console-tabs-level"+i).innerHTML = _(levelText);
 			document.getElementById("console-tabs-level"+i).title = _("Double click to maximize/restore");
 		}
 		document.getElementById("language-title").innerHTML = _("Select language")+": ";
@@ -107,9 +107,9 @@
 		document.getElementById("button-reset").title = _("Reset");
 		document.getElementById("button-redo").title = _("Redo");
 		document.getElementById("dialog-tabs-setup").title = _("Setup");
-		document.getElementById("dialog-tabs-debug").innerHTML = "<a href=\"#\">"+_("Debug")+"</a>";
-		document.getElementById("dialog-tabs-window").innerHTML = "<a href=\"#\">"+_("Window")+"</a>";
-		document.getElementById("dialog-tabs-pieces").innerHTML = "<a href=\"#\">"+_("Pieces")+"</a>";
+		document.getElementById("dialog-tabs-debug").innerHTML = _("Debug");
+		document.getElementById("dialog-tabs-window").innerHTML = _("Window");
+		document.getElementById("dialog-tabs-pieces").innerHTML = _("Pieces");
 		document.getElementById("dialog-blocks").title = _("Blocks available");
 		document.getElementById("dialog-write").title = _("Instructions available");
 		document.getElementById("dialog-window").title = _("Interactive window");

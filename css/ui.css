@@ -45,17 +45,13 @@
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 		text-decoration: none;
-	}
-	.tab a {
-		background-color: inherit;
-		color: #FFFFFF;
-		text-decoration: none;
+		cursor: pointer;
 	}
 	.tab:hover {
 		height: 20px;
 		margin: 0px 0px 0px 0px;
 		background-color: #789ABC;
-		color: inherit;
+		color: #FFFFFF;
 		font-weight: bold;
 	}
 	.tab-active, .tab-active:hover {
