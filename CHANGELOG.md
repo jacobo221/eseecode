@@ -1,4 +1,5 @@
 ## 2.1 (ongoing work)
+ * Removed advanced parameter description from level 2
  * Added instruction snapshot() (by request from J.Alemany)
  * Added options to download all layers as an animation (by request from J.Alemany)
  * Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
@@ -8,6 +9,7 @@
  * Added some fractal examples adapted from the FMSLogo documentation
  * Added examples exercices showing the new embedding capabilities
  * Added a shortcut to run the code: CTRL+R
+ * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
  * Fix: scale() icon was broken
