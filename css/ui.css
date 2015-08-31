@@ -164,6 +164,9 @@
 		margin: 0px 0px 0px 0px;
 		cursor: help;
 	}
+	#dialog-debug-layers-title {
+		position: relative;
+	}
 	#dialog-debug-layers-title, #dialog-debug-analyzer-title {
 		padding: 3px 0px 3px 0px;
 		border-bottom: 1px solid #000000;

@@ -9,6 +9,7 @@
  * Added some fractal examples adapted from the FMSLogo documentation
  * Added examples exercices showing the new embedding capabilities
  * Added a shortcut to run the code: CTRL+R
+ * Level1 has no text in blocks no more
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image

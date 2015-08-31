@@ -1027,6 +1027,9 @@
 		span.style.fontSize = "10px";
 		span.style.fontWeight = "bold";
 		span.className = "blockTitle";
+		if (level == "level1") {
+			span.style.display = "none";
+		}
 		span.innerHTML = text;
 		if (div.firstChild) {
 			var firstChild = div.firstChild;

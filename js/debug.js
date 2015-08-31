@@ -373,3 +373,21 @@
 			}
 		}
 	}
+
+	/**
+	 * Select All/None of the debug layer checkboxes
+	 * @private
+	 * @param {!Object} checkbox Checkbox element
+	 * @example debugSelectAllNoneLayers(checkbox)
+	 */
+	function debugSelectAllNoneLayers(checkbox) {
+		if (checkbox.checked) {
+			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
+				document.getElementById("toggle-canvas-"+i).checked = true;
+			}
+		} else {
+			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
+				document.getElementById("toggle-canvas-"+i).checked = false;
+			}
+		}
+	}

@@ -58,7 +58,7 @@
 	 */
 	function blocks2blocks(level) {
 		var divs = document.getElementById("console-blocks").getElementsByTagName("div");
-		for (var i=divs.length-1; i>=0; i--) { // We parse it bottom-up because we need to redraw the children before begin able to accurately redraw the parents
+		for (var i=divs.length-1; i>=0; i--) { // We parse it bottom-up because we need to redraw the children before being able to accurately redraw the parents
 			var div = divs[i];
 			if (div.id == "console-blocks-tip") {
 				continue;

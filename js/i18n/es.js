@@ -39,6 +39,7 @@ $_eseecode.i18n.available.es = {
 	"Instructions available": "Instrucciones disponibles",
 	"Interactive window": "Ventana interactiva",
 	"Debug dialog": "Ventana de depuración",
+	"All/None": "Todo/Nada",
 	"Layers": "Capas",
 	"Here you can:\n * analyze the order of layers\n * view a layer alone and its cursor\n * toggle layer visibility\n * set the active layer\n * run commands": "Aquí puedes:\n * analizar el orden de capas\n * ver una capa verla sola con su cursor\n * mostrar/ocultar capas\n * establecer la capa activa\n * ejecutar comandos",
 	"Layer": "Capa",
