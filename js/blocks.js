@@ -554,7 +554,7 @@
 					helpText += "<b>"+tipTrans;
 				}
 				helpText += "</b>"
-				if (tipTrans.charAt(tipTrans.length-1) != '?') {
+				if (tipTrans && tipTrans.charAt(tipTrans.length-1) != '?') {
 					helpText += ":";
 				}
 				helpText += "<br />";
