@@ -980,6 +980,7 @@ oop.inherits(JavaScriptWorker, Mirror);
                     type = "error";
                 } else {
                     type = "info";
+                    return;
                 }
             }
             else if (disabledWarningsRe.test(raw)) {
@@ -999,15 +1000,13 @@ oop.inherits(JavaScriptWorker, Mirror);
                 type = "info";
             }
 
-            if (type != "info") {
-                errors.push({
-                    row: error.line-1,
-                    column: error.character-1,
-                    text: error.reason,
-                    type: type,
-                    raw: raw
-                });
-            }
+            errors.push({
+                row: error.line-1,
+                column: error.character-1,
+                text: error.reason,
+                type: type,
+                raw: raw
+            });
 
             if (errorAdded) {
             }
@@ -3191,7 +3190,7 @@ var JSHINT = (function () {
 
     functionicity = [
       "closure", "exception", "global", "label",
-      "outer", "unused", "var"
+      "outer", "unused", "var", "array"
     ],
 
     funct, // The current function
@@ -3993,6 +3992,7 @@ var JSHINT = (function () {
       case "throw":
       case "try":
       case "var":
+      case "array":
       case "let":
       case "while":
       case "with":
@@ -6127,6 +6127,62 @@ var JSHINT = (function () {
     }
     return this;
   });
+  var varstatement = stmt("array", function (prefix) {
+    var tokens, lone, value;
+
+    this.first = [];
+    for (;;) {
+      var names = [];
+      if (_.contains(["{", "["], state.tokens.next.value)) {
+        tokens = destructuringExpression();
+        lone = false;
+      } else {
+        tokens = [ { id: identifier(), token: state.tokens.curr } ];
+        lone = true;
+      }
+      for (var t in tokens) {
+        if (tokens.hasOwnProperty(t)) {
+          t = tokens[t];
+          if (state.option.inESNext() && funct[t.id] === "const") {
+            warning("E011", null, t.id);
+          }
+          if (funct["(global)"] && predefined[t.id] === false) {
+            warning("W079", t.token, t.id);
+          }
+          if (t.id) {
+            addlabel(t.id, { type: "unused", token: t.token });
+            names.push(t.token);
+          }
+        }
+      }
+      if (prefix) {
+        break;
+      }
+
+      this.first = this.first.concat(names);
+
+      if (state.tokens.next.id === "=") {
+        advance("=");
+        if (state.tokens.next.id === "undefined") {
+          warning("W080", state.tokens.prev, state.tokens.prev.value);
+        }
+        if (peek(0).id === "=" && state.tokens.next.identifier) {
+          warning("W120", state.tokens.next, state.tokens.next.value);
+        }
+        value = expression(10);
+        if (lone) {
+          tokens[0].first = value;
+        } else {
+          destructuringExpressionMatch(names, value);
+        }
+      }
+      if (state.tokens.next.id !== ",") {
+        break;
+      }
+      comma();
+    }
+    return this;
+  });
   varstatement.exps = true;
 
   var letstatement = stmt("let", function (prefix) {
@@ -6381,7 +6437,7 @@ var JSHINT = (function () {
 
     return this;
   });
-  
+
   blockstmt("repeat", function () {
     var t = state.tokens.next;
     funct["(breakage)"] += 1;
@@ -6875,7 +6931,11 @@ var JSHINT = (function () {
       return this;
     }
 
-    if (state.tokens.next.id === "var") {
+    if (state.tokens.next.id === "array") {
+      advance("array");
+      exported[state.tokens.next.value] = true;
+      state.syntax["array"].fud.call(state.syntax["array"].fud);
+    } else if (state.tokens.next.id === "var") {
       advance("var");
       exported[state.tokens.next.value] = true;
       state.syntax["var"].fud.call(state.syntax["var"].fud);
@@ -8033,7 +8093,7 @@ Lexer.prototype = {
       "void", "with", "enum", "while", "break",
       "catch", "throw", "const", "yield", "class",
       "super", "return", "typeof", "delete", "repeat",
-      "switch", "export", "import", "default",
+      "switch", "export", "import", "default", "array",
       "finally", "extends", "function", "continue",
       "debugger", "instanceof"
     ];
