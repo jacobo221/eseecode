@@ -87,6 +87,9 @@
 		} else if (err === "executionBreakpointed") {
 			highlight($_eseecode.session.highlight.lineNumber);
 			switchDialogMode("debug");
+		} else if (err.type == "codeError") {
+			msgBox(_("Error found during execution at line %s:",[err.line])+"\n"+err.text);
+			highlight(err.line,"error");
 		} else {
 			// The code didn't finish running and there is no known reason
 			printExecutionError(err);
@@ -315,4 +318,18 @@
 		if ($_eseecode.execution.precode) {
 			execute("disabled", null, true);
 		}
+	}
+
+	/**
+	 * Defines an error to handle during user code execution
+	 * @param {String} name Name of the instruction
+	 * @param {String} text Text to show the user
+	 * @return Returns an exception codeError object
+	 * @example new codeError("foward", "Invalid parameter");
+	 */
+	function codeError(name, text) {
+		this.type = "codeError";
+		this.name = name;
+		this.line = $_eseecode.session.highlight.lineNumber;
+		this.text = text;
 	}

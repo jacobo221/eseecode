@@ -826,10 +826,10 @@
 	 * Resets the cursor in a layer
 	 * @private
 	 * @param {Number} [id] Layer id. If unset use the currently active layer
-	 * @param {Number} [ctx] Canvas context. If unset use the "turtle" layer
+	 * @param {Number} [canvas] Canvas to use. If unset use the "turtle" layer
 	 * @example resetTurtle()
 	 */
-	function resetTurtle(id, ctx) {
+	function resetTurtle(id, canvas) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
@@ -853,14 +853,14 @@
 		var lefty = orgy-size/2*Math.cos(angle*Math.PI/180);
 		var rightx = orgx-size/2*Math.sin(angle*Math.PI/180);
 		var righty = orgy+size/2*Math.cos(angle*Math.PI/180);
-		if (ctx === undefined) {
-			var turtleCanvas = $_eseecode.canvasArray["turtle"];
-			if (!turtleCanvas.visible) {
+		if (canvas === undefined) {
+			if (!$_eseecode.canvasArray["turtle"].visible) {
 				return;
 			}
-			ctx = turtleCanvas.canvas.getContext("2d");
-			turtleCanvas.width = canvasSize;
+			canvas = $_eseecode.canvasArray["turtle"].canvas;
 		}
+		var ctx = canvas.getContext("2d");
+		canvas.width = canvasSize;
 		// clear turtle
 		ctx.clearRect(0,0,canvasSize,canvasSize);
 		// draw turtle
@@ -1024,8 +1024,7 @@
 			turtleCanvas.className = "canvas";
 			turtleCanvas.width = canvasSize;
 			turtleCanvas.height = canvasSize;
-			var turtleContext = turtleCanvas.getContext("2d");
-			resetTurtle(id, turtleContext);
+			resetTurtle(id, turtleCanvas);
 			context.drawImage(turtleCanvas, 0, 0);
 		}
 	}

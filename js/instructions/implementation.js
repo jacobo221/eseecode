@@ -892,6 +892,9 @@
 	 * @example forward(50)
 	 */
 	function forward(pixels) {
+		if (!isNumber(pixels)) {
+			throw new codeError("foward","Invalid parameter in forward() call");
+		}
 		var posx = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
 		var posy = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
 		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,posx,posy,true);

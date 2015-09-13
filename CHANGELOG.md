@@ -19,6 +19,7 @@
  * Option to go fullscreen
  * Default to landscape view
  * GUI restyled
+ * Began work on better execution error messages
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
