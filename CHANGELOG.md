@@ -16,6 +16,8 @@
  * Breakpoints can now be enabled/disabled
  * New resize console button, much more intuitive than doubleclicking level tabs
  * Center of coordinates can be changed
+ * Option to go fullscreen
+ * Default to landscape view
  * GUI restyled
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly

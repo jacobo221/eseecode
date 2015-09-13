@@ -1399,9 +1399,98 @@
 		window.addEventListener("beforeunload", windowRefresh, false);
 		if (!notInitial) {
 			window.addEventListener('resize', windowResizeHandler);
+			var orientation = "landscape";
+			if (screen.orientation && screen.orientation.lock) {
+				screen.orientation.lock(orientation).catch(function() {});
+			} else if (screen.lockOrientation) {
+				screen.lockOrientation(orientation);
+			} else if (screen.mzLockOrientation) {
+				screen.mzLockOrientation(orientation);
+			} else if (screen.msLockOrientation) {
+				screen.msLockOrientation(orientation);
+			} else if (screen.webkitLockOrientation) {
+				screen.webkitLockOrientation(orientation);
+			}
+			var eventListeners = ["webkitfullscreenchange","mozfullscreenchange","msfullscreenchange","fullscreenchange"];
+			for (var i=0; i<eventListeners.length; i++) {
+				document.addEventListener(eventListeners[i], function(e) {
+					if (!isFullscreen()) {
+						toggleFullscreenIcon(false);
+					} else {
+						toggleFullscreenIcon(true);
+					}
+				}, false);
+			}
+			toggleFullscreenIcon();
 		}
 		windowResizeHandler();
 		return true;
+	}
+
+	/**
+	 * Detects whether the site is in fullscreen mode or not
+	 * @return {Boolean} True if the page is in fullscreen mode
+	 * @example isFullscreen();
+	 */
+	function isFullscreen() {
+		return (window.navigator.standalone || (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen));
+	}
+
+	/**
+	 * Redraws the maximize/restore fullscreen icon
+	 * @example toggleFullscreenIcon();
+	 */
+	function toggleFullscreenIcon(maximize) {
+		var iconMargin = 2;
+		if (!isFullscreen()) {
+			iconMargin = 4;
+		} else {
+			iconMargin = 2;
+		}
+		// Console resize tab
+		var canvas = document.getElementById("fullscreen-button").firstChild;
+		var ctx = canvas.getContext("2d");
+		var width = canvas.width;
+		var height = canvas.height;
+		canvas.width = width;
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#FFFFFF";
+		ctx.beginPath();
+		ctx.moveTo(iconMargin,iconMargin);
+		ctx.lineTo(width-iconMargin,iconMargin);
+		ctx.lineTo(width-iconMargin,height-iconMargin);
+		ctx.lineTo(iconMargin,height-iconMargin);
+		ctx.closePath();
+		ctx.stroke();
+	}
+
+	/**
+	 * Set/unsets fullscreen view
+	 * @example toggleFullscreen();
+	 */
+	function toggleFullscreen() {
+		if (!isFullscreen()) {
+			var element = document.getElementById("eseecode");
+			if(element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if(element.mozRequestFullScreen) {
+				element.mozRequestFullScreen();
+			} else if(element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen();
+			} else if(element.msRequestFullscreen) {
+				element.msRequestFullscreen();
+			}
+		} else {
+			if(document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if(document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if(document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if(document.msExitFullscreen) {
+				document.msExitFullscreen();
+			}
+		}
 	}
 
 	/**
