@@ -2154,7 +2154,6 @@
 			enableSnippets: true,
 			enableLiveAutocompletion: true
 		});
-		editor.renderer.setShowGutter(false);
 		editor.setHighlightActiveLine(true);
 		// Only update code if it changed, to avoid adding empty changes into the ACE undo queue
 		if (code != ace.edit("console-write").getValue()) {

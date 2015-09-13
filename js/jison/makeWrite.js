@@ -396,7 +396,6 @@
 			}
 		}
 		str += " in " + this.right.makeWrite(level, "", "", realCode) + ") {";
-//TODO: I see no way to insert a realCodeAddition in a for (var x in list)
 		str += realCodeAddition(realCode,this.loc.start.line);
 		str += "\n";
 		str += body.makeWrite(level, indent + indentChar, indentChar, realCode) + "\n";

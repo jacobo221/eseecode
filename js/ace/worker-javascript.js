@@ -999,13 +999,15 @@ oop.inherits(JavaScriptWorker, Mirror);
                 type = "info";
             }
 
-            errors.push({
-                row: error.line-1,
-                column: error.character-1,
-                text: error.reason,
-                type: type,
-                raw: raw
-            });
+            if (type != "info") {
+                errors.push({
+                    row: error.line-1,
+                    column: error.character-1,
+                    text: error.reason,
+                    type: type,
+                    raw: raw
+                });
+            }
 
             if (errorAdded) {
             }
@@ -3985,6 +3987,7 @@ var JSHINT = (function () {
       case "if":
       case "in":
       case "instanceof":
+      case "repeat":
       case "return":
       case "switch":
       case "throw":
@@ -6378,6 +6381,20 @@ var JSHINT = (function () {
 
     return this;
   });
+  
+  blockstmt("repeat", function () {
+    var t = state.tokens.next;
+    funct["(breakage)"] += 1;
+    funct["(loopage)"] += 1;
+    increaseComplexityCount();
+    advance("(");
+    checkCondAssignment(expression(0));
+    advance(")", t);
+    block(true, true);
+    funct["(breakage)"] -= 1;
+    funct["(loopage)"] -= 1;
+    return this;
+  }).labelled = true;
 
   blockstmt("while", function () {
     var t = state.tokens.next;
@@ -8015,7 +8032,7 @@ Lexer.prototype = {
       "try", "let", "this", "else", "case",
       "void", "with", "enum", "while", "break",
       "catch", "throw", "const", "yield", "class",
-      "super", "return", "typeof", "delete",
+      "super", "return", "typeof", "delete", "repeat",
       "switch", "export", "import", "default",
       "finally", "extends", "function", "continue",
       "debugger", "instanceof"

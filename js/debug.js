@@ -208,6 +208,7 @@
 				document.getElementById("dialog-debug-analyzer-line"+line).style.fontWeight = "bold";
 			}
 		}
+		var editor = ace.edit("console-write");
 	}
 
 	/**

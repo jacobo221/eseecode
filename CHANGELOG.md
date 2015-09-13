@@ -16,6 +16,7 @@
  * Breakpoints can now be enabled/disabled
  * New resize console button, much more intuitive than doubleclicking level tabs
  * Center of coordinates can be changed
+ * Enable ACE editor worker and helper
  * Confirm before leaving page
  * Option to go fullscreen
  * Default to landscape view
