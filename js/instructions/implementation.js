@@ -1114,7 +1114,15 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		goTo((getLayerWidth()/2-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()/2-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
+		var xScale = $_eseecode.coordinates.yScale;
+		if (xScale < 0) {
+			xScale *= -1;
+		}
+		var yScale = $_eseecode.coordinates.yScale;
+		if (yScale < 0) {
+			yScale *= -1;
+		}
+		goTo((getLayerWidth()/2-$_eseecode.coordinates.x)*xScale,(getLayerWidth()/2-$_eseecode.coordinates.y)*yScale);
 	}
 
 	/**

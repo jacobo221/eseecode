@@ -20,7 +20,6 @@
 			translated = lang[text];
 		} else {
 			translated = text;
-			//console.log("\""+text+"\": \"\",");
 		}
 		if (params) {
 			for (var i=0; i<params.length; i++) {

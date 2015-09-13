@@ -822,6 +822,21 @@
 		}
 	}
 
+/*
+	function userCoords2systemCoords(posx, posy, moveWhiteboard) {
+		var xScale = $_eseecode.coordinates.xScale;
+		var yScale = $_eseecode.coordinates.yScale;
+		if (xScale < 0) {
+			xScale *= -1;
+		}
+		if (yScale < 0) {
+			yScale *= -1;
+		}
+		var orgx = targetCanvas.turtle.x*xScale+$_eseecode.coordinates.x;
+		var orgy = targetCanvas.turtle.y*yScale+$_eseecode.coordinates.y;
+	}
+*/
+
 	/**
 	 * Resets the cursor in a layer
 	 * @private
@@ -920,42 +935,6 @@
 	}
 
 	/**
-	 * Shows only a layer (hides the others)
-	 * @private
-	 * @param {Number} id Layer id
-	 * @example highlightCanvas(3)
-	 */
-	function highlightCanvas(id) {
-		unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
-		// Since we destroy it and create it again every time it should always be on top of the canvas stack
-		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		var div = document.createElement("div");
-		div.id = "canvas-div-highlight";
-		div.className = "canvas-div";
-		div.style.left = $_eseecode.whiteboard.offsetLeft;
-		div.style.top = $_eseecode.whiteboard.offsetTop;
-		div.style.width = canvasSize+"px";
-		div.style.height = canvasSize+"px";
-		div.style.zIndex = Number($_eseecode.canvasArray["turtle"].div.style.zIndex)+1;
-		div.style.backgroundColor = "#FFFFFF";
-		var canvas = document.createElement("canvas");
-		canvas.className = "canvas";
-		canvas.width = canvasSize;
-		canvas.height = canvasSize;
-		var context = canvas.getContext("2d");
-		if (document.getElementById("setup-grid-enable").checked) {
-			drawGrid(context);
-		}
-		var targetCanvas = $_eseecode.canvasArray[id];
-		context.drawImage(targetCanvas.canvas, 0, 0);
-		var posX = targetCanvas.turtle.x;
-		var posY = targetCanvas.turtle.y;
-		drawCursor(context, posX, posY, id);
-		div.appendChild(canvas);
-		$_eseecode.whiteboard.appendChild(div);
-	}
-
-	/**
 	 * Draws a cursor
 	 * @private
 	 * @param {Object} context Context object where to draw the cursor
@@ -966,8 +945,18 @@
 	 */
 	function drawCursor(context, posX, posY, id) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		if (posX < 0 || posX > canvasSize || posY < 0 || posY > canvasSize) {
+		if (posX < 0-$_eseecode.coordinates.x || posX > canvasSize-$_eseecode.coordinates.x || posY < 0-$_eseecode.coordinates.y || posY > canvasSize-$_eseecode.coordinates.y) {
 			var markerSize = 20;
+			var xScale = $_eseecode.coordinates.xScale;
+			if (xScale < 0) {
+				xScale *= -1;
+			}
+			var yScale = $_eseecode.coordinates.yScale;
+			if (yScale < 0) {
+				yScale *= -1;
+			}
+			posX = posX*xScale+$_eseecode.coordinates.x;
+			posY = posY*yScale+$_eseecode.coordinates.y;
 			var orgx = posX;
 			var orgy = posY;
 			if (orgx < markerSize) {
@@ -1026,18 +1015,6 @@
 			turtleCanvas.height = canvasSize;
 			resetTurtle(id, turtleCanvas);
 			context.drawImage(turtleCanvas, 0, 0);
-		}
-	}
-
-	/**
-	 * Resets the layers visibility back to normal after a highlightCanvas() call
-	 * @private
-	 * @example unhighlightCanvas()
-	 */
-	function unhighlightCanvas() {
-		var div = document.getElementById("canvas-div-highlight");
-		if (div) {
-			div.parentNode.removeChild(div);
 		}
 	}
 
