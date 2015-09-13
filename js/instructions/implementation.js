@@ -839,15 +839,30 @@
 	 * @param {Number} originy Y coordinate where the line starts
 	 * @param {Number} destinationx X coordinate where the line ends
 	 * @param {Number} destinationy Y coordinate where the line ends
+	 * @param {Boolean} fromForward Indicates if the function is being called from wrapper forward()
 	 * @example lineAt(200, 200, 50, 50)
 	 */
-	function lineAt(originx, originy, destinationx, destinationy) {
-
+	function lineAt(originx, originy, destinationx, destinationy, fromForward) {
+		var xScale = $_eseecode.coordinates.xScale;
+		var yScale = $_eseecode.coordinates.yScale;
+		// forward() direction doesn't change with axis direction
+		if (fromForward) {
+			if (xScale < 0) {
+				xScale *= -1;
+			}
+			if (yScale < 0) {
+				yScale *= -1;
+			}
+		}
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.beginPath();
-			$_eseecode.currentCanvas.context.moveTo(originx,originy); // shape should use forward() or line()
+			var moveToX = originx*xScale+$_eseecode.coordinates.x
+			var moveToY = originy*yScale+$_eseecode.coordinates.y
+			$_eseecode.currentCanvas.context.moveTo(moveToX,moveToY); // shape should use forward() or line()
 		}
-		$_eseecode.currentCanvas.context.lineTo(destinationx,destinationy);
+		var lineToX = destinationx*xScale+$_eseecode.coordinates.x;
+		var lineToY = destinationy*yScale+$_eseecode.coordinates.y;
+		$_eseecode.currentCanvas.context.lineTo(lineToX,lineToY);
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.closePath();
 		}
@@ -863,7 +878,7 @@
 	 * @example line(50, 50)
 	 */
 	function line(destinationx, destinationy) {
-		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,destinationx,destinationy,true);
+		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,destinationx,destinationy);
 		$_eseecode.currentCanvas.turtle.x = destinationx;
 		$_eseecode.currentCanvas.turtle.y = destinationy;
 		resetTurtle();
@@ -879,7 +894,10 @@
 	function forward(pixels) {
 		var posx = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
 		var posy = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
-		line(posx,posy); // line() sets the turtle
+		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,posx,posy,true);
+		$_eseecode.currentCanvas.turtle.x = posx;
+		$_eseecode.currentCanvas.turtle.y = posy;
+		resetTurtle();
 	}
 
 	/**
@@ -964,7 +982,7 @@
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
 		var tempCtx = tempCanvas.getContext("2d");
-		tempCtx.translate(posx, posy);
+		tempCtx.translate(posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y);
 		tempCtx.rotate(angle*Math.PI/180);
 		// apply style properties to new canvas
 		setColorStyle(undefined,tempCtx);
@@ -1062,9 +1080,9 @@
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (typeof height === "undefined") {
-				canvas.context.drawImage(img, posx, posy);
+				canvas.context.drawImage(img, posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y);
 			} else {
-				canvas.context.drawImage(img, posx, posy, width, height);
+				canvas.context.drawImage(img, posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y, width, height);
 			}
 		}
 		if (src) {
@@ -1093,7 +1111,7 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		goTo(getLayerWidth()/2,getLayerWidth()/2);
+		goTo((getLayerWidth()/2-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()/2-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
 	}
 
 	/**
@@ -1103,7 +1121,7 @@
 	 * @example goToUpLeft()
 	 */
 	function goToUpLeft() {
-		goTo(0,0);
+		goTo((0-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(0-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
 	}
 
 	/**
@@ -1113,7 +1131,7 @@
 	 * @example goToUpRight()
 	 */
 	function goToUpRight() {
-		goTo(getLayerWidth(),0);
+		goTo((getLayerWidth()-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(0-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
 	}
 
 	/**
@@ -1123,7 +1141,7 @@
 	 * @example goToLowLeft()
 	 */
 	function goToLowLeft() {
-		goTo(0,getLayerWidth());
+		goTo((0-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
 	}
 
 	/**
@@ -1133,7 +1151,7 @@
 	 * @example goToLowRight()
 	 */
 	function goToLowRight() {
-		goTo(getLayerWidth(),getLayerWidth());
+		goTo((getLayerWidth()-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
 	}
 
 	/**
@@ -1592,11 +1610,37 @@
 	}
 
 	/**
+	 * Changes the axis of the whiteboard
+	 * @since 2.1
+	 * @public
+	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
+	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
+	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
+	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
+	 * @example changeAxis(200, 200)
+	 */
+	function changeAxis(posx, posy, xScale, yScale) {
+		if (posx === undefined) {
+			posx = 0;
+		}
+		if (posy === undefined) {
+			posy = 0;
+		}
+		if (xScale === undefined) {
+			xScale = 1;
+		}
+		if (yScale === undefined) {
+			yScale = 1;
+		}
+		changeCoordinates(posx, posy, xScale, yScale);
+	}
+
+	/**
 	 * Stops the execution of any future code
 	 * @since 1.0
 	 * @public
 	 * @example stop()
 	 */
 	function stop() {
-		limitProgramCounter = true;
+		$_eseecode.execution.programCounterLimit = true;
 	}

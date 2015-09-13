@@ -165,6 +165,9 @@ var JavaScriptHighlightRules = function() {
             keywords["variable.language"] += "|"+$_eseecode.instructions.set[i].name;
         }
     }
+    for (var i=0; i<$_eseecode.instructions.variables.length; i++) {
+        keywords["keyword"] += "|"+$_eseecode.instructions.variables[i].name;
+    }
     var keywordMapper = this.createKeywordMapper(keywords, "identifier");
 
     var kwBeforeRe = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield|void";

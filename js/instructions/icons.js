@@ -87,6 +87,52 @@
 			ctx.arc(margin, height-margin, 2, startAngle, endAngle, false);
 			ctx.fill();
 		},
+		"changeAxis": function(ctx, width, height, param) {
+			var margin = 20;
+			if (!param) {
+				return;
+			}
+			var param1 = param[0];
+			var param2 = param[1];
+			if (!isNumber(param1) || !isNumber(param2)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+			}
+			var canvasSize = $_eseecode.whiteboard.offsetWidth;
+			if (!isNumber(param1)) {
+				param1 = canvasSize/2;
+			} else {
+				param1 = margin+parseInt(param1)/canvasSize*(width-(2*margin));
+			}
+			if (!isNumber(param2)) {
+				param2 = canvasSize/2;
+			} else {
+				param2 = margin+parseInt(param2)/canvasSize*(height-(2*margin));
+			}
+			var arrowSize = 6;
+			ctx.strokeStyle = "#000000";
+			ctx.fillStyle = "#000000";
+			ctx.beginPath();
+			ctx.moveTo(param1,margin);
+			ctx.lineTo(param1,height-margin);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(param1-arrowSize/2,margin);
+			ctx.lineTo(param1+arrowSize/2,margin);
+			ctx.lineTo(param1,margin-arrowSize);
+			ctx.fill();
+			ctx.beginPath();
+			ctx.moveTo(margin,param2);
+			ctx.lineTo(width-margin,param2);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(width-margin,param2-arrowSize/2);
+			ctx.lineTo(width-margin,param2+arrowSize/2);
+			ctx.lineTo(width-margin+arrowSize,param2);
+			ctx.fill();
+		},
 		"clean": function(ctx, width, height, param) {
 			var margin = 15;
 			var lineWidth = width / 8;
@@ -262,17 +308,23 @@
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
+			var canvasSize = $_eseecode.whiteboard.offsetWidth;
 			if (!isNumber(param1)) {
-				param1 = 200;
+				param1 = canvasSize/2+$_eseecode.coordinates.x;
+			} else {
+				param1 = parseInt(param1)*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x;
 			}
 			if (!isNumber(param2)) {
-				param2 = 200;
+				param2 = canvasSize/2+$_eseecode.coordinates.y;
+			} else {
+				param2 = parseInt(param2)*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y;
 			}
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin+(width-margin*2)*param1/$_eseecode.whiteboard.offsetWidth, margin+(height-margin*2)*param2/$_eseecode.whiteboard.offsetHeight,height/20, startAngle, endAngle, false);
+			ctx.arc(margin+(width-margin*2)*param1/canvasSize, margin+(height-margin*2)*param2/canvasSize, height/20, startAngle, endAngle, false);
+			ctx.closePath();
 			ctx.fill();
 		},
 		"goToCenter": function(ctx, width, height, param) {

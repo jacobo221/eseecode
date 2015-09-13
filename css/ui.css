@@ -1,28 +1,100 @@
+	html {
+		height: 100%;
+	}
+	body {
+		height: 100%;
+		min-height: 100%;
+	}
 	.ace-chrome .ace_marker-layer .ace_stack {
 		/* Overwrite Ace's definition */
 		background: rgb(255, 100, 100) !important;
 	}
+	.button {
+		cursor: pointer;
+	}
 	.column {
-		width: 300px;
-		float: left;
 		margin-left: 3px;
-	}
-	.column:first-child {
-		width: 400px;
-		clear: left;
-	}
-	.column:last-child {
-		clear: right;
 		margin-right: 3px;
+		height: 100%;
 	}
 	.dialog-debug-analyzer-breakpoint {
 		border-top:1px solid #000000;
 		margin-top:5px;
 	}
+	.dialog-debug-analyzer-breakpoint-trash {
+		float: right;
+		font-size: smaller;
+	}
+	.dialog-debug-analyzer-breakpoint-watch {
+		border-top:1px solid #000000;
+		margin-top:5px;
+	}
+	.helpNote {
+		color: #AAAAAA;
+		font-style: italic;
+	}
+	.link {
+		cursor: pointer;
+		text-decoration: underline;
+		/*font-weight: normal;*/
+		color: blue;
+	}
+	.link:hover {
+		text-decoration: none;
+		font-weight: bold;
+	}
+	.maximized #console-buttons {
+		border-bottom-left-radius: 10px !important;
+	}
+	.msgBox {
+		position: relative;
+		margin: auto;
+  		top: 25%;
+		width: 50%;
+		height: 50%;
+		border: 10px solid black;
+		background-color: #FFFFFF;
+		color: #000000;
+		padding: 10px 10px 10px 10px;
+		white-space: pre-line;
+		font-family: "Courier New", Courier, monospace;	
+	}
+	.msgBox .msgBox-tabs {
+		clear: both;
+		text-align: right;
+	}
+	.msgBox .msgBox-tabs a {
+		margin: 2px 0px 0px 0px;
+		padding: 2px 3px 0px 3px;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		text-decoration: none;
+		font-weight: bold;
+		border: 2px solid #123456;
+	}
+	.msgBox .msgBox-tabs a:hover {
+		margin: 0px 0px 0px 0px;
+		background-color: #789ABC;
+		color: inherit;
+		font-weight: bold;
+	}
+	.msgBoxWrapper {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: inherit;
+		height: inherit;
+		z-index: 9999; /* jscolor uses z-index 10000 */
+		border: 0px solid black;
+		background-color: rgba(0,0,0,0.4);
+	}
 	.program {
-		height: 349px;
+		width: inherit;
+		height: 349px; // This will be modified via javascript
 		background-color: #FFFFFF;
 		color: inherit;
+		overflow-x: hidden;
 		border: 1px solid #666666;
 		border-top-width: 0px;
 		border-bottom-width: 0px;
@@ -65,13 +137,14 @@
 		background-color: inherit;
 		color: #123456;
 	}
-	#body>div {
-		height: 400px;
-	}
-	#console .program {
+	#body {
 		width: inherit;
-		overflow: auto;
-		border-top-right-radius: 10px;
+		height: auto;
+		overflow: hidden;
+	}
+	#console {
+		width: auto;
+		overflow: hidden;
 	}
 	#console .tab {
 		float: left;
@@ -81,9 +154,11 @@
 		background-color: #AAAAAA;
 		color: inherit;
 		border: 1px solid #666666;
-		border-bottom-left-radius: 10px;
+		width: 100%;
+		height: 28px;
+	}
+	#console-buttons {
 		border-bottom-right-radius: 10px;
-		width: initial;
 	}
 	#console-buttons canvas {
 		margin: 3px 10px 0px 10px;
@@ -112,9 +187,13 @@
 	}
 	#console-tabs {
 		margin: 0px 3px 0px 1px;
+		height: 24px;
 	}
 	#console-tabdiv {
 		clear: both;
+	}
+	#console-tabdiv .program {
+		border-top-right-radius: 10px;
 	}
 	#console-write {
 		position: relative;
@@ -123,6 +202,8 @@
 		cursor: crosshair !important;
 	}
 	#dialog {
+		width: 250px;
+		float: left;
 		border-top-left-radius: 10px;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
@@ -132,21 +213,16 @@
 	}
 	#dialog .program {
 		background-color: #E9E9E9;
-		color: inherit;
-		overflow-x: hidden;
 		border-top-left-radius: 10px;
-		border-bottom-left-radius: 10px;
-		border-bottom-right-radius: 10px;
-	}
-	#dialog-debug.program {
-		border-bottom-left-radius: 0px;
-		border-bottom-right-radius: 0px;
 	}
 	#dialog-debug-command {
 		clear: both;
 		text-align: left;
 		vertical-align: top;
-		display: none;
+		border-bottom-left-radius: 10px;
+	}
+	#dialog-debug-command-form {
+		visibility: hidden;
 	}
 	#dialog-debug-command-input {
 		width: 87%;
@@ -154,8 +230,8 @@
 		margin: 0px 0px 2px 2px;
 	}
 	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute {
-		float: left;
 		width: auto;
+		overflow-x: hidden;
 	}
 	#dialog-debug-layers-help, #dialog-debug-analyzer-help, #dialog-debug-execute-help {
 		float: right;
@@ -195,8 +271,10 @@
 	#dialog-tabs div {
 		width: auto;
 	}
-	#dialog-tabs-setup {
-		width: 20px;
+	#dialog-tabs-setup, #console-tabs-resize {
+		width: auto;
+		height: 15px;
+		margin-top: 5px;
 	}
 	#dialog-window .dialog-window {
 		background-color: #AAAAAA;
@@ -204,31 +282,32 @@
 		height: inherit;
 	}
 	#eseecode {
-		width: 980px; /* iPad / Android default layout viewport */
-		height: 480px;
+		width: 100%;
+		min-width: 980px; /* iPad / Android default layout viewport */
+		height: 100%;
+		min-height: 505px;
 		color: inherit;
 		background-color: #123456;
 		border-radius: 30px;
 		position: relative;
 	}
 	#filemenu {
-		/* float: right; */
 		width: auto;
 	}
 	#filemenu input:hover {
 		box-shadow: 0px 0px 5px #FFFFFF;
 	}
-	#header {
-		clear: both;
+	#footer {
+		position: absolute;
+		bottom: 0px;
+	}
+	#header, #footer {
 		background-color: transparent;
 		color: #FFFFFF;
-	}
-	#header {
 		height: 40px;
 		position: relative;
 		text-align: left;
 		font-size: 10px;
-		float: left;
 		width: inherit;
 	}
 	#header a {
@@ -250,63 +329,15 @@
 		width: 100%;
 		text-align: center;
 	}
-/*
-	#header>:first-child {
-		float: left;
-		margin-left: 25px;
-	}
-	#header>:last-child {
-		text-align: right;
+	#whiteboard-wrapper {
 		float: right;
-		margin-right: 5px;
-		width: auto;
-		margin-right: 25px;
 	}
-*/
-	#msgBox {
-		position: relative;
-		margin: auto;
-  		top: 25%;
-		width: 50%;
-		height: 50%;
-		border: 10px solid black;
-		background-color: #FFFFFF;
-		color: #000000;
-		padding: 10px 10px 10px 10px;
-		white-space: pre-line;
-		font-family: "Courier New", Courier, monospace;	
-	}
-	#msgBox .msgBox-tabs {
+	#whiteboard-wrapper>div {
 		clear: both;
-		text-align: right;
-	}
-	#msgBox .msgBox-tabs a {
-		margin: 2px 0px 0px 0px;
-		padding: 2px 3px 0px 3px;
-		background-color: #456789;
-		color: #FFFFFF;
-		text-align: center;
-		text-decoration: none;
-		font-weight: bold;
-		border: 2px solid #123456;
-	}
-	#msgBox .msgBox-tabs a:hover {
-		margin: 0px 0px 0px 0px;
-		background-color: #789ABC;
-		color: inherit;
-		font-weight: bold;
-	}
-	#msgBoxWrapper {
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		width: 980px;
-		height: 100%;
-		z-index: 9999; /* jscolor uses z-index 10000 */
-		border: 0px solid black;
-		background-color: rgba(0,0,0,0.4);
 	}
 	#whiteboard {
+		width: 400px;
+		height: 400px;
 		background-color: #FFFFFF;
 		color: inherit;
 		border-radius: 10px;
@@ -317,4 +348,7 @@
 	#whiteboard div {
 		position: absolute;
 		border-radius: 10px;
+	}
+	#whiteboard-tabs {
+		visibility: hidden;
 	}

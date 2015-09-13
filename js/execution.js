@@ -28,6 +28,19 @@
 	}
 
 	/**
+	 * Function to trace breakpoints during execution, injected un the runtime code
+	 * @private
+	 * @param {Number} lineNumber Code line number currently running
+	 * @param {Object} variables This parameter is ignores but is necessary to be able to run an inline function uppon call to obtain the watch vairable valueS
+	 * @example eseeCodeInjection(123)
+	 */
+	function eseeCodeInjection(lineNumber, variables) {
+		checkExecutionLimits(lineNumber);
+		// The only case in which we need to return soemthing is for return, since it could be with no parameters leave undefined
+		return undefined;
+	}
+
+	/**
 	 * Check the execution control limits
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
@@ -38,7 +51,7 @@
 		var executionTime = new Date().getTime();
 		$_eseecode.execution.programCounter++;
 		setHighlight(lineNumber);
-		if ($_eseecode.session.breakpoints[lineNumber]) {
+		if ($_eseecode.session.breakpoints[lineNumber] && $_eseecode.session.breakpointsStatus[lineNumber]) {
 			$_eseecode.execution.breakpointCounter++;
 			if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
 				throw "executionBreakpointed";
@@ -68,7 +81,7 @@
 			}
 		} else if (err === "executionTimeout") {
 			highlight($_eseecode.session.highlight.lineNumber,"error");
-			msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after'"));
+			msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
 		} else if (err === "executionStepped") {
 			highlight($_eseecode.session.highlight.lineNumber);
 		} else if (err === "executionBreakpointed") {
@@ -259,12 +272,17 @@
 			resetCanvas();
 			resetBreakpointWatches();
 		}
-		var jsCode = "";
-		if (!inCode && $_eseecode.execution.precode) { // Don't load precode again when running the code of an event
-			jsCode += code2run($_eseecode.execution.precode)+";initProgramCounter("+(withStep=== "disabled"?'"disabled"':withStep)+");\n";
-		}
-		if (!justPrecode) {
-			jsCode += code2run(code);
+		try {
+			var jsCode = "";
+			if (!inCode && $_eseecode.execution.precode) { // Don't load precode again when running the code of an event
+				jsCode += code2run($_eseecode.execution.precode)+";initProgramCounter("+(withStep=== "disabled"?'"disabled"':withStep)+");\n";
+			}
+			if (!justPrecode) {
+				jsCode += code2run(code);
+			}
+		} catch (exception) {
+			msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
+			return;
 		}
 		var script = document.createElement("script");
 		script.id = "executionCode";

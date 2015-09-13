@@ -82,8 +82,13 @@
 				level = $_eseecode.modes.console[i].name;
 			}
 		}
-		var code = program.makeWrite(level,"","\t",true);
-		code = "\"use strict\";try {"+code+";\n\
+		var userCode = program.makeWrite(level,"","\t",true);
+		var code = "\"use strict\";";
+		var globalVars = $_eseecode.instructions.variables;
+		for (var i=0; i<globalVars.length; i++) {
+			code += "var "+globalVars[i].name+"="+globalVars[i].value+";";
+		}
+		code += "try {"+userCode+";\n\
 				showExecutionResults();\n\
 			} catch(err) {\n\
 				showExecutionResults(err);\n\

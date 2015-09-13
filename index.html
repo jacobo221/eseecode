@@ -48,92 +48,99 @@
 		<h1 id="title" class="column"></h1>
 	</div>
 	<div id="body">
-		<div id="whiteboard" class="column"></div>
-		<div id="console" class="column column-middle">
-			<div id="console-tabs">
-				<div id="console-tabs-level1" class="tab" onclick="switchConsoleMode('level1')" ondblclick="resizeConsole()"></div>
-				<div id="console-tabs-level2" class="tab" onclick="switchConsoleMode('level2')" ondblclick="resizeConsole()"></div>
-				<div id="console-tabs-level3" class="tab" onclick="switchConsoleMode('level3')" ondblclick="resizeConsole()"></div>
-				<div id="console-tabs-level4" class="tab" onclick="switchConsoleMode('level4')" ondblclick="resizeConsole()"></div>
+		<div id="whiteboard-wrapper" class="column">
+			<div id="whiteboard-tabs" class="tabs">
+				<div id="whiteboard-tabs-blank" class="tab"><canvas width="20" height="20"></canvas></div>
 			</div>
-			<div id="console-tabdiv" class="console-tabdiv">
-				<div id="console-blocks" class="program"></div>
-				<div id="console-write" class="program"></div>
-			</div>
-			<div id="console-buttons">
-				<div>
-					<a id="button-undo" href="#"><canvas width="40" height="20" onclick="undo(false)"></canvas></a>
-				</div><div>
-					<a id="button-execute" href="#"><canvas width="20" height="20" onclick="execute()"></canvas></a>
-					<a id="button-clear" href="#"><canvas width="20" height="20" onclick="resetDraw()"></canvas></a>
-					<a id="button-reset" href="#"><canvas width="20" height="20" onclick="resetUI(true)"></canvas></a>
-				</div><div>
-					<a id="button-redo" href="#"><canvas width="40" height="20" onclick="undo(true)"></canvas></a>
-				</div>
-			</div>
+			<div id="whiteboard"></div>
 		</div>
 		<div id="dialog" class="column">
-			<div id="dialog-tabs">
-				<div id="dialog-tabs-setup" class="tab" onclick="switchDialogMode('setup')"><canvas width="20" height="20"></canvas></div>
+			<div id="dialog-tabs" class="tabs">
+				<div id="dialog-tabs-setup" class="tab" onclick="switchDialogMode('setup')"><canvas width="15" height="15"></canvas></div>
 				<div id="dialog-tabs-debug" class="tab" onclick="switchDialogMode('debug')"></div>
 				<div id="dialog-tabs-window" class="tab" onclick="switchDialogMode('window')"></div>
 				<div id="dialog-tabs-pieces" class="tab" onclick="switchDialogMode($_eseecode.modes.console[0])"></div>
 			</div>
-			<div id="dialog-blocks" class="program"></div>
-			<div id="dialog-write" class="program"></div>
-			<div id="dialog-window" class="program"></div>
-			<div id="dialog-debug" class="program">
-				<div id="dialog-debug-layers-title"></div>
-				<div id="dialog-debug-layers-help">?</div>
-				<div id="dialog-debug-layers"></div>
-				<div class="separator"></div>
-				<div id="dialog-debug-analyzer-title"></div>
-				<div id="dialog-debug-analyzer-help">?</div>
-				<div id="dialog-debug-analyzer"></div>
-				<div class="separator"></div>
-				<div id="dialog-debug-execute-title"></div>
-				<div id="dialog-debug-execute-help">?</div>
-				<div id="dialog-debug-execute"></div>
-			</div>
-			<div id="dialog-debug-command"><form id="dialog-debug-form" onsubmit="execute(true,document.getElementById('dialog-debug-command-input').value);return false;">
-				<label id="dialog-debug-command-label" for="dialog-debug-command-input"></label><input id="dialog-debug-command-input" type="text" />
-				<a id="dialog-debug-command-button" href="#"><canvas width="20" height="20" onclick="execute(true,document.getElementById('dialog-debug-command-input').value)"></canvas></a>
-			</form></div>
-			<div id="dialog-setup" class="program">
-				<br />
-				<div id="language">
-					<!-- <div id="language-translator"></div><br /> -->
-					<div id="language-switch">
-						<span id="language-title"></span>
-						<select id="language-select" onChange="switchLanguage(document.getElementById('language-select').value)"></select>
+			<div id="dialog-body" class="programbody">
+				<div id="dialog-blocks" class="program"></div>
+				<div id="dialog-write" class="program"></div>
+				<div id="dialog-window" class="program"></div>
+				<div id="dialog-debug" class="program">
+					<div id="dialog-debug-layers-title"></div>
+					<div id="dialog-debug-layers-help">?</div>
+					<div id="dialog-debug-layers"></div>
+					<div class="separator"></div>
+					<div id="dialog-debug-analyzer-title"></div>
+					<div id="dialog-debug-analyzer-help">?</div>
+					<div id="dialog-debug-analyzer"></div>
+					<div class="separator"></div>
+					<div id="dialog-debug-execute-title"></div>
+					<div id="dialog-debug-execute-help">?</div>
+					<div id="dialog-debug-execute"></div>
+				</div>
+				<div id="dialog-setup" class="program">
+					<br />
+					<div id="language">
+						<!-- <div id="language-translator"></div><br /> -->
+						<div id="language-switch">
+							<span id="language-title"></span>
+							<select id="language-select" onChange="switchLanguage(document.getElementById('language-select').value)"></select>
+						</div>
 					</div>
+					<br />
+					<div id="filemenu">
+						<input type="button" id="loadcode" name="loadfile" onclick="loadCode()" />
+						<input type="button" id="savecode" name="savefile" onclick="saveCode()" />
+					</div>
+					<br />
+					<div id="setup-grid">
+						<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
+						<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" /><br /><select id="setup-grid-coordinates" onchange="changeCoordinatesFromUI()"></select><br />
+						<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
+					</div>
+					<br />
+					<div id="setup-execute-step-buttons">
+						<span id="setup-execute-step-title"></span><input id="setup-execute-step" type="number" min="1" onchange="updateExecutionStep()" /><span id="setup-execute-step-title2"></span><label id="setup-execute-stepped-label" for="setup-execute-stepped"></label><input id="setup-execute-stepped" type="checkbox" onchange="updateExecutionStepped()" />
+					</div>
+					<div id="setup-execute-time-buttons">
+						<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
+					</div><br />
+					<div>
+						<p><a id="setup-downloadImage" class="link" onclick="downloadCanvas(this)"></a></p>
+						<p><a id="setup-downloadLayers" class="link" onclick="downloadLayers(this)"></a><br /><span id="setup-downloadLayers-interval-title"></span> <input id="setup-downloadLayers-interval" type="number" value="500" min="0" /></p>
+					</div>
+					<div id="dialog-setup-author"></div>
 				</div>
-				<br />
-				<div id="filemenu">
-					<input type="button" id="loadcode" name="loadfile" onclick="loadCode()" />
-					<input type="button" id="savecode" name="savefile" onclick="saveCode()" />
-				</div>
-				<br />
-				<div id="setup-grid">
-					<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
-					<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" />
-					<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
-				</div>
-				<br />
-				<div id="setup-execute-step-buttons">
-					<span id="setup-execute-step-title"></span><input id="setup-execute-step" type="number" min="1" onchange="updateExecutionStep()" /><span id="setup-execute-step-title2"></span><label id="setup-execute-stepped-label" for="setup-execute-stepped"></label><input id="setup-execute-stepped" type="checkbox" onchange="updateExecutionStepped()" />
-				</div>
-				<div id="setup-execute-time-buttons">
-					<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
-				</div><br />
+			</div>
+			<div id="dialog-debug-command"><form id="dialog-debug-command-form" onsubmit="execute(true,document.getElementById('dialog-debug-command-input').value);return false;">
+				<label id="dialog-debug-command-label" for="dialog-debug-command-input"></label><input id="dialog-debug-command-input" type="text" />
+				<span id="dialog-debug-command-button" class="button"><canvas width="20" height="20" onclick="execute(true,document.getElementById('dialog-debug-command-input').value)"></canvas></span>
+			</form></div>
+		</div>
+		<div id="console" class="column">
+			<div id="console-tabs" class="tabs">
+				<div id="console-tabs-level1" class="tab" onclick="switchConsoleMode('level1')"></div>
+				<div id="console-tabs-level2" class="tab" onclick="switchConsoleMode('level2')"></div>
+				<div id="console-tabs-level3" class="tab" onclick="switchConsoleMode('level3')"></div>
+				<div id="console-tabs-level4" class="tab" onclick="switchConsoleMode('level4')"></div>
+				<div id="console-tabs-resize" class="tab" onclick="resizeConsole()"><canvas width="15" height="15"></canvas></div>
+			</div>
+			<div id="console-tabdiv" class="programbody">
+				<div id="console-blocks" class="program"></div>
+				<div id="console-write" class="program"></div>
+			</div>
+			<div id="console-buttons">
+				<div id="button-undo" class="button"><canvas width="40" height="20" onclick="undo(false)"></canvas></div>
 				<div>
-					<p><a id="setup-downloadImage" href="#" onclick="downloadCanvas(this)"></a></p>
-					<p><a id="setup-downloadLayers" href="#" onclick="downloadLayers(this)"></a><br /><span id="setup-downloadLayers-interval-title"></span> <input id="setup-downloadLayers-interval" type="number" value="500" min="0" /></p>
+					<span id="button-execute" class="button"><canvas width="20" height="20" onclick="execute()"></canvas></span>
+					<span id="button-clear" class="button"><canvas width="20" height="20" onclick="resetDraw()"></canvas></span>
+					<span id="button-reset" class="button"><canvas width="20" height="20" onclick="resetUI(true)"></canvas></span>
 				</div>
-				<div id="dialog-setup-author"></div>
+				<div id="button-redo" class="button"><canvas width="40" height="20" onclick="undo(true)"></canvas></div>
 			</div>
 		</div>
 	</div>
+	<div id="footer"></div>
 </div>
 </body>
 </html>

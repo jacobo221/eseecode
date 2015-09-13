@@ -7,8 +7,8 @@
 	 */
 	function downloadCanvas(link) {
 		var canvas = document.createElement('canvas');
-		canvas.width = 400;
-		canvas.height = 400;
+		canvas.width = $_eseecode.canvasArray[0].canvas.width;
+		canvas.height = $_eseecode.canvasArray[0].canvas.height;
 		var ctx = canvas.getContext("2d");
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -53,8 +53,8 @@
 		var layer = $_eseecode.canvasArray[i]; // We skip first frame which is the grid
 		while (layer) {
 			var canvas = document.createElement('canvas');
-			canvas.width = 400;
-			canvas.height = 400;
+			canvas.width = $_eseecode.canvasArray[0].canvas.width;
+			canvas.height = $_eseecode.canvasArray[0].canvas.height;
 			var ctx = canvas.getContext("2d");
 			ctx.fillStyle="#FFFFFF";
 			ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -97,24 +97,46 @@
 		var consoleColumn = document.getElementById("console");
 		var dialogColumn = document.getElementById("dialog");
 		var widthLeft = mainWidth-whiteboardWidth;
-		var marginWidth = 3;
+		var iconMargin = 4;
+		var setupTab = document.getElementById("dialog-tabs-setup");
 		if (restore || dialogColumn.style.display == "none") { // we asume console has by default same width as dialog
+			if (consoleColumn.classList) {
+				consoleColumn.classList.remove("maximized");
+			} else {
+				consoleColumn.div.className = consoleColumn.className.replace(/\s+maximized/,"");
+			}
+			setupTab.parentNode.removeChild(setupTab);
+			document.getElementById("dialog-tabs").appendChild(setupTab);
 			dialogColumn.style.display = "block";
-			var margin = marginWidth*(3+1);
-			var consoleWidth = Math.ceil((widthLeft-margin)/100/2)*100;
-			consoleColumn.style.width = consoleWidth+"px";
-			dialogColumn.style.width = (widthLeft-consoleWidth-margin)+"px";
-			ace.edit("console-write").session.setUseWrapMode(true);
-			ace.edit("console-write").session.setWrapLimitRange(36, 36);
+			iconMargin = 3;
 		} else {
+			if (consoleColumn.classList) {
+				consoleColumn.classList.add("maximized");
+			} else {
+				consoleColumn.div.className += " maximized";
+			}
+			setupTab.parentNode.removeChild(setupTab);
+			document.getElementById("console-tabs").insertBefore(setupTab,document.getElementById("console-tabs").firstChild);
 			dialogColumn.style.display = "none";
-			var margin = marginWidth*(2+1);
-			consoleColumn.style.width = (widthLeft-margin)+"px";
-			ace.edit("console-write").session.setUseWrapMode(true);
-			ace.edit("console-write").session.setWrapLimitRange(70, 70);
+			iconMargin = 5;
 		}
 		switchDialogMode();
 		ace.edit("console-write").resize();
+		// Console resize tab
+		var canvas = document.getElementById("console-tabs-resize").firstChild;
+		var ctx = canvas.getContext("2d");
+		var width = canvas.width;
+		var height = canvas.height;
+		canvas.width = width;
+		ctx.lineWidth = 2;
+		ctx.strokeStyle = "#FFFFFF";
+		ctx.beginPath();
+		ctx.moveTo(iconMargin,iconMargin);
+		ctx.lineTo(width-iconMargin,iconMargin);
+		ctx.lineTo(width-iconMargin,height-iconMargin);
+		ctx.lineTo(iconMargin,height-iconMargin);
+		ctx.closePath();
+		ctx.stroke();
 	}
 
 	/**
@@ -125,11 +147,15 @@
 	 * @example msgBox("Alert!")
 	 */
 	function msgBox(text, config) {
+		var id = 0;
+		for (id=0; document.getElementById("msgBoxWrapper"+id); id++);
 		var mainBlock = document.getElementById("eseecode");
 		var div = document.createElement("div");
-		div.id = "msgBoxWrapper";
+		div.id = "msgBoxWrapper"+id;
+		div.className = "msgBoxWrapper";
 		var innerDiv = document.createElement("div");
-		innerDiv.id = "msgBox";
+		innerDiv.id = "msgBox"+id;
+		innerDiv.className = "msgBox";
 		var textDiv;
 		if (typeof text === "string") {
 			textDiv = document.createElement("div");
@@ -150,6 +176,7 @@
 		} else {
 			input.value = _("Accept");
 		}
+		var focusElement = input;
 		if (!config || !config.focus) {
 			input.autofocus = true;
 		}
@@ -184,6 +211,9 @@
 		textDiv.style.height = (innerDiv.offsetHeight-buttonDiv.offsetHeight-40)+"px";
 		if (config && config.focus) {
 			document.getElementById(config.focus).focus();
+		} else {
+			// We must give focus to something in the msgBox otherwise the focus could be on a previous msgBox's button and pressing ENTER would affect to that other msgBox
+			focusElement.focus();
 		}
 	}
 
@@ -194,9 +224,17 @@
 	 * @example msgBoxClose()
 	 */
 	function msgBoxClose() {
-		document.getElementById("eseecode").removeChild(document.getElementById("msgBoxWrapper"));
-		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
-			ace.edit("console-write").focus();
+		var id=0;
+		for (id=0; document.getElementById("msgBoxWrapper"+id); id++);
+		id--;
+		var msgBox = document.getElementById("msgBoxWrapper"+id);
+		if (msgBox) {
+			document.getElementById("eseecode").removeChild(msgBox);
+			if (id>0) {
+				document.getElementById("msgBoxWrapper"+(id-1)).focus();
+			} else if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
+				ace.edit("console-write").focus();
+			}
 		}
 	}
 
@@ -341,6 +379,9 @@
 		if (!id) {
 			id = $_eseecode.modes.dialog[0];
 		}
+		if (id == "setup") {
+			resizeConsole(true);
+		}
 		if (!isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.dialog.length; i++) {
 				if ($_eseecode.modes.dialog[i].name == id) {
@@ -365,47 +406,47 @@
 		} else if ($_eseecode.modes.dialog[id].div == "write") {
 			initDialogWrite($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
 		}
+		var debugCommand = document.getElementById("dialog-debug-command-form");
 		if ($_eseecode.modes.dialog[id].name == "debug") {
 			resetDebug();
-			var debugCommand = document.getElementById("dialog-debug-command");
-			debugCommand.style.display = "block";
+			debugCommand.style.visibility = "visible";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
 			debugCommandInput.style.width = (debugCommand.offsetWidth - document.getElementById("dialog-debug-command-button").offsetWidth - 15) +"px";
 			//debugCommandInput.focus();
 		} else {
-			document.getElementById("dialog-debug-command").style.display = "none";
+			debugCommand.style.visibility = "hidden";
 		}
 		// Paint setup tab image
-		var margin = 3;
+		var margin = 2;
 		var canvas = document.getElementById("dialog-tabs-setup").firstChild;
 		var ctx = canvas.getContext("2d");
 		var width = canvas.width;
 		var height = canvas.height;
-		ctx.lineWidth = 3;
+		canvas.width = width;
 		if ($_eseecode.modes.dialog[id].name == "setup") {
 			ctx.strokeStyle = "#000000";
 		} else {
 			ctx.strokeStyle = "#FFFFFF";
 		}
-		var radio = (height-margin*2)/2;
+		var radio = (height-margin*2-4)/2;
+		ctx.lineWidth = 3;
 		ctx.beginPath();
-		ctx.arc(width/2, height/2, (height-margin*2)/2, 0, 360*Math.PI/180, false);
+		ctx.arc(width/2, height/2, radio, 0, 360*Math.PI/180, false);
 		ctx.closePath();
 		ctx.stroke();
-		ctx.save();
-		ctx.beginPath();
+		ctx.lineWidth = 2;
 		ctx.translate(width/2,height/2);
 		ctx.moveTo(0,0-radio);
-		var numLines = 6;
+		var numLines = 8;
 		for (var i = 0; i < numLines; i++)
 		{
-			ctx.rotate(Math.PI / numLines);
-			ctx.lineTo(0, 0 - (radio*1.4));
-			ctx.rotate(Math.PI / numLines);
+			ctx.beginPath();
+			ctx.rotate(Math.PI*2 / numLines);
+			ctx.moveTo(0, 0 - (radio*2));
 			ctx.lineTo(0, 0 - radio);
+			ctx.closePath();
+			ctx.stroke();
 		}
-		ctx.stroke();
-		ctx.restore();
 		// Update current dialog
 		$_eseecode.modes.dialog[0] = id;
 	}
@@ -677,6 +718,40 @@
 	}
 
 	/**
+	 * Initializes or resets the grid modes select
+	 * @private
+	 * @example resetGridModeSelect()
+	 */
+	function resetGridModeSelect() {
+		var element = document.getElementById("setup-grid-coordinates");
+		// Clean select
+		for (var i=element.options.length; i>0; i--) {
+			element.remove(0);
+		}
+		// Add options
+		var gridModes = $_eseecode.coordinates.predefined;
+		var gridSelectOptions = "";
+		var currentPredefinedMode = $_eseecode.coordinates.userSelection;
+		for (var i=0; i<gridModes.length; i++) {
+			var option = document.createElement("option");
+			option.value = i;
+			option.text = _(gridModes[i].name);
+			if (i == currentPredefinedMode || (currentPredefinedMode == undefined && gridModes[i].default)) {
+				option.selected = true;
+			}
+			element.add(option);
+		}
+		// If we are currently using a custom axis setup (could happen when changing translation) add Custom option
+		if (getGridPredefined() == -1) {
+			var option = document.createElement("option");
+			option.value = gridModes.length;
+			option.text = _("Custom");
+			option.selected = true;
+			element.add(option);
+		}
+	}
+
+	/**
 	 * Returns a readable text color given a background color
 	 * @private
 	 * @param {String} backgroundColor Background color
@@ -760,16 +835,24 @@
 			id = $_eseecode.currentCanvas.name;
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
+		var xScale = $_eseecode.coordinates.xScale;
+		var yScale = $_eseecode.coordinates.yScale;
+		if (xScale < 0) {
+			xScale *= -1;
+		}
+		if (yScale < 0) {
+			yScale *= -1;
+		}
 		var size = 20;
-		var orgx = targetCanvas.turtle.x;
-		var orgy = targetCanvas.turtle.y;
+		var orgx = targetCanvas.turtle.x*xScale+$_eseecode.coordinates.x;
+		var orgy = targetCanvas.turtle.y*yScale+$_eseecode.coordinates.y;
 		var angle = targetCanvas.turtle.angle;
-		var frontx = targetCanvas.turtle.x+size*Math.cos(angle*Math.PI/180);
-		var fronty = targetCanvas.turtle.y+size*Math.sin(angle*Math.PI/180);
-		var leftx = targetCanvas.turtle.x+size/2*Math.sin(angle*Math.PI/180);
-		var lefty = targetCanvas.turtle.y-size/2*Math.cos(angle*Math.PI/180);
-		var rightx = targetCanvas.turtle.x-size/2*Math.sin(angle*Math.PI/180);
-		var righty = targetCanvas.turtle.y+size/2*Math.cos(angle*Math.PI/180);
+		var frontx = orgx+size*Math.cos(angle*Math.PI/180);
+		var fronty = orgy+size*Math.sin(angle*Math.PI/180);
+		var leftx = orgx+size/2*Math.sin(angle*Math.PI/180);
+		var lefty = orgy-size/2*Math.cos(angle*Math.PI/180);
+		var rightx = orgx-size/2*Math.sin(angle*Math.PI/180);
+		var righty = orgy+size/2*Math.cos(angle*Math.PI/180);
 		if (ctx === undefined) {
 			var turtleCanvas = $_eseecode.canvasArray["turtle"];
 			if (!turtleCanvas.visible) {
@@ -837,7 +920,7 @@
 	}
 
 	/**
-	 * Shows only a layer (hodes the others)
+	 * Shows only a layer (hides the others)
 	 * @private
 	 * @param {Number} id Layer id
 	 * @example highlightCanvas(3)
@@ -962,7 +1045,7 @@
 	/**
 	 * Initializes/Resets the grid layer
 	 * @private
-	 * @example resetGrid(3)
+	 * @example resetGrid()
 	 */
 	function resetGrid() {
 		var ctx = $_eseecode.canvasArray[0].context;
@@ -983,26 +1066,48 @@
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
-		ctx.fillText("(0,0)",margin,fontHeight+margin);
-		ctx.fillText("("+canvasSize+","+canvasSize+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
+		var coorUpperLeftX = (-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
+		var coorUpperLeftY = (-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
+		var coorLowerRightX = (canvasSize-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
+		var coorLowerRightY = (canvasSize-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
+		ctx.fillText("("+coorUpperLeftX+","+coorUpperLeftY+")",margin,fontHeight+margin);
+		ctx.fillText("("+coorLowerRightX+","+coorLowerRightY+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
 		if (step < 25) {
 			step = 25;
 			document.getElementById("setup-grid-step").value = step;			
 		}
-		ctx.fillStyle = "#DDDDDD";
-		ctx.strokeStyle = "#EEEEEE";
+		var colorHighlight = "#DDDDDD";
+		var colorNormal = "#EEEEEE";
+		ctx.fillStyle = colorHighlight;
+		ctx.strokeStyle = colorNormal;
 		ctx.lineWidth = 1;
-		for (var i=step; i<canvasSize; i+=step) {
-			ctx.fillText(i,i,7);
+		var xUserStep = step*$_eseecode.coordinates.xScale;
+		for (var i=step, text=coorUpperLeftX+xUserStep; i<canvasSize; i+=step, text+=xUserStep) {
+			ctx.fillText(text,i,7);
+			if (text == 0) {
+				ctx.strokeStyle = colorHighlight;
+			} else {
+				ctx.strokeStyle = colorNormal;
+			}
+			ctx.beginPath();
 			ctx.moveTo(i,0);
 			ctx.lineTo(i,canvasSize);
+			ctx.closePath();
 			ctx.stroke();
 		}
-		for (var i=step; i<canvasSize; i+=step) {
-			ctx.fillText(i,0,i);
+		var yUserStep = step*$_eseecode.coordinates.yScale;
+		for (var i=step, text=coorUpperLeftY+yUserStep; i<canvasSize; i+=step, text+=yUserStep) {
+			ctx.fillText(text,0,i);
+			if (text == 0) {
+				ctx.strokeStyle = colorHighlight;
+			} else {
+				ctx.strokeStyle = colorNormal;
+			}
+			ctx.beginPath();
 			ctx.moveTo(0,i);
 			ctx.lineTo(canvasSize,i);
+			ctx.closePath();
 			ctx.stroke();
 		}
 	}
@@ -1244,16 +1349,19 @@
 	/**
 	 * Initializes/Resets all UI elements
 	 * @private
-	 * @param {Boolean} nonInitial If set to true it asks for confirmation if code would be lost
+	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost
+	 * @param {Boolean} force Force reset
 	 * @example resetUI()
 	 */
-	function resetUI(notInitial) {
+	function resetUI(notInitial, force) {
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
 		$_eseecode.dialogWindow = document.getElementById("dialog-window");
-		if (notInitial === true && !codeIsEmpty() && !confirm(_("Do you really want to start over?"))) {
+		if (notInitial === true && !codeIsEmpty() && !force) {
+			msgBox(_("Do you really want to start over?"), {acceptAction:resetUIForced,cancelAction:msgBoxClose});
 			return false;
 		}
 		initUIElements();
+		resetGridModeSelect();
 		resetUndoBlocks();
 		resetBreakpoints();
 		// Hide filemenu if asked to do so (to integrate with other platforms)
@@ -1287,7 +1395,37 @@
 		switchLanguage($_eseecode.i18n.current, true);
 		document.body.removeEventListener("keydown", keyboardShortcuts, false);
 		document.body.addEventListener("keydown", keyboardShortcuts, false);
+		window.removeEventListener("beforeunload", windowRefresh, false);
+		window.addEventListener("beforeunload", windowRefresh, false);
+		if (!notInitial) {
+			window.addEventListener('resize', windowResizeHandler);
+		}
+		windowResizeHandler();
 		return true;
+	}
+
+	/**
+	 * Resets all UI elements even if code is already loaded
+	 * @private
+	 * @example resetUIForced()
+	 */
+	function resetUIForced() {
+		resetUI(true, true);
+		msgBoxClose();
+	}
+
+	/**
+	 * Resizes the console height based on the window's size
+	 * @private
+	 * @example windowResizeHandler()
+	 */
+	function windowResizeHandler() {
+		var height = document.getElementById("eseecode").clientHeight - document.getElementById("header").offsetHeight - document.getElementById("footer").offsetHeight - document.getElementById("console-tabs").offsetHeight - document.getElementById("console-buttons").offsetHeight;
+		var programElements = document.getElementsByClassName("program");
+		for (var i=0; i<programElements.length; i++) {
+			programElements[i].style.height = height+"px";
+		}
+		ace.edit("console-write").resize();
 	}
 
 	/**
@@ -1298,6 +1436,15 @@
 	function initConsole() {
 		resetBlocksConsole(document.getElementById("console-blocks"));
 		resetWriteConsole();
+	}
+
+	/**
+	 * Window refresh handler
+	 * @private
+	 * @example windowRefresh()
+	 */
+	function windowRefresh(event) {
+                event.returnValue = _("Careful, any code you haven't saved will be lost if you leave this page!");
 	}
 
 	/**
@@ -1315,8 +1462,23 @@
 			if ($_eseecode.session.floatingBlock.div) {
 				cancelFloatingBlock(event);
 			}
-			if (document.getElementById("msgBoxWrapper")) {
-				if (document.getElementById("setupBlockDiv")) {
+			if (document.getElementById("msgBoxWrapper0")) {
+				var id=0;
+				for (id=0; document.getElementById("msgBoxWrapper"+id); id++);
+				id--;
+				var isSetupBlockDialog = false;
+				var element = document.getElementById("setupBlockDiv");
+				while (element) {
+					if (element.id && element.id.indexOf("msgBoxWrapper") === 0) {
+						var setupBlockMsgBoxId = parseInt(element.id.substring("msgBoxWrapper".length));
+						if (setupBlockMsgBoxId === id) {
+							isSetupBlockDialog = true;
+						}
+						break;
+					}
+					element = element.parentNode;
+				}
+				if (isSetupBlockDialog) {
 					setupBlockCancel();
 				} else {
 					msgBoxClose();
@@ -1354,7 +1516,8 @@
 			} else {
 				text = _("Drop some blocks here to start programming!");
 			}
-			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;display:table-cell;text-align:center;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;padding:"+(consoleDiv.clientHeight/2-10)+"px 10px 0px 10px'>"+text+"</div>";
+			consoleDiv.innerHTML = "<div id='console-blocks-tip' style='border-width:0px;box-shadow:none;float:none;text-align:center;color:#FF5555;text-shadow:1px 1px 2px #000000;font-weight:bold;padding:"+(consoleDiv.clientHeight/2-10)+"px 10px 0px 10px'>"+text+"</div>";
+/*
 			// Dialog highlight first block to use
 			if (level === "level1") {
 				var startInstructionId = getInstructionSetIdFromName("goToCenter");
@@ -1392,17 +1555,40 @@
 					ctx.lineWidth = '10';
 					ctx.moveTo(consoleDiv.clientWidth/2, margin);
 					ctx.lineTo(consoleDiv.clientWidth/2, arrowHeight-margin);
-					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight-margin);
+					ctx.lineTo(margin*2, arrowHeight-margin);
 					ctx.stroke();
 					ctx.beginPath();
-					ctx.moveTo(consoleDiv.clientWidth-margin, arrowHeight-margin);
-					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight);
-					ctx.lineTo(consoleDiv.clientWidth-margin*2, arrowHeight-margin*2);
+					ctx.moveTo(margin, arrowHeight-margin);
+					ctx.lineTo(margin*2, arrowHeight);
+					ctx.lineTo(margin*2, arrowHeight-margin*2);
 					ctx.closePath();
 					ctx.fill();
 					consoleDiv.appendChild(canvas);
 				}
 			}
+*/
+			// Arrow
+			var tipDiv = document.getElementById("console-blocks-tip");
+			var canvas = document.createElement("canvas");
+			canvas.width = consoleDiv.clientWidth;
+			var arrowHeight = 50;
+			canvas.height = arrowHeight;
+			var ctx = canvas.getContext("2d");
+			var margin = 10;
+			ctx.strokeStyle = "#FF5555";
+			ctx.fillStyle = "#FF5555";
+			ctx.lineWidth = '10';
+			ctx.moveTo(consoleDiv.clientWidth/2, margin);
+			ctx.lineTo(consoleDiv.clientWidth/2, arrowHeight-margin);
+			ctx.lineTo(margin*2, arrowHeight-margin);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(margin, arrowHeight-margin);
+			ctx.lineTo(margin*2, arrowHeight);
+			ctx.lineTo(margin*2, arrowHeight-margin*2);
+			ctx.closePath();
+			ctx.fill();
+			consoleDiv.appendChild(canvas);
 		}
 	}
 
@@ -1840,8 +2026,8 @@
 			$_eseecode.canvasArray["turtle"] = turtle;
 		}
 		getCanvas(0).canvas.style.zIndex = -1; // canvas-0 is special
-		resetGrid();
 		switchCanvas(1); // canvas-1 is the default
+		changeCoordinatesFromUI(); // Must be run before resetTurtle() so the turtle is set within the right coordinates map
 		// reset turtle	
 		resetTurtle();
 		// reset windows
@@ -1913,6 +2099,7 @@
 		}
 		editor.gotoLine(0,0);
 		editor.session.on("change",writeChanged);
+		ace.edit("console-write").session.setUseWrapMode(true);
 	}
 
 	/**
@@ -1925,5 +2112,98 @@
 		$_eseecode.session.changesInCode = "write";
 		unhighlight();
 		updateWriteBreakpoints(event);
+	}
+
+	/**
+	 * Returns the $_eseecode.coordinates.predefined index of the axis setup
+	 * If no parameters are passed it assumes current coordinates
+	 * @private
+	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
+	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
+	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
+	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
+	 * @return The index if it is found, -1 otherwise
+	 * @example getGridPredefined(200, 200, 1, -1)
+	 */
+	function getGridPredefined(posx, posy, xScale, yScale) {
+		if (posx === undefined) {
+			posx = $_eseecode.coordinates.x;
+			posy = $_eseecode.coordinates.y;
+			xScale = $_eseecode.coordinates.xScale;
+			yScale = $_eseecode.coordinates.yScale;
+		}
+		var gridModes = $_eseecode.coordinates.predefined;
+		var foundPredefined = false;
+		var i = 0;
+		for (i=0; i<gridModes.length; i++) {
+			if (posx == gridModes[i].x && posy == gridModes[i].y && xScale == gridModes[i].xScale && yScale == gridModes[i].yScale) {
+				foundPredefined = true;
+				break;
+			}
+		}
+		if (!foundPredefined) {
+			i = -1;
+		}
+		return i;
+	}
+
+	/**
+	 * Change whiteboard axis setup
+	 * @private
+	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
+	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
+	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
+	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
+	 * @example changeCoordinates(200, 200, 1, -1)
+	 */
+	function changeCoordinates(posx, posy, xScale, yScale) {
+		$_eseecode.coordinates.x = posx;
+		$_eseecode.coordinates.y = posy;
+		$_eseecode.coordinates.xScale = xScale;
+		$_eseecode.coordinates.yScale = yScale;
+		resetGrid();
+		var element = document.getElementById("setup-grid-coordinates");
+		var gridModes = $_eseecode.coordinates.predefined;
+		var gridIsPredefined = getGridPredefined(posx, posy, xScale, yScale);
+		if (gridIsPredefined >= 0) {
+			// Only change if it is not the one already selected, otherwise we enter a infinite loop
+			if (element.value != gridIsPredefined) {
+				element.value = gridIsPredefined;
+			}
+			if (element.options.length > gridModes.length) {
+				// Remove the Custom option
+				element.remove(gridModes.length);
+			}
+		} else {
+			if (element.options.length == gridModes.length) {
+				var option = document.createElement("option");
+				option.value = gridModes.length;
+				option.text = _("Custom");
+				element.add(option);
+			}
+			element.value = gridModes.length;
+		}
+	}
+
+	/**
+	 * Change whiteboard axis setup, called by the UI
+	 * @private
+	 * @example changeCoordinatesFromUI()
+	 */
+	function changeCoordinatesFromUI() {
+		var element = document.getElementById("setup-grid-coordinates");
+		var gridModes = $_eseecode.coordinates.predefined;
+		var selectValue = element.value;
+		if (selectValue == gridModes.length) { // It was set as Custom
+			selectValue = 0;
+			for (var i=0; i<gridModes.length; i++) {
+				if (gridModes[i].default) {
+					selectValue = i;
+					break;
+				}
+			}
+		}
+		$_eseecode.coordinates.userSelection = selectValue;
+		changeCoordinates(gridModes[selectValue].x, gridModes[selectValue].y, gridModes[selectValue].xScale, gridModes[selectValue].yScale);
 	}
 

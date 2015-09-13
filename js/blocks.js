@@ -683,43 +683,44 @@
 				}, false);
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
-				if (parameter.minValue !== undefined && parameter.maxValue !== undefined && supportedInputs["range"]) {
+				if (supportedInputs["range"]) {
 					visualTypeSupportedByBrowser = true;
-					var elementInput = document.createElement("input");
-					elementInput.setAttribute("type", "range");
-					if (parameter.stepValue !== undefined) {
-						stepValue = parameter.stepValue;
+					var useSlider = false;
+					var canvasSize = $_eseecode.whiteboard.offsetWidth;
+					var minValue = parameter.minValue;
+					if (minValue == "minX") {
+						minValue = -$_eseecode.coordinates.x;
+					} else if (minValue == "maxX") {
+						minValue = canvasSize-$_eseecode.coordinates.x;
+					} else if (minValue == "minY") {
+						minValue = -$_eseecode.coordinates.y;
+					} else if (minValue == "maxY") {
+						minValue = canvasSize-$_eseecode.coordinates.y;
 					}
-					var valueEscalation = 1;
-					if (stepValue < 1) {
-						// Number inputs only accept integers, so escalate
-						valueEscalation = 1/stepValue;
+					var maxValue = parameter.maxValue;
+					if (maxValue == "minX") {
+						maxValue = -$_eseecode.coordinates.x;
+					} else if (maxValue == "maxX") {
+						maxValue = canvasSize-$_eseecode.coordinates.x;
+					} else if (maxValue == "minY") {
+						maxValue = -$_eseecode.coordinates.y;
+					} else if (maxValue == "maxY") {
+						maxValue = canvasSize-$_eseecode.coordinates.y;
 					}
-					element.step = stepValue*valueEscalation;
-					if (defaultValue !== undefined) {
-						elementInput.value = defaultValue*valueEscalation;
+					if (defaultValue == "minX") {
+						defaultValue = -$_eseecode.coordinates.x;
+					} else if (defaultValue == "maxX") {
+						defaultValue = canvasSize-$_eseecode.coordinates.x;
+					} else if (defaultValue == "minY") {
+						defaultValue = -$_eseecode.coordinates.y;
+					} else if (defaultValue == "maxY") {
+						defaultValue = canvasSize-$_eseecode.coordinates.y;
+					} else if (isNumber(defaultValue)) {
+						defaultValue = parseInt(defaultValue);
 					}
-					elementInput.min = parameter.minValue*valueEscalation;
-					elementInput.max = parameter.maxValue*valueEscalation;
-					elementInput.setAttribute("valueEscalation", valueEscalation);
-					elementInput.addEventListener("change", function() {
-						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-						document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseInt(this.getAttribute("valueEscalation"));
-						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
-						updateIcon();
-					}, false);
-					element.appendChild(elementInput);
-					var elementSpace = document.createElement("span");
-					elementSpace.innerHTML = "  ";
-					element.appendChild(elementSpace);
-					var elementSpan = document.createElement("span");
-					elementSpan.id = parameterInputId+"VisualSpan";
-					if (defaultValue !== undefined) {
-						elementSpan.innerHTML = defaultValue;
+					if (minValue !== undefined && maxValue !== undefined) {
+						useSlider = true;
 					}
-					element.appendChild(elementSpan);
-				} else if (supportedInputs["range"]) {
-					visualTypeSupportedByBrowser = true;
 					var stepValue = 1;
 					if (parameter.stepValue !== undefined) {
 						stepValue = parameter.stepValue;
@@ -753,32 +754,60 @@
 							stepValue = parseInt(elem.step);
 						}
 						elem.value = parseInt(val) - stepValue;
-						if (elem.getAttribute("min") && elem.value < elem.getAttribute("min")) {
+						if (elem.getAttribute("min") && parseInt(elem.value) < elem.getAttribute("min")) {
 							elem.value = elem.getAttribute("min");
 						}
 						elem.dispatchEvent(new Event('change'));
 					}, false);
 					element.appendChild(elementMinus);
-					var elementInput = document.createElement("input");
-					elementInput.id = parameterInputId+"VisualInput";
-					elementInput.setAttribute("type", "number");
-					if (defaultValue !== undefined) {
-						elementInput.value = defaultValue*valueEscalation;
+					if (useSlider) {
+						var elementInput = document.createElement("input");
+						elementInput.id = parameterInputId+"VisualInput";
+						elementInput.setAttribute("type", "range");
+						elementInput.step = stepValue*valueEscalation;
+						if (defaultValue !== undefined) {
+							elementInput.value = defaultValue*valueEscalation;
+						}
+						elementInput.min = minValue*valueEscalation;
+						elementInput.max = maxValue*valueEscalation;
+						elementInput.setAttribute("valueEscalation", valueEscalation);
+						elementInput.addEventListener("change", function() {
+							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+							document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseInt(this.getAttribute("valueEscalation"));
+							document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
+							updateIcon();
+						}, false);
+						var elementText = document.createElement("span");
+						elementText.className = "helpNote";
+						elementText.innerHTML = minValue;
+						element.appendChild(elementText);
+						element.appendChild(elementInput);
+						elementText = document.createElement("span");
+						elementText.className = "helpNote";
+						elementText.innerHTML = maxValue;
+						element.appendChild(elementText);
+					} else {
+						var elementInput = document.createElement("input");
+						elementInput.id = parameterInputId+"VisualInput";
+						elementInput.setAttribute("type", "number");
+						if (defaultValue !== undefined) {
+							elementInput.value = defaultValue*valueEscalation;
+						}
+						if (minValue !== undefined) {
+							elementInput.min = minValue*valueEscalation;
+						}
+						if (maxValue !== undefined) {
+							elementInput.max = maxValue*valueEscalation;
+						}
+						elementInput.step = stepValue*valueEscalation;
+						elementInput.setAttribute("valueEscalation", valueEscalation);
+						elementInput.addEventListener("change", function() {
+							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+							document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
+							updateIcon();
+						}, false);
+						element.appendChild(elementInput);
 					}
-					if (parameter.minValue !== undefined) {
-						elementInput.min = parameter.minValue*valueEscalation;
-					}
-					if (parameter.maxValue !== undefined) {
-						elementInput.max = parameter.maxValue*valueEscalation;
-					}
-					elementInput.step = stepValue*valueEscalation;
-					elementInput.setAttribute("valueEscalation", valueEscalation);
-					elementInput.addEventListener("change", function() {
-						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-						document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
-						updateIcon();
-					}, false);
-					element.appendChild(elementInput);
 					var elementPlus = document.createElement("input");
 					elementPlus.type = "button";
 					elementPlus.value = "+";
@@ -803,12 +832,23 @@
 							stepValue = parseInt(elem.step);
 						}
 						elem.value = parseInt(val) + stepValue;
-						if (elem.getAttribute("max") && elem.value > elem.getAttribute("max")) {
+						if (elem.getAttribute("max") && parseInt(elem.value) > elem.getAttribute("max")) {
 							elem.value = elem.getAttribute("max");
 						}
 						elem.dispatchEvent(new Event('change'));
 					}, false);
 					element.appendChild(elementPlus);
+					if (useSlider) {
+						var elementSpace = document.createElement("span");
+						elementSpace.innerHTML = "  ";
+						element.appendChild(elementSpace);
+						var elementSpan = document.createElement("span");
+						elementSpan.id = parameterInputId+"VisualSpan";
+						if (defaultValue !== undefined) {
+							elementSpan.innerHTML = defaultValue;
+						}
+						element.appendChild(elementSpan);
+					}
 				}
 			} else if (parameter.type === "bool") {
 				visualTypeSupportedByBrowser = true;
@@ -827,15 +867,19 @@
 			} else if (parameter.type === "color") {
 				visualTypeSupportedByBrowser = true;
 				element = document.createElement("input");
-				if (defaultValue !== undefined) {
-					element.value = defaultValue;
-				}
 				if (supportedInputs["color"]) {
 					element.setAttribute("type", "color");
 				} else {
 					// Use jsColor
 					element.className = "color";
 					jscolor.color(element, {});
+				}
+				if (defaultValue !== undefined) {
+					var value = defaultValue;
+					if (value.charAt(0) == '"') {
+						value = value.substring(1,value.length-1);
+					}
+					element.value = value;
 				}
 				element.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -885,7 +929,7 @@
 			if (instruction.parameters[i] && instruction.parameters[i].validate) {
 				var value = document.getElementById("setupBlock"+paramNumber).value;
 				if (!instruction.parameters[i].validate(value)) {
-					alert(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
+					msgBox(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
 					return;
 				}
 			}

@@ -52,6 +52,17 @@
 	}
 
 	/**
+	 * Enables/disables a breakpoint
+	 * @private
+	 * @param {String} line Breakpoint to disable/enable
+	 * @param {!HTMLElement} element HTML checkbox that triggered the function
+	 * @example toggleBreakpoint(12, this)
+	 */
+	function toggleBreakpoint(line, element) {
+		$_eseecode.session.breakpointsStatus[line] = element.checked;
+	}
+
+	/**
 	 * Deletes a breakpoint
 	 * @private
 	 * @param {String} line Line to remove breakpoint from
@@ -59,6 +70,7 @@
 	 */
 	function removeBreakpoint(line) {
 		delete $_eseecode.session.breakpoints[line];
+		delete $_eseecode.session.breakpointsStatus[line];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
 		div.parentNode.removeChild(div);
 	}
@@ -165,11 +177,12 @@
 		} else if (!document.getElementById("dialog-debug-analyzer-line"+line)) {
 			if ($_eseecode.session.breakpoints[line] === undefined) {
 				$_eseecode.session.breakpoints[line] = {};
+				$_eseecode.session.breakpointsStatus[line] = true;
 			}
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"removeBreakpoint("+line+")\" checked /><a href=\"#\" onclick=\"updateBreakpoint("+line+")\" onmouseover=\"highlight("+line+",'breakpoint')\" onmouseover=\"unhighlight()\">"+_("Line")+" "+line+"</a>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"addBreakpointWatch("+line+")\" /><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"updateBreakpoint("+line+")\" onmouseover=\"highlight("+line+",'breakpoint')\" onmouseover=\"unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"removeBreakpoint("+line+")\">("+_("Delete")+")</span><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
 			var divAnalyzer = document.getElementById("dialog-debug-analyzer");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
@@ -213,7 +226,9 @@
 					return;
 				}
 				$_eseecode.session.breakpoints[line] = $_eseecode.session.breakpoints[oldLine];
+				$_eseecode.session.breakpointsStatus[line] = $_eseecode.session.breakpointsStatus[oldLine];
 				delete $_eseecode.session.breakpoints[oldLine];
+				delete $_eseecode.session.breakpointsStatus[oldLine];
 				var div = document.getElementById("dialog-debug-analyzer-line"+oldLine);
 				if (div) {
 					div.parentNode.removeChild(div);
@@ -227,7 +242,7 @@
 	}
 
 	/**
-	 * Adds a watch in a breakpoint
+	 * Adds a watch in a breakpoint, its only a wrapper to call the dialog or directly the function
 	 * @private
 	 * @param {String} line Breakpoint (line) to add the watch to
 	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
@@ -235,18 +250,45 @@
 	 */
 	function addBreakpointWatch(line, watch) {
 		if (!watch) {
-			do {
-				watch = window.prompt(_("Enter the name of the variable you want to watch in line %s",[line])+":");
-			} while (watch && watch.match(/^[A-Za-z][A-Za-z_0-9]*$/) === null);
+			var div = _("Enter the name of the variable you want to watch in line %s",[line])+"<br /> <input id=\"addBreakpointLine\" type=\"hidden\" value=\""+line+"\" /><input id=\"addBreakpointWatch\" type=\"text\" />";
+			msgBox(div,{acceptAction:addBreakpointWatchFromDialog,cancelAction:msgBoxClose,focus:"addBreakpointWatch"});
+		} else {
+			addBreakpointWatch2(line, watch);
 		}
+	}
+
+	/**
+	 * Adds a watch in a breakpoint, called from dialog
+	 * @private
+	 * @example addBreakpointWatchFromDialog()
+	 */
+	function addBreakpointWatchFromDialog() {
+		var line = document.getElementById("addBreakpointLine").value;
+		var watch = document.getElementById("addBreakpointWatch").value;
+		if (watch && watch.match(/^[A-Za-z][A-Za-z_0-9]*$/) !== null) {
+			msgBoxClose();
+			addBreakpointWatch2(line, watch);
+		} else {
+			msgBox(_("Invalid name of variable!"));
+		}
+	}
+
+	/**
+	 * Adds a watch in a breakpoint
+	 * @private
+	 * @param {String} line Breakpoint (line) to add the watch to
+	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
+	 * @example addBreakpointWatch2(12, "count")
+	 */
+	function addBreakpointWatch2(line, watch) {
 		if (watch !== null && !document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch)) {
-			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\"><input type=\"checkbox\" onchange=\"removeBreakpointWatch("+line+",'"+watch+"')\" checked />"+watch+": ";
+			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\">"+watch+": ";
 			if ($_eseecode.session.breakpoints[line][watch] === undefined) {
 				$_eseecode.session.breakpoints[line][watch] = "";
 			} else {
 				watchText += $_eseecode.session.breakpoints[line][watch];
 			}
-			watchText += "</div>";
+			watchText += "<span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"removeBreakpointWatch("+line+",'"+watch+"')\">("+_("Delete")+")</span></div>";
 			document.getElementById("dialog-debug-analyzer-line"+line+"-watches").innerHTML += watchText;
 		}
 	}
@@ -280,14 +322,14 @@
 			if (document.getElementById("canvas-div-"+id).style.display != "none") {
 				checked = " checked";
 			}
-			layersText += "<div><label for=\"toggle-canvas-"+id+"\">"+_("Toggle layer")+" "+id+"</label><input id=\"toggle-canvas-"+id+"\" type=\"checkbox\" title=\""+_("Toggle layer")+" "+id+"\""+checked+" /"+"><a id=\"link-canvas-"+id+"\" href=\"#\">";
+			layersText += "<div><label for=\"toggle-canvas-"+id+"\">"+_("Toggle layer")+" "+id+"</label><input id=\"toggle-canvas-"+id+"\" type=\"checkbox\" title=\""+_("Toggle layer")+" "+id+"\""+checked+" /"+"><span id=\"link-canvas-"+id+"\" class=\"link\">";
 			var showName = _("Layer")+" "+list[i];
 			if ($_eseecode.currentCanvas.name == list[i]) {
 				layersText += "<b>"+showName+"</b>";
 			} else {
 				layersText += showName;
 			}
-			layersText += "</a></div>\n";
+			layersText += "</span></div>\n";
 		}
 		document.getElementById("dialog-debug-layers").innerHTML = layersText;
 		document.getElementById("dialog-debug-layers").addEventListener('mouseout', unhighlightCanvas, false);

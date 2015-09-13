@@ -12,6 +12,11 @@
  * Level1 has no text in blocks no more
  * UI cleanup
  * Download layer images hides/shows cursor and grid based on settings
+ * Added the possibility to include global variables in the language
+ * Breakpoints can now be enabled/disabled
+ * New resize console button, much more intuitive than doubleclicking level tabs
+ * Center of coordinates can be changed
+ * GUI restyled
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
@@ -19,10 +24,11 @@
  * Fix: getArctangent(), getArcsine() and getArcCosine were broken
  * Fix: else's inner block not being correctly indented
  * Fix: resetUI() was resetting the language also
- * Fix: tabs were scrolling the page
+ * Fix: tabs and buttons were scrolling the page
  * Fix: breakpoint is unhighlighted when resetting the canvas
  * Fix: Undesired tabs switches
  * Fix: unsetInvisible() had no tip
+ * Fix: repeatCount in nested repeat()s is consistent uppon entry into each loop
 
 ## 2.0 (2015-01-29)
 

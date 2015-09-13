@@ -1550,6 +1550,8 @@ ReservedWord
     | "TRY"
     | "TYPEOF"
     | "VAR"
+    | "OR"
+    | "AND"
     | "ARRAY"
     | "VOID"
     | "WHILE"

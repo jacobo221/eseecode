@@ -39,11 +39,9 @@
 	 */
 	function switchLanguage(lang, force) {
 		if (!lang) {
-			if (!lang) {
-				var urlParts = window.location.href.match(/(\?|&)lang=([^&#]+)/);
-				if (urlParts !== null) {
-					lang = urlParts[2];
-				}
+			var urlParts = window.location.href.match(/(\?|&)lang=([^&#]+)/);
+			if (urlParts !== null) {
+				lang = urlParts[2];
 			}
 			if (!lang) {
 				lang = "initial";
@@ -65,13 +63,14 @@
 		$_eseecode.i18n.current = lang;
 		addStaticText();
 		switchDialogMode();
+		resetGridModeSelect();
 		switchConsoleMode();
 		document.getElementById("language-select").value = lang;
 		var translator = "";
 		if ($_eseecode.i18n.available[lang].translator) {
 			translator = $_eseecode.i18n.available[lang].translator;
 			if ($_eseecode.i18n.available[lang].translatorLink) {
-				translator = "<a href=\""+$_eseecode.i18n.available[lang].translatorLink+"\" target=\"_blank\">"+translator+"</a>";
+				translator = "<span class=\"link\" onclick=\"window.open('"+$_eseecode.i18n.available[lang].translatorLink+"','_blank')\">"+translator+"</span>";
 			}
 			translator = _("Translated to %s by %s",[$_eseecode.i18n.available[lang].name,translator]);
 		}
@@ -95,9 +94,9 @@
 		document.getElementById("language-title").innerHTML = _("Select language")+": ";
 		document.getElementById("language-select").title = _("Select language");
 		document.getElementById("title").innerHTML = _($_eseecode.platform.name.text);
-		document.getElementById("dialog-setup-author").innerHTML = _("v")+"<a href=\""+_($_eseecode.platform.version.link)+"\" target=\"_blank\">"+_($_eseecode.platform.version.text)+"</a><br />"
-		//+_("Author")+": "+"<a href=\""+_($_eseecode.platform.author.link)+"\" target=\"_blank\">"+_($_eseecode.platform.author.text)+"</a><br />"
-		+_("Licensed under the")+" "+"<a href=\""+_($_eseecode.platform.license.link)+"\" target=\"_blank\">"+_($_eseecode.platform.license.text)+"</a></div>";
+		document.getElementById("dialog-setup-author").innerHTML = _("v")+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.version.link)+"','_blank')\"\">"+_($_eseecode.platform.version.text)+"</span><br />"
+		//+_("Author")+": "+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.author.link)+"','_blank')\">"+_($_eseecode.platform.author.text)+"</span><br />"
+		+_("Licensed under the")+" "+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.license.link)+"','_blank')\">"+_($_eseecode.platform.license.text)+"</span></div>";
 		document.getElementById("loadcode").value = _("Load code");
 		document.getElementById("savecode").value = _("Save code");
 		document.getElementById("whiteboard").title = _("Whiteboard");
