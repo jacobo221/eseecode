@@ -870,12 +870,12 @@ var toObject = function (o) {
 
 });
 
-define('ace/mode/javascript_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/javascript/jshint'], function(require, exports, module) {
+define('ace/mode/eseecode_worker', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/worker/mirror', 'ace/mode/eseecode/jshint'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
-var lint = require("./javascript/jshint").JSHINT;
+var lint = require("./eseecode/jshint").JSHINT;
 
 function startRegex(arr) {
     return RegExp("^(" + arr.join("|") + ")");
@@ -965,6 +965,7 @@ oop.inherits(JavaScriptWorker, Mirror);
         var results = lint.errors;
 
         var errorAdded = false
+        var ignore = false;
         for (var i = 0; i < results.length; i++) {
             var error = results[i];
             if (!error)
@@ -980,7 +981,7 @@ oop.inherits(JavaScriptWorker, Mirror);
                     type = "error";
                 } else {
                     type = "info";
-                    return;
+                    ignore = true;
                 }
             }
             else if (disabledWarningsRe.test(raw)) {
@@ -1000,13 +1001,15 @@ oop.inherits(JavaScriptWorker, Mirror);
                 type = "info";
             }
 
-            errors.push({
-                row: error.line-1,
-                column: error.character-1,
-                text: error.reason,
-                type: type,
-                raw: raw
-            });
+            if (!ignore) {
+                errors.push({
+                    row: error.line-1,
+                    column: error.character-1,
+                    text: error.reason,
+                    type: type,
+                    raw: raw
+                });
+            }
 
             if (errorAdded) {
             }
@@ -2154,7 +2157,7 @@ exports.delayedCall = function(fcn, defaultTimeout) {
     return _self;
 };
 });
-define('ace/mode/javascript/jshint', ['require', 'exports', 'module' ], function(require, exports, module) {
+define('ace/mode/eseecode/jshint', ['require', 'exports', 'module' ], function(require, exports, module) {
 module.exports = (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({
 1:[function(_dereq_,module,exports){
 var identifierStartTable = [];
@@ -3974,6 +3977,7 @@ var JSHINT = (function () {
 
     if (state.tokens.next.identifier && !(opts.property && state.option.inES5())) {
       switch (state.tokens.next.value) {
+      case "array":
       case "break":
       case "case":
       case "catch":
@@ -3992,7 +3996,6 @@ var JSHINT = (function () {
       case "throw":
       case "try":
       case "var":
-      case "array":
       case "let":
       case "while":
       case "with":
@@ -6070,7 +6073,7 @@ var JSHINT = (function () {
   });
 
   conststatement.exps = true;
-  var varstatement = stmt("var", function (prefix) {
+  var varstatement = stmt("array", function (prefix) {
     var tokens, lone, value;
 
     this.first = [];
@@ -6127,7 +6130,7 @@ var JSHINT = (function () {
     }
     return this;
   });
-  var varstatement = stmt("array", function (prefix) {
+  var varstatement = stmt("var", function (prefix) {
     var tokens, lone, value;
 
     this.first = [];
@@ -6176,6 +6179,7 @@ var JSHINT = (function () {
           destructuringExpressionMatch(names, value);
         }
       }
+
       if (state.tokens.next.id !== ",") {
         break;
       }

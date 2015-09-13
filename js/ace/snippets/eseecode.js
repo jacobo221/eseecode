@@ -1,4 +1,4 @@
-define("ace/snippets/javascript",["require","exports","module"], function(require, exports, module) {
+define("ace/snippets/eseecode",["require","exports","module"], function(require, exports, module) {
 "use strict";
 
 exports.snippetText = "# Prototype\n\
@@ -184,6 +184,6 @@ guard ^\\s*\n\
 	var ${1/.*\\/(.)/\\u$1/} = require(\"${1}\").${1/.*\\/(.)/\\u$1/};\n\
 	$0\n\
 ";
-exports.scope = "javascript";
+exports.scope = "eseecode";
 
 });

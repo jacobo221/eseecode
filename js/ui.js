@@ -2148,7 +2148,7 @@
 		var editor = ace.edit("console-write");
     		ace.require("ace/ext/language_tools");
 		editor.setTheme("ace/theme/chrome");
-		editor.getSession().setMode("ace/mode/javascript");
+		editor.getSession().setMode("ace/mode/eseecode");
 		editor.setOptions({
 			enableBasicAutocompletion: true,
 			enableSnippets: true,

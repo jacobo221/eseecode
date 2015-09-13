@@ -28,12 +28,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define('ace/mode/javascript', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/mode/javascript_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/worker/worker_client', 'ace/mode/behaviour/cstyle', 'ace/mode/folding/cstyle'], function(require, exports, module) {
+define('ace/mode/eseecode', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/text', 'ace/mode/eseecode_highlight_rules', 'ace/mode/matching_brace_outdent', 'ace/range', 'ace/worker/worker_client', 'ace/mode/behaviour/cstyle', 'ace/mode/folding/cstyle'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;
+var JavaScriptHighlightRules = require("./eseecode_highlight_rules").JavaScriptHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var Range = require("../range").Range;
 var WorkerClient = require("../worker/worker_client").WorkerClient;
@@ -95,7 +95,7 @@ oop.inherits(Mode, TextMode);
     };
 
     this.createWorker = function(session) {
-        var worker = new WorkerClient(["ace"], "ace/mode/javascript_worker", "JavaScriptWorker");
+        var worker = new WorkerClient(["ace"], "ace/mode/eseecode_worker", "JavaScriptWorker");
         worker.attachToDocument(session.getDocument());
 
         worker.on("jslint", function(results) {
@@ -109,13 +109,13 @@ oop.inherits(Mode, TextMode);
         return worker;
     };
 
-    this.$id = "ace/mode/javascript";
+    this.$id = "ace/mode/eseecode";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
 });
 
-define('ace/mode/javascript_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
+define('ace/mode/eseecode_highlight_rules', ['require', 'exports', 'module' , 'ace/lib/oop', 'ace/mode/doc_comment_highlight_rules', 'ace/mode/text_highlight_rules'], function(require, exports, module) {
 
 
 var oop = require("../lib/oop");
