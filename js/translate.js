@@ -121,11 +121,9 @@
 		document.getElementById("dialog-debug-execute-title").innerHTML = _("Execution")+":";
 		document.getElementById("dialog-debug-execute-help").title = _("Execution statistics");
 		document.getElementById("dialog-debug-execute").innerHTML = "";
-		document.getElementById("dialog-debug-command-label").innerHTML = _("Command");
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
 		document.getElementById("dialog-setup").title = _("Setup dialog");
-		document.getElementById("setup-grid-enable-label").innerHTML = _("Toggle grid");
 		document.getElementById("setup-grid-enable").title = _("Toggle grid");
 		document.getElementById("setup-grid-step-title").innerHTML = _("Grid")+": ";
 		document.getElementById("setup-grid-step").title = _("Grid inter-line space");

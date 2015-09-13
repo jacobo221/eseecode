@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta name="viewport" content="width=980">
+<meta name="viewport" content="width=1000">
 <meta name="author" content="Jacobo Vilella Vilahur" />
 <meta name="description" content="Easy computer programming eLearning development platform for schools and fun" />
 <meta name="keywords" content="esee,code,eesecode,programming,school" />
@@ -46,7 +46,7 @@
 <div id="eseecode">
 	<div id="header">
 		<h1 id="title" class="column"></h1>
-		<span id="fullscreen-button" onclick="toggleFullscreen()"><canvas width="20" height="20"></canvas></span>
+		<span id="fullscreen-button" class="button" onclick="toggleFullscreen()"><canvas width="20" height="20"></canvas></span>
 	</div>
 	<div id="body">
 		<div id="whiteboard-wrapper" class="column">
@@ -95,7 +95,7 @@
 					</div>
 					<br />
 					<div id="setup-grid">
-						<label id="setup-grid-enable-label" for="setup-grid-enable"></label><input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
+						<input id="setup-grid-enable" type="checkbox" onclick="resetGrid()" checked /><span id="setup-grid-step-title"></span>
 						<input id="setup-grid-step" type="number" min="20" max="200" onchange="resetGrid()" value="25" /><br /><select id="setup-grid-coordinates" onchange="changeCoordinatesFromUI()"></select><br />
 						<span id="setup-turtle-enable-title"></span><label id="setup-turtle-enable-label" for="setup-turtle-enable"></label><input id="setup-turtle-enable" type="checkbox" onclick="toggleTurtle()" checked />
 					</div>
@@ -114,7 +114,7 @@
 				</div>
 			</div>
 			<div id="dialog-debug-command"><form id="dialog-debug-command-form" onsubmit="execute(true,document.getElementById('dialog-debug-command-input').value);return false;">
-				<label id="dialog-debug-command-label" for="dialog-debug-command-input"></label><input id="dialog-debug-command-input" type="text" />
+				</label><input id="dialog-debug-command-input" type="text" />
 				<span id="dialog-debug-command-button" class="button"><canvas width="20" height="20" onclick="execute(true,document.getElementById('dialog-debug-command-input').value)"></canvas></span>
 			</form></div>
 		</div>
