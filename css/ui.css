@@ -216,9 +216,9 @@
 		visibility: hidden;
 	}
 	#dialog-debug-command-input {
-		width: 87%;
-		padding: 0px 0px 0px 0px;
-		margin: 0px 0px 2px 2px;
+		height: 17px;
+		width: 220px;
+		float: left;
 	}
 	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute {
 		width: auto;
