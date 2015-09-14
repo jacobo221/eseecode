@@ -325,6 +325,9 @@
 		width: 100%;
 		text-align: center;
 	}
+	#title-logo {
+		height: inherit;
+	}
 	#whiteboard-wrapper {
 		float: right;
 	}

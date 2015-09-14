@@ -92,7 +92,7 @@
 		}
 		document.getElementById("language-title").innerHTML = _("Select language")+": ";
 		document.getElementById("language-select").title = _("Select language");
-		document.getElementById("title").innerHTML = _($_eseecode.platform.name.text);
+		document.getElementById("title-logo").title = _($_eseecode.platform.name.text);
 		document.getElementById("dialog-setup-author").innerHTML = _("v")+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.version.link)+"','_blank')\"\">"+_($_eseecode.platform.version.text)+"</span><br />"
 		//+_("Author")+": "+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.author.link)+"','_blank')\">"+_($_eseecode.platform.author.text)+"</span><br />"
 		+_("Licensed under the")+" "+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.license.link)+"','_blank')\">"+_($_eseecode.platform.license.text)+"</span></div>";

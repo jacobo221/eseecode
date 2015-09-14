@@ -147,7 +147,8 @@
 				str += indent;
 				str += "} else ";
 				if (realCode) {
-					str += "if ("+realCodeAddition(realCode,this.loc.start.line,true)+") ";
+					// We need to add "|| true", otherwise we never enter the else. The code will anyway only be run when the else is evaluated
+					str += "if ("+realCodeAddition(realCode,this.loc.start.line,true)+" || true) ";
 				}
 				str +="{";
 				str += "\n";
@@ -274,7 +275,11 @@
 		if (realCode) {
 			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
 		}
-		str += this.test.makeWrite(level, "", "", realCode) + ")) {";
+		str += this.test.makeWrite(level, "", "", realCode);
+		if (realCode) {
+			str += ")";
+		}
+		str += ") {";
 		str += "\n";
 		var body = this.body;
 
