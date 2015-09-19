@@ -86,3 +86,16 @@
                 }
                 return out;
         }
+
+	/**
+	 * Returns if the device is a touch device or not
+	 * @private
+	 * @return {Boolean} Whether the device is a touch device or not
+	 * @example isTouchDevice()
+	 */
+	function isTouchDevice() {
+		var touchscreen = (('ontouchstart' in window) ||
+     		    (navigator.maxTouchPoints > 0) ||
+		    (navigator.msMaxTouchPoints > 0));
+		return touchscreen;
+	}

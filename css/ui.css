@@ -14,8 +14,6 @@
 		border-radius: 10px;
 	}
 	.column {
-		margin-left: 3px;
-		margin-right: 3px;
 		height: 100%;
 	}
 	.dialog-debug-analyzer-breakpoint {
@@ -279,7 +277,7 @@
 		min-height: 500px;
 		color: inherit;
 		background-color: #123456;
-		border-radius: 30px;
+		/*border-radius: 30px;*/
 		position: relative;
 	}
 	#filemenu {
@@ -296,11 +294,14 @@
 	#footer {
 		position: absolute;
 		bottom: 0px;
+		height: 18px;
+	}
+	#header {
+		height: 58px;
 	}
 	#header, #footer {
 		background-color: transparent;
 		color: #FFFFFF;
-		height: 38px;
 		position: relative;
 		text-align: left;
 		font-size: 10px;
@@ -325,8 +326,11 @@
 		width: 100%;
 		text-align: center;
 	}
+	#title {
+	}
 	#title-logo {
-		height: inherit;
+		width: 150px;
+		margin: 10px 0px 10px 0px;
 	}
 	#whiteboard-wrapper {
 		float: right;
@@ -340,6 +344,7 @@
 		background-color: #FFFFFF;
 		color: inherit;
 		border-radius: 10px;
+		margin-left: 3px;
 	}
 	#whiteboard canvas {
 		border-radius: 10px;

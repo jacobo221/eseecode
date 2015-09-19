@@ -61,6 +61,11 @@
 			throw "executionTimeout";
 		}
 		if ($_eseecode.execution.programCounterLimit && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
+			if ($_eseecode.execution.programCounter == 1) {
+				$_eseecode.execution.programCounterLimit++;
+				// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
+				return
+			}
 			throw "executionStepped";
 		}
 	}
@@ -126,6 +131,7 @@
 		if (resetStepLimit) {
 			$_eseecode.execution.programCounterLimit = 0;
 			$_eseecode.execution.breakpointCounterLimit = 0;
+			executionTraceReset();
 		} else {			
 			$_eseecode.execution.breakpointCounterLimit++;
 		}
@@ -142,6 +148,8 @@
 		} else {
 			$_eseecode.execution.programCounterLimit = false;
 		}
+		executionTraceReset("randomColor");
+		executionTraceReset("randomNumber");
 	}
 
 	/**
@@ -333,3 +341,4 @@
 		this.line = $_eseecode.session.highlight.lineNumber;
 		this.text = text;
 	}
+	

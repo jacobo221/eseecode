@@ -490,3 +490,73 @@
 			div.parentNode.removeChild(div);
 		}
 	}
+
+	/**
+	 * Reset execution tracing platform
+	 * @private
+	 * @param {String} [type] Type of trace to reset its iterator. If none is passed all the platform is reset
+	 * @example executionTraceReset("randomNumber")
+	 */
+	function executionTraceReset(type) {
+		if (type === undefined) {
+			$_eseecode.execution.trace = [];
+		} else {
+			if (!$_eseecode.execution.trace[type]) {
+				$_eseecode.execution.trace[type] = [];
+			}
+			$_eseecode.execution.trace[type][0] = 1;
+		}
+	}
+	
+	/**
+	 * Push a value into the trace platform
+	 * @private
+	 * @param {String} type Type of trace to modify
+	 * @param {String} value Value to add to the trace
+	 * @example executionTracePush("randomNumber", 213)
+	 */
+	function executionTracePush(type, value) {
+		var traceType = $_eseecode.execution.trace[type];
+		if (!traceType) {
+			executionTraceReset(type);
+			traceType = $_eseecode.execution.trace[type];
+		}
+		traceType.push(value);
+	}
+	
+	/**
+	 * Get and remove a value from the platform
+	 * @private
+	 * @param {String} type Type of trace to reset its iterator. If none is passed all the platform is reset
+	 * @return Latest value stored
+	 * @example executionTracePop("randomNumber")
+	 */
+	function executionTracePop(type) {
+		var traceType = $_eseecode.execution.trace[type];
+		var value = undefined;
+		if (traceType.length > 1) {
+			value = traceType.pop();
+		}
+		traceType[0]--;
+		return value;
+	}
+	
+	/**
+	 * Get a value from the platform. If none are available push a new one
+	 * @private
+	 * @param {String} type Type of trace to use
+	 * @param {String} [value] Value to add to the trace if no more are available
+	 * @return Next value
+	 * @example executionTraceIterate("randomNumber", 213)
+	 */
+	function executionTraceIterate(type, value) {
+		var traceType = $_eseecode.execution.trace[type];
+		if (traceType[0] < traceType.length) {
+			value = traceType[traceType[0]];
+		} else {
+			executionTracePush(type, value);
+		}
+		traceType[0]++;
+		return value;
+	}
+	

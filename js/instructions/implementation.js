@@ -13,12 +13,12 @@
 	 */
 	function windowButtonEdit(id, text, posx, posy, action) {
 		var id = "element-"+id;
-    		var button = document.getElementById(id);
+		var button = document.getElementById(id);
 		resizeConsole(true); // We need this to calculate the offset of the dialog window
 		switchDialogMode("window"); // We need to display it order to get its coordinates, but we also want to display it since we are doing something with it so we want to display the window after execution is done
 		button.style.position = "absolute";
 		if (text) {
-	    		button.value = text;
+			button.value = text;
 		}
 		if (posx) {
 			button.style.left = ($_eseecode.dialogWindow.offsetLeft+posx)+"px";
@@ -29,12 +29,12 @@
 		if (action) {
 			var oldButton = button;
 			button = oldButton.cloneNode(true); // Clone to remove handlers
- 			oldButton.parentNode.replaceChild(button, oldButton);
+			oldButton.parentNode.replaceChild(button, oldButton);
 			if (action !== true) {
 				if (!isTouchDevice()) {
-		    			button.addEventListener("click", function() { execute(true,action); }, false);
+					button.addEventListener("click", function() { execute(true,action); }, false);
 				} else {
-		    			button.addEventListener("touchstart", function() { execute(true,action); }, false);
+					button.addEventListener("touchstart", function() { execute(true,action); }, false);
 				}
 			}
 		}
@@ -220,9 +220,9 @@
 	 */
 	function windowButtonCreate(windowId, id, text, posx, posy, action) {
 		var window = getWindow(windowId);
-    		var button = document.createElement("input");
+  		var button = document.createElement("input");
 		button.id = "element-"+id;
-    		button.type = "button";
+		button.type = "button";
 		window.appendChild(button);
 		windowButtonEdit(id, text, posx, posy, action);
 	}
@@ -644,7 +644,7 @@
 	 * @example getRandomColor()
 	 */
 	function getRandomColor() {
-		var color = "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16);
+		var color = executionTraceIterate("randomColor", "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16));
 		return color;
 	}
 
@@ -652,12 +652,15 @@
 	 * Returns a positive random integer number
 	 * @since 1.0
 	 * @public
-	 * @param {Number} number The highest number desired
-	 * @return {Number} A positive random integer number
+	 * @param {Number} [upperbound] The highest number desired, excluding this number
+	 * @return {Number} A positive random integer number [0,upperbound-1]
 	 * @example getRandomNumber(100)
 	 */
-	function getRandomNumber(number) {
-		var number = Math.floor(Math.random()*number); // [0,random-1]
+	function getRandomNumber(upperbound) {
+		if (upperbound === undefined) {
+			upperbound = Number.MAX_VALUE;
+		}
+		var number = executionTraceIterate("randomNumber", Math.floor(Math.random()*upperbound)); // [0,upperbound-1]
 		return number;
 	}
 
@@ -839,29 +842,17 @@
 	 * @param {Number} originy Y coordinate where the line starts
 	 * @param {Number} destinationx X coordinate where the line ends
 	 * @param {Number} destinationy Y coordinate where the line ends
-	 * @param {Boolean} fromForward Indicates if the function is being called from wrapper forward()
 	 * @example lineAt(200, 200, 50, 50)
 	 */
-	function lineAt(originx, originy, destinationx, destinationy, fromForward) {
-		var xScale = $_eseecode.coordinates.xScale;
-		var yScale = $_eseecode.coordinates.yScale;
-		// forward() direction doesn't change with axis direction
-		if (fromForward) {
-			if (xScale < 0) {
-				xScale *= -1;
-			}
-			if (yScale < 0) {
-				yScale *= -1;
-			}
-		}
+	function lineAt(originx, originy, destinationx, destinationy) {
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.beginPath();
-			var moveToX = originx*xScale+$_eseecode.coordinates.x
-			var moveToY = originy*yScale+$_eseecode.coordinates.y
+			var moveToX = user2systemCoords(originx, "x");
+			var moveToY = user2systemCoords(originy, "y");
 			$_eseecode.currentCanvas.context.moveTo(moveToX,moveToY); // shape should use forward() or line()
 		}
-		var lineToX = destinationx*xScale+$_eseecode.coordinates.x;
-		var lineToY = destinationy*yScale+$_eseecode.coordinates.y;
+		var lineToX = user2systemCoords(destinationx, "x");
+		var lineToY = user2systemCoords(destinationy, "y");
 		$_eseecode.currentCanvas.context.lineTo(lineToX,lineToY);
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.closePath();
@@ -879,9 +870,7 @@
 	 */
 	function line(destinationx, destinationy) {
 		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,destinationx,destinationy);
-		$_eseecode.currentCanvas.turtle.x = destinationx;
-		$_eseecode.currentCanvas.turtle.y = destinationy;
-		resetTurtle();
+		moveTurtle(destinationx, destinationy);
 	}
 
 	/**
@@ -893,14 +882,12 @@
 	 */
 	function forward(pixels) {
 		if (!isNumber(pixels)) {
-			throw new codeError("foward","Invalid parameter in forward() call");
+			throw new codeError("forward","Invalid parameter in forward() call");
 		}
-		var posx = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
-		var posy = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180);
-		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,posx,posy,true);
-		$_eseecode.currentCanvas.turtle.x = posx;
-		$_eseecode.currentCanvas.turtle.y = posy;
-		resetTurtle();
+		var posx = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*$_eseecode.coordinates.xScale;
+		var posy = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*$_eseecode.coordinates.yScale;
+		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,posx,posy);
+		moveTurtle(posx, posy);
 	}
 
 	/**
@@ -985,7 +972,7 @@
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
 		var tempCtx = tempCanvas.getContext("2d");
-		tempCtx.translate(posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y);
+		tempCtx.translate(posx, posy);
 		tempCtx.rotate(angle*Math.PI/180);
 		// apply style properties to new canvas
 		setColorStyle(undefined,tempCtx);
@@ -1016,7 +1003,7 @@
 	function beginShape() {
 		$_eseecode.currentCanvas.shaping = true;
 		$_eseecode.currentCanvas.context.beginPath();
-		$_eseecode.currentCanvas.context.moveTo($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y); // necessary to mark the starting point in shapes in case the turtle has never been moved before
+		$_eseecode.currentCanvas.context.moveTo(user2systemCoords($_eseecode.currentCanvas.turtle.x,"x"),user2systemCoords($_eseecode.currentCanvas.turtle.y,"y")); // necessary to mark the starting point in shapes in case the turtle has never been moved before
 	}
 
 	/**
@@ -1083,9 +1070,9 @@
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (typeof height === "undefined") {
-				canvas.context.drawImage(img, posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y);
+				canvas.context.drawImage(img, posx, posy);
 			} else {
-				canvas.context.drawImage(img, posx*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x, posy*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y, width, height);
+				canvas.context.drawImage(img, posx, posy, width, height);
 			}
 		}
 		if (src) {
@@ -1102,9 +1089,7 @@
 	 * @example goTo(50, 50)
 	 */
 	function goTo(posx, posy) {
-		$_eseecode.currentCanvas.turtle.x = posx;
-		$_eseecode.currentCanvas.turtle.y = posy;
-		resetTurtle();
+		moveTurtle(posx, posy);
 	}
 
 	/**
@@ -1114,15 +1099,7 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		var xScale = $_eseecode.coordinates.yScale;
-		if (xScale < 0) {
-			xScale *= -1;
-		}
-		var yScale = $_eseecode.coordinates.yScale;
-		if (yScale < 0) {
-			yScale *= -1;
-		}
-		goTo((getLayerWidth()/2-$_eseecode.coordinates.x)*xScale,(getLayerWidth()/2-$_eseecode.coordinates.y)*yScale);
+		goTo(system2userCoords(getLayerWidth()/2,"x"),system2userCoords(getLayerHeight()/2,"y"));
 	}
 
 	/**
@@ -1132,7 +1109,7 @@
 	 * @example goToUpLeft()
 	 */
 	function goToUpLeft() {
-		goTo((0-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(0-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
+		goTo(system2userCoords(0,"x"),system2userCoords(0,"y"));
 	}
 
 	/**
@@ -1142,7 +1119,7 @@
 	 * @example goToUpRight()
 	 */
 	function goToUpRight() {
-		goTo((getLayerWidth()-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(0-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
+		goTo(system2userCoords(getLayerWidth(),"x"),system2userCoords(0,"y"));
 	}
 
 	/**
@@ -1152,7 +1129,7 @@
 	 * @example goToLowLeft()
 	 */
 	function goToLowLeft() {
-		goTo((0-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
+		goTo(system2userCoords(0,"x"),system2userCoords(getLayerHeight(),"y"));
 	}
 
 	/**
@@ -1162,7 +1139,7 @@
 	 * @example goToLowRight()
 	 */
 	function goToLowRight() {
-		goTo((getLayerWidth()-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale,(getLayerWidth()-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale);
+		goTo(system2userCoords(getLayerWidth(),"x"),system2userCoords(getLayerHeight(),"y"));
 	}
 
 	/**

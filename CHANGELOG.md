@@ -24,6 +24,7 @@
  * Default to landscape view
  * GUI restyled
  * Began work on better execution error messages
+ * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image
@@ -35,7 +36,7 @@
  * Fix: breakpoint is unhighlighted when resetting the canvas
  * Fix: Undesired tabs switches
  * Fix: unsetInvisible() had no tip
- * Fix: repeatCount in nested repeat()s is consistent uppon entry into each loop
+ * Fix: repeatCount in nested repeat()s is consistent uppon entry/exit of each loop
 
 ## 2.0 (2015-01-29)
 

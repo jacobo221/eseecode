@@ -382,6 +382,9 @@
 		if (id == "setup") {
 			resizeConsole(true);
 		}
+		if (id == "window") {
+			document.getElementById("dialog-tabs-window").style.display = "block";
+		}
 		if (!isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.dialog.length; i++) {
 				if ($_eseecode.modes.dialog[i].name == id) {
@@ -486,7 +489,6 @@
 		div.style.backgroundImage = "url("+src+")";
 		div.style.backgroundColor = "rgba(0,0,0,0)";
 		*/
-		div.style.backgroundColor = "#123456";
 		// Console background
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
@@ -821,21 +823,42 @@
 			turtleCanvas.div.style.display = "block";
 		}
 	}
-
-/*
-	function userCoords2systemCoords(posx, posy, moveWhiteboard) {
-		var xScale = $_eseecode.coordinates.xScale;
-		var yScale = $_eseecode.coordinates.yScale;
-		if (xScale < 0) {
-			xScale *= -1;
+	
+	/**
+	 * Converts system coordinates to user coordinates
+	 * @private
+	 * @param {Number} pos System coordinate
+	 * @param {String} axis Axis which is affected
+	 * @return User value which refers to the same system position
+	 * @example system2userCoords(100, "x")
+	 */
+	function system2userCoords(pos, axis) {
+		var value;
+		if (axis == "x" || axis == "X") {
+			value = pos/$_eseecode.coordinates.xScale+$_eseecode.coordinates.x;
+		} else if (axis == "y" || axis == "Y") {
+			value = pos/$_eseecode.coordinates.yScale+$_eseecode.coordinates.y;
 		}
-		if (yScale < 0) {
-			yScale *= -1;
-		}
-		var orgx = targetCanvas.turtle.x*xScale+$_eseecode.coordinates.x;
-		var orgy = targetCanvas.turtle.y*yScale+$_eseecode.coordinates.y;
+		return value;
 	}
-*/
+	
+	/**
+	 * Converts user coordinates to system coordinates
+	 * @private
+	 * @param {Number} pos User coordinate
+	 * @param {String} axis Axis which is affected
+	 * @return System value which refers to the same user position
+	 * @example user2systemCoords(100, "x")
+	 */
+	function user2systemCoords(pos, axis) {
+		var value;
+		if (axis == "x" || axis == "X") {
+			value = (pos-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
+		} else if (axis == "y" || axis == "Y") {
+			value = (pos-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
+		}
+		return value;
+	}
 
 	/**
 	 * Resets the cursor in a layer
@@ -850,17 +873,9 @@
 			id = $_eseecode.currentCanvas.name;
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
-		var xScale = $_eseecode.coordinates.xScale;
-		var yScale = $_eseecode.coordinates.yScale;
-		if (xScale < 0) {
-			xScale *= -1;
-		}
-		if (yScale < 0) {
-			yScale *= -1;
-		}
 		var size = 20;
-		var orgx = targetCanvas.turtle.x*xScale+$_eseecode.coordinates.x;
-		var orgy = targetCanvas.turtle.y*yScale+$_eseecode.coordinates.y;
+		var orgx = user2systemCoords(targetCanvas.turtle.x, "x");
+		var orgy = user2systemCoords(targetCanvas.turtle.y, "y");
 		var angle = targetCanvas.turtle.angle;
 		var frontx = orgx+size*Math.cos(angle*Math.PI/180);
 		var fronty = orgy+size*Math.sin(angle*Math.PI/180);
@@ -947,16 +962,8 @@
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (posX < 0-$_eseecode.coordinates.x || posX > canvasSize-$_eseecode.coordinates.x || posY < 0-$_eseecode.coordinates.y || posY > canvasSize-$_eseecode.coordinates.y) {
 			var markerSize = 20;
-			var xScale = $_eseecode.coordinates.xScale;
-			if (xScale < 0) {
-				xScale *= -1;
-			}
-			var yScale = $_eseecode.coordinates.yScale;
-			if (yScale < 0) {
-				yScale *= -1;
-			}
-			posX = posX*xScale+$_eseecode.coordinates.x;
-			posY = posY*yScale+$_eseecode.coordinates.y;
+			posX = user2systemCoords(posX,"x");
+			posY = user2systemCoords(posY,"y");
 			var orgx = posX;
 			var orgy = posY;
 			if (orgx < markerSize) {
@@ -1042,10 +1049,10 @@
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
-		var coorUpperLeftX = (-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
-		var coorUpperLeftY = (-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
-		var coorLowerRightX = (canvasSize-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
-		var coorLowerRightY = (canvasSize-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
+		var coorUpperLeftX = user2systemCoords(0,"x");
+		var coorUpperLeftY = user2systemCoords(0,"y");
+		var coorLowerRightX = user2systemCoords(getLayerWidth(),"x");
+		var coorLowerRightY = user2systemCoords(getLayerHeight(),"y");
 		ctx.fillText("("+coorUpperLeftX+","+coorUpperLeftY+")",margin,fontHeight+margin);
 		ctx.fillText("("+coorLowerRightX+","+coorLowerRightY+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
@@ -1364,8 +1371,14 @@
 		resizeConsole(true);
 		initConsole();
 		resetCanvas();
+		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
+		if (urlParts !== null) {
+			var grid = $_eseecode.coordinates.predefined[urlParts[2]];
+			changeCoordinates(grid.x, grid.y, grid.xScale, grid.yScale);
+		}
 		executePrecode();
 		resetDebug();
+		document.getElementById("dialog-tabs-window").style.display = "none";
 		initSetup();
 		resetLanguageSelect();
 		switchLanguage($_eseecode.i18n.current, true);
@@ -1409,7 +1422,7 @@
 	 * @example isFullscreen();
 	 */
 	function isFullscreen() {
-		return (window.navigator.standalone || (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen));
+		return (window.navigator.standalone || (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement));
 	}
 
 	/**

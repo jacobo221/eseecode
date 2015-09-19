@@ -148,7 +148,7 @@
 				str += "} else ";
 				if (realCode) {
 					// We need to add "|| true", otherwise we never enter the else. The code will anyway only be run when the else is evaluated
-					str += "if ("+realCodeAddition(realCode,this.loc.start.line,true)+" || true) ";
+					str += "if ("+realCodeAddition(realCode,consequent.loc.end.line,true)+" || true) ";
 				}
 				str +="{";
 				str += "\n";
@@ -261,7 +261,7 @@
 		}
 		if (finalizer !== null) {
 			str += "finally {";
-			str += realCodeAddition(realCode,this.loc.start.line);
+			str += realCodeAddition(realCode,(handlers || this.block).loc.end.line);
 			str += "\n";
 			str += finalizer.makeWrite(level, indent, indentChar, realCode);
 			str += indent + "}";
@@ -298,6 +298,9 @@
 		var condition = this.test.makeWrite(level, "", "", realCode);
 		if (realCode) {
 			var internalCounter = "repeatCount"+(Math.floor(Math.random()*1000000000));
+			if (realCode) {
+				str += "pushRepeatCount(repeatCount);";
+			}
 			str += "for (var repeatCount=0,"+internalCounter+"=0;";
 			if (realCode) {
 				str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
@@ -318,7 +321,11 @@
 		} else {
 			str += body.makeWrite(level, indent + indentChar, indentChar, realCode);
 		}
-		str += indent + "}";
+		str += indent;
+		str += "}";
+		if (realCode) {
+			str += "repeatCount=popRepeatCount();"; // We restore the parent repeat()'s repeatCount value'
+		}
 
 		return str;
 	};
@@ -327,16 +334,16 @@
 		str += realCodeAddition(realCode,this.loc.start.line);
 		var str = indent + "do {";
 		str += "\n";
-		str += this.body.makeWrite(level, indent + indentChar, indentChar, realCode) + "\n";
+		str += this.body.makeWrite(level, indent, indentChar, realCode);
 		str += indent + "} while (";
 		if (realCode) {
-			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
+			str += realCodeAddition(realCode,this.body.loc.end.line,true)+" || (";
 		}
 		str += this.test.makeWrite(level, "", "", realCode);
 		if (realCode) {
 			str += ")";
 		}
-		str += ");";
+		str += ")";
 		return str;
 	};
 

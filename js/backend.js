@@ -136,6 +136,7 @@
 			}
 		}
 		$_eseecode.currentWindow.style.display = "block";
+		document.getElementById("dialog-tabs-window").style.display = "block";
 	}
 
 	/**
@@ -266,16 +267,34 @@
 		ctx.clearRect(0,0,canvasSize,canvasSize);
 		canvas.width = canvasSize;
 	}
-
+	
 	/**
-	 * Returns if the device is a touch device or not
+	 * Stores repeatCount state when entering a repeat() block
 	 * @private
-	 * @return {Boolean} Whether the device is a touch device or not
-	 * @example isTouchDevice()
+	 * @example pushRepeatCount(repeatCount)
 	 */
-	function isTouchDevice() {
-		var touchscreen = (('ontouchstart' in window) ||
-     		    (navigator.maxTouchPoints > 0) ||
-		    (navigator.msMaxTouchPoints > 0));
-		return touchscreen;
+	function pushRepeatCount(value) {
+		executionTracePush("repeatCount",value);
+	}
+	
+	/**
+	 * Restores repeatCount state when exiting a repeat() block
+	 * @private
+	 * @example popRepeatCount()
+	 */
+	function popRepeatCount() {
+		return executionTracePop("repeatCount");
+	}
+	
+	/**
+	 * Moves the turtle to the specified position
+	 * @private
+	 * @param {Number} posx X coordinate
+	 * @param [NUmber] posy Y coordinate
+	 * @example moveTurtle(50,50)
+	 */
+	function moveTurtle(posx, posy) {
+		$_eseecode.currentCanvas.turtle.x = Math.round(posx); // Make sure the value is integer
+		$_eseecode.currentCanvas.turtle.y = Math.round(posy); // Make sure the value is integer
+		resetTurtle(); 	
 	}
