@@ -995,7 +995,7 @@
 	function beginShape() {
 		$_eseecode.currentCanvas.shaping = true;
 		$_eseecode.currentCanvas.context.beginPath();
-		var pos = user2systemCoords($_eseecode.currentCanvas.turtle); // necessary to mark the starting point in shapes in case the turtle has never been moved before
+		var pos = $_eseecode.currentCanvas.turtle; // necessary to mark the starting point in shapes in case the turtle has never been moved before
 		$_eseecode.currentCanvas.context.moveTo(pos.x, pos.y);
 	}
 
