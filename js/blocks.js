@@ -689,32 +689,32 @@
 					var canvasSize = $_eseecode.whiteboard.offsetWidth;
 					var minValue = parameter.minValue;
 					if (minValue == "minX") {
-						minValue = -$_eseecode.coordinates.x;
+						minValue = -$_eseecode.coordinates.position.x;
 					} else if (minValue == "maxX") {
-						minValue = canvasSize-$_eseecode.coordinates.x;
+						minValue = canvasSize-$_eseecode.coordinates.position.x;
 					} else if (minValue == "minY") {
-						minValue = -$_eseecode.coordinates.y;
+						minValue = -$_eseecode.coordinates.position.y;
 					} else if (minValue == "maxY") {
-						minValue = canvasSize-$_eseecode.coordinates.y;
+						minValue = canvasSize-$_eseecode.coordinates.position.y;
 					}
 					var maxValue = parameter.maxValue;
 					if (maxValue == "minX") {
-						maxValue = -$_eseecode.coordinates.x;
+						maxValue = -$_eseecode.coordinates.position.x;
 					} else if (maxValue == "maxX") {
-						maxValue = canvasSize-$_eseecode.coordinates.x;
+						maxValue = canvasSize-$_eseecode.coordinates.position.x;
 					} else if (maxValue == "minY") {
-						maxValue = -$_eseecode.coordinates.y;
+						maxValue = -$_eseecode.coordinates.position.y;
 					} else if (maxValue == "maxY") {
-						maxValue = canvasSize-$_eseecode.coordinates.y;
+						maxValue = canvasSize-$_eseecode.coordinates.position.y;
 					}
 					if (defaultValue == "minX") {
-						defaultValue = -$_eseecode.coordinates.x;
+						defaultValue = -$_eseecode.coordinates.position.x;
 					} else if (defaultValue == "maxX") {
-						defaultValue = canvasSize-$_eseecode.coordinates.x;
+						defaultValue = canvasSize-$_eseecode.coordinates.position.x;
 					} else if (defaultValue == "minY") {
-						defaultValue = -$_eseecode.coordinates.y;
+						defaultValue = -$_eseecode.coordinates.position.y;
 					} else if (defaultValue == "maxY") {
-						defaultValue = canvasSize-$_eseecode.coordinates.y;
+						defaultValue = canvasSize-$_eseecode.coordinates.position.y;
 					} else if (isNumber(defaultValue)) {
 						defaultValue = parseInt(defaultValue);
 					}

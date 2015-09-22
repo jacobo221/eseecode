@@ -270,7 +270,7 @@
 					} catch (exception) {
 						msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 						var lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
-						if (lineNumber[2]) {
+						if (lineNumber && neNumber[2]) {
 							lineNumber = lineNumber[2];
 							highlight(lineNumber,"error");
 							ace.edit("console-write").gotoLine(lineNumber,0,true);
@@ -341,4 +341,14 @@
 		this.line = $_eseecode.session.highlight.lineNumber;
 		this.text = text;
 	}
-	
+
+	/**
+	 * Prepares execution environment for the next run
+	 * @example endExecution();
+	 */
+	function endExecution() {
+		initProgramCounter(true);
+		unhighlight();
+		resetDebug();
+		executePrecode();
+	}

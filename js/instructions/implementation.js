@@ -794,6 +794,7 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
+		turtle = system2userCoords(turtle);
 		return turtle.x;
 	}
 
@@ -812,6 +813,7 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
+		turtle = system2userCoords(turtle);
 		return turtle.y;
 	}
 
@@ -831,11 +833,11 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
-		return turtle.angle;
+		return system2userAngle(turtle.angle);
 	}
 
 	/**
-	 * Draws a line from a coordinate to another
+	 * Draws a line from a coordinate to another using user coordinates
 	 * @since 1.0
 	 * @public
 	 * @param {Number} originx X coordinate where the line starts
@@ -845,21 +847,9 @@
 	 * @example lineAt(200, 200, 50, 50)
 	 */
 	function lineAt(originx, originy, destinationx, destinationy) {
-		if (!$_eseecode.currentCanvas.shaping) {
-			$_eseecode.currentCanvas.context.beginPath();
-			var moveToX = user2systemCoords(originx, "x");
-			var moveToY = user2systemCoords(originy, "y");
-			$_eseecode.currentCanvas.context.moveTo(moveToX,moveToY); // shape should use forward() or line()
-		}
-		var lineToX = user2systemCoords(destinationx, "x");
-		var lineToY = user2systemCoords(destinationy, "y");
-		$_eseecode.currentCanvas.context.lineTo(lineToX,lineToY);
-		if (!$_eseecode.currentCanvas.shaping) {
-			$_eseecode.currentCanvas.context.closePath();
-		}
-		$_eseecode.currentCanvas.context.stroke();
+		systemLineAt(user2systemCoords({x: originx, y: originy}), user2systemCoords({x: destinationx, y: destinationy}));
 	}
-
+	
 	/**
 	 * Draws a line from current cursor position to a specified coodinate
 	 * @since 1.0
@@ -870,7 +860,7 @@
 	 */
 	function line(destinationx, destinationy) {
 		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,destinationx,destinationy);
-		moveTurtle(destinationx, destinationy);
+		goTo(destinationx, destinationy);
 	}
 
 	/**
@@ -884,10 +874,11 @@
 		if (!isNumber(pixels)) {
 			throw new codeError("forward","Invalid parameter in forward() call");
 		}
-		var posx = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*$_eseecode.coordinates.xScale;
-		var posy = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*$_eseecode.coordinates.yScale;
-		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,posx,posy);
-		moveTurtle(posx, posy);
+		var pos = {};
+		pos.x = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
+		pos.y = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
+		systemLineAt($_eseecode.currentCanvas.turtle, pos);
+		moveTurtle(pos);
 	}
 
 	/**
@@ -972,14 +963,15 @@
 		tempCanvas.width = canvasSize;
 		tempCanvas.height = canvasSize;
 		var tempCtx = tempCanvas.getContext("2d");
-		tempCtx.translate(posx, posy);
-		tempCtx.rotate(angle*Math.PI/180);
+		var systemPos = user2systemCoords({x: posx, y: posy});
+		tempCtx.translate(systemPos.x, systemPos.y);
+		tempCtx.rotate(user2systemAngle(angle)*Math.PI/180);
 		// apply style properties to new canvas
 		setColorStyle(undefined,tempCtx);
 		setSizeStyle(undefined,tempCtx);
 		setTextStyle(tempCtx);
 		tempCtx.fillText(text, 0, 0);
-		tempCtx.translate(-posx, -posy);
+		tempCtx.translate(-systemPos.x, -systemPos.y);
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
 
@@ -1003,7 +995,8 @@
 	function beginShape() {
 		$_eseecode.currentCanvas.shaping = true;
 		$_eseecode.currentCanvas.context.beginPath();
-		$_eseecode.currentCanvas.context.moveTo(user2systemCoords($_eseecode.currentCanvas.turtle.x,"x"),user2systemCoords($_eseecode.currentCanvas.turtle.y,"y")); // necessary to mark the starting point in shapes in case the turtle has never been moved before
+		var pos = user2systemCoords($_eseecode.currentCanvas.turtle); // necessary to mark the starting point in shapes in case the turtle has never been moved before
+		$_eseecode.currentCanvas.context.moveTo(pos.x, pos.y);
 	}
 
 	/**
@@ -1026,8 +1019,7 @@
 	 * @example turnRight(90)
 	 */
 	function turnRight(angle) {
-		$_eseecode.currentCanvas.turtle.angle += angle;
-		resetTurtle();
+		setAngleTurtle($_eseecode.currentCanvas.turtle.angle+angle);
 	}
 
 	/**
@@ -1038,19 +1030,22 @@
 	 * @example turnLeft(90)
 	 */
 	function turnLeft(angle) {
-		turnRight(-angle);
+		setAngleTurtle($_eseecode.currentCanvas.turtle.angle-angle);
 	}
 
 	/**
 	 * Turns the cursor to it's original angle
 	 * The original angle is the cursor looking horizontally to the right
-	 * @since 1.0
+	 * @since 2.1
 	 * @public
-	 * @example turnReset()
+	 * @param {Number} angle Angle to set to
+	 * @example turnReset(90)
 	 */
-	function turnReset() {
-		$_eseecode.currentCanvas.turtle.angle = 0;		
-		resetTurtle();
+	function turnReset(angle) {
+		if (angle === undefined) {
+			angle = 0;
+		}
+		setAngleTurtle(user2systemAngle(angle));
 	}
 
 	/**
@@ -1067,12 +1062,13 @@
 	function image(src, posx, posy, width, height) {
 		var img = new Image();
 		var canvas = $_eseecode.currentCanvas;
+		var systemPos = user2systemCoords({x: posx, y: posy});
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (typeof height === "undefined") {
-				canvas.context.drawImage(img, posx, posy);
+				canvas.context.drawImage(img, systemPos.x, systemPos.y);
 			} else {
-				canvas.context.drawImage(img, posx, posy, width, height);
+				canvas.context.drawImage(img, systemPos.x, systemPos.y, width, height);
 			}
 		}
 		if (src) {
@@ -1089,7 +1085,8 @@
 	 * @example goTo(50, 50)
 	 */
 	function goTo(posx, posy) {
-		moveTurtle(posx, posy);
+		var pos = user2systemCoords({x: posx, y: posy});
+		moveTurtle(pos);
 	}
 
 	/**
@@ -1099,7 +1096,7 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		goTo(system2userCoords(getLayerWidth()/2,"x"),system2userCoords(getLayerHeight()/2,"y"));
+		moveTurtle({x: getLayerWidth()/2, y: getLayerHeight()/2});
 	}
 
 	/**
@@ -1109,7 +1106,7 @@
 	 * @example goToUpLeft()
 	 */
 	function goToUpLeft() {
-		goTo(system2userCoords(0,"x"),system2userCoords(0,"y"));
+		moveTurtle({x: 0, y: 0});
 	}
 
 	/**
@@ -1119,7 +1116,7 @@
 	 * @example goToUpRight()
 	 */
 	function goToUpRight() {
-		goTo(system2userCoords(getLayerWidth(),"x"),system2userCoords(0,"y"));
+		moveTurtle({x: getLayerWidth(), y: 0});
 	}
 
 	/**
@@ -1129,7 +1126,7 @@
 	 * @example goToLowLeft()
 	 */
 	function goToLowLeft() {
-		goTo(system2userCoords(0,"x"),system2userCoords(getLayerHeight(),"y"));
+		moveTurtle({x: 0, y: getLayerHeight()});
 	}
 
 	/**
@@ -1139,7 +1136,7 @@
 	 * @example goToLowRight()
 	 */
 	function goToLowRight() {
-		goTo(system2userCoords(getLayerWidth(),"x"),system2userCoords(getLayerHeight(),"y"));
+		moveTurtle({x: getLayerWidth(), y: getLayerHeight()});
 	}
 
 	/**
@@ -1302,6 +1299,39 @@
 			$_eseecode.session.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() { animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex); },seconds*1000);
 		}
 		return timeoutHandlersIndex;
+	}
+	
+	/**
+	 * Animate layers by displaying them one at a time
+	 * @since 2.1
+	 * @public
+	 * @param {Number} delay
+	 * @example animateLayers(0.1)
+	 */
+	function animateLayers(delay) {
+		var numLayers = $_eseecode.canvasArray.length;
+		if (delay === undefined) {
+			delay = 0.5;
+		}
+		for (var i=1; i<numLayers; i++) {
+			hide(i);
+		}
+		animate("(function(){\
+			var layer = 1;\
+			for (var i=1; i<"+numLayers+"; i++) {\
+				if ($_eseecode.canvasArray[i].div.style.display != \"none\") {\
+					layer = i+1;\
+				}\
+			}\
+			for (var i=1; i<"+numLayers+"; i++) {\
+				hide(i);\
+			}\
+			layer %= "+numLayers+";\
+			if (layer < 1) {\
+				layer = 1;\
+			}\
+			show(layer);\
+			})()", delay);
 	}
 
 	/**
@@ -1620,7 +1650,7 @@
 		if (yScale === undefined) {
 			yScale = 1;
 		}
-		changeCoordinates(posx, posy, xScale, yScale);
+		changeCoordinates({x: posx, y: posy}, {x: xScale, y: yScale});
 	}
 
 	/**

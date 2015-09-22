@@ -25,6 +25,10 @@
  * GUI restyled
  * Began work on better execution error messages
  * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
+ * Turtle starts at (0,0)
+ * New animateLayers() instruction to ease creating animations from Level2
+ * Turtle icon slightly redesigned
+ * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
  * Fix: image() needed refresh to load the image

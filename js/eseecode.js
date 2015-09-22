@@ -5,7 +5,7 @@
 
 	// Main initialization
 	/**
-	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:String},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointsStatus:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>,tipInterval:Object,scrollTimeout:Object},whiteboard:HTMLElement,coordinates:Array<{x:Number,y:Number,xScale:Number,yScale:Number,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,xScale:Number,yScale:Number,default:Boolean}>}>,dialogWindow:HTMLElement,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}>
+	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:String},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointsStatus:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>,tipInterval:Object,scrollTimeout:Object},whiteboard:HTMLElement,coordinates:Array<{position:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,default:Boolean}>}>,dialogWindow:HTMLElement,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}>
 	 */
 	var $_eseecode = {
 		platform: {
@@ -74,15 +74,19 @@
 		},
 		whiteboard: null,
 		coordinates: {
-			x: 0,
-			y: 0,
-			xScale: 1,
-			yScale: 1,
+			position: {
+				x: 0,
+				y: 0
+			},
+			scale:{
+				x: 1,
+				y: 1
+			},
 			userSelection: undefined,
 			predefined: [
-				{ name: "Computer console", x: 0, y: 0, xScale: 1, yScale: 1, default: false },
-				{ name: "Mathematical simple", x: 0, y: 400, xScale: 1, yScale: -1 },
-				{ name: "Mathematical centered", x: 200, y: 200, xScale: 1, yScale: -1, default: true }
+				{ name: "Computer console", position: {x: 0, y: 0}, scale: {x: 1, y: 1}, default: false },
+				{ name: "Mathematical simple", position: {x: 0, y: 400}, scale: {x: 1, y: -1 }, default: false },
+				{ name: "Mathematical centered", position: {x: 200, y: 200}, scale: {x: 1, y: -1}, default: true }
 			]
 		},
 		dialogWindow: null,

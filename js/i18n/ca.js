@@ -242,8 +242,13 @@ $_eseecode.i18n.available.ca = {
 	"Sticks an external image": "Enganxa una imatge externa",
 	"Stop the execution": "Para l'execució",
 	"Switches the active canvas, returns the name of the new current canvas": "Canvia el dibuix actiu, torna el nom del nou dibuix",
-	"Runs the action every seconds seconds up to maxTimes": "Executa la acció cada segons segons fins a màximVegades",
+	"Runs the action every certain amount of time": "Executa la acció cada cert temps",
 	"Stops an animation": "Atura una animació",
+	"Code to run": "Codi a executar",
+	"How often to run the code (in seconds)": "Freqüència amb la que executar el codi (en segons)",
+	"Maximum number of times to run the code": "Nombre màxim de vegades que s'executarà el codi",
+	"Switch the layer every certain time": "Canvia de capa cada cert temps",
+	"Shows one layer at a time every certain time": "Mostra una capa diferent cada cert temps",
 	"Switches the active window": "Cambia la finestra activa",
 	"text": "text",
 	"Turns 15 degrees left": "Gira 15 graus cap a l'esquerra",
@@ -273,6 +278,7 @@ $_eseecode.i18n.available.ca = {
 	"The value for parameter \"%s\" is invalid!": "El valor del paràmetre \"%s\" és invàlid!",
 	"How many pixels do you want to move forward?": "Quants píxels vols moure't endavant?",
 	"How many degrees do you want to turn?": "Quants graus vols girar?",
+	"Which angle do you want the pointer to face?": "Quin angle vols que encari el punter?",
 	"Which color do you want to use?": "Quin color vols?",
 	"Set X coordinate to go to": "Introdueix la coordenada X a on vols anar",
 	"Set Y coordinate to go to": "Introdueix la coordenada Y a on vols anar",
@@ -296,5 +302,6 @@ $_eseecode.i18n.available.ca = {
 	"When should the code be triggered?": "Quan s'hauria d'executar el codi?",
 	"The code will be triggered as long as the following condition remains true": "El codi s'executarà mentre la següent condició sigui certa",
 	"How many times do you want to run the code?": "Quantes vegades vols executar el codi?",
-	"In which angle to write the text?": "En quin angle vols escriure el text?"
+	"In which angle to write the text?": "En quin angle vols escriure el text?",
+	"It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.": "S'estima que trigarà %s segons a generar l'arxiu per descarregar. Vols continuar?\n\nSi desitges continuar %sclica aquí%s i sigues pacient i no sortis de l'aplicació."
 }

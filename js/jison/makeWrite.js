@@ -96,6 +96,10 @@
 			var line = unparsedLines[i];
 			str += elements[line].makeWrite(level, indent, indentChar, realCode) + "\n";
 		}
+		if (realCode) {
+			// Finish stepped/breakpointed execution
+			str += "endExecution()";
+		}
 		return str;
 	};
 

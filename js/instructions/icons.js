@@ -6,6 +6,54 @@
 	 * @example {"arc": function(ctx, width, height, param) { ... }}
 	 */
 	$_eseecode.instructions.icons = {
+		"animate": function(ctx, width, height, param) {
+			var margin = 15;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.arc(width/2, height/2, width/2-margin, 0, 360, false);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(width/2, height/2);
+			ctx.lineTo(4*margin/3, height/2);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(width/2, height/2);
+			ctx.lineTo(width/2, 3*margin/2);
+			ctx.closePath();
+			ctx.stroke();
+		},
+		"animateLayers": function(ctx, width, height, param) {
+			var margin = 15;
+			var separation = 4;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.moveTo(margin+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,(height-margin)-separation);
+			ctx.lineTo(margin+separation,(height-margin)-separation);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(margin+separation*2,height/3-separation*2);
+			ctx.lineTo(2*width/3+separation*2,height/3-separation*2);
+			ctx.lineTo(2*width/3+separation*2,(height-margin)-separation*2);
+			ctx.lineTo(margin+separation*2,(height-margin)-separation*2);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillStyle = '#222222';
+			ctx.beginPath();
+			ctx.moveTo(margin,height/3);
+			ctx.lineTo(2*width/3,height/3);
+			ctx.lineTo(2*width/3,height-margin);
+			ctx.lineTo(margin,height-margin);
+			ctx.closePath();
+			ctx.fill();
+		},
 		"arc": function(ctx, width, height, param) {
 			var margin = 15;
 			var param1, param2;
@@ -47,21 +95,20 @@
 				param = param[0];
 			}
 			var margin = 15;
-			var maxparam1 = 10;
-			var maxparam2 = 10;
+			var minfont = 10;
+			var maxfont = 20;
 			var fontSize = (width-margin*2)/param.length;
-			if (fontSize < maxparam1) {
-				fontSize = maxparam1;
+			if (fontSize < minfont) {
+				fontSize = minfont;
+			}
+			if (fontSize > maxfont) {
+				fontSize = maxfont;
 			}
 			ctx.font = fontSize+"px Verdana";
-      			ctx.fillStyle = '#FFFFFF';
+      		ctx.fillStyle = '#FFFFFF';
 			ctx.fillText(param,margin,height-margin);
-			fontSize = height-margin*2;
-			if (fontSize < maxparam2) {
-				fontSize = maxparam2;
-			}
-			ctx.font = fontSize+"px Verdana";
-			ctx.fillText("[ ]",margin,height-margin);
+			ctx.font = "32px Verdana";
+			ctx.fillText("[ ]",margin,height/2);
 		},
 		"beginShape": function(ctx, width, height, param) {
 			var margin = 15;
@@ -279,22 +326,21 @@
 				param = param[0];
 			}
 			var margin = 15;
-			var maxparam1 = 10;
-			var maxparam2 = 20;
-			var fontSize = (width-margin)/param.length;
-			if (fontSize < maxparam1) {
-				fontSize = maxparam1;
+			var minfont = 10;
+			var maxfont = 20;
+			var fontSize = (width-margin*2)/param.length;
+			if (fontSize < minfont) {
+				fontSize = minfont;
+			}
+			if (fontSize > maxfont) {
+				fontSize = maxfont;
 			}
 			var margin = 15;
 			ctx.font = fontSize+"px Verdana";
-      			ctx.fillStyle = '#FFFFFF';
+   			ctx.fillStyle = '#FFFFFF';
 			ctx.fillText(param,margin,height-margin);
-			fontSize = height-margin*2;
-			if (fontSize < maxparam2) {
-				fontSize = maxparam2;
-			}
-			ctx.font = fontSize+"px Verdana";
-			ctx.fillText("( )",margin,height-margin);
+			ctx.font = "32px Verdana";
+			ctx.fillText("( )",margin,height/2);
 		},
 		"goTo": function(ctx, width, height, param) {
 			var margin = 20;
@@ -310,20 +356,17 @@
 			}
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
 			if (!isNumber(param1)) {
-				param1 = canvasSize/2+$_eseecode.coordinates.x;
-			} else {
-				param1 = parseInt(param1)*$_eseecode.coordinates.xScale+$_eseecode.coordinates.x;
+				param1 = 0;
 			}
 			if (!isNumber(param2)) {
 				param2 = canvasSize/2+$_eseecode.coordinates.y;
-			} else {
-				param2 = parseInt(param2)*$_eseecode.coordinates.yScale+$_eseecode.coordinates.y;
 			}
+			var coords = user2systemCoords({x: parseInt(param1), y: parseInt(param2)});
 			var startAngle = 0;
 			var endAngle = 2*Math.PI;
 			ctx.fillStyle = "#000000";
 			ctx.beginPath();
-			ctx.arc(margin+(width-margin*2)*param1/canvasSize, margin+(height-margin*2)*param2/canvasSize, height/20, startAngle, endAngle, false);
+			ctx.arc(margin+(width-margin*2)*coords.x/canvasSize, margin+(height-margin*2)*coords.y/canvasSize, height/20, startAngle, endAngle, false);
 			ctx.closePath();
 			ctx.fill();
 		},
@@ -1035,12 +1078,20 @@
 		},
 		"turnReset": function(ctx, width, height, param) {
 			var margin = 15;
+			if (param) {
+				param = parseInt(param[0]);
+			} else {
+				param = 0;
+			}
+			param = user2systemAngle(param);
+			ctx.translate(width/2, height/2);
+			ctx.rotate(param*Math.PI/180);
+			ctx.translate(-width/2, -height/2);
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.moveTo(margin,height/2);
+			ctx.moveTo(width/2,margin);
 			ctx.lineTo(width-margin,height/2);
-			ctx.lineTo(width/2,margin);
-			ctx.lineTo(margin,height/2);
+			ctx.lineTo(width/2,height-margin);
 			ctx.fill();
 		},
 		"turnRight": function(ctx, width, height, param) {

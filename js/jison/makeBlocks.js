@@ -167,7 +167,11 @@
 		if (this.argument !== null) {
 			str += this.argument.makeWrite(level,"","");
 		}
-		appendBlock(level,"return",parentDiv,[str]);
+		if (str.length > 0) {
+			appendBlock(level,"return",parentDiv,[str]);
+		} else {
+			appendBlock(level,"return",parentDiv,null);
+		}
 	};
 
 	ast.ThrowStatementNode.prototype.makeBlocks = function(level,parentDiv) {

@@ -33,12 +33,13 @@
 			canvas.width = canvasSize;
 			canvas.height = canvasSize;
 			var context = canvas.getContext("2d");
+			var origin = user2systemCoords({x: 0, y: 0});
 			$_eseecode.canvasArray[id] = {
 				name: id,
 				canvas: canvas,
 				context: context,
 				div: div,
-				turtle: {x: 0, y: 0, angle: 0},
+				turtle: {x: origin.x, y: origin.y, angle: 0},
 				style: {color: "#000000", font: "sans-serif", size: 2, alpha: 1, bold: false, italic: false},
 				shaping: false,
 				layerOver: null,
@@ -289,12 +290,46 @@
 	/**
 	 * Moves the turtle to the specified position
 	 * @private
-	 * @param {Number} posx X coordinate
-	 * @param [NUmber] posy Y coordinate
-	 * @example moveTurtle(50,50)
+	 * @param {Number} pos Coordinate
+	 * @example moveTurtle({x: 50, y: 50})
 	 */
-	function moveTurtle(posx, posy) {
-		$_eseecode.currentCanvas.turtle.x = Math.round(posx); // Make sure the value is integer
-		$_eseecode.currentCanvas.turtle.y = Math.round(posy); // Make sure the value is integer
-		resetTurtle(); 	
+	function moveTurtle(pos) {
+		$_eseecode.currentCanvas.turtle.x = Math.round(pos.x); // Make sure the value is integer
+		$_eseecode.currentCanvas.turtle.y = Math.round(pos.y); // Make sure the value is integer
+		resetTurtle();
 	}
+	
+	/**
+	 * Turns the turtle to the specified angle
+	 * @private
+	 * @param {Number} angle Angle
+	 * @example turnTurtle(90)
+	 */
+	function setAngleTurtle(angle) {
+		$_eseecode.currentCanvas.turtle.angle = angle;
+		$_eseecode.currentCanvas.turtle.angle %= 360;
+		if ($_eseecode.currentCanvas.turtle.angle < 0) {
+			$_eseecode.currentCanvas.turtle.angle += 360;
+		}
+		resetTurtle();
+	}
+	
+	/**
+	 * Draws a line from a coordinate to another using system coordinates
+	 * @private
+	 * @param {Array} origin Coordinates where the line starts
+	 * @param {Array} destination Coordinates where the line ends
+	 * @example systemLineAt({x: 200, y: 200}, {x: 50, y: 50})
+	 */
+	function systemLineAt(origin, destination) {
+		if (!$_eseecode.currentCanvas.shaping) {
+			$_eseecode.currentCanvas.context.beginPath();
+			$_eseecode.currentCanvas.context.moveTo(origin.x,origin.y); // shape should use forward() or line()
+		}
+		$_eseecode.currentCanvas.context.lineTo(destination.x,destination.y);
+		if (!$_eseecode.currentCanvas.shaping) {
+			$_eseecode.currentCanvas.context.closePath();
+		}
+		$_eseecode.currentCanvas.context.stroke();
+	}
+	

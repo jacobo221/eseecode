@@ -24,13 +24,35 @@
 		}
 		if (document.getElementById("setup-turtle-enable").checked) {
 			var id = $_eseecode.currentCanvas.name;
-			var posX = $_eseecode.canvasArray[id].turtle.x;
-			var posY = $_eseecode.canvasArray[id].turtle.y;
-			drawCursor(ctx, posX, posY, id);
+			drawCursor(ctx, $_eseecode.canvasArray[id].turtle, id);
 		}
 		link.href = canvas.toDataURL();
 		var d = new Date();
 		link.download = "canvas-"+d.getTime()+".png";
+	}
+
+	/**
+	 * Downloads the layers as a file, called from the UI
+	 * @private
+	 * @example downloadLayersFromUI()
+	 */
+	function downloadLayersFromUI() {
+		// Create one layer GIF to measure how long it takes
+		var start = new Date().getTime();
+		var encoder = new GIFEncoder();
+		encoder.setRepeat(0);
+		encoder.setDelay(0.1);
+		encoder.start();
+		encoder.addFrame($_eseecode.canvasArray[0].canvas.getContext("2d"));
+		encoder.finish();
+		var finish = new Date().getTime();
+		var secondsPerLayer = (finish - start) / 1000;
+		var estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
+		if (estimatedTime >= 3) {
+			msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"downloadLayers()\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:msgBoxClose});
+		} else {
+			downloadLayers();
+		}
 	}
 
 	/**
@@ -39,7 +61,11 @@
 	 * @param {!HTMLElement} link HTML A element to add the link to
 	 * @example downloadLayers(document.body.createElement("a"))
 	 */
-	function downloadLayers(link) {
+	function downloadLayers() {
+		var link = document.getElementById("downloadLayers-link");
+		if (!link) {
+			link = document.getElementById("setup-downloadLayers");
+		}
 		var encoder = new GIFEncoder();
 		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
 		var interval = document.getElementById("setup-downloadLayers-interval").value;
@@ -51,23 +77,21 @@
 
 		var i = 1;
 		var layer = $_eseecode.canvasArray[i]; // We skip first frame which is the grid
+		var canvas = document.createElement('canvas');
+		canvas.width = $_eseecode.canvasArray[0].canvas.width;
+		canvas.height = $_eseecode.canvasArray[0].canvas.height;
+		var ctx = canvas.getContext("2d");
 		while (layer) {
-			var canvas = document.createElement('canvas');
-			canvas.width = $_eseecode.canvasArray[0].canvas.width;
-			canvas.height = $_eseecode.canvasArray[0].canvas.height;
-			var ctx = canvas.getContext("2d");
 			ctx.fillStyle="#FFFFFF";
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 			if (document.getElementById("setup-grid-enable").checked) {
-				drawGrid(ctx);
+				ctx.drawImage($_eseecode.canvasArray[0].canvas,0,0); // draw grid
 			}
 			if (layer != $_eseecode.canvasArray[0]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			if (document.getElementById("setup-turtle-enable").checked) {
-				var posX = layer.turtle.x;
-				var posY = layer.turtle.y;
-				drawCursor(ctx, posX, posY, i);
+				drawCursor(ctx, layer.turtle, i);
 			}
 			// Watermark
 			ctx.font = "20px Arial";
@@ -79,10 +103,11 @@
 		}
 		encoder.finish();
 		var binary_gif = encoder.stream().getData();
-		var data_url = 'data:image/gif;base64,'+encode64(binary_gif); 
+		var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
 		link.href = data_url;
 		var d = new Date();
 		link.download = "layers-"+d.getTime()+".gif";
+		msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
 	/**
@@ -143,7 +168,7 @@
 	 * Shows a message box overlapping all the platform's user interface
 	 * @private
 	 * @param {String|HTMLElement} text Message to show in the message box
-	 * @param {{acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String}} config Configuration parameters for the message box
+	 * @param {{acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String,noSubmit:{Boolean}} config Configuration parameters for the message box
 	 * @example msgBox("Alert!")
 	 */
 	function msgBox(text, config) {
@@ -176,18 +201,24 @@
 		} else {
 			input.value = _("Accept");
 		}
-		var focusElement = input;
-		if (!config || !config.focus) {
-			input.autofocus = true;
+		var focusElement;
+		if (config.noSubmit !== true) {
+			focusElement = input;
+			if (!config || !config.focus) {
+				input.autofocus = true;
+			}
+			if (config && config.acceptAction) {
+				input.addEventListener("click", config.acceptAction, false);
+			} else {
+				input.addEventListener("click", msgBoxClose, false);
+			}
+			buttonDiv.appendChild(input);
 		}
-		if (config && config.acceptAction) {
-			input.addEventListener("click", config.acceptAction, false);
-		} else {
-			input.addEventListener("click", msgBoxClose, false);
-		}
-		buttonDiv.appendChild(input);
 		if (config && (config.cancel || config.cancelName || config.cancelAction)) {
 			input = document.createElement("input");
+			if (config.noSubmit === true) {
+				focusElement = input;
+			}
 			input.type = "button";
 			if (config && config.cancelName) {
 				input.value = config.cancelName;
@@ -825,39 +856,62 @@
 	}
 	
 	/**
-	 * Converts system coordinates to user coordinates
+	 * Converts user coordinates to system coordinates
 	 * @private
-	 * @param {Number} pos System coordinate
-	 * @param {String} axis Axis which is affected
-	 * @return User value which refers to the same system position
-	 * @example system2userCoords(100, "x")
+	 * @param {Array} pos System coordinates with Array elements x and y
+	 * @return System value which refers to the same user position
+	 * @example user2systemCoords({x: 150, y: 250})
 	 */
-	function system2userCoords(pos, axis) {
-		var value;
-		if (axis == "x" || axis == "X") {
-			value = pos/$_eseecode.coordinates.xScale+$_eseecode.coordinates.x;
-		} else if (axis == "y" || axis == "Y") {
-			value = pos/$_eseecode.coordinates.yScale+$_eseecode.coordinates.y;
-		}
+	function user2systemCoords(pos) {
+		var value = {};
+		value.x = pos.x*$_eseecode.coordinates.scale.x+$_eseecode.coordinates.position.x;
+		value.y = pos.y*$_eseecode.coordinates.scale.y+$_eseecode.coordinates.position.y;
 		return value;
 	}
 	
 	/**
-	 * Converts user coordinates to system coordinates
+	 * Converts system coordinates to user coordinates
 	 * @private
-	 * @param {Number} pos User coordinate
-	 * @param {String} axis Axis which is affected
-	 * @return System value which refers to the same user position
-	 * @example user2systemCoords(100, "x")
+	 * @param {Array} pos System coordinates with Array elements x and y
+	 * @return User value which refers to the same system position
+	 * @example system2userCoords({x: 100, y: 200})
 	 */
-	function user2systemCoords(pos, axis) {
-		var value;
-		if (axis == "x" || axis == "X") {
-			value = (pos-$_eseecode.coordinates.x)*$_eseecode.coordinates.xScale;
-		} else if (axis == "y" || axis == "Y") {
-			value = (pos-$_eseecode.coordinates.y)*$_eseecode.coordinates.yScale;
-		}
+	function system2userCoords(pos) {
+		var value = {};
+		value.x = (pos.x-$_eseecode.coordinates.position.x)/$_eseecode.coordinates.scale.x;
+		value.y = (pos.y-$_eseecode.coordinates.position.y)/$_eseecode.coordinates.scale.y;
 		return value;
+	}
+	
+	/**
+	 * Converts user angle to system angle
+	 * @private
+	 * @param {Number} angle User angle
+	 * @return System value which refers to the same user angle
+	 * @example user2systemAngle(90)
+	 */
+	function user2systemAngle(angle) {
+		return system2userAngle(angle);
+	}
+	
+	/**
+	 * Converts system angle to user angle
+	 * @private
+	 * @param {Number} angle System angle
+	 * @return User value which refers to the same system position
+	 * @example system2userAngle(90)
+	 */
+	function system2userAngle(angle) {
+		if ($_eseecode.coordinates.scale.x < 0) {
+			angle = 180 - angle;
+		}
+		if ($_eseecode.coordinates.scale.y < 0) {
+			angle = angle * -1;
+		}
+		if (angle < 0) {
+			angle += 360;
+		}
+		return angle;
 	}
 
 	/**
@@ -874,15 +928,14 @@
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
 		var size = 20;
-		var orgx = user2systemCoords(targetCanvas.turtle.x, "x");
-		var orgy = user2systemCoords(targetCanvas.turtle.y, "y");
+		var org = targetCanvas.turtle;
 		var angle = targetCanvas.turtle.angle;
-		var frontx = orgx+size*Math.cos(angle*Math.PI/180);
-		var fronty = orgy+size*Math.sin(angle*Math.PI/180);
-		var leftx = orgx+size/2*Math.sin(angle*Math.PI/180);
-		var lefty = orgy-size/2*Math.cos(angle*Math.PI/180);
-		var rightx = orgx-size/2*Math.sin(angle*Math.PI/180);
-		var righty = orgy+size/2*Math.cos(angle*Math.PI/180);
+		var frontx = org.x+size*Math.cos(angle*Math.PI/180);
+		var fronty = org.y+size*Math.sin(angle*Math.PI/180);
+		var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
+		var lefty = org.y+size/2*Math.sin(angle*Math.PI/180+Math.PI/3);
+		var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
+		var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
 		if (canvas === undefined) {
 			if (!$_eseecode.canvasArray["turtle"].visible) {
 				return;
@@ -907,12 +960,12 @@
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
-		gradient = ctx.createRadialGradient(orgx,orgy,size,orgx,orgy,size/10);
+		gradient = ctx.createRadialGradient(org.x,org.y,size,org.x,org.y,size/10);
 		gradient.addColorStop(0,'rgb(0,0,0)');
 		gradient.addColorStop(1,'rgb(103,137,171)');
 		ctx.fillStyle = gradient;
 		ctx.beginPath();
-		ctx.arc(orgx, orgy, size/2, 2*Math.PI, 0, false);
+		ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
 		ctx.closePath();
 		ctx.fill();
 		ctx.stroke();
@@ -938,11 +991,12 @@
 	 * Shows/Hides a layer
 	 * @private
 	 * @param {Number} id Layer id
+	 * @param {Boolean} [force] True to force switch on, false to force switch off
 	 * @example toggleCanvas(3)
 	 */
-	function toggleCanvas(id) {
+	function toggleCanvas(id, force) {
 		var div = $_eseecode.canvasArray[id].div;
-		if (div.style.display == "none") {
+		if (force === true || div.style.display == "none") {
 			div.style.display = "block";
 		} else {
 			div.style.display = "none";
@@ -953,40 +1007,36 @@
 	 * Draws a cursor
 	 * @private
 	 * @param {Object} context Context object where to draw the cursor
-	 * @param {Number} posX X coordinate of the cursor
-	 * @param {Number} posY Y coordinate of the cursor
+	 * @param {Array} pos Coordinates of the cursor
 	 * @param {Number} id Id of the layer
-	 * @example drawCursor(ctx, posX, posY, id)
+	 * @example drawCursor(ctx, {x: 200, y: 200}, id)
 	 */
-	function drawCursor(context, posX, posY, id) {
-		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		if (posX < 0-$_eseecode.coordinates.x || posX > canvasSize-$_eseecode.coordinates.x || posY < 0-$_eseecode.coordinates.y || posY > canvasSize-$_eseecode.coordinates.y) {
+	function drawCursor(context, pos, id) {
+		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
+		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
+		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
 			var markerSize = 20;
-			posX = user2systemCoords(posX,"x");
-			posY = user2systemCoords(posY,"y");
-			var orgx = posX;
-			var orgy = posY;
-			if (orgx < markerSize) {
-				orgx = markerSize;
-			} else if (orgx > canvasSize-markerSize) {
-				orgx = canvasSize-markerSize;
+			var org = {x: pos.x, y: pos.y};
+			if (org.x < markerSize) {
+				org.x = markerSize;
+			} else if (org.x > canvasWidth-markerSize) {
+				org.x = canvasWidth-markerSize;
 			}
-			if (orgy < markerSize) {
-				orgy = markerSize;
-			} else if (orgy > canvasSize-markerSize) {
-				orgy = canvasSize-markerSize;
+			if (org.y < markerSize) {
+				org.y = markerSize;
+			} else if (org.y > canvasHeight-markerSize) {
+				org.y = canvasHeight-markerSize;
 			}
-			var modulus = Math.sqrt(posX*posX+posY*posY);
-			var posVectorX = (posX-orgx)/modulus;
-			var posVectorY = (posY-orgy)/modulus;
-			var angle = -Math.acos((1*posVectorX + 0*posVectorY)/(Math.sqrt(1*1+0*0)*Math.sqrt(posVectorX*posVectorX+posVectorY*posVectorY)));
+			var modulus = Math.sqrt((pos.x-org.x)*(pos.x-org.x)+(pos.y-org.y)*(pos.y-org.y));
+			var posVector = {x: (pos.x-org.x)/modulus, y: (pos.y-org.y)/modulus};
+			var angle = Math.atan2(posVector.y, posVector.x);
 			var size = 20;
-			var frontx = orgx+size*Math.cos(angle);
-			var fronty = orgy+size*Math.sin(angle);
-			var leftx = orgx+size/2*Math.sin(angle);
-			var lefty = orgy-size/2*Math.cos(angle);
-			var rightx = orgx-size/2*Math.sin(angle);
-			var righty = orgy+size/2*Math.cos(angle);
+			var frontx = org.x+size*Math.cos(angle);
+			var fronty = org.y+size*Math.sin(angle);
+			var leftx = org.x+size/2*Math.cos(angle+Math.PI/3);
+			var lefty = org.y+size/2*Math.sin(angle+Math.PI/3);
+			var rightx = org.x+size/2*Math.cos(angle-Math.PI/3);
+			var righty = org.y+size/2*Math.sin(angle-Math.PI/3);
 			var ctx = context;
 			// draw turtle
 			ctx.lineWidth = 1;
@@ -1000,26 +1050,26 @@
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(orgx, orgy, size/2, 2*Math.PI, 0, false);
+			ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(orgx, orgy, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
+			ctx.arc(org.x, org.y, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
 			ctx.stroke();
 			ctx.lineWidth = 2;
 			ctx.beginPath();
-			ctx.arc(orgx, orgy, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
+			ctx.arc(org.x, org.y, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
 			ctx.stroke();
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-			ctx.arc(orgx, orgy, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
+			ctx.arc(org.x, org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
 			ctx.stroke();
 		} else {
 			var turtleCanvas = document.createElement("canvas");
 			turtleCanvas.className = "canvas";
-			turtleCanvas.width = canvasSize;
-			turtleCanvas.height = canvasSize;
+			turtleCanvas.width = canvasWidth;
+			turtleCanvas.height = canvasHeight;
 			resetTurtle(id, turtleCanvas);
 			context.drawImage(turtleCanvas, 0, 0);
 		}
@@ -1049,12 +1099,10 @@
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
-		var coorUpperLeftX = user2systemCoords(0,"x");
-		var coorUpperLeftY = user2systemCoords(0,"y");
-		var coorLowerRightX = user2systemCoords(getLayerWidth(),"x");
-		var coorLowerRightY = user2systemCoords(getLayerHeight(),"y");
-		ctx.fillText("("+coorUpperLeftX+","+coorUpperLeftY+")",margin,fontHeight+margin);
-		ctx.fillText("("+coorLowerRightX+","+coorLowerRightY+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
+		var coorUpperLeft = system2userCoords({x: 0, y: 0});
+		var coorLowerRight = system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
+		ctx.fillText("("+coorUpperLeft.x+","+coorUpperLeft.y+")",margin,fontHeight+margin);
+		ctx.fillText("("+coorLowerRight.x+","+coorLowerRight.y+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
 		if (step < 25) {
 			step = 25;
@@ -1065,8 +1113,8 @@
 		ctx.fillStyle = colorHighlight;
 		ctx.strokeStyle = colorNormal;
 		ctx.lineWidth = 1;
-		var xUserStep = step*$_eseecode.coordinates.xScale;
-		for (var i=step, text=coorUpperLeftX+xUserStep; i<canvasSize; i+=step, text+=xUserStep) {
+		var xUserStep = step/$_eseecode.coordinates.scale.x;
+		for (var i=step, text=coorUpperLeft.x+xUserStep; i<canvasSize; i+=step, text+=xUserStep) {
 			ctx.fillText(text,i,7);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
@@ -1079,8 +1127,8 @@
 			ctx.closePath();
 			ctx.stroke();
 		}
-		var yUserStep = step*$_eseecode.coordinates.yScale;
-		for (var i=step, text=coorUpperLeftY+yUserStep; i<canvasSize; i+=step, text+=yUserStep) {
+		var yUserStep = step/$_eseecode.coordinates.scale.y;
+		for (var i=step, text=coorUpperLeft.y+yUserStep; i<canvasSize; i+=step, text+=yUserStep) {
 			ctx.fillText(text,0,i);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
@@ -1370,12 +1418,12 @@
 		}
 		resizeConsole(true);
 		initConsole();
-		resetCanvas();
 		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
 		if (urlParts !== null) {
 			var grid = $_eseecode.coordinates.predefined[urlParts[2]];
-			changeCoordinates(grid.x, grid.y, grid.xScale, grid.yScale);
+			changeCoordinates(grid.position, grid.scale);
 		}
+		resetCanvas();
 		executePrecode();
 		resetDebug();
 		document.getElementById("dialog-tabs-window").style.display = "none";
@@ -2078,10 +2126,8 @@
 	 */
 	function resetDraw() {
 		resetCanvas();
-		initProgramCounter(true);
-		unhighlight();
-		resetDebug();
-		executePrecode();
+		goTo(0,0);
+		endExecution();
 	}
 
 	/**
@@ -2105,9 +2151,10 @@
 		}
 		getCanvas(0).canvas.style.zIndex = -1; // canvas-0 is special
 		switchCanvas(1); // canvas-1 is the default
-		changeCoordinatesFromUI(); // Must be run before resetTurtle() so the turtle is set within the right coordinates map
+		updateAxisSettingsFromUI();
 		// reset turtle	
-		resetTurtle();
+		moveTurtle(user2systemCoords({x: 0, y: 0}));
+		setAngleTurtle(user2systemAngle(0));
 		// reset windows
   		for(var i=0;i<$_eseecode.windowsArray.length;i++) {
 			if ($_eseecode.windowsArray[i]) {
@@ -2195,25 +2242,21 @@
 	 * Returns the $_eseecode.coordinates.predefined index of the axis setup
 	 * If no parameters are passed it assumes current coordinates
 	 * @private
-	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
-	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
-	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
-	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
+	 * @param {Number} pos Position of the axis, origin us upperleft corner
+	 * @param {Number} scale Scale by which to multiply the x coordinates, originaly increasing from left to right
 	 * @return The index if it is found, -1 otherwise
 	 * @example getGridPredefined(200, 200, 1, -1)
 	 */
-	function getGridPredefined(posx, posy, xScale, yScale) {
-		if (posx === undefined) {
-			posx = $_eseecode.coordinates.x;
-			posy = $_eseecode.coordinates.y;
-			xScale = $_eseecode.coordinates.xScale;
-			yScale = $_eseecode.coordinates.yScale;
+	function getGridPredefined(pos, scale) {
+		if (pos === undefined) {
+			pos = $_eseecode.coordinates.position;
+			scale = $_eseecode.coordinates.scale;
 		}
 		var gridModes = $_eseecode.coordinates.predefined;
 		var foundPredefined = false;
 		var i = 0;
 		for (i=0; i<gridModes.length; i++) {
-			if (posx == gridModes[i].x && posy == gridModes[i].y && xScale == gridModes[i].xScale && yScale == gridModes[i].yScale) {
+			if (pos.x == gridModes[i].position.x && pos.y == gridModes[i].position.y && scale.x == gridModes[i].scale.x && scale.y == gridModes[i].scale.y) {
 				foundPredefined = true;
 				break;
 			}
@@ -2227,21 +2270,17 @@
 	/**
 	 * Change whiteboard axis setup
 	 * @private
-	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
-	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
-	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
-	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
-	 * @example changeCoordinates(200, 200, 1, -1)
+	 * @param {Number} pos Position of the axis, origin us upperleft corner
+	 * @param {Number} scale Scale by which to multiply the coordinates, originaly increasing downwards
+	 * @example changeCoordinates({x: 200, y: 200}, {x: 1, y: -1})
 	 */
-	function changeCoordinates(posx, posy, xScale, yScale) {
-		$_eseecode.coordinates.x = posx;
-		$_eseecode.coordinates.y = posy;
-		$_eseecode.coordinates.xScale = xScale;
-		$_eseecode.coordinates.yScale = yScale;
+	function changeCoordinates(pos, scale) {
+		$_eseecode.coordinates.position = pos;
+		$_eseecode.coordinates.scale = scale;
 		resetGrid();
 		var element = document.getElementById("setup-grid-coordinates");
 		var gridModes = $_eseecode.coordinates.predefined;
-		var gridIsPredefined = getGridPredefined(posx, posy, xScale, yScale);
+		var gridIsPredefined = getGridPredefined(pos, scale);
 		if (gridIsPredefined >= 0) {
 			// Only change if it is not the one already selected, otherwise we enter a infinite loop
 			if (element.value != gridIsPredefined) {
@@ -2261,13 +2300,23 @@
 			element.value = gridModes.length;
 		}
 	}
-
+	
 	/**
 	 * Change whiteboard axis setup, called by the UI
 	 * @private
-	 * @example changeCoordinatesFromUI()
+	 * @example changeCoordinatesFromUIromUI()
 	 */
 	function changeCoordinatesFromUI() {
+		updateAxisSettingsFromUI();
+		resetCanvas();
+	}
+
+	/**
+	 * Change whiteboard axis setup
+	 * @private
+	 * @example updateAxisSettingsFromUI()
+	 */
+	function updateAxisSettingsFromUI() {
 		var element = document.getElementById("setup-grid-coordinates");
 		var gridModes = $_eseecode.coordinates.predefined;
 		var selectValue = element.value;
@@ -2281,6 +2330,6 @@
 			}
 		}
 		$_eseecode.coordinates.userSelection = selectValue;
-		changeCoordinates(gridModes[selectValue].x, gridModes[selectValue].y, gridModes[selectValue].xScale, gridModes[selectValue].yScale);
+		changeCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
 	}
 

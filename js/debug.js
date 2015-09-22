@@ -427,10 +427,12 @@
 		if (checkbox.checked) {
 			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
 				document.getElementById("toggle-canvas-"+i).checked = true;
+				toggleCanvas(i, true);
 			}
 		} else {
 			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
 				document.getElementById("toggle-canvas-"+i).checked = false;
+				toggleCanvas(i, false);
 			}
 		}
 	}
@@ -442,6 +444,7 @@
 	 * @example highlightCanvas(3)
 	 */
 	function highlightCanvas(id) {
+		id = parseInt(id);
 		unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
 		// Since we destroy it and create it again every time it should always be on top of the canvas stack
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
@@ -472,9 +475,7 @@
 			yScale *= -1;
 		}
 		var yScale = $_eseecode.coordinates.yScale;
-		var posX = targetCanvas.turtle.x;
-		var posY = targetCanvas.turtle.y;
-		drawCursor(context, posX, posY, id);
+		drawCursor(context, targetCanvas.turtle, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
 	}
