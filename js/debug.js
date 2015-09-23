@@ -9,7 +9,7 @@
 	function debugLayers() {
 		var list = [];
 		var listReverse = [];
-		var layer = $_eseecode.canvasArray[0].layerUnder;
+		var layer = $_eseecode.canvasArray["top"];
 		var oldLayer = null;
 		for (var i=0; layer; i++) {
 			list[i] = layer.name;
@@ -17,7 +17,7 @@
 			layer = layer.layerUnder;
 		}
 		// Check that the list is equal downwards and upwards
-		var layer = oldLayer;
+		var layer = $_eseecode.canvasArray["bottom"];
 		for (var i=0; layer; i++) {
 			listReverse[i] = layer.name;
 			oldLayer = layer;
@@ -463,7 +463,7 @@
 		canvas.height = canvasSize;
 		var context = canvas.getContext("2d");
 		if (document.getElementById("setup-grid-enable").checked) {
-			drawGrid(context);
+			context.drawImage($_eseecode.canvasArray["grid"].canvas, 0, 0);
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
 		context.drawImage(targetCanvas.canvas, 0, 0);

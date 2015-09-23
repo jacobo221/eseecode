@@ -1147,20 +1147,27 @@
 			if (param) {
 				param = param[0];
 			}
-			if (!isNumber(param)) {
-				ctx.font = 12+"px Verdana";
-				ctx.fillStyle = '#000000';
-				ctx.fillText(_("variable"),margin,height);
-			}
-			if (!isNumber(param) || param === undefined) {
-				param = "N";
-			}
-			ctx.font = "bold "+(height-margin*2)+"px Verdana";
-      			ctx.fillStyle = '#FFFFFF';
-      			ctx.strokeStyle = '#FFFFFF';
-			ctx.fillText(param,margin,height-margin);
+  			ctx.strokeStyle = '#FFFFFF';
 			ctx.rect(margin,margin,width-margin*2,height-margin*2);
 			ctx.stroke();
+			if (!isNumber(param)) {
+				var fontSize;
+				var text;
+				if (param === undefined || param === "") {
+					fontSize = 20;
+					text = _("New");
+				} else {
+					fontSize = 12;
+					text = _("variable");
+				}
+				ctx.font = fontSize+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(text,margin,height-margin);
+			} else {
+				ctx.font = "bold "+(height-margin*2)+"px Verdana";
+	  			ctx.fillStyle = '#FFFFFF';
+				ctx.fillText(param,margin,height-margin);
+			}
 		},
 		"unsetBold": function(ctx, width, height, param) {
 			var margin = 15;

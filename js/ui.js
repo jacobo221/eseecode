@@ -7,17 +7,17 @@
 	 */
 	function downloadCanvas(link) {
 		var canvas = document.createElement('canvas');
-		canvas.width = $_eseecode.canvasArray[0].canvas.width;
-		canvas.height = $_eseecode.canvasArray[0].canvas.height;
+		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
+		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
 		var ctx = canvas.getContext("2d");
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		if (document.getElementById("setup-grid-enable").checked) {
 			drawGrid(ctx);
 		}
-		var layer = $_eseecode.canvasArray[0];
+		var layer = $_eseecode.canvasArray["grid"];
 		while (layer) {
-			if (layer != $_eseecode.canvasArray[0]) {
+			if (layer != $_eseecode.canvasArray["grid"]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			layer = layer.layerUnder;
@@ -43,7 +43,7 @@
 		encoder.setRepeat(0);
 		encoder.setDelay(0.1);
 		encoder.start();
-		encoder.addFrame($_eseecode.canvasArray[0].canvas.getContext("2d"));
+		encoder.addFrame($_eseecode.canvasArray["grid"].canvas.getContext("2d"));
 		encoder.finish();
 		var finish = new Date().getTime();
 		var secondsPerLayer = (finish - start) / 1000;
@@ -78,16 +78,16 @@
 		var i = 1;
 		var layer = $_eseecode.canvasArray[i]; // We skip first frame which is the grid
 		var canvas = document.createElement('canvas');
-		canvas.width = $_eseecode.canvasArray[0].canvas.width;
-		canvas.height = $_eseecode.canvasArray[0].canvas.height;
+		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
+		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
 		var ctx = canvas.getContext("2d");
 		while (layer) {
 			ctx.fillStyle="#FFFFFF";
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 			if (document.getElementById("setup-grid-enable").checked) {
-				ctx.drawImage($_eseecode.canvasArray[0].canvas,0,0); // draw grid
+				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0); // draw grid
 			}
-			if (layer != $_eseecode.canvasArray[0]) {
+			if (layer != $_eseecode.canvasArray["grid"]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			if (document.getElementById("setup-turtle-enable").checked) {
@@ -201,8 +201,8 @@
 		} else {
 			input.value = _("Accept");
 		}
-		var focusElement;
-		if (config.noSubmit !== true) {
+		var focusElement = div;
+		if (config && config.noSubmit !== true) {
 			focusElement = input;
 			if (!config || !config.focus) {
 				input.autofocus = true;
@@ -1081,8 +1081,8 @@
 	 * @example resetGrid()
 	 */
 	function resetGrid() {
-		var ctx = $_eseecode.canvasArray[0].context;
-		clearCanvas(0);
+		var ctx = $_eseecode.canvasArray["grid"].context;
+		clearCanvas("grid");
 		if (document.getElementById("setup-grid-enable").checked) {
 			drawGrid(ctx);
 		}
@@ -2137,20 +2137,18 @@
 	 */
 	function resetCanvas() {
 		document.getElementById("dialog-debug-execute").innerHTML = "";
-		var turtle = $_eseecode.canvasArray["turtle"]; // must check this before removing $_eseecode.canvasArray
+		// First delete bottom and top references so their layers aren't deleted twice in the for()
+		delete $_eseecode.canvasArray["bottom"];
+		delete $_eseecode.canvasArray["top"];
 		// reset canvas
-  		for(var i=0;i<$_eseecode.canvasArray.length;i++) {
-			removeCanvas(i);
+  		for(key in $_eseecode.canvasArray) {
+			removeCanvas(key);
 		}
 		delete $_eseecode.canvasArray;
 		$_eseecode.canvasArray = [];
-		if (!turtle) {
-			initTurtle();
-		} else {
-			$_eseecode.canvasArray["turtle"] = turtle;
-		}
-		getCanvas(0).canvas.style.zIndex = -1; // canvas-0 is special
-		switchCanvas(1); // canvas-1 is the default
+		initTurtle();
+		getCanvas("grid").canvas.style.zIndex = -1; // canvas-0 is special
+		switchCanvas(0); // canvas-0 is the default
 		updateAxisSettingsFromUI();
 		// reset turtle	
 		moveTurtle(user2systemCoords({x: 0, y: 0}));
@@ -2164,8 +2162,7 @@
 		}
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
-		windowSwitch(0); // window-0 is special
-		windowSwitch(1); // window-1 is the default
+		windowSwitch(0); // window-0 is the default
 	}
 
 	/**
@@ -2332,4 +2329,3 @@
 		$_eseecode.coordinates.userSelection = selectValue;
 		changeCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
 	}
-

@@ -23,6 +23,7 @@
  * Option to go fullscreen
  * Default to landscape view
  * GUI restyled
+ * Layers, windows and repeatCount now start numbering at 0
  * Began work on better execution error messages
  * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
  * Turtle starts at (0,0)

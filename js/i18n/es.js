@@ -303,5 +303,6 @@ $_eseecode.i18n.available.es = {
 	"The code will be triggered as long as the following condition remains true": "El código se ejecutará mientras la siguiente condición sea cierta",
 	"How many times do you want to run the code?": "¿Cuantas veces quieres ejecutar el código?",
 	"In which angle to write the text?": "¿En qué ángulo quieres escribir el texto?",
-	"It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.": "Se estima que tardará %s segundos en generar el archivo para descargar. ¿Deseas continuar?\n\nSi deseas continuar %sclica aquí%s y se paciente y no salgas de la aplicación."
+	"It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.": "Se estima que tardará %s segundos en generar el archivo para descargar. ¿Deseas continuar?\n\nSi deseas continuar %sclica aquí%s y se paciente y no salgas de la aplicación.",
+	"New": "Nueva"
 }

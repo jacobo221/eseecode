@@ -21,11 +21,13 @@
 			div.style.top = $_eseecode.whiteboard.offsetTop;
 			div.style.width = canvasSize+"px";
 			div.style.height = canvasSize+"px";
-			var canvasTopLayer = ($_eseecode.canvasArray[0])? $_eseecode.canvasArray[0].layerUnder : null;
-			if (canvasTopLayer) {
-				div.style.zIndex = Number(canvasTopLayer.div.style.zIndex)+1;
+			if ($_eseecode.canvasArray["top"]) {
+				div.style.zIndex = Number($_eseecode.canvasArray["top"].div.style.zIndex)+1;
+			} else if($_eseecode.canvasArray["grid"]) {
+				div.style.zIndex = Number($_eseecode.canvasArray["grid"].div.style.zIndex)+1;
 			} else {
-				div.style.zIndex = id;
+				// No canvas exist yet, suppose it is grid
+				div.style.zIndex = 0;
 			}
 			var canvas = document.createElement("canvas");
 			canvas.name = id;
@@ -43,7 +45,7 @@
 				style: {color: "#000000", font: "sans-serif", size: 2, alpha: 1, bold: false, italic: false},
 				shaping: false,
 				layerOver: null,
-				layerUnder: canvasTopLayer
+				layerUnder: $_eseecode.canvasArray["top"]
 			};
 			$_eseecode.canvasArray[id].context.lineWidth = $_eseecode.canvasArray[id].style.size;
 			$_eseecode.canvasArray[id].context.fillStyle = $_eseecode.canvasArray[id].style.color;
@@ -60,11 +62,14 @@
 			font += $_eseecode.canvasArray[id].style.font;
 			$_eseecode.canvasArray[id].context.font = font;
 			$_eseecode.canvasArray[id].context.globalAlpha = $_eseecode.canvasArray[id].style.alpha;
-			if (id > 0) { // canvas-0 (grid) doesn't count as top
-				if (canvasTopLayer) {
-					canvasTopLayer.layerOver = $_eseecode.canvasArray[id];
+			if (id >= 0) { // grid/turtle canvas don't count as top or bottom
+				if ($_eseecode.canvasArray["top"]) {
+					$_eseecode.canvasArray["top"].layerOver = $_eseecode.canvasArray[id];
 				}
-				$_eseecode.canvasArray[0].layerUnder = $_eseecode.canvasArray[id]; // newest canvas is always on top
+				$_eseecode.canvasArray["top"] = $_eseecode.canvasArray[id]; // newest canvas is always on top
+				if (!$_eseecode.canvasArray["bottom"]) {
+					$_eseecode.canvasArray["bottom"] = $_eseecode.canvasArray[id];
+				}
 			}
 			div.appendChild(canvas);
 			$_eseecode.whiteboard.appendChild(div);
@@ -105,6 +110,9 @@
 	function removeCanvas(id) {
 		if ($_eseecode.canvasArray[id]) {
 			$_eseecode.whiteboard.removeChild($_eseecode.canvasArray[id].div);
+			if ($_eseecode.canvasArray["top"] == $_eseecode.canvasArray[id]) {
+				$_eseecode.canvasArray["top"] = $_eseecode.canvasArray[id].layerUnder;
+			}
 			delete $_eseecode.canvasArray[id];
 		}
 	}
@@ -331,5 +339,35 @@
 			$_eseecode.currentCanvas.context.closePath();
 		}
 		$_eseecode.currentCanvas.context.stroke();
+	}
+	
+	/**
+	 * Writes text at a specific position
+	 * @private
+	 * @param {String} text Text to write
+	 * @param {Number} posx X coordinate to start writing
+	 * @param {Number} posy Y coordinate to start writing
+	 * @param {Number} [angle=0] Angle in which to write
+	 * @example systemWriteAt("Hello!", 200, 200, 90)
+	 */
+	function systemWriteAt(text, pos, angle) {
+		if (angle === undefined) {
+			angle = 0;
+		}
+		// We must create a new canvas and merge, otherwise if writeAt was called in the middle of a shape it would break the shape
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
+		var tempCanvas = document.createElement("canvas");
+		tempCanvas.width = canvasSize;
+		tempCanvas.height = canvasSize;
+		var tempCtx = tempCanvas.getContext("2d");
+		tempCtx.translate(pos.x, pos.y);
+		tempCtx.rotate(angle*Math.PI/180);
+		// apply style properties to new canvas
+		setColorStyle(undefined,tempCtx);
+		setSizeStyle(undefined,tempCtx);
+		setTextStyle(tempCtx);
+		tempCtx.fillText(text, 0, 0);
+		tempCtx.translate(-pos.x, -pos.y);
+		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
 	

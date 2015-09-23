@@ -859,8 +859,9 @@
 	 * @example line(50, 50)
 	 */
 	function line(destinationx, destinationy) {
-		lineAt($_eseecode.currentCanvas.turtle.x,$_eseecode.currentCanvas.turtle.y,destinationx,destinationy);
-		goTo(destinationx, destinationy);
+		var coords = user2systemCoords({x: destinationx, y: destinationy});
+		systemLineAt($_eseecode.currentCanvas.turtle,coords);
+		moveTurtle(coords);
 	}
 
 	/**
@@ -954,25 +955,8 @@
 	 * @example writeAt("Hello!", 200, 200, 90)
 	 */
 	function writeAt(text, posx, posy, angle) {
-		if (angle === undefined) {
-			angle = 0;
-		}
-		// We must create a new canvas and merge, otherwise if writeAt was called in the middle of a shape it would break the shape
-		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		var tempCanvas = document.createElement("canvas");
-		tempCanvas.width = canvasSize;
-		tempCanvas.height = canvasSize;
-		var tempCtx = tempCanvas.getContext("2d");
-		var systemPos = user2systemCoords({x: posx, y: posy});
-		tempCtx.translate(systemPos.x, systemPos.y);
-		tempCtx.rotate(user2systemAngle(angle)*Math.PI/180);
-		// apply style properties to new canvas
-		setColorStyle(undefined,tempCtx);
-		setSizeStyle(undefined,tempCtx);
-		setTextStyle(tempCtx);
-		tempCtx.fillText(text, 0, 0);
-		tempCtx.translate(-systemPos.x, -systemPos.y);
-		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
+		var coords = user2systemCoords({x: posx, y: posy});
+		systemWriteAt(text, coords, user2systemAngle(angle));
 	}
 
 	/**
@@ -983,7 +967,7 @@
 	 * @example write("Hello!")
 	 */
 	function write(text) {
-		writeAt(text, $_eseecode.currentCanvas.turtle.x, $_eseecode.currentCanvas.turtle.y, $_eseecode.currentCanvas.turtle.angle);
+		systemWriteAt(text, $_eseecode.currentCanvas.turtle, $_eseecode.currentCanvas.turtle.angle);
 	}
 
 	/**
@@ -1191,10 +1175,13 @@
 		if (levels == 0) {
 			return;
 		}
-		if ($_eseecode.canvasArray[0].layerUnder == $_eseecode.currentCanvas) {
-			$_eseecode.canvasArray[0].layerUnder = $_eseecode.currentCanvas.layerUnder;
-		}
 		var layer = $_eseecode.currentCanvas;
+		if ($_eseecode.canvasArray["bottom"] == layer.layerUnder) {
+			$_eseecode.canvasArray["bottom"] = layer;
+		}
+		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant pull() calls
+			$_eseecode.canvasArray["top"] = layer.layerUnder;
+		}
 		while (layer.layerUnder && levels != 0) { // this works also for levels=-1 meaning push to background
 			var oldLayerOver = layer.layerOver;
 			var oldLayerUnder = layer.layerUnder;
@@ -1231,6 +1218,12 @@
 			return;
 		}
 		var layer = $_eseecode.currentCanvas;
+		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
+			$_eseecode.canvasArray["bottom"] = layer.layerOver;
+		}
+		if ($_eseecode.canvasArray["top"].layerUnder == layer) {
+			$_eseecode.canvasArray["top"] = layer;
+		}
 		while (layer.layerOver && levels != 0) { // this works also for levels=-1 meaning push to background
 			var oldLayerOver = layer.layerOver;
 			var oldLayerUnder = layer.layerUnder;
@@ -1247,9 +1240,6 @@
 			}
 			oldLayerOver.layerOver = layer;
 			oldLayerOver.layerUnder = oldLayerUnder;
-			if ($_eseecode.canvasArray[0].layerUnder == oldLayerOver) {
-				$_eseecode.canvasArray[0].layerUnder = $_eseecode.currentCanvas;
-			}
 			levels--;
 		}
 	}
