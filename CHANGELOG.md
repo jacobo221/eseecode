@@ -11,7 +11,7 @@
  * Added a shortcut to run the code: CTRL+R
  * Level1 has no text in blocks no more
  * UI cleanup
- * Download layer images hides/shows cursor and grid based on settings
+ * Download layer images hides/shows guide and grid based on settings
  * Added the possibility to include global variables in the language
  * Breakpoints can now be enabled/disabled
  * Easily convert between if and ifelse

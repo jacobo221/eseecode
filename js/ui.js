@@ -22,7 +22,7 @@
 		}
 		if (document.getElementById("setup-guide-enable").checked) {
 			var id = $_eseecode.currentCanvas.name;
-			$e_drawCursor(ctx, $_eseecode.canvasArray[id].guide, id);
+			$e_drawGuide(ctx, $_eseecode.canvasArray[id].guide, id);
 		}
 		link.href = canvas.toDataURL();
 		var d = new Date();
@@ -88,7 +88,7 @@
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			if (document.getElementById("setup-guide-enable").checked) {
-				$e_drawCursor(ctx, layer.guide, layer.name);
+				$e_drawGuide(ctx, layer.guide, layer.name);
 			}
 			// Watermark
 			ctx.font = "20px Arial";
@@ -813,7 +813,7 @@
 	}
 
 	/**
-	 * Initializes the cursor layer
+	 * Initializes the guide layer
 	 * @private
 	 * @example $e_initGuide()
 	 */
@@ -839,7 +839,7 @@
 	}
 
 	/**
-	 * Hides/Shows the cursor layer
+	 * Hides/Shows the guide layer
 	 * @private
 	 * @example $e_toggleGuide()
 	 */
@@ -914,7 +914,7 @@
 	}
 
 	/**
-	 * Resets the cursor in a layer
+	 * Resets the guide in a layer
 	 * @private
 	 * @param {Number} [id] Layer id. If unset use the currently active layer
 	 * @param {Number} [canvas] Canvas to use. If unset use the "guide" layer
@@ -1003,14 +1003,14 @@
 	}
 
 	/**
-	 * Draws a cursor
+	 * Draws a guide
 	 * @private
-	 * @param {Object} context Context object where to draw the cursor
-	 * @param {Array} pos Coordinates of the cursor
+	 * @param {Object} context Context object where to draw the guide
+	 * @param {Array} pos Coordinates of the guide
 	 * @param {Number} id Id of the layer
-	 * @example $e_drawCursor(ctx, {x: 200, y: 200}, id)
+	 * @example $e_drawGuide(ctx, {x: 200, y: 200}, id)
 	 */
-	function $e_drawCursor(context, pos, id) {
+	function $e_drawGuide(context, pos, id) {
 		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
 		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
 		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
@@ -2076,7 +2076,7 @@
 	}
 
 	/**
-	 * Writes in the write console at the position where the cursor is the instruction clicked in the dialgo window
+	 * Writes in the write console at the position where the guide is the instruction clicked in the dialgo window
 	 * @private
 	 * @param {!Object} event Event
 	 * @example div.addEventListener("click", $e_writeText, false)

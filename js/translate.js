@@ -116,7 +116,7 @@
 		document.getElementById("dialog-window").title = _("Interactive window");
 		document.getElementById("dialog-debug").title = _("Debug dialog");
 		document.getElementById("dialog-debug-layers-title").innerHTML = '<span style="position:absolute;left:0px;font-weight:normal;font-size:small"><input type="checkbox" onclick="$e_debugSelectAllNoneLayers(this)" style="float:left" checked /> '+_("All/None")+'</span>'+_("Layers")+":";
-		document.getElementById("dialog-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its cursor\n * toggle layer visibility\n * set the active layer\n * run commands");
+		document.getElementById("dialog-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands");
 		document.getElementById("dialog-debug-analyzer-title").innerHTML = _("Analyzer")+":";
 		document.getElementById("dialog-debug-analyzer-help").title = _("Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops");
 		document.getElementById("dialog-debug-execute-title").innerHTML = _("Execution")+":";

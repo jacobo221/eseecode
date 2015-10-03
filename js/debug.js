@@ -475,7 +475,7 @@
 			yScale *= -1;
 		}
 		var yScale = $_eseecode.coordinates.yScale;
-		$e_drawCursor(context, targetCanvas.guide, id);
+		$e_drawGuide(context, targetCanvas.guide, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
 	}
