@@ -41,7 +41,7 @@
 				canvas: canvas,
 				context: context,
 				div: div,
-				turtle: {x: origin.x, y: origin.y, angle: 0},
+				guide: {x: origin.x, y: origin.y, angle: 0},
 				style: {color: "#000000", font: "sans-serif", size: 2, alpha: 1, bold: false, italic: false},
 				shaping: false,
 				layerOver: null,
@@ -62,7 +62,7 @@
 			font += $_eseecode.canvasArray[id].style.font;
 			$_eseecode.canvasArray[id].context.font = font;
 			$_eseecode.canvasArray[id].context.globalAlpha = $_eseecode.canvasArray[id].style.alpha;
-			if (id >= 0) { // grid/turtle canvas don't count as top or bottom
+			if (id >= 0) { // grid/guide canvas don't count as top or bottom
 				if ($_eseecode.canvasArray["top"]) {
 					$_eseecode.canvasArray["top"].layerOver = $_eseecode.canvasArray[id];
 				}
@@ -125,7 +125,7 @@
 	 */
 	function $e_switchCanvas(id) {
 		$_eseecode.currentCanvas = $e_getCanvas(id);
-		$e_resetTurtle(); // switch to the apropiate turtle
+		$e_resetGuide(); // switch to the apropiate guide
 		return $_eseecode.currentCanvas;
 	}
 
@@ -296,30 +296,30 @@
 	}
 	
 	/**
-	 * Moves the turtle to the specified position
+	 * Moves the guide to the specified position
 	 * @private
 	 * @param {Number} pos Coordinate
-	 * @example $e_moveTurtle({x: 50, y: 50})
+	 * @example $e_moveGuide({x: 50, y: 50})
 	 */
-	function $e_moveTurtle(pos) {
-		$_eseecode.currentCanvas.turtle.x = Math.round(pos.x); // Make sure the value is integer
-		$_eseecode.currentCanvas.turtle.y = Math.round(pos.y); // Make sure the value is integer
-		$e_resetTurtle();
+	function $e_moveGuide(pos) {
+		$_eseecode.currentCanvas.guide.x = Math.round(pos.x); // Make sure the value is integer
+		$_eseecode.currentCanvas.guide.y = Math.round(pos.y); // Make sure the value is integer
+		$e_resetGuide();
 	}
 	
 	/**
-	 * Turns the turtle to the specified angle
+	 * Turns the guide to the specified angle
 	 * @private
 	 * @param {Number} angle Angle
-	 * @example $e_setAngleTurtle(90)
+	 * @example $e_setAngleGuide(90)
 	 */
-	function $e_setAngleTurtle(angle) {
-		$_eseecode.currentCanvas.turtle.angle = angle;
-		$_eseecode.currentCanvas.turtle.angle %= 360;
-		if ($_eseecode.currentCanvas.turtle.angle < 0) {
-			$_eseecode.currentCanvas.turtle.angle += 360;
+	function $e_setAngleGuide(angle) {
+		$_eseecode.currentCanvas.guide.angle = angle;
+		$_eseecode.currentCanvas.guide.angle %= 360;
+		if ($_eseecode.currentCanvas.guide.angle < 0) {
+			$_eseecode.currentCanvas.guide.angle += 360;
 		}
-		$e_resetTurtle();
+		$e_resetGuide();
 	}
 	
 	/**

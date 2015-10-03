@@ -30,11 +30,11 @@
  * Layers, windows and repeatCount now start numbering at 0
  * Began work on better execution error messages
  * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
- * Turtle starts at (0,0)
+ * Guide starts at (0,0)
  * lineAt and writeAt icons are now dynamic
  * Better icon for if/ifelse
  * New animateLayers() instruction to ease creating animations from Level2
- * Turtle icon slightly redesigned
+ * Guide icon slightly redesigned
  * Resetting the UI and switching the console level always leave the dialog in Pieces mode
  * Wrapped all functions under the $e_ prefix
  * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
@@ -89,7 +89,7 @@
  * Synthax and execution errors handling and highlighting
  * Introduced the instruction "repeat"
  * Code now is run in persistive state so real interactive applications can now be developped
- * Debug can highlight a single layer. Debug also points where the turtle is in a layer if it is outbouds
+ * Debug can highlight a single layer. Debug also points where the guide is in a layer if it is outbouds
 
 ## 1.2 (2014-05-23)
 
@@ -134,7 +134,7 @@
 
 ## 0.3 (2014-02-03)
 
- * Debug system to list layers, their order, show their turtle and run commands (independently of the code)
+ * Debug system to list layers, their order, show their guide and run commands (independently of the code)
  * New Window API to create interactive applications
  * Can now maximize/restore the console
 

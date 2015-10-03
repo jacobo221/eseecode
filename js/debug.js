@@ -455,7 +455,7 @@
 		div.style.top = $_eseecode.whiteboard.offsetTop;
 		div.style.width = canvasSize+"px";
 		div.style.height = canvasSize+"px";
-		div.style.zIndex = Number($_eseecode.canvasArray["turtle"].div.style.zIndex)+1;
+		div.style.zIndex = Number($_eseecode.canvasArray["guide"].div.style.zIndex)+1;
 		div.style.backgroundColor = "#FFFFFF";
 		var canvas = document.createElement("canvas");
 		canvas.className = "canvas";
@@ -475,7 +475,7 @@
 			yScale *= -1;
 		}
 		var yScale = $_eseecode.coordinates.yScale;
-		$e_drawCursor(context, targetCanvas.turtle, id);
+		$e_drawCursor(context, targetCanvas.guide, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
 	}

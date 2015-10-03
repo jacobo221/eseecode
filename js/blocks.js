@@ -256,7 +256,6 @@
 				$e_execute(true);
 			}
 		}
-		console.log(action)
 	}
 
 	/**

@@ -788,14 +788,14 @@
 	 * @example getX()
 	 */
 	function getX(id) {
-		var turtle;
+		var guide;
 		if (typeof id === "undefined") {
-			turtle = $_eseecode.currentCanvas.turtle;
+			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			turtle = $_eseecode.canvasArray[id].turtle;
+			guide = $_eseecode.canvasArray[id].guide;
 		}
-		turtle = $e_system2userCoords(turtle);
-		return turtle.x;
+		guide = $e_system2userCoords(guide);
+		return guide.x;
 	}
 
 	/**
@@ -807,14 +807,14 @@
 	 * @example getY()
 	 */
 	function getY(id) {
-		var turtle;
+		var guide;
 		if (typeof id === "undefined") {
-			turtle = $_eseecode.currentCanvas.turtle;
+			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			turtle = $_eseecode.canvasArray[id].turtle;
+			guide = $_eseecode.canvasArray[id].guide;
 		}
-		turtle = $e_system2userCoords(turtle);
-		return turtle.y;
+		guide = $e_system2userCoords(guide);
+		return guide.y;
 	}
 
 	/**
@@ -827,13 +827,13 @@
 	 * @example getAngle()
 	 */
 	function getAngle(id) {
-		var turtle;
+		var guide;
 		if (typeof id === "undefined") {
-			turtle = $_eseecode.currentCanvas.turtle;
+			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			turtle = $_eseecode.canvasArray[id].turtle;
+			guide = $_eseecode.canvasArray[id].guide;
 		}
-		return $e_system2userAngle(turtle.angle);
+		return $e_system2userAngle(guide.angle);
 	}
 
 	/**
@@ -860,8 +860,8 @@
 	 */
 	function line(destinationx, destinationy) {
 		var coords = $e_user2systemCoords({x: destinationx, y: destinationy});
-		$e_systemLineAt($_eseecode.currentCanvas.turtle,coords);
-		$e_moveTurtle(coords);
+		$e_systemLineAt($_eseecode.currentCanvas.guide,coords);
+		$e_moveGuide(coords);
 	}
 
 	/**
@@ -876,10 +876,10 @@
 			throw new codeError("forward","Invalid parameter in forward() call");
 		}
 		var pos = {};
-		pos.x = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
-		pos.y = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
-		$e_systemLineAt($_eseecode.currentCanvas.turtle, pos);
-		$e_moveTurtle(pos);
+		pos.x = $_eseecode.currentCanvas.guide.x+pixels*Math.cos($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
+		pos.y = $_eseecode.currentCanvas.guide.y+pixels*Math.sin($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
+		$e_systemLineAt($_eseecode.currentCanvas.guide, pos);
+		$e_moveGuide(pos);
 	}
 
 	/**
@@ -914,13 +914,13 @@
 			move = -1;
 		}
 		if (axis == 1) {
-			startradians = ($_eseecode.currentCanvas.turtle.angle+90*move)*Math.PI/180;	
-			posx = $_eseecode.currentCanvas.turtle.x+radius*Math.cos(($_eseecode.currentCanvas.turtle.angle-90*move)*Math.PI/180);
-			posy = $_eseecode.currentCanvas.turtle.y+radius*Math.sin(($_eseecode.currentCanvas.turtle.angle-90*move)*Math.PI/180);
+			startradians = ($_eseecode.currentCanvas.guide.angle+90*move)*Math.PI/180;	
+			posx = $_eseecode.currentCanvas.guide.x+radius*Math.cos(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
+			posy = $_eseecode.currentCanvas.guide.y+radius*Math.sin(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
 		} else {
-			startradians = $_eseecode.currentCanvas.turtle.angle*Math.PI/180;
-			posx = $_eseecode.currentCanvas.turtle.x;
-			posy = $_eseecode.currentCanvas.turtle.y;
+			startradians = $_eseecode.currentCanvas.guide.angle*Math.PI/180;
+			posx = $_eseecode.currentCanvas.guide.x;
+			posy = $_eseecode.currentCanvas.guide.y;
 		}
 		endradians = startradians + degrees*Math.PI/180;
 		if (!$_eseecode.currentCanvas.shaping) {
@@ -934,14 +934,14 @@
 
 		if (axis == 1) {
 			var COx, COy; // vector from center to origin
-			COx = $_eseecode.currentCanvas.turtle.x-posx;
-			COy = $_eseecode.currentCanvas.turtle.y-posy;
+			COx = $_eseecode.currentCanvas.guide.x-posx;
+			COy = $_eseecode.currentCanvas.guide.y-posy;
 			var rotateAngle = degrees*Math.PI/180;
-			$_eseecode.currentCanvas.turtle.x = posx+Math.cos(rotateAngle)*COx-Math.sin(rotateAngle)*COy;
-			$_eseecode.currentCanvas.turtle.y = posy+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
+			$_eseecode.currentCanvas.guide.x = posx+Math.cos(rotateAngle)*COx-Math.sin(rotateAngle)*COy;
+			$_eseecode.currentCanvas.guide.y = posy+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 		}
-		$_eseecode.currentCanvas.turtle.angle += degrees;
-		$e_resetTurtle();
+		$_eseecode.currentCanvas.guide.angle += degrees;
+		$e_resetGuide();
 	}
 
 	/**
@@ -967,7 +967,7 @@
 	 * @example write("Hello!")
 	 */
 	function write(text) {
-		$e_systemWriteAt(text, $_eseecode.currentCanvas.turtle, $_eseecode.currentCanvas.turtle.angle);
+		$e_systemWriteAt(text, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.guide.angle);
 	}
 
 	/**
@@ -979,7 +979,7 @@
 	function beginShape() {
 		$_eseecode.currentCanvas.shaping = true;
 		$_eseecode.currentCanvas.context.beginPath();
-		var pos = $_eseecode.currentCanvas.turtle; // necessary to mark the starting point in shapes in case the turtle has never been moved before
+		var pos = $_eseecode.currentCanvas.guide; // necessary to mark the starting point in shapes in case the guide has never been moved before
 		$_eseecode.currentCanvas.context.moveTo(pos.x, pos.y);
 	}
 
@@ -1003,7 +1003,7 @@
 	 * @example turnRight(90)
 	 */
 	function turnRight(angle) {
-		$e_setAngleTurtle($_eseecode.currentCanvas.turtle.angle+angle);
+		$e_setAngleGuide($_eseecode.currentCanvas.guide.angle+angle);
 	}
 
 	/**
@@ -1014,7 +1014,7 @@
 	 * @example turnLeft(90)
 	 */
 	function turnLeft(angle) {
-		$e_setAngleTurtle($_eseecode.currentCanvas.turtle.angle-angle);
+		$e_setAngleGuide($_eseecode.currentCanvas.guide.angle-angle);
 	}
 
 	/**
@@ -1029,7 +1029,7 @@
 		if (angle === undefined) {
 			angle = 0;
 		}
-		$e_setAngleTurtle($e_user2systemAngle(angle));
+		$e_setAngleGuide($e_user2systemAngle(angle));
 	}
 
 	/**
@@ -1070,7 +1070,7 @@
 	 */
 	function goTo(posx, posy) {
 		var pos = $e_user2systemCoords({x: posx, y: posy});
-		$e_moveTurtle(pos);
+		$e_moveGuide(pos);
 	}
 
 	/**
@@ -1080,7 +1080,7 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		$e_moveTurtle({x: getLayerWidth()/2, y: getLayerHeight()/2});
+		$e_moveGuide({x: getLayerWidth()/2, y: getLayerHeight()/2});
 	}
 
 	/**
@@ -1090,7 +1090,7 @@
 	 * @example goToUpLeft()
 	 */
 	function goToUpLeft() {
-		$e_moveTurtle({x: 0, y: 0});
+		$e_moveGuide({x: 0, y: 0});
 	}
 
 	/**
@@ -1100,7 +1100,7 @@
 	 * @example goToUpRight()
 	 */
 	function goToUpRight() {
-		$e_moveTurtle({x: getLayerWidth(), y: 0});
+		$e_moveGuide({x: getLayerWidth(), y: 0});
 	}
 
 	/**
@@ -1110,7 +1110,7 @@
 	 * @example goToLowLeft()
 	 */
 	function goToLowLeft() {
-		$e_moveTurtle({x: 0, y: getLayerHeight()});
+		$e_moveGuide({x: 0, y: getLayerHeight()});
 	}
 
 	/**
@@ -1120,7 +1120,7 @@
 	 * @example goToLowRight()
 	 */
 	function goToLowRight() {
-		$e_moveTurtle({x: getLayerWidth(), y: getLayerHeight()});
+		$e_moveGuide({x: getLayerWidth(), y: getLayerHeight()});
 	}
 
 	/**
@@ -1364,7 +1364,7 @@
 		var img = new Image();
 		img.src = imageClone;
 		canvas.context.drawImage(img, 0, 0);
-		canvas.turtle = $e_clone(currentCanvas.turtle);
+		canvas.guide = $e_clone(currentCanvas.guide);
 		canvas.style = $e_clone(currentCanvas.style);
 		canvas.shaping = $e_clone(currentCanvas.shaping);
 		$e_switchCanvas(currentCanvas.name);

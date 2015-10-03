@@ -20,9 +20,9 @@
 			ctx.drawImage(layer.canvas,0,0);
 			layer = layer.layerOver;
 		}
-		if (document.getElementById("setup-turtle-enable").checked) {
+		if (document.getElementById("setup-guide-enable").checked) {
 			var id = $_eseecode.currentCanvas.name;
-			$e_drawCursor(ctx, $_eseecode.canvasArray[id].turtle, id);
+			$e_drawCursor(ctx, $_eseecode.canvasArray[id].guide, id);
 		}
 		link.href = canvas.toDataURL();
 		var d = new Date();
@@ -87,8 +87,8 @@
 			if (layer != $_eseecode.canvasArray["grid"]) {
 				ctx.drawImage(layer.canvas,0,0);
 			}
-			if (document.getElementById("setup-turtle-enable").checked) {
-				$e_drawCursor(ctx, layer.turtle, layer.name);
+			if (document.getElementById("setup-guide-enable").checked) {
+				$e_drawCursor(ctx, layer.guide, layer.name);
 			}
 			// Watermark
 			ctx.font = "20px Arial";
@@ -815,11 +815,11 @@
 	/**
 	 * Initializes the cursor layer
 	 * @private
-	 * @example $e_initTurtle()
+	 * @example $e_initGuide()
 	 */
-	function $e_initTurtle() {
+	function $e_initGuide() {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		var name = "turtle";
+		var name = "guide";
 		var div = document.createElement("div");
 		div.id = "canvas-div-"+name;
 		div.className = "canvas-div";
@@ -829,7 +829,7 @@
 		div.style.height = canvasSize+"px";
 		div.style.zIndex = 9999;
 		var canvas = document.createElement("canvas");
-		canvas.id = "canvas-turtle";
+		canvas.id = "canvas-guide";
 		canvas.className = "canvas";
 		canvas.width = canvasSize;
 		canvas.height = canvasSize;
@@ -841,16 +841,16 @@
 	/**
 	 * Hides/Shows the cursor layer
 	 * @private
-	 * @example $e_toggleTurtle()
+	 * @example $e_toggleGuide()
 	 */
-	function $e_toggleTurtle() {
-		var turtleCanvas = $_eseecode.canvasArray["turtle"];
-		if (turtleCanvas.visible) {
-			turtleCanvas.visible = false;
-			turtleCanvas.div.style.display = "none";
+	function $e_toggleGuide() {
+		var guideCanvas = $_eseecode.canvasArray["guide"];
+		if (guideCanvas.visible) {
+			guideCanvas.visible = false;
+			guideCanvas.div.style.display = "none";
 		} else {
-			turtleCanvas.visible = true;
-			turtleCanvas.div.style.display = "block";
+			guideCanvas.visible = true;
+			guideCanvas.div.style.display = "block";
 		}
 	}
 	
@@ -917,18 +917,18 @@
 	 * Resets the cursor in a layer
 	 * @private
 	 * @param {Number} [id] Layer id. If unset use the currently active layer
-	 * @param {Number} [canvas] Canvas to use. If unset use the "turtle" layer
-	 * @example $e_resetTurtle()
+	 * @param {Number} [canvas] Canvas to use. If unset use the "guide" layer
+	 * @example $e_resetGuide()
 	 */
-	function $e_resetTurtle(id, canvas) {
+	function $e_resetGuide(id, canvas) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
 		var size = 20;
-		var org = targetCanvas.turtle;
-		var angle = targetCanvas.turtle.angle;
+		var org = targetCanvas.guide;
+		var angle = targetCanvas.guide.angle;
 		var frontx = org.x+size*Math.cos(angle*Math.PI/180);
 		var fronty = org.y+size*Math.sin(angle*Math.PI/180);
 		var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
@@ -936,16 +936,16 @@
 		var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
 		var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
 		if (canvas === undefined) {
-			if (!$_eseecode.canvasArray["turtle"].visible) {
+			if (!$_eseecode.canvasArray["guide"].visible) {
 				return;
 			}
-			canvas = $_eseecode.canvasArray["turtle"].canvas;
+			canvas = $_eseecode.canvasArray["guide"].canvas;
 		}
 		var ctx = canvas.getContext("2d");
 		canvas.width = canvasSize;
-		// clear turtle
+		// clear guide
 		ctx.clearRect(0,0,canvasSize,canvasSize);
-		// draw turtle
+		// draw guide
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = "#888888";
 		var gradient = ctx.createRadialGradient(frontx,fronty,size/1.2,frontx,fronty,size/10);
@@ -1037,7 +1037,7 @@
 			var rightx = org.x+size/2*Math.cos(angle-Math.PI/3);
 			var righty = org.y+size/2*Math.sin(angle-Math.PI/3);
 			var ctx = context;
-			// draw turtle
+			// draw guide
 			ctx.lineWidth = 1;
 			ctx.strokeStyle = "#FF5555";
 			ctx.fillStyle = "#FF9999";
@@ -1065,12 +1065,12 @@
 			ctx.arc(org.x, org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
 			ctx.stroke();
 		} else {
-			var turtleCanvas = document.createElement("canvas");
-			turtleCanvas.className = "canvas";
-			turtleCanvas.width = canvasWidth;
-			turtleCanvas.height = canvasHeight;
-			$e_resetTurtle(id, turtleCanvas);
-			context.drawImage(turtleCanvas, 0, 0);
+			var guideCanvas = document.createElement("canvas");
+			guideCanvas.className = "canvas";
+			guideCanvas.width = canvasWidth;
+			guideCanvas.height = canvasHeight;
+			$e_resetGuide(id, guideCanvas);
+			context.drawImage(guideCanvas, 0, 0);
 		}
 	}
 
@@ -2157,13 +2157,13 @@
 		}
 		delete $_eseecode.canvasArray;
 		$_eseecode.canvasArray = [];
-		$e_initTurtle();
+		$e_initGuide();
 		$e_getCanvas("grid").canvas.style.zIndex = -1; // canvas-0 is special
 		$e_switchCanvas(0); // canvas-0 is the default
 		$e_changeAxisBasedOnUISettings();
-		// reset turtle	
-		$e_moveTurtle($e_user2systemCoords({x: 0, y: 0}));
-		$e_setAngleTurtle($e_user2systemAngle(0));
+		// reset guide	
+		$e_moveGuide($e_user2systemCoords({x: 0, y: 0}));
+		$e_setAngleGuide($e_user2systemAngle(0));
 		// reset windows
   		for(var i=0;i<$_eseecode.windowsArray.length;i++) {
 			if ($_eseecode.windowsArray[i]) {

@@ -127,9 +127,9 @@
 		document.getElementById("setup-grid-enable").title = _("Toggle grid");
 		document.getElementById("setup-grid-step-title").innerHTML = _("Grid")+": ";
 		document.getElementById("setup-grid-step").title = _("Grid inter-line space");
-		document.getElementById("setup-turtle-enable-title").innerHTML = _("Cursor")+":";
-		document.getElementById("setup-turtle-enable-label").innerHTML = _("Toggle cursor");
-		document.getElementById("setup-turtle-enable").title = _("Toggle cursor");
+		document.getElementById("setup-guide-enable-title").innerHTML = _("Cursor")+":";
+		document.getElementById("setup-guide-enable-label").innerHTML = _("Toggle cursor");
+		document.getElementById("setup-guide-enable").title = _("Toggle cursor");
 		document.getElementById("setup-downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
 		document.getElementById("setup-downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
 		document.getElementById("setup-downloadLayers-interval-title").innerHTML = _("Interval (in msecs)")+": ";
