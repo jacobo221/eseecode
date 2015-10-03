@@ -65,7 +65,7 @@
 			return;
 		}
 		$e_unhighlight();
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var div = event.target;
 		if (div.tagName !== "DIV") {
 			if (div.id.match(/^div-blankspan-/)) {
@@ -161,7 +161,7 @@
 		var div = $_eseecode.session.floatingBlock.div;
 		var divId = div.id;
 		var action;
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var pos = $e_eventPosition(event);
 		if (level == "level1" ||
 		    (pos.x > consoleDiv.offsetLeft &&
@@ -219,7 +219,7 @@
 						$e_paintBlock(div);
 					}
 					setTimeout(function() {
-						var blockHeight = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].name, div).height;
+						var blockHeight = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].id, div).height;
 						if (position*blockHeight < consoleDiv.scrollTop) {
 							$e_smoothScroll(consoleDiv, position*blockHeight-10);
 						} else if ((position+1)*blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
@@ -332,7 +332,7 @@
 		if (!event) {  // firefox doesn't know window.event
 			return;
 		}
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var div = $_eseecode.session.floatingBlock.div;
 		var pos = $e_eventPosition(event);
 		div.style.left = pos.x*1 - $_eseecode.setup.blockWidth[level]/2 +"px";
@@ -406,7 +406,7 @@
 	 * @example $e_createSubblocks(block)
 	 */
 	function $e_createSubblocks(blockDiv) {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
 		if (instruction.block) {
 			var oldChild = blockDiv.firstChild.nextSibling; // The first element inside a BlockDiv is its span title, so we can safely skip it
@@ -582,7 +582,7 @@
 			input.value = blockAdd;
 			input.type = "hidden";
 			msgDiv.appendChild(input);
-			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 			if (instruction.convert) {
 				var convertDiv = document.createElement("div");
 				var span = document.createElement("span");
@@ -1010,7 +1010,7 @@
 				var newDiv = div.cloneNode(true);
 				var newDivId = $e_newDivId();
 				newDiv.setAttribute("id", newDivId);	
-				$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].name, newDiv, newInstructionId)
+				$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].id, newDiv, newInstructionId)
 				instructionId = newInstructionId;
 				newDiv.setAttribute("instructionSetId",instructionId);
 				$e_createSubblocks(newDiv);
@@ -1151,7 +1151,7 @@
 	 * @example $e_paintBlock(document.getElementById("div-123123123"), false, true)
 	 */
 	function $e_paintBlock(div, dialog, skipRecursiveRepaint) {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var color = "transparent"; // default color
 		var searchCategoryForColor = instruction.category;
@@ -1338,7 +1338,7 @@
 		} else {
 			$_eseecode.session.blocksUndo[0]--;
 		}
-		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].name == "level1") {
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
 			$e_execute();
 		}
 	}

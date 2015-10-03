@@ -263,7 +263,7 @@
 						var level;
 						for (var i=0;i<$_eseecode.modes.console.length;i++) {
 							if ($_eseecode.modes.console[i].div == "write") {
-								level = $_eseecode.modes.console[i].name;
+								level = $_eseecode.modes.console[i].id;
 							}
 						}
 						code = program.makeWrite(level,"","\t");
@@ -311,7 +311,7 @@
 		}
 		document.getElementById("eseecode").removeChild(script);
 		// if debug is open refresh it
-		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name == "debug") {
+		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebug();
 		}
 	}

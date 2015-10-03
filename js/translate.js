@@ -85,10 +85,10 @@
 	 */
 	function $e_addStaticText() {
 		for (var i=1; i<$_eseecode.modes.console.length; i++) {
-			var levelName = $_eseecode.modes.console[i].name;
-			var levelText = levelName.substr(0,1).toUpperCase()+levelName.substr(1);
-			document.getElementById("console-tabs-level"+i).innerHTML = _(levelText);
-			document.getElementById("console-tabs-level"+i).title = _("Double click to maximize/restore");
+			var levelId = $_eseecode.modes.console[i].id;
+			var levelText = $_eseecode.modes.console[i].name;
+			document.getElementById("console-tabs-"+levelId).innerHTML = _(levelText);
+			document.getElementById("console-tabs-"+levelId).title = _("Double click to maximize/restore");
 		}
 		document.getElementById("language-title").innerHTML = _("Select language")+": ";
 		document.getElementById("language-select").title = _("Select language");
@@ -106,6 +106,7 @@
 		document.getElementById("button-clear").title = _("Clear");
 		document.getElementById("button-reset").title = _("Reset");
 		document.getElementById("button-redo").title = _("Redo");
+		document.getElementById("console-tabs-title").innerHTML = _("Views")+": ";
 		document.getElementById("dialog-tabs-setup").title = _("Setup");
 		document.getElementById("dialog-tabs-debug").innerHTML = _("Debug");
 		document.getElementById("dialog-tabs-window").innerHTML = _("Window");

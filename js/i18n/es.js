@@ -305,5 +305,10 @@ $_eseecode.i18n.available.es = {
 	"In which angle to write the text?": "¿En qué ángulo quieres escribir el texto?",
 	"It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.": "Se estima que tardará %s segundos en generar el archivo para descargar. ¿Deseas continuar?\n\nSi deseas continuar %sclica aquí%s y se paciente y no salgas de la aplicación.",
 	"New": "Nueva",
-	"Where is the value we want to check?": "Donde está el valor que queremos comprobar?"
+	"Where is the value we want to check?": "Donde está el valor que queremos comprobar?",
+	"Touch": "Toca",
+	"Drag": "Arrastra",
+	"Build": "Construye",
+	"Code": "Código",
+	"Views": "Vistas"
 }

@@ -6,7 +6,7 @@
 	 * @example $e_blocks2write()
 	 */
 	function $e_blocks2write() {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var code = $e_blocks2code(document.getElementById("console-blocks").firstChild);
 		var cleanCode;
 		if (eseecodeLanguage) {
@@ -79,7 +79,7 @@
 		var level;
 		for (var i=0;i<$_eseecode.modes.console.length;i++) {
 			if ($_eseecode.modes.console[i].div == "write") {
-				level = $_eseecode.modes.console[i].name;
+				level = $_eseecode.modes.console[i].id;
 			}
 		}
 		var userCode = program.makeWrite(level,"","\t",true);

@@ -136,6 +136,12 @@
 		background-color: inherit;
 		color: #123456;
 	}
+	span.tab-title {
+		float: left;
+		color: #FFFFFF;
+		font-weight: bold;
+		padding: 5px 5px 0px 10px;
+	}
 	#body {
 		width: inherit;
 		height: auto;
@@ -272,7 +278,7 @@
 	}
 	#eseecode {
 		width: 100%;
-		min-width: 980px; /* iPad / Android default layout viewport */
+		min-width: 1020px; /* iPad / Android default layout viewport */
 		height: 100%;
 		min-height: 500px;
 		color: inherit;

@@ -7,7 +7,6 @@
 	 * @example API_downloadCode()
 	 */
 	function API_downloadCode() {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var code;
 		if (mode == "blocks") {
@@ -33,7 +32,7 @@
 		if (!$e_resetUI(true)) {
 			return;
 		}
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var program;
 		// Always start by trying to load the code into the current level

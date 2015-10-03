@@ -283,8 +283,8 @@
 				} else {
 					for (var i=1; i<$_eseecode.modes.console.length; i++) {
 						var levelName = $_eseecode.modes.console[i].name.toLowerCase();
-						if (levelName == newLevel ||
-						    _(levelName.substr(0,1).toUpperCase()+levelName.substr(1)).toLowerCase() == newLevel) {
+						var levelId = $_eseecode.modes.console[i].id.toLowerCase();
+						if (levelName == newLevel || levelId == newLevel) {
 							id = i;
 							break;
 						}
@@ -297,7 +297,7 @@
 		}
 		if (!$e_isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.console.length; i++) {
-				if ($_eseecode.modes.console[i].name == id) {
+				if ($_eseecode.modes.console[i].id == id) {
 					id = i;
 					break;
 				}
@@ -324,7 +324,7 @@
 			}
 		}
 		// Save scroll position
-		var oldHeight = $_eseecode.setup.blockHeight[$_eseecode.modes.console[oldMode].name];
+		var oldHeight = $_eseecode.setup.blockHeight[$_eseecode.modes.console[oldMode].id];
 		var oldConsoleDiv = document.getElementById("console-"+$_eseecode.modes.console[oldMode].div);
 		var oldScrollTop;
 		if ($_eseecode.modes.console[oldMode].div == "write") {
@@ -340,7 +340,7 @@
 		}
 		document.getElementById("console-"+$_eseecode.modes.console[id].div).style.display = "block";
 		// Continue switching console
-		var level = $_eseecode.modes.console[id].name;
+		var level = $_eseecode.modes.console[id].id;
 		if ($_eseecode.modes.console[oldMode].div == "blocks") {
 			if ($_eseecode.modes.console[id].div == "write") {
 				if (document.getElementById("console-blocks").firstChild.id == "console-blocks-tip") {
@@ -366,7 +366,7 @@
 			}
 		}
 		// Scroll to the same position in new console
-		var newHeight = $_eseecode.setup.blockHeight[$_eseecode.modes.console[id].name];
+		var newHeight = $_eseecode.setup.blockHeight[$_eseecode.modes.console[id].id];
 		var newConsoleDiv = document.getElementById("console-"+$_eseecode.modes.console[id].div);
 		var scrollTop = oldScrollTop * newHeight/oldHeight;
 		if ($_eseecode.modes.console[id].div == "write") {
@@ -382,7 +382,7 @@
 		}
 		/*
 		// Only change the dialog window if it is set to the blocks/code tab (not if it is windows, debug or setup)
-		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.indexOf("level") == 0) {
+		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id.indexOf("level") == 0) {
 			$e_switchDialogMode(id);
 		}
 		*/
@@ -417,7 +417,7 @@
 		}
 		if (!$e_isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.dialog.length; i++) {
-				if ($_eseecode.modes.dialog[i].name == id) {
+				if ($_eseecode.modes.dialog[i].id == id) {
 					id = i;
 					break;
 				}
@@ -435,12 +435,12 @@
 			$_eseecode.modes.dialog[id].tab.className += " tab-active";
 		}
 		if ($_eseecode.modes.dialog[id].div == "blocks") {
-			$e_initDialogBlocks($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
+			$e_initDialogBlocks($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
 		} else if ($_eseecode.modes.dialog[id].div == "write") {
-			$e_initDialogWrite($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
+			$e_initDialogWrite($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
 		}
 		var debugCommand = document.getElementById("dialog-debug-command-form");
-		if ($_eseecode.modes.dialog[id].name == "debug") {
+		if ($_eseecode.modes.dialog[id].id == "debug") {
 			$e_resetDebug();
 			debugCommand.style.visibility = "visible";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
@@ -456,7 +456,7 @@
 		var width = canvas.width;
 		var height = canvas.height;
 		canvas.width = width;
-		if ($_eseecode.modes.dialog[id].name == "setup") {
+		if ($_eseecode.modes.dialog[id].id == "setup") {
 			ctx.strokeStyle = "#000000";
 		} else {
 			ctx.strokeStyle = "#FFFFFF";
@@ -1403,16 +1403,16 @@
 		}
 		// init $_eseecode.modes array with div objects
 		for (var i=1;i<$_eseecode.modes.console.length;i++) {
-			var modeName = $_eseecode.modes.console[i].name;
-			$_eseecode.modes.console[i].tab = document.getElementById("console-tabs-"+modeName);
+			var modeId = $_eseecode.modes.console[i].id;
+			$_eseecode.modes.console[i].tab = document.getElementById("console-tabs-"+modeId);
 		}
 		for (var i=1;i<$_eseecode.modes.dialog.length;i++) {
-			var modeName = $_eseecode.modes.dialog[i].div;
-			$_eseecode.modes.dialog[i].element = document.getElementById("dialog-"+modeName);
+			var modeId = $_eseecode.modes.dialog[i].div;
+			$_eseecode.modes.dialog[i].element = document.getElementById("dialog-"+modeId);
 			if (i < $_eseecode.modes.console.length) {
 				$_eseecode.modes.dialog[i].tab = document.getElementById("dialog-tabs-pieces");
 			} else {
-				$_eseecode.modes.dialog[i].tab = document.getElementById("dialog-tabs-"+modeName);
+				$_eseecode.modes.dialog[i].tab = document.getElementById("dialog-tabs-"+modeId);
 			}
 		}
 		$e_resizeConsole(true);
@@ -1641,7 +1641,7 @@
 	function $e_checkAndAddBlocksTips() {
 		var consoleDiv = document.getElementById("console-blocks");
 		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == "console-blocks-tip") {
-			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 			// Console tip
 			var text = "";
 			if (level === "level1") {
@@ -2082,7 +2082,7 @@
 	 * @example div.addEventListener("click", $e_writeText, false)
 	 */
 	function $e_writeText(event) {
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var div = event.target;
 		while (div && !div.getAttribute("instructionSetId")) { // Target could be a span in the div, so let's fetch the parent div
 			div = div.parentNode;

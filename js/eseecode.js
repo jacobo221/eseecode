@@ -104,20 +104,20 @@
 		modes: {
 			console: [
 				1,
-				{name: "level1", div: "blocks", tab: null},
-				{name: "level2", div: "blocks", tab: null},
-				{name: "level3", div: "blocks", tab: null},
-				{name: "level4", div: "write", tab: null}
+				{id: "level1", name: "Touch", div: "blocks", tab: null},
+				{id: "level2", name: "Drag", div: "blocks", tab: null},
+				{id: "level3", name: "Build", div: "blocks", tab: null},
+				{id: "level4", name: "Code", div: "write", tab: null}
 			],
 		  	dialog: [
 				1,
-				{name: "level1", div: "blocks", element: null, tab: null},
-				{name: "level2", div: "blocks", element: null, tab: null},
-				{name: "level3", div: "blocks", element: null, tab: null},
-				{name: "level4", div: "write", element: null, tab: null},
-				{name: "window", div: "window", element: null, tab: null},
-				{name: "debug", div: "debug", element: null, tab: null},
-				{name: "setup", div: "setup", element: null, tab: null}
+				{id: "level1", name: "Touch", div: "blocks", element: null, tab: null},
+				{id: "level2", name: "Drag", div: "blocks", element: null, tab: null},
+				{id: "level3", name: "Build", div: "blocks", element: null, tab: null},
+				{id: "level4", name: "Code", div: "write", element: null, tab: null},
+				{id: "window", name: "Window", div: "window", element: null, tab: null},
+				{id: "debug", name: "Debug", div: "debug", element: null, tab: null},
+				{id: "setup", name: "Setup", div: "setup", element: null, tab: null}
 			]
 		}
 	};
