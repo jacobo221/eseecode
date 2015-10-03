@@ -9,7 +9,7 @@
 			if (inCondition !== true) {
 				str += ";";
 			}
-			str += "eseeCodeInjection("+lineNumber+",(function(){for(var watch in $_eseecode.session.breakpoints["+lineNumber+"]){try{$_eseecode.session.breakpoints["+lineNumber+"][watch]=eval('if(typeof '+watch+'!==\\'undefined\\')'+watch);}catch(e){}}}()))";
+			str += "$e_eseeCodeInjection("+lineNumber+",(function(){for(var watch in $_eseecode.session.breakpoints["+lineNumber+"]){try{$_eseecode.session.breakpoints["+lineNumber+"][watch]=eval('if(typeof '+watch+'!==\\'undefined\\')'+watch);}catch(e){}}}()))";
 			if (inCondition !== true) {
 				str += ";";
 			}
@@ -98,7 +98,7 @@
 		}
 		if (realCode) {
 			// Finish stepped/breakpointed execution
-			str += "endExecution()";
+			str += "$e_endExecution()";
 		}
 		return str;
 	};
@@ -303,7 +303,7 @@
 		if (realCode) {
 			var internalCounter = "repeatCount"+(Math.floor(Math.random()*1000000000));
 			if (realCode) {
-				str += "pushRepeatCount(repeatCount);";
+				str += "$e_pushRepeatCount(repeatCount);";
 			}
 			str += "for (var repeatCount=0,"+internalCounter+"=0;";
 			if (realCode) {
@@ -328,7 +328,7 @@
 		str += indent;
 		str += "}";
 		if (realCode) {
-			str += "repeatCount=popRepeatCount();"; // We restore the parent repeat()'s repeatCount value'
+			str += "repeatCount=$e_popRepeatCount();"; // We restore the parent repeat()'s repeatCount value'
 		}
 
 		return str;

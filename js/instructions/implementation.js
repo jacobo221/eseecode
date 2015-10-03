@@ -14,8 +14,8 @@
 	function windowButtonEdit(id, text, posx, posy, action) {
 		var id = "element-"+id;
 		var button = document.getElementById(id);
-		resizeConsole(true); // We need this to calculate the offset of the dialog window
-		switchDialogMode("window"); // We need to display it order to get its coordinates, but we also want to display it since we are doing something with it so we want to display the window after execution is done
+		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
+		$e_switchDialogMode("window"); // We need to display it order to get its coordinates, but we also want to display it since we are doing something with it so we want to display the window after execution is done
 		button.style.position = "absolute";
 		if (text) {
 			button.value = text;
@@ -31,10 +31,10 @@
 			button = oldButton.cloneNode(true); // Clone to remove handlers
 			oldButton.parentNode.replaceChild(button, oldButton);
 			if (action !== true) {
-				if (!isTouchDevice()) {
-					button.addEventListener("click", function() { execute(true,action); }, false);
+				if (!$e_isTouchDevice()) {
+					button.addEventListener("click", function() { $e_execute(true,action); }, false);
 				} else {
-					button.addEventListener("touchstart", function() { execute(true,action); }, false);
+					button.addEventListener("touchstart", function() { $e_execute(true,action); }, false);
 				}
 			}
 		}
@@ -59,8 +59,8 @@
 	function windowTextEdit(id, text, posx, posy, width, bold, italic, size, color, family) {
 		var id = "element-"+id;
     		var div = document.getElementById(id);
-		resizeConsole(true); // We need this to calculate the offset of the dialog window
-		switchDialogMode("window");
+		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
+		$e_switchDialogMode("window");
 		div.style.position = "absolute";
 		if (text !== false) {
 	    		div.innerHTML = text;
@@ -109,8 +109,8 @@
 	function windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
 		var id = "element-"+id;
     		var div = document.getElementById(id);
-		resizeConsole(true); // We need this to calculate the offset of the dialog window
-		switchDialogMode("window");
+		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
+		$e_switchDialogMode("window");
 		img.style.position = "absolute";
 		if (canvasId) {
 			img.src = $_eseecode.canvasArray[canvasId].canvas.toDataURL();
@@ -133,28 +133,28 @@
  			oldImg.parentNode.replaceChild(img, oldImg);
 			if (onmouseover && onmouseover !== true) {
 				if (onmouseover) {
-					if (!isTouchDevice()) {
-				    		img.addEventListener("mouseover",function() { execute(true,onmouseover); }, false);
+					if (!$e_isTouchDevice()) {
+				    		img.addEventListener("mouseover",function() { $e_execute(true,onmouseover); }, false);
 					} else {
-				    		img.addEventListener("touchstart",function() { execute(true,onmouseover); }, false);
+				    		img.addEventListener("touchstart",function() { $e_execute(true,onmouseover); }, false);
 					}
 				}
 			}
 			if (onclick && onclick !== true) {
 				if (onclick) {
-					if (!isTouchDevice()) {
-				    		img.addEventListener("click",function() { execute(true,onclick); }, false);
+					if (!$e_isTouchDevice()) {
+				    		img.addEventListener("click",function() { $e_execute(true,onclick); }, false);
 					} else {
-		   	 			img.addEventListener("touchstart",function() { execute(true,onclick); }, false);
+		   	 			img.addEventListener("touchstart",function() { $e_execute(true,onclick); }, false);
 					}
 				}
 			}
 			if (onmouseout && onmouseout !== true) {
 				if (onmouseout) {
-					if (!isTouchDevice()) {
-				    		img.addEventListener("mouseout",function() { execute(true,onmouseout); }, false);
+					if (!$e_isTouchDevice()) {
+				    		img.addEventListener("mouseout",function() { $e_execute(true,onmouseout); }, false);
 					} else {
-		    			img.addEventListener("touchend",function() { execute(true,onmouseout); }, false);
+		    			img.addEventListener("touchend",function() { $e_execute(true,onmouseout); }, false);
 					}
 				}
 			}
@@ -176,8 +176,8 @@
 	function windowInputEdit(id, posx, posy, width, height, type) {
 		var id = "element-"+id;
     		var input = document.getElementById(id);
-		resizeConsole(true); // We need this to calculate the offset of the dialog window
-		switchDialogMode("window");
+		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
+		$e_switchDialogMode("window");
 		input.style.position = "absolute";
 		if (width) {
 			input.style.width = width+"px";
@@ -202,7 +202,7 @@
 	function windowInputSet(id, value) {
 		var id = "element-"+id;
     		var input = document.getElementById(id);
-		switchDialogMode("window");
+		$e_switchDialogMode("window");
 		input.value = value;
 	}
 
@@ -219,7 +219,7 @@
 	 * @example windowButtonCreate(1, "b2", "turn", 170, 90, "turnRight(15)")
 	 */
 	function windowButtonCreate(windowId, id, text, posx, posy, action) {
-		var window = getWindow(windowId);
+		var window = $e_getWindow(windowId);
   		var button = document.createElement("input");
 		button.id = "element-"+id;
 		button.type = "button";
@@ -245,7 +245,7 @@
 	 * @example windowTextCreate(1, "t2", "Repeticions:", 10, 100, undefined, true)
 	 */
 	function windowTextCreate(windowId, id, text, posx, posy, width, bold, italic, size, color, family) {
-		var window = getWindow(windowId);
+		var window = $e_getWindow(windowId);
     		var div = document.createElement("div");
 		div.id = "element-"+id;
 		window.appendChild(div);
@@ -269,7 +269,7 @@
 	 * @example windowImageCreate(1, "img1", "3", 100, 100, 60, 15)
 	 */
 	function windowImageCreate(windowId, id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
-		var window = getWindow(windowId);
+		var window = $e_getWindow(windowId);
     		var img = document.createElement("img");
 		img.id = "element-"+id;
 		window.appendChild(img);
@@ -290,7 +290,7 @@
 	 * @example windowInputCreate(1, "i1", 70, 75, 90, 15, "color")
 	 */
 	function windowInputCreate(windowId, id, posx, posy, width, height, type) {
-		var window = getWindow(windowId);
+		var window = $e_getWindow(windowId);
     		var input = document.createElement("input");
 		input.id = "element-"+id;
 		window.appendChild(input);
@@ -387,7 +387,7 @@
 	 * @example windowShow()
 	 */
 	function windowShow() {
-		windowSwitch();
+		$e_windowSwitch();
 	}
 
 	/**
@@ -398,7 +398,7 @@
 	 * @example windowUse(2)
 	 */
 	function windowUse(id) {
-		windowSwitch(id);
+		$e_windowSwitch(id);
 	}
 
 	/**
@@ -644,7 +644,7 @@
 	 * @example getRandomColor()
 	 */
 	function getRandomColor() {
-		var color = executionTraceIterate("randomColor", "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16));
+		var color = $e_executionTraceIterate("randomColor", "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16));
 		return color;
 	}
 
@@ -660,7 +660,7 @@
 		if (upperbound === undefined) {
 			upperbound = Number.MAX_VALUE;
 		}
-		var number = executionTraceIterate("randomNumber", Math.floor(Math.random()*upperbound)); // [0,upperbound-1]
+		var number = $e_executionTraceIterate("randomNumber", Math.floor(Math.random()*upperbound)); // [0,upperbound-1]
 		return number;
 	}
 
@@ -794,7 +794,7 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
-		turtle = system2userCoords(turtle);
+		turtle = $e_system2userCoords(turtle);
 		return turtle.x;
 	}
 
@@ -813,7 +813,7 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
-		turtle = system2userCoords(turtle);
+		turtle = $e_system2userCoords(turtle);
 		return turtle.y;
 	}
 
@@ -833,7 +833,7 @@
 		} else {
 			turtle = $_eseecode.canvasArray[id].turtle;
 		}
-		return system2userAngle(turtle.angle);
+		return $e_system2userAngle(turtle.angle);
 	}
 
 	/**
@@ -847,7 +847,7 @@
 	 * @example lineAt(200, 200, 50, 50)
 	 */
 	function lineAt(originx, originy, destinationx, destinationy) {
-		systemLineAt(user2systemCoords({x: originx, y: originy}), user2systemCoords({x: destinationx, y: destinationy}));
+		$e_systemLineAt($e_user2systemCoords({x: originx, y: originy}), $e_user2systemCoords({x: destinationx, y: destinationy}));
 	}
 	
 	/**
@@ -859,9 +859,9 @@
 	 * @example line(50, 50)
 	 */
 	function line(destinationx, destinationy) {
-		var coords = user2systemCoords({x: destinationx, y: destinationy});
-		systemLineAt($_eseecode.currentCanvas.turtle,coords);
-		moveTurtle(coords);
+		var coords = $e_user2systemCoords({x: destinationx, y: destinationy});
+		$e_systemLineAt($_eseecode.currentCanvas.turtle,coords);
+		$e_moveTurtle(coords);
 	}
 
 	/**
@@ -872,14 +872,14 @@
 	 * @example forward(50)
 	 */
 	function forward(pixels) {
-		if (!isNumber(pixels)) {
+		if (!$e_isNumber(pixels)) {
 			throw new codeError("forward","Invalid parameter in forward() call");
 		}
 		var pos = {};
 		pos.x = $_eseecode.currentCanvas.turtle.x+pixels*Math.cos($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
 		pos.y = $_eseecode.currentCanvas.turtle.y+pixels*Math.sin($_eseecode.currentCanvas.turtle.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
-		systemLineAt($_eseecode.currentCanvas.turtle, pos);
-		moveTurtle(pos);
+		$e_systemLineAt($_eseecode.currentCanvas.turtle, pos);
+		$e_moveTurtle(pos);
 	}
 
 	/**
@@ -941,7 +941,7 @@
 			$_eseecode.currentCanvas.turtle.y = posy+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 		}
 		$_eseecode.currentCanvas.turtle.angle += degrees;
-		resetTurtle();
+		$e_resetTurtle();
 	}
 
 	/**
@@ -955,8 +955,8 @@
 	 * @example writeAt("Hello!", 200, 200, 90)
 	 */
 	function writeAt(text, posx, posy, angle) {
-		var coords = user2systemCoords({x: posx, y: posy});
-		systemWriteAt(text, coords, user2systemAngle(angle));
+		var coords = $e_user2systemCoords({x: posx, y: posy});
+		$e_systemWriteAt(text, coords, $e_user2systemAngle(angle));
 	}
 
 	/**
@@ -967,7 +967,7 @@
 	 * @example write("Hello!")
 	 */
 	function write(text) {
-		systemWriteAt(text, $_eseecode.currentCanvas.turtle, $_eseecode.currentCanvas.turtle.angle);
+		$e_systemWriteAt(text, $_eseecode.currentCanvas.turtle, $_eseecode.currentCanvas.turtle.angle);
 	}
 
 	/**
@@ -1003,7 +1003,7 @@
 	 * @example turnRight(90)
 	 */
 	function turnRight(angle) {
-		setAngleTurtle($_eseecode.currentCanvas.turtle.angle+angle);
+		$e_setAngleTurtle($_eseecode.currentCanvas.turtle.angle+angle);
 	}
 
 	/**
@@ -1014,7 +1014,7 @@
 	 * @example turnLeft(90)
 	 */
 	function turnLeft(angle) {
-		setAngleTurtle($_eseecode.currentCanvas.turtle.angle-angle);
+		$e_setAngleTurtle($_eseecode.currentCanvas.turtle.angle-angle);
 	}
 
 	/**
@@ -1029,11 +1029,11 @@
 		if (angle === undefined) {
 			angle = 0;
 		}
-		setAngleTurtle(user2systemAngle(angle));
+		$e_setAngleTurtle($e_user2systemAngle(angle));
 	}
 
 	/**
-	 * Turns the cursor right
+	 * Puts an image in the specified position of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @param {String} src image source. Can be an external http:// image or an image from getLayerImage()
@@ -1046,7 +1046,7 @@
 	function image(src, posx, posy, width, height) {
 		var img = new Image();
 		var canvas = $_eseecode.currentCanvas;
-		var systemPos = user2systemCoords({x: posx, y: posy});
+		var systemPos = $e_user2systemCoords({x: posx, y: posy});
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (typeof height === "undefined") {
@@ -1069,8 +1069,8 @@
 	 * @example goTo(50, 50)
 	 */
 	function goTo(posx, posy) {
-		var pos = user2systemCoords({x: posx, y: posy});
-		moveTurtle(pos);
+		var pos = $e_user2systemCoords({x: posx, y: posy});
+		$e_moveTurtle(pos);
 	}
 
 	/**
@@ -1080,7 +1080,7 @@
 	 * @example goToCenter()
 	 */
 	function goToCenter() {
-		moveTurtle({x: getLayerWidth()/2, y: getLayerHeight()/2});
+		$e_moveTurtle({x: getLayerWidth()/2, y: getLayerHeight()/2});
 	}
 
 	/**
@@ -1090,7 +1090,7 @@
 	 * @example goToUpLeft()
 	 */
 	function goToUpLeft() {
-		moveTurtle({x: 0, y: 0});
+		$e_moveTurtle({x: 0, y: 0});
 	}
 
 	/**
@@ -1100,7 +1100,7 @@
 	 * @example goToUpRight()
 	 */
 	function goToUpRight() {
-		moveTurtle({x: getLayerWidth(), y: 0});
+		$e_moveTurtle({x: getLayerWidth(), y: 0});
 	}
 
 	/**
@@ -1110,7 +1110,7 @@
 	 * @example goToLowLeft()
 	 */
 	function goToLowLeft() {
-		moveTurtle({x: 0, y: getLayerHeight()});
+		$e_moveTurtle({x: 0, y: getLayerHeight()});
 	}
 
 	/**
@@ -1120,7 +1120,7 @@
 	 * @example goToLowRight()
 	 */
 	function goToLowRight() {
-		moveTurtle({x: getLayerWidth(), y: getLayerHeight()});
+		$e_moveTurtle({x: getLayerWidth(), y: getLayerHeight()});
 	}
 
 	/**
@@ -1255,7 +1255,7 @@
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
 		}
-		clearCanvas(id);
+		$e_clearCanvas(id);
 	}
 
 	/**
@@ -1345,7 +1345,7 @@
 	 * @example use()
 	 */
 	function use(id) {
-		var canvas = switchCanvas(id);
+		var canvas = $e_switchCanvas(id);
 		return canvas.name;
 	}
 
@@ -1359,13 +1359,15 @@
 	 */
 	function snapshot(id) {
 		var currentCanvas = $_eseecode.currentCanvas;
-		var canvas = switchCanvas(id);
+		var canvas = $e_switchCanvas(id);
 		var imageClone = getLayerImage(currentCanvas.name);
-		image(imageClone, 0, 0);
-		canvas.turtle = clone(currentCanvas.turtle);
-		canvas.style = clone(currentCanvas.style);
-		canvas.shaping = clone(currentCanvas.shaping);
-		switchCanvas(currentCanvas.name);
+		var img = new Image();
+		img.src = imageClone;
+		canvas.context.drawImage(img, 0, 0);
+		canvas.turtle = $e_clone(currentCanvas.turtle);
+		canvas.style = $e_clone(currentCanvas.style);
+		canvas.shaping = $e_clone(currentCanvas.shaping);
+		$e_switchCanvas(currentCanvas.name);
 		return canvas.name;
 	}
 
@@ -1377,7 +1379,7 @@
 	 * @example setSize(2)
 	 */
 	function setSize(size) {
-		setSizeStyle(size);
+		$e_setSizeStyle(size);
 	}
 
 	/**
@@ -1398,7 +1400,7 @@
 	 * @example setColor("#FF0000")
 	 */
 	function setColor(color) {
-		setColorStyle(color);
+		$e_setColorStyle(color);
 	}
 
 	/**
@@ -1420,7 +1422,7 @@
 	 */
 	function setFont(font) {
 		$_eseecode.currentCanvas.style.font = font;
-		setTextStyle();
+		$e_setTextStyle();
 	}
 
 	/**
@@ -1446,7 +1448,7 @@
 		} else {
 			$_eseecode.currentCanvas.style.bold = false;
 		}
-		setTextStyle();
+		$e_setTextStyle();
 	}
 
 	/**
@@ -1472,7 +1474,7 @@
 		} else {
 			$_eseecode.currentCanvas.style.italic = false;
 		}
-		setTextStyle();
+		$e_setTextStyle();
 	}
 
 	/**
@@ -1493,7 +1495,7 @@
 	 * @example windowButtonRemove("b1")
 	 */
 	function windowButtonRemove(id) {
-		return windowElementRemove(id);
+		return $e_windowElementRemove(id);
 	}
 
 	/**
@@ -1504,7 +1506,7 @@
 	 * @example windowTextRemove("b1")
 	 */
 	function windowTextRemove(id) {
-		return windowElementRemove(id);
+		return $e_windowElementRemove(id);
 	}
 
 	/**
@@ -1515,7 +1517,7 @@
 	 * @example windowImageRemove("b1")
 	 */
 	function windowImageRemove(id) {
-		return windowElementRemove(id);
+		return $e_windowElementRemove(id);
 	}
 
 	/**
@@ -1526,7 +1528,7 @@
 	 * @example windowInputRemove("b1")
 	 */
 	function windowInputRemove(id) {
-		return windowElementRemove(id);
+		return $e_windowElementRemove(id);
 	}
 
 	/**
@@ -1537,7 +1539,7 @@
 	 * @example windowButtonHide("b1")
 	 */
 	function windowButtonHide(id) {
-		windowElementHide(id);
+		$e_windowElementHide(id);
 	}
 
 	/**
@@ -1548,7 +1550,7 @@
 	 * @example windowTextHide("t1")
 	 */
 	function windowTextHide(id) {
-		windowElementHide(id);
+		$e_windowElementHide(id);
 	}
 
 	/**
@@ -1559,7 +1561,7 @@
 	 * @example windowInputHide("i1")
 	 */
 	function windowInputHide(id) {
-		windowElementHide(id);
+		$e_windowElementHide(id);
 	}
 
 	/**
@@ -1570,7 +1572,7 @@
 	 * @example windowImageHide("img1")
 	 */
 	function windowImageHide(id) {
-		windowElementHide(id);
+		$e_windowElementHide(id);
 	}
 
 	/**
@@ -1581,7 +1583,7 @@
 	 * @example windowButtonShow("b1")
 	 */
 	function windowButtonShow(id) {
-		windowElementShow(id);
+		$e_windowElementShow(id);
 	}
 
 	/**
@@ -1592,7 +1594,7 @@
 	 * @example windowTextShow("t1")
 	 */
 	function windowTextShow(id) {
-		windowElementShow(id);
+		$e_windowElementShow(id);
 	}
 
 	/**
@@ -1603,7 +1605,7 @@
 	 * @example windowImageShow("img1")
 	 */
 	function windowImageShow(id) {
-		windowElementShow(id);
+		$e_windowElementShow(id);
 	}
 
 	/**
@@ -1614,7 +1616,7 @@
 	 * @example windowInputShow("i1")
 	 */
 	function windowInputShow(id) {
-		windowElementShow(id);
+		$e_windowElementShow(id);
 	}
 
 	/**
@@ -1640,7 +1642,7 @@
 		if (yScale === undefined) {
 			yScale = 1;
 		}
-		changeCoordinates({x: posx, y: posy}, {x: xScale, y: yScale});
+		$e_changeAxisCoordinates({x: posx, y: posy}, {x: xScale, y: yScale});
 	}
 
 	/**

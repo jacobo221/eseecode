@@ -14,6 +14,8 @@
  * Download layer images hides/shows cursor and grid based on settings
  * Added the possibility to include global variables in the language
  * Breakpoints can now be enabled/disabled
+ * Easily convert between if and ifelse
+ * Clicking on "}" block or "else" block will prompt for the parent block setup
  * New resize console button, much more intuitive than doubleclicking level tabs
  * Center of coordinates can be changed
  * Enable ACE editor worker and helper
@@ -21,14 +23,17 @@
  * New logo
  * Confirm before leaving page
  * Option to go fullscreen
+ * Allow predefined constants in the instruction set definitions: minX, minY, maxX, maxY, centerX, centerY, originX, originY (only applies to type "number")
  * Default to landscape view
  * GUI restyled
  * Layers, windows and repeatCount now start numbering at 0
  * Began work on better execution error messages
  * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
  * Turtle starts at (0,0)
+ * lineAt and writeAt icons are now dynamic
  * New animateLayers() instruction to ease creating animations from Level2
  * Turtle icon slightly redesigned
+ * Resetting the UI and switching the console level always leave the dialog in Pieces mode
  * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly

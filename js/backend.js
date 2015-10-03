@@ -6,9 +6,9 @@
 	 * @private
 	 * @param {Number} [id] Layer id (if blank it creates a new id)
 	 * @return {!Object} Layer in the whiteboard
-	 * @example $_eseecode.currentCanvas = getCanvas(id)
+	 * @example $_eseecode.currentCanvas = $e_getCanvas(id)
 	 */
-	function getCanvas(id) {
+	function $e_getCanvas(id) {
 		if (typeof id === "undefined") {
 			id = $_eseecode.canvasArray.length;
 		}
@@ -35,7 +35,7 @@
 			canvas.width = canvasSize;
 			canvas.height = canvasSize;
 			var context = canvas.getContext("2d");
-			var origin = user2systemCoords({x: 0, y: 0});
+			var origin = $e_user2systemCoords({x: 0, y: 0});
 			$_eseecode.canvasArray[id] = {
 				name: id,
 				canvas: canvas,
@@ -83,9 +83,9 @@
 	 * @private
 	 * @param {Number} [id] Window id (if blank it creates a new id)
 	 * @return {!HTMLElement} Div HTML element representing the Window
-	 * @example $_eseecode.currentWiundow = getWindow(id)
+	 * @example $_eseecode.currentWiundow = $e_getWindow(id)
 	 */
-	function getWindow(id) {
+	function $e_getWindow(id) {
 		if (typeof id === "undefined") {
 			id = $_eseecode.windowsArray.length;
 		}
@@ -105,9 +105,9 @@
 	/** Deletes a layer from the whiteboard
 	 * @private
 	 * @param {Number} [id] Layer id
-	 * @example removeCanvas(3)
+	 * @example $e_removeCanvas(3)
 	 */
-	function removeCanvas(id) {
+	function $e_removeCanvas(id) {
 		if ($_eseecode.canvasArray[id]) {
 			$_eseecode.whiteboard.removeChild($_eseecode.canvasArray[id].div);
 			if ($_eseecode.canvasArray["top"] == $_eseecode.canvasArray[id]) {
@@ -121,24 +121,24 @@
 	 * @private
 	 * @param {Number} [id] Layer id
 	 * @return {!Object} The layer
-	 * @example switchCanvas(3)
+	 * @example $e_switchCanvas(3)
 	 */
-	function switchCanvas(id) {
-		$_eseecode.currentCanvas = getCanvas(id);
-		resetTurtle(); // switch to the apropiate turtle
+	function $e_switchCanvas(id) {
+		$_eseecode.currentCanvas = $e_getCanvas(id);
+		$e_resetTurtle(); // switch to the apropiate turtle
 		return $_eseecode.currentCanvas;
 	}
 
 	/** Switches the currently active window
 	 * @private
 	 * @param {Number} [id] Window id
-	 * @example windowSwitch(3)
+	 * @example $e_windowSwitch(3)
 	 */
-	function windowSwitch(id) {
+	function $e_windowSwitch(id) {
 		if (id !== undefined) { // 0 is a valid id
-			$_eseecode.currentWindow = getWindow(id);
+			$_eseecode.currentWindow = $e_getWindow(id);
 		}
-		// even if we did getWindow() still do the following, since it fixes rendering issues
+		// even if we did $e_getWindow() still do the following, since it fixes rendering issues
 		for (var i=0;i<$_eseecode.windowsArray.length;i++) {
 			if ($_eseecode.windowsArray[i]) {
 				$_eseecode.windowsArray[i].style.display = "none";
@@ -152,9 +152,9 @@
 	 * Sets the font properties on the currently active layer context
 	 * @private
 	 * @param {!HTMLElement} [context] Canvas context to take style difinitions from. If unset, currently active layer
-	 * @example setTextStyle(ctx)
+	 * @example $e_setTextStyle(ctx)
 	 */
-	function setTextStyle(context) {
+	function $e_setTextStyle(context) {
 		if (context === undefined) {
 			context = $_eseecode.currentCanvas.context;
 		}
@@ -176,9 +176,9 @@
 	 * @private
 	 * @param {Number} [size] Size in pixels. If unset uses currently active layer's size
 	 * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
-	 * @example setSizeStyle(2, ctx)
+	 * @example $e_setSizeStyle(2, ctx)
 	 */
-	function setSizeStyle(size, context) {
+	function $e_setSizeStyle(size, context) {
 		if (size === undefined) {
 			size = $_eseecode.currentCanvas.style.size;
 		}
@@ -191,7 +191,7 @@
 		} else {
 			context.lineWidth = size;
 		}
-		setTextStyle();
+		$e_setTextStyle();
 	}
 
 	/**
@@ -199,9 +199,9 @@
 	 * @private
 	 * @param {String} [color] Color to use. If unset uses currently active layer's color
 	 * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
-	 * @example setColor("#FF0000", ctx)
+	 * @example $e_setColorStyle("#FF0000", ctx)
 	 */
-	function setColorStyle(color, context) {
+	function $e_setColorStyle(color, context) {
 		if (color === undefined) {
 			color = $_eseecode.currentCanvas.style.color;
 		}
@@ -211,16 +211,16 @@
 		$_eseecode.currentCanvas.style.color = color;
 		context.fillStyle = color;
 		context.strokeStyle = color;
-		setTextStyle(context);
+		$e_setTextStyle(context);
 	}
 
 	/**
 	 * Deletes a window element
 	 * @private
 	 * @param {String} id Element id
-	 * @example windowElementRemove("b1")
+	 * @example $e_windowElementRemove("b1")
 	 */
-	function windowElementRemove(id) {
+	function $e_windowElementRemove(id) {
 		var obj = document.getElementById("element-"+id);
 		if (!obj) {
 			return false;
@@ -236,9 +236,9 @@
 	 * Hides a window element
 	 * @private
 	 * @param {String} id Element id
-	 * @example windowElementHide("b1")
+	 * @example $e_windowElementHide("b1")
 	 */
-	function windowElementHide(id) {
+	function $e_windowElementHide(id) {
 		var obj = document.getElementById("element-"+id);
 		obj.style.display = "none";
 	}
@@ -247,9 +247,9 @@
 	 * Shows a window element if it was hidden
 	 * @private
 	 * @param {String} id Element id
-	 * @example windowElementShow("b1")
+	 * @example $e_windowElementShow("b1")
 	 */
-	function windowElementShow(id) {
+	function $e_windowElementShow(id) {
 		var obj = document.getElementById("element-"+id);
 		obj.style.display = "inline";
 	}
@@ -258,9 +258,9 @@
 	 * Removes all content from a layer
 	 * @private
 	 * @param {Number} id Layer id
-	 * @example clearCanvas(2)
+	 * @example $e_clearCanvas(2)
 	 */
-	function clearCanvas(id) {
+	function $e_clearCanvas(id) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var ctx, canvas;
 		if (!$_eseecode.canvasArray[id]) {
@@ -280,46 +280,46 @@
 	/**
 	 * Stores repeatCount state when entering a repeat() block
 	 * @private
-	 * @example pushRepeatCount(repeatCount)
+	 * @example $e_pushRepeatCount(repeatCount)
 	 */
-	function pushRepeatCount(value) {
-		executionTracePush("repeatCount",value);
+	function $e_pushRepeatCount(value) {
+		$e_executionTracePush("repeatCount",value);
 	}
 	
 	/**
 	 * Restores repeatCount state when exiting a repeat() block
 	 * @private
-	 * @example popRepeatCount()
+	 * @example $e_popRepeatCount()
 	 */
-	function popRepeatCount() {
-		return executionTracePop("repeatCount");
+	function $e_popRepeatCount() {
+		return $e_executionTracePop("repeatCount");
 	}
 	
 	/**
 	 * Moves the turtle to the specified position
 	 * @private
 	 * @param {Number} pos Coordinate
-	 * @example moveTurtle({x: 50, y: 50})
+	 * @example $e_moveTurtle({x: 50, y: 50})
 	 */
-	function moveTurtle(pos) {
+	function $e_moveTurtle(pos) {
 		$_eseecode.currentCanvas.turtle.x = Math.round(pos.x); // Make sure the value is integer
 		$_eseecode.currentCanvas.turtle.y = Math.round(pos.y); // Make sure the value is integer
-		resetTurtle();
+		$e_resetTurtle();
 	}
 	
 	/**
 	 * Turns the turtle to the specified angle
 	 * @private
 	 * @param {Number} angle Angle
-	 * @example turnTurtle(90)
+	 * @example $e_setAngleTurtle(90)
 	 */
-	function setAngleTurtle(angle) {
+	function $e_setAngleTurtle(angle) {
 		$_eseecode.currentCanvas.turtle.angle = angle;
 		$_eseecode.currentCanvas.turtle.angle %= 360;
 		if ($_eseecode.currentCanvas.turtle.angle < 0) {
 			$_eseecode.currentCanvas.turtle.angle += 360;
 		}
-		resetTurtle();
+		$e_resetTurtle();
 	}
 	
 	/**
@@ -327,9 +327,9 @@
 	 * @private
 	 * @param {Array} origin Coordinates where the line starts
 	 * @param {Array} destination Coordinates where the line ends
-	 * @example systemLineAt({x: 200, y: 200}, {x: 50, y: 50})
+	 * @example $e_systemLineAt({x: 200, y: 200}, {x: 50, y: 50})
 	 */
-	function systemLineAt(origin, destination) {
+	function $e_systemLineAt(origin, destination) {
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.beginPath();
 			$_eseecode.currentCanvas.context.moveTo(origin.x,origin.y); // shape should use forward() or line()
@@ -348,9 +348,9 @@
 	 * @param {Number} posx X coordinate to start writing
 	 * @param {Number} posy Y coordinate to start writing
 	 * @param {Number} [angle=0] Angle in which to write
-	 * @example systemWriteAt("Hello!", 200, 200, 90)
+	 * @example $e_systemWriteAt("Hello!", 200, 200, 90)
 	 */
-	function systemWriteAt(text, pos, angle) {
+	function $e_systemWriteAt(text, pos, angle) {
 		if (angle === undefined) {
 			angle = 0;
 		}
@@ -363,9 +363,9 @@
 		tempCtx.translate(pos.x, pos.y);
 		tempCtx.rotate(angle*Math.PI/180);
 		// apply style properties to new canvas
-		setColorStyle(undefined,tempCtx);
-		setSizeStyle(undefined,tempCtx);
-		setTextStyle(tempCtx);
+		$e_setColorStyle(undefined,tempCtx);
+		$e_setSizeStyle(undefined,tempCtx);
+		$e_setTextStyle(tempCtx);
 		tempCtx.fillText(text, 0, 0);
 		tempCtx.translate(-pos.x, -pos.y);
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);

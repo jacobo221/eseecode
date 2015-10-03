@@ -5,9 +5,9 @@
 
 	function appendBlock(level, instruction, parentDiv, params) {
 		var div = document.createElement('div');
-		var instructionSetId = getInstructionSetIdFromName(instruction);
+		var instructionSetId = $e_getInstructionSetIdFromName(instruction);
 		if (instructionSetId < 0) {
-			instructionSetId = getInstructionSetIdFromName("unknownFunction");
+			instructionSetId = $e_getInstructionSetIdFromName("unknownFunction");
 			// Custom functions recieve all parameters as a single one because we don't know how many they must have so there's no need to separate them
 			var parametersTexts = "";
 			for (var i=0; i<params.length; i++) {
@@ -28,8 +28,8 @@
 		if ($_eseecode.instructions.set[instructionSetId].block) {
 			document.body.appendChild(div); // We need it to exist in order to draw the end div background
 		}
-		createBlock(level,div,instructionSetId);
-		addBlock(div,true,parentDiv);
+		$e_createBlock(level,div,instructionSetId);
+		$e_addBlock(div,true,parentDiv);
 		return div;
 	}
 

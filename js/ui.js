@@ -3,9 +3,9 @@
 	 * Links an A HTML element to the current whiteboard export drawing
 	 * @private
 	 * @param {!HTMLElement} link HTML A element to add the link to
-	 * @example downloadCanvas(document.body.createElement("a"))
+	 * @example $e_downloadCanvas(document.body.createElement("a"))
 	 */
-	function downloadCanvas(link) {
+	function $e_downloadCanvas(link) {
 		var canvas = document.createElement('canvas');
 		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
 		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
@@ -13,18 +13,16 @@
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		if (document.getElementById("setup-grid-enable").checked) {
-			drawGrid(ctx);
+			ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0);
 		}
-		var layer = $_eseecode.canvasArray["grid"];
+		var layer = $_eseecode.canvasArray["bottom"];
 		while (layer) {
-			if (layer != $_eseecode.canvasArray["grid"]) {
-				ctx.drawImage(layer.canvas,0,0);
-			}
-			layer = layer.layerUnder;
+			ctx.drawImage(layer.canvas,0,0);
+			layer = layer.layerOver;
 		}
 		if (document.getElementById("setup-turtle-enable").checked) {
 			var id = $_eseecode.currentCanvas.name;
-			drawCursor(ctx, $_eseecode.canvasArray[id].turtle, id);
+			$e_drawCursor(ctx, $_eseecode.canvasArray[id].turtle, id);
 		}
 		link.href = canvas.toDataURL();
 		var d = new Date();
@@ -34,9 +32,9 @@
 	/**
 	 * Downloads the layers as a file, called from the UI
 	 * @private
-	 * @example downloadLayersFromUI()
+	 * @example $e_downloadLayersFromUI()
 	 */
-	function downloadLayersFromUI() {
+	function $e_downloadLayersFromUI() {
 		// Create one layer GIF to measure how long it takes
 		var start = new Date().getTime();
 		var encoder = new GIFEncoder();
@@ -49,9 +47,9 @@
 		var secondsPerLayer = (finish - start) / 1000;
 		var estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
 		if (estimatedTime >= 3) {
-			msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"downloadLayers()\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:msgBoxClose});
+			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers()\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
 		} else {
-			downloadLayers();
+			$e_downloadLayers();
 		}
 	}
 
@@ -59,9 +57,9 @@
 	 * Links an A HTML element to an image containing all the layers
 	 * @private
 	 * @param {!HTMLElement} link HTML A element to add the link to
-	 * @example downloadLayers(document.body.createElement("a"))
+	 * @example $e_downloadLayers(document.body.createElement("a"))
 	 */
-	function downloadLayers() {
+	function $e_downloadLayers() {
 		var link = document.getElementById("downloadLayers-link");
 		if (!link) {
 			link = document.getElementById("setup-downloadLayers");
@@ -69,14 +67,13 @@
 		var encoder = new GIFEncoder();
 		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
 		var interval = document.getElementById("setup-downloadLayers-interval").value;
-		if (!isNumber(interval)) {
+		if (!$e_isNumber(interval)) {
 			interval = 500;
 		}
 		encoder.setDelay(interval); //go to next frame every n milliseconds 
 		encoder.start();
 
-		var i = 1;
-		var layer = $_eseecode.canvasArray[i]; // We skip first frame which is the grid
+		var layer = $_eseecode.canvasArray["bottom"]; // We skip first frame which is the grid
 		var canvas = document.createElement('canvas');
 		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
 		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
@@ -91,7 +88,7 @@
 				ctx.drawImage(layer.canvas,0,0);
 			}
 			if (document.getElementById("setup-turtle-enable").checked) {
-				drawCursor(ctx, layer.turtle, i);
+				$e_drawCursor(ctx, layer.turtle, layer.name);
 			}
 			// Watermark
 			ctx.font = "20px Arial";
@@ -99,7 +96,6 @@
 			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),canvas.width/4,canvas.height-20);
 			encoder.addFrame(ctx);
 			layer = layer.layerOver;
-			i++;
 		}
 		encoder.finish();
 		var binary_gif = encoder.stream().getData();
@@ -107,16 +103,16 @@
 		link.href = data_url;
 		var d = new Date();
 		link.download = "layers-"+d.getTime()+".gif";
-		msgBoxClose(); // It might have been called from a msgBox confirmation message
+		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
 	/**
 	 * Resizes the console window
 	 * @private
 	 * @param {Boolean} [restore=false] If false it maximizes the console window taking up the dialog window, otherwise it restores its size to the initial size
-	 * @example resizeConsole(true)
+	 * @example $e_resizeConsole(true)
 	 */
-	function resizeConsole(restore) {
+	function $e_resizeConsole(restore) {
 		var mainWidth = document.getElementById('eseecode').clientWidth;
 		var whiteboardWidth = $_eseecode.whiteboard.offsetWidth;
 		var consoleColumn = document.getElementById("console");
@@ -145,7 +141,7 @@
 			dialogColumn.style.display = "none";
 			iconMargin = 5;
 		}
-		switchDialogMode();
+		$e_switchDialogMode();
 		ace.edit("console-write").resize();
 		// Console resize tab
 		var canvas = document.getElementById("console-tabs-resize").firstChild;
@@ -169,9 +165,9 @@
 	 * @private
 	 * @param {String|HTMLElement} text Message to show in the message box
 	 * @param {{acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String,noSubmit:{Boolean}} config Configuration parameters for the message box
-	 * @example msgBox("Alert!")
+	 * @example $e_msgBox("Alert!")
 	 */
-	function msgBox(text, config) {
+	function $e_msgBox(text, config) {
 		var id = 0;
 		for (id=0; document.getElementById("msgBoxWrapper"+id); id++);
 		var mainBlock = document.getElementById("eseecode");
@@ -202,7 +198,7 @@
 			input.value = _("Accept");
 		}
 		var focusElement = div;
-		if (config && config.noSubmit !== true) {
+		if (!config || config.noSubmit !== true) {
 			focusElement = input;
 			if (!config || !config.focus) {
 				input.autofocus = true;
@@ -210,7 +206,7 @@
 			if (config && config.acceptAction) {
 				input.addEventListener("click", config.acceptAction, false);
 			} else {
-				input.addEventListener("click", msgBoxClose, false);
+				input.addEventListener("click", $e_msgBoxClose, false);
 			}
 			buttonDiv.appendChild(input);
 		}
@@ -228,7 +224,7 @@
 			if (config.cancelAction) {
 				input.addEventListener("click", config.cancelAction, false);
 			} else {
-				input.addEventListener("click", msgBoxClose, false);
+				input.addEventListener("click", $e_msgBoxClose, false);
 			}
 			buttonDiv.appendChild(input);
 		}
@@ -250,17 +246,17 @@
 
 	/**
 	 * Closes the msgBox dialog
-	 * @see msgBox
+	 * @see $e_msgBox
 	 * @private
-	 * @example msgBoxClose()
+	 * @example $e_msgBoxClose()
 	 */
-	function msgBoxClose() {
+	function $e_msgBoxClose() {
 		var id=0;
 		for (id=0; document.getElementById("msgBoxWrapper"+id); id++);
 		id--;
-		var msgBox = document.getElementById("msgBoxWrapper"+id);
-		if (msgBox) {
-			document.getElementById("eseecode").removeChild(msgBox);
+		var msgBoxElement = document.getElementById("msgBoxWrapper"+id);
+		if (msgBoxElement) {
+			document.getElementById("eseecode").removeChild(msgBoxElement);
 			if (id>0) {
 				document.getElementById("msgBoxWrapper"+(id-1)).focus();
 			} else if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
@@ -273,16 +269,16 @@
 	 * Switches the user interface to the specified level
 	 * @private
 	 * @param {Number|String} [id] Can refer to a level number or to a level name. If unset it checks the "level" parameter in the browser's URL. If it can't determine the new level, it keeps the current level
-	 * @example switchConsoleMode(2)
+	 * @example $e_switchConsoleMode(2)
 	 */
-	function switchConsoleMode(id) {
+	function $e_switchConsoleMode(id) {
 		var oldMode = $_eseecode.modes.console[0];
 		if (!id) {
 			var urlParts = window.location.href.match(/(\?|&)level=([^&#]+)/);
 			if (urlParts !== null) {
 				// Check that the level exists
 				var newLevel = urlParts[2].toLowerCase();
-				if (isNumber(newLevel) && $_eseecode.modes.console[newLevel]) {
+				if ($e_isNumber(newLevel) && $_eseecode.modes.console[newLevel]) {
 					id = newLevel;
 				} else {
 					for (var i=1; i<$_eseecode.modes.console.length; i++) {
@@ -299,7 +295,7 @@
 		if (!id) {
 			id = oldMode;
 		}
-		if (!isNumber(id)) {
+		if (!$e_isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.console.length; i++) {
 				if ($_eseecode.modes.console[i].name == id) {
 					id = i;
@@ -315,9 +311,9 @@
 				try {
 					program = eseecodeLanguage.parse(code);
 				} catch (exception) {
-					msgBox(_("Can't convert the code to blocks. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
+					$e_msgBox(_("Can't convert the code to blocks. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 					var lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/)[2];
-					highlight(lineNumber,"error");
+					$e_highlight(lineNumber,"error");
 					ace.edit("console-write").gotoLine(lineNumber,0,true);
 					return;
 				}
@@ -348,24 +344,24 @@
 		if ($_eseecode.modes.console[oldMode].div == "blocks") {
 			if ($_eseecode.modes.console[id].div == "write") {
 				if (document.getElementById("console-blocks").firstChild.id == "console-blocks-tip") {
-					resetWriteConsole("");
+					$e_resetWriteConsole("");
 				} else {
-					blocks2write();
+					$e_blocks2write();
 				}
 			} else if ($_eseecode.modes.console[id].div == "blocks") {
-				blocks2blocks(level);
+				$e_blocks2blocks(level);
 			}
 		} else if ($_eseecode.modes.console[oldMode].div == "write") {
 			if ($_eseecode.modes.console[id].div == "blocks") {
 				var consoleDiv = document.getElementById("console-blocks");
 				if ($_eseecode.session.changesInCode && $_eseecode.session.changesInCode != "blocks") {
 					// Only reset the blocks console if changes were made in the code, this preserves the undo's
-					resetUndoBlocks();
-					resetBlocksConsole(consoleDiv);
+					$e_resetUndoBlocks();
+					$e_resetBlocksConsole(consoleDiv);
 					program.makeBlocks(level,consoleDiv);
 				} else {
 					// Just update the blocks style to the appropiate level
-					blocks2blocks(level);
+					$e_blocks2blocks(level);
 				}
 			}
 		}
@@ -384,39 +380,42 @@
 		} else {
 			$_eseecode.modes.console[id].tab.className += " tab-active";
 		}
+		/*
 		// Only change the dialog window if it is set to the blocks/code tab (not if it is windows, debug or setup)
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.indexOf("level") == 0) {
-			switchDialogMode(id);
+			$e_switchDialogMode(id);
 		}
-		// if write mode, focus in the textarea. Do this after switchDialogMode() in case the dialog tries to steal focus
+		*/
+		$e_switchDialogMode(id);
+		// if write mode, focus in the textarea. Do this after $e_switchDialogMode() in case the dialog tries to steal focus
 		if ($_eseecode.modes.console[id].div == "write") {
 			ace.edit("console-write").focus();
 		} else {
-			checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
+			$e_checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
 		}
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.changesInCode) {
 			$_eseecode.session.changesInCode = false;
 		}
-		highlight();
+		$e_highlight();
 	}
 
 	/**
 	 * Switches the dialog window
 	 * @private
 	 * @param {Number|String} [id] Can refer to a dialog index or to a dialog name. If unset it keeps the current dialog window
-	 * @example switchDialogMode("debug")
+	 * @example $e_switchDialogMode("debug")
 	 */
-	function switchDialogMode(id) {
+	function $e_switchDialogMode(id) {
 		if (!id) {
 			id = $_eseecode.modes.dialog[0];
 		}
 		if (id == "setup") {
-			resizeConsole(true);
+			$e_resizeConsole(true);
 		}
 		if (id == "window") {
 			document.getElementById("dialog-tabs-window").style.display = "block";
 		}
-		if (!isNumber(id)) {
+		if (!$e_isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.dialog.length; i++) {
 				if ($_eseecode.modes.dialog[i].name == id) {
 					id = i;
@@ -436,13 +435,13 @@
 			$_eseecode.modes.dialog[id].tab.className += " tab-active";
 		}
 		if ($_eseecode.modes.dialog[id].div == "blocks") {
-			initDialogBlocks($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
+			$e_initDialogBlocks($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
 		} else if ($_eseecode.modes.dialog[id].div == "write") {
-			initDialogWrite($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
+			$e_initDialogWrite($_eseecode.modes.dialog[id].name, $_eseecode.modes.dialog[id].element);
 		}
 		var debugCommand = document.getElementById("dialog-debug-command-form");
 		if ($_eseecode.modes.dialog[id].name == "debug") {
-			resetDebug();
+			$e_resetDebug();
 			debugCommand.style.visibility = "visible";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
 			debugCommandInput.style.width = (debugCommand.offsetWidth - document.getElementById("dialog-debug-command-button").offsetWidth - 15) +"px";
@@ -489,9 +488,9 @@
 	 * Initializes or resets custom UI elements
 	 * Such elements include the console and dialog buttons and the console and dialog backgrounds
 	 * @private
-	 * @example initUIElements()
+	 * @example $e_initUIElements()
 	 */
-	function initUIElements() {
+	function $e_initUIElements() {
 		var canvas, ctx, div, width, height, src;
 		// Main background
 		div = document.getElementById("eseecode");
@@ -753,9 +752,9 @@
 	/**
 	 * Initializes or resets the grid modes select
 	 * @private
-	 * @example resetGridModeSelect()
+	 * @example $e_resetGridModeSelect()
 	 */
-	function resetGridModeSelect() {
+	function $e_resetGridModeSelect() {
 		var element = document.getElementById("setup-grid-coordinates");
 		// Clean select
 		for (var i=element.options.length; i>0; i--) {
@@ -775,7 +774,7 @@
 			element.add(option);
 		}
 		// If we are currently using a custom axis setup (could happen when changing translation) add Custom option
-		if (getGridPredefined() == -1) {
+		if ($e_getGridPredefined() == -1) {
 			var option = document.createElement("option");
 			option.value = gridModes.length;
 			option.text = _("Custom");
@@ -789,9 +788,9 @@
 	 * @private
 	 * @param {String} backgroundColor Background color
 	 * @return {String} Readable text
-	 * @example readableText("#123456")
+	 * @example $e_readableText("#123456")
 	 */
-	function readableText(backgroundColor) {
+	function $e_readableText(backgroundColor) {
 		var color = backgroundColor.substring(1);
 		var colorR = parseInt(color.substring(0,2), 16);
 		var colorG = parseInt(color.substring(2,4), 16);
@@ -816,9 +815,9 @@
 	/**
 	 * Initializes the cursor layer
 	 * @private
-	 * @example initTurtle()
+	 * @example $e_initTurtle()
 	 */
-	function initTurtle() {
+	function $e_initTurtle() {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var name = "turtle";
 		var div = document.createElement("div");
@@ -842,9 +841,9 @@
 	/**
 	 * Hides/Shows the cursor layer
 	 * @private
-	 * @example toggleTurtle()
+	 * @example $e_toggleTurtle()
 	 */
-	function toggleTurtle() {
+	function $e_toggleTurtle() {
 		var turtleCanvas = $_eseecode.canvasArray["turtle"];
 		if (turtleCanvas.visible) {
 			turtleCanvas.visible = false;
@@ -860,9 +859,9 @@
 	 * @private
 	 * @param {Array} pos System coordinates with Array elements x and y
 	 * @return System value which refers to the same user position
-	 * @example user2systemCoords({x: 150, y: 250})
+	 * @example $e_user2systemCoords({x: 150, y: 250})
 	 */
-	function user2systemCoords(pos) {
+	function $e_user2systemCoords(pos) {
 		var value = {};
 		value.x = pos.x*$_eseecode.coordinates.scale.x+$_eseecode.coordinates.position.x;
 		value.y = pos.y*$_eseecode.coordinates.scale.y+$_eseecode.coordinates.position.y;
@@ -874,9 +873,9 @@
 	 * @private
 	 * @param {Array} pos System coordinates with Array elements x and y
 	 * @return User value which refers to the same system position
-	 * @example system2userCoords({x: 100, y: 200})
+	 * @example $e_system2userCoords({x: 100, y: 200})
 	 */
-	function system2userCoords(pos) {
+	function $e_system2userCoords(pos) {
 		var value = {};
 		value.x = (pos.x-$_eseecode.coordinates.position.x)/$_eseecode.coordinates.scale.x;
 		value.y = (pos.y-$_eseecode.coordinates.position.y)/$_eseecode.coordinates.scale.y;
@@ -890,8 +889,8 @@
 	 * @return System value which refers to the same user angle
 	 * @example user2systemAngle(90)
 	 */
-	function user2systemAngle(angle) {
-		return system2userAngle(angle);
+	function $e_user2systemAngle(angle) {
+		return $e_system2userAngle(angle);
 	}
 	
 	/**
@@ -899,9 +898,9 @@
 	 * @private
 	 * @param {Number} angle System angle
 	 * @return User value which refers to the same system position
-	 * @example system2userAngle(90)
+	 * @example $e_system2userAngle(90)
 	 */
-	function system2userAngle(angle) {
+	function $e_system2userAngle(angle) {
 		if ($_eseecode.coordinates.scale.x < 0) {
 			angle = 180 - angle;
 		}
@@ -919,9 +918,9 @@
 	 * @private
 	 * @param {Number} [id] Layer id. If unset use the currently active layer
 	 * @param {Number} [canvas] Canvas to use. If unset use the "turtle" layer
-	 * @example resetTurtle()
+	 * @example $e_resetTurtle()
 	 */
-	function resetTurtle(id, canvas) {
+	function $e_resetTurtle(id, canvas) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
@@ -974,9 +973,9 @@
 	/**
 	 * Initiates/Resets the setup window
 	 * @private
-	 * @example initSetup()
+	 * @example $e_initSetup()
 	 */
-	function initSetup() {
+	function $e_initSetup() {
 		var debugDiv = document.getElementById("dialog-setup");
 		document.getElementById("setup-execute-step").value = $_eseecode.execution.step;
 		if ($_eseecode.execution.stepped) {
@@ -992,9 +991,9 @@
 	 * @private
 	 * @param {Number} id Layer id
 	 * @param {Boolean} [force] True to force switch on, false to force switch off
-	 * @example toggleCanvas(3)
+	 * @example $e_toggleCanvas(3)
 	 */
-	function toggleCanvas(id, force) {
+	function $e_toggleCanvas(id, force) {
 		var div = $_eseecode.canvasArray[id].div;
 		if (force === true || div.style.display == "none") {
 			div.style.display = "block";
@@ -1009,9 +1008,9 @@
 	 * @param {Object} context Context object where to draw the cursor
 	 * @param {Array} pos Coordinates of the cursor
 	 * @param {Number} id Id of the layer
-	 * @example drawCursor(ctx, {x: 200, y: 200}, id)
+	 * @example $e_drawCursor(ctx, {x: 200, y: 200}, id)
 	 */
-	function drawCursor(context, pos, id) {
+	function $e_drawCursor(context, pos, id) {
 		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
 		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
 		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
@@ -1070,7 +1069,7 @@
 			turtleCanvas.className = "canvas";
 			turtleCanvas.width = canvasWidth;
 			turtleCanvas.height = canvasHeight;
-			resetTurtle(id, turtleCanvas);
+			$e_resetTurtle(id, turtleCanvas);
 			context.drawImage(turtleCanvas, 0, 0);
 		}
 	}
@@ -1078,13 +1077,13 @@
 	/**
 	 * Initializes/Resets the grid layer
 	 * @private
-	 * @example resetGrid()
+	 * @example $e_resetGrid()
 	 */
-	function resetGrid() {
+	function $e_resetGrid() {
 		var ctx = $_eseecode.canvasArray["grid"].context;
-		clearCanvas("grid");
+		$e_clearCanvas("grid");
 		if (document.getElementById("setup-grid-enable").checked) {
-			drawGrid(ctx);
+			$e_drawGrid(ctx);
 		}
 	}
 
@@ -1092,15 +1091,15 @@
 	 * Draws a grid
 	 * @private
 	 * @param {Object} context Context object where to draw the grid
-	 * @example drawGrid(ctx)
+	 * @example $e_drawGrid(ctx)
 	 */
-	function drawGrid(ctx) {
+	function $e_drawGrid(ctx) {
 		var canvasSize = window.getComputedStyle(document.querySelector('#whiteboard')).getPropertyValue('width').replace("px","");
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
-		var coorUpperLeft = system2userCoords({x: 0, y: 0});
-		var coorLowerRight = system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
+		var coorUpperLeft = $e_system2userCoords({x: 0, y: 0});
+		var coorLowerRight = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
 		ctx.fillText("("+coorUpperLeft.x+","+coorUpperLeft.y+")",margin,fontHeight+margin);
 		ctx.fillText("("+coorLowerRight.x+","+coorLowerRight.y+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
@@ -1149,9 +1148,9 @@
 	 * @param {Number} lineStart Line where the selection starts
 	 * @param {Number} lineEnd Line where the selection ends
 	 * @param {String} style Ace style to use for highlighting
-	 * @example selectTextareaLine(12, 12, "ace_step")
+	 * @example $e_selectTextareaLine(12, 12, "ace_step")
 	 */
-	function selectTextareaLine(lineStart, lineEnd, style) {
+	function $e_selectTextareaLine(lineStart, lineEnd, style) {
 		lineStart--; // array starts at 0, we leave lineEnd as is beacuse we'll select until the beginning of the next line
 		var Range = require('ace/range').Range;
 		return ace.edit("console-write").session.addMarker(new Range(lineStart,0,lineEnd-1,ace.edit("console-write").session.getLine(lineEnd-1).length), style, "fullLine");
@@ -1162,9 +1161,9 @@
 	 * @private
 	 * @param {Number} [lineNumber] Line to highlight. If unset it highlights the last line marked with setHighlight()
 	 * @param {String} [reason=step] Reason for highlighting. Available reasons are: "step", "error"
-	 * @example highlight(12, "error")
+	 * @example $e_highlight(12, "error")
 	 */
-	function highlight(lineNumber, reason) {
+	function $e_highlight(lineNumber, reason) {
 		reason = reason?reason:"step";
 		if (!lineNumber) {
 			if ($_eseecode.session.highlight.lineNumber) {
@@ -1174,12 +1173,12 @@
 			}
 			reason = $_eseecode.session.highlight.reason;
 		}
-		unhighlight();
+		$e_unhighlight();
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if (mode == "blocks") {
 			var consoleDiv = document.getElementById("console-blocks");
-			var div = searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
 			var style;
 			if (reason === "error") {
 				style = "#FF0000";
@@ -1191,7 +1190,7 @@
 			}
 			div.style.border = "2px solid "+style;
 			div.style.boxShadow = "5px 5px 5px "+style;
-			smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+blockSize(level,consoleDiv.firstChild).height/2);
+			$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+$e_blockSize(level,consoleDiv.firstChild).height/2);
 		} else if (mode == "write") {
 			var style;
 			if (reason == "error") {
@@ -1201,7 +1200,7 @@
 			} else {
 				style = "ace_step";
 			}
-			selectTextareaLine(lineNumber,lineNumber, style);
+			$e_selectTextareaLine(lineNumber,lineNumber, style);
 			ace.edit("console-write").scrollToLine(lineNumber, true, true);
 		}
 		$_eseecode.session.highlight.lineNumber = lineNumber;
@@ -1211,15 +1210,15 @@
 	/**
 	 * Removes code highlight
 	 * @private
-	 * @example unhighlight()
+	 * @example $e_unhighlight()
 	 */
-	function unhighlight() {
+	function $e_unhighlight() {
 		if (!$_eseecode.session.highlight.lineNumber) {
 			return;
 		}
 		var consoleDiv = document.getElementById("console-blocks");
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id !== "console-blocks-tip") {
-			var div = searchBlockByPosition(consoleDiv.firstChild,$_eseecode.session.highlight.lineNumber,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,$_eseecode.session.highlight.lineNumber,1).element;
 			if (div) { // by the time we have to unhighlight it the div might not exist anymore
 				div.style.border = ""; // accesses the canvas
 				div.style.boxShadow = ""
@@ -1238,9 +1237,9 @@
 	 * Mark a line to highlight
 	 * @private
 	 * @param lineNumber Line to mark to highlight
-	 * @example setHighlight(12)
+	 * @example $e_setHighlight(12)
 	 */
-	function setHighlight(lineNumber) {
+	function $e_setHighlight(lineNumber) {
 		$_eseecode.session.highlight.lineNumber = lineNumber;
 		
 	}
@@ -1251,9 +1250,9 @@
 	 * @param instructionName Name of the instruction to search
 	 * @param startId Index to start from. Useful when an instruction appears several times in the set and we want to skip the ones we've seen
 	 * @return {Number} Index of the given instruction
-	 * @example getInstructionSetIdFromName("forward")
+	 * @example $e_getInstructionSetIdFromName("forward")
 	 */
-	function getInstructionSetIdFromName(instructionName, startId) {
+	function $e_getInstructionSetIdFromName(instructionName, startId) {
 		if (startId == null) { // By default search from the beginning
 			startId = 0;
 		}
@@ -1268,14 +1267,14 @@
 	/**
 	 * Downloads the user code as a file to the user's device
 	 * @private
-	 * @example saveCode()
+	 * @example $e_saveCode()
 	 */
-	function saveCode() {
+	function $e_saveCode() {
 		if (navigator.userAgent.match(/MSIE/)) {
-			msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to level4, copy the code and paste it into a file in your computer."));
+			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to level4, copy the code and paste it into a file in your computer."));
 			return;
 		}
-		var codeURI = "data:application/octet-stream," + encodeURIComponent(downloadCode());
+		var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
 		var downloadLink = document.createElement("a");
 		downloadLink.href = codeURI;
 		downloadLink.download = (($_eseecode.codeFilename && $_eseecode.codeFilename.length > 0)?$_eseecode.codeFilename:"code.esee");
@@ -1288,43 +1287,43 @@
 	/**
 	 * Asks the user via the UI to upload a file which will then trigger loadCodFile()
 	 * @private
-	 * @example loadCode()
+	 * @example $e_loadCode()
 	 */
-	function loadCode() {
+	function $e_loadCode() {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			var uploadButton = document.createElement("input");
 			uploadButton.type = "file";
-			uploadButton.addEventListener("change", loadCodeFile, false);
+			uploadButton.addEventListener("change", $e_loadCodeFile, false);
 			uploadButton.style.display = "none";
 			document.body.appendChild(uploadButton);
 			uploadButton.click();
 			document.body.removeChild(uploadButton);
 		} else {
-			msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into level4 and then switch to the level you wish to code with."));
+			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into level4 and then switch to the level you wish to code with."));
 		}
 	}
 
 	/**
-	 * Completes or cancels the loadCode() asynchronous event by loading the code into the console if possible
+	 * Completes or cancels the $e_loadCode() asynchronous event by loading the code into the console if possible
 	 * @private
 	 * @param {!Object} event Event
-	 * @example loadCodeFile(event)
+	 * @example $e_loadCodeFile(event)
 	 */
-	function loadCodeFile(event) {
+	function $e_loadCodeFile(event) {
 		if (!event.target.files.length) {
 			return;
 		}
 		var file = event.target.files[0];
 		if (!file) {
-        		msgBox(_("Failed to upload the file!"));
+        		$e_msgBox(_("Failed to upload the file!"));
 			return;
 		} else if (file.type && !file.type.match('text.*')) {
-			msgBox(_("%s is not a valid eSee file! (Invalid file type %s)",[file.name,file.type]));
+			$e_msgBox(_("%s is not a valid eSee file! (Invalid file type %s)",[file.name,file.type]));
 			return;
 		}
       		var reader = new FileReader();
 		reader.onload = function(event) {
-			uploadCode(event.target.result)
+			API_uploadCode(event.target.result)
 			$_eseecode.codeFilename = file.name;
 		}
 		reader.readAsText(file);
@@ -1336,9 +1335,9 @@
 	 * @param {!HTMLElement} div Div to scroll
 	 * @param {Number} height Pixels from top to scroll to
 	 * @param {Number} [startTop] Offset from the start. If unset it takes the current div's scroll offset
-	 * @example smoothScroll()
+	 * @example $e_smoothScroll()
 	 */
-	function smoothScroll(div, height, startTop) {
+	function $e_smoothScroll(div, height, startTop) {
 		clearTimeout($_eseecode.session.scrollTimeout); // This is to prevent two scroll timeouts tunning at the same time
 		if (!startTop) {
 			startTop = div.scrollTop;
@@ -1357,7 +1356,7 @@
 		}
 		div.scrollTop += increment;
 		if (div.scrollTop != height) {
-			$_eseecode.session.scrollTimeout = setTimeout(function() { smoothScroll(div, height, startTop) }, 1);
+			$_eseecode.session.scrollTimeout = setTimeout(function() { $e_smoothScroll(div, height, startTop) }, 1);
 		}
 	}
 
@@ -1365,9 +1364,9 @@
 	 * Check if the code in the console is empty
 	 * @private
 	 * @return {Boolean} Whether the console is empty of code
-	 * @example codeIsEmpty("ca")
+	 * @example $e_codeIsEmpty("ca")
 	 */
-	function codeIsEmpty() {
+	function $e_codeIsEmpty() {
 		if (ace.edit("console-write").getValue()) {
 			return false;
 		}
@@ -1382,19 +1381,19 @@
 	 * @private
 	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost
 	 * @param {Boolean} force Force reset
-	 * @example resetUI()
+	 * @example $e_resetUI()
 	 */
-	function resetUI(notInitial, force) {
+	function $e_resetUI(notInitial, force) {
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
 		$_eseecode.dialogWindow = document.getElementById("dialog-window");
-		if (notInitial === true && !codeIsEmpty() && !force) {
-			msgBox(_("Do you really want to start over?"), {acceptAction:resetUIForced,cancelAction:msgBoxClose});
+		if (notInitial === true && !$e_codeIsEmpty() && !force) {
+			$e_msgBox(_("Do you really want to start over?"), {acceptAction:$e_resetUIForced,cancelAction:$e_msgBoxClose});
 			return false;
 		}
-		initUIElements();
-		resetGridModeSelect();
-		resetUndoBlocks();
-		resetBreakpoints();
+		$e_initUIElements();
+		$e_resetGridModeSelect();
+		$e_resetUndoBlocks();
+		$e_resetBreakpoints();
 		// Hide filemenu if asked to do so (to integrate with other platforms)
 		var urlParts = window.location.href.match(/(\?|&)filemenu=([^&#]+)/);
 		if (urlParts !== null) {
@@ -1416,26 +1415,26 @@
 				$_eseecode.modes.dialog[i].tab = document.getElementById("dialog-tabs-"+modeName);
 			}
 		}
-		resizeConsole(true);
-		initConsole();
+		$e_resizeConsole(true);
+		$e_initConsole();
 		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
 		if (urlParts !== null) {
 			var grid = $_eseecode.coordinates.predefined[urlParts[2]];
-			changeCoordinates(grid.position, grid.scale);
+			$e_changeAxisCoordinates(grid.position, grid.scale);
 		}
-		resetCanvas();
-		executePrecode();
-		resetDebug();
+		$e_resetCanvas();
+		$e_executePrecode();
+		$e_resetDebug();
 		document.getElementById("dialog-tabs-window").style.display = "none";
-		initSetup();
-		resetLanguageSelect();
-		switchLanguage($_eseecode.i18n.current, true);
-		document.body.removeEventListener("keydown", keyboardShortcuts, false);
-		document.body.addEventListener("keydown", keyboardShortcuts, false);
-		window.removeEventListener("beforeunload", windowRefresh, false);
-		window.addEventListener("beforeunload", windowRefresh, false);
+		$e_initSetup();
+		$e_resetLanguageSelect();
+		$e_switchLanguage($_eseecode.i18n.current, true);
+		document.body.removeEventListener("keydown", $e_keyboardShortcuts, false);
+		document.body.addEventListener("keydown", $e_keyboardShortcuts, false);
+		window.removeEventListener("beforeunload", $e_windowRefresh, false);
+		window.addEventListener("beforeunload", $e_windowRefresh, false);
 		if (!notInitial) {
-			window.addEventListener('resize', windowResizeHandler);
+			window.addEventListener('resize', $e_windowResizeHandler);
 			var orientation = "landscape";
 			if (screen.orientation && screen.orientation.lock) {
 				screen.orientation.lock(orientation).catch(function() {});
@@ -1451,41 +1450,46 @@
 			var eventListeners = ["webkitfullscreenchange","mozfullscreenchange","msfullscreenchange","fullscreenchange"];
 			for (var i=0; i<eventListeners.length; i++) {
 				document.addEventListener(eventListeners[i], function(e) {
-					if (!isFullscreen()) {
-						toggleFullscreenIcon(false);
+					if (!$e_isFullscreen()) {
+						$e_toggleFullscreenIcon(false);
 					} else {
-						toggleFullscreenIcon(true);
+						$e_toggleFullscreenIcon(true);
 					}
 				}, false);
 			}
-			toggleFullscreenIcon();
+			$e_toggleFullscreenIcon();
 		}
-		windowResizeHandler();
+		$e_windowResizeHandler();
 		return true;
 	}
 
 	/**
 	 * Detects whether the site is in fullscreen mode or not
 	 * @return {Boolean} True if the page is in fullscreen mode
-	 * @example isFullscreen();
+	 * @example $e_isFullscreen();
 	 */
-	function isFullscreen() {
+	function $e_isFullscreen() {
 		return (window.navigator.standalone || (document.fullScreenElement && document.fullScreenElement !== null) || (document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement));
 	}
 
 	/**
 	 * Redraws the maximize/restore fullscreen icon
-	 * @example toggleFullscreenIcon();
+	 * @example $e_toggleFullscreenIcon();
 	 */
-	function toggleFullscreenIcon(maximize) {
+	function $e_toggleFullscreenIcon(maximize) {
+		var fullscreenButton = document.getElementById("fullscreen-button");
+		// Do not show this button if the page is embedded
+		if ($e_isEmbedded()) {
+			fullscreenButton.style.display = "none";
+		}
 		var iconMargin = 2;
-		if (!isFullscreen()) {
+		if (!$e_isFullscreen()) {
 			iconMargin = 4;
 		} else {
 			iconMargin = 2;
 		}
 		// Console resize tab
-		var canvas = document.getElementById("fullscreen-button").firstChild;
+		var canvas = fullscreenButton.firstChild;
 		var ctx = canvas.getContext("2d");
 		var width = canvas.width;
 		var height = canvas.height;
@@ -1503,11 +1507,12 @@
 
 	/**
 	 * Set/unsets fullscreen view
-	 * @example toggleFullscreen();
+	 * @example $e_toggleFullscreen();
 	 */
-	function toggleFullscreen() {
-		if (!isFullscreen()) {
-			var element = document.getElementById("eseecode");
+	function $e_toggleFullscreen() {
+		if (!$e_isFullscreen()) {
+			//var element = document.getElementById("eseecode");
+			var element = document.documentElement;
 			if(element.requestFullscreen) {
 				element.requestFullscreen();
 			} else if(element.mozRequestFullScreen) {
@@ -1533,19 +1538,19 @@
 	/**
 	 * Resets all UI elements even if code is already loaded
 	 * @private
-	 * @example resetUIForced()
+	 * @example $e_resetUIForced()
 	 */
-	function resetUIForced() {
-		resetUI(true, true);
-		msgBoxClose();
+	function $e_resetUIForced() {
+		$e_resetUI(true, true);
+		$e_msgBoxClose();
 	}
 
 	/**
 	 * Resizes the console height based on the window's size
 	 * @private
-	 * @example windowResizeHandler()
+	 * @example $e_windowResizeHandler()
 	 */
-	function windowResizeHandler() {
+	function $e_windowResizeHandler() {
 		var height = document.getElementById("eseecode").clientHeight - document.getElementById("header").offsetHeight - document.getElementById("footer").offsetHeight - document.getElementById("console-tabs").offsetHeight - document.getElementById("console-buttons").offsetHeight;
 		var programElements = document.getElementsByClassName("program");
 		for (var i=0; i<programElements.length; i++) {
@@ -1557,36 +1562,38 @@
 	/**
 	 * Initializes/Resets the Console
 	 * @private
-	 * @example initConsole()
+	 * @example $e_initConsole()
 	 */
-	function initConsole() {
-		resetBlocksConsole(document.getElementById("console-blocks"));
-		resetWriteConsole();
+	function $e_initConsole() {
+		$e_resetBlocksConsole(document.getElementById("console-blocks"));
+		$e_resetWriteConsole();
 	}
 
 	/**
 	 * Window refresh handler
 	 * @private
-	 * @example windowRefresh()
+	 * @example $e_windowRefresh()
 	 */
-	function windowRefresh(event) {
+	function $e_windowRefresh(event) {
+		if (!$e_isEmbedded()) {
                 event.returnValue = _("Careful, any code you haven't saved will be lost if you leave this page!");
+		}
 	}
 
 	/**
 	 * Keyboard shortcuts listener. It listenes for all keyboard presses and calls functions when shurtcut combinations happen
 	 * @private
 	 * @param {Object} event Event
-	 * @example document.body.addEventListener("keydown",keyboardShortcuts,false)
+	 * @example document.body.addEventListener("keydown",$e_keyboardShortcuts,false)
 	 */
-	function keyboardShortcuts(event) {
+	function $e_keyboardShortcuts(event) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if (event && event.type == "keydown" && event.keyCode == 27) {
 			if ($_eseecode.session.breakpointHandler) {
-				addBreakpointEventCancel();
+				$e_addBreakpointEventCancel();
 			}
 			if ($_eseecode.session.floatingBlock.div) {
-				cancelFloatingBlock(event);
+				$e_cancelFloatingBlock(event);
 			}
 			if (document.getElementById("msgBoxWrapper0")) {
 				var id=0;
@@ -1605,22 +1612,22 @@
 					element = element.parentNode;
 				}
 				if (isSetupBlockDialog) {
-					setupBlockCancel();
+					$e_setupBlockCancel();
 				} else {
-					msgBoxClose();
+					$e_msgBoxClose();
 				}
 			}
 		} else if (event.which === 82 && event.ctrlKey && !event.shiftKey) { // CTRL+R
-			execute();
+			$e_execute();
 			event.preventDefault();
 		} else if (mode == "blocks") {
 			if (event && event.type == "keydown") {
 				if (event.which === 90 && event.ctrlKey && !event.shiftKey) { // CTRL+Z
-					undo(false);
+					$e_undo(false);
 				} else if (event.which === 90 && event.ctrlKey && event.shiftKey) { // CTRL+SHIFT+Z
-					undo(true);
+					$e_undo(true);
 				} else if (event.which === 89 && event.ctrlKey) { // CTRL+Y
-					undo(true);
+					$e_undo(true);
 				}
 			}
 		}
@@ -1629,9 +1636,9 @@
 	/**
 	 * Adds the console and dialog tips for blocks if no code exists
 	 * @private
-	 * @example checkAndAddBlocksTips()
+	 * @example $e_checkAndAddBlocksTips()
 	 */
-	function checkAndAddBlocksTips() {
+	function $e_checkAndAddBlocksTips() {
 		var consoleDiv = document.getElementById("console-blocks");
 		if (!consoleDiv.firstChild || consoleDiv.firstChild.id == "console-blocks-tip") {
 			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
@@ -1646,7 +1653,7 @@
 /*
 			// Dialog highlight first block to use
 			if (level === "level1") {
-				var startInstructionId = getInstructionSetIdFromName("goToCenter");
+				var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
 				var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 				while (startInstructionDiv !== null) {
 					if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
@@ -1721,9 +1728,9 @@
 	/**
 	 * Removes the console and dialog tips for blocks
 	 * @private
-	 * @example removeBlocksTips()
+	 * @example $e_removeBlocksTips()
 	 */
-	function removeBlocksTips() {
+	function $e_removeBlocksTips() {
 		// Remove console tip
 		var consoleDiv = document.getElementById("console-blocks");
 		consoleDiv.innerHTML = "";
@@ -1731,7 +1738,7 @@
 		if ($_eseecode.session.tipInterval) {
 			clearInterval($_eseecode.session.tipInterval);
 		}
-		var startInstructionId = getInstructionSetIdFromName("goToCenter");
+		var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
 		var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 		while (startInstructionDiv !== null) {
 			if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
@@ -1750,9 +1757,9 @@
 	 * @private
 	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String>} List of all variables declared before and in the scope of div
-	 * @example getVariables(document.getElementById("div-123123123"))
+	 * @example $e_getVariables(document.getElementById("div-123123123"))
 	 */
-	function getVariables(div) {
+	function $e_getVariables(div) {
 		var consoleDiv = document.getElementById("console-blocks");
 		var values = [];
 		var div = div.parentNode;
@@ -1774,9 +1781,9 @@
 	 * @private
 	 * @param {!HTMLElement} div Block div
 	 * @return {Array<String>} List of all eSeeCode functions declared in the code that return a specific type of value
-	 * @example getFunctions("number"))
+	 * @example $e_getFunctions("number"))
 	 */
-	function getFunctions(type) {
+	function $e_getFunctions(type) {
 		var values = [];
 		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
 			if ($_eseecode.instructions.set[i].type === type) {
@@ -1794,9 +1801,9 @@
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @return {{parameters:Array<String>, text:String} Parameters of a block, or the default parameters if none were set
-	 * @example loadParameters("level2", document.getElementById("div-123123123"))
+	 * @example $e_loadParameters("level2", document.getElementById("div-123123123"))
 	 */
-	function loadParameters(level, div, dialog) {
+	function $e_loadParameters(level, div, dialog) {
 		var instructionSetId = div.getAttribute("instructionSetId");
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		var parameters = [];
@@ -1808,6 +1815,9 @@
 					param = div.getAttribute("param"+(i+1));
 				} else if (instruction.parameters[i].initial !== undefined) {
 					param = instruction.parameters[i].initial;
+					if (instruction.parameters[i].type == "number") {
+						param = $e_parsePredefinedConstants(param);
+					}
 					div.setAttribute("param"+(i+1),param);
 				}
 				if (param !== undefined) {
@@ -1904,49 +1914,49 @@
 	 * @private
 	 * @param {String} level Level name
 	 * @param {!HTMLElement} dialog Dialog window element
-	 * @example initDialogBlocks("level2", document.getElementById("dialog-window"))
+	 * @example $e_initDialogBlocks("level2", document.getElementById("dialog-window"))
 	 */
-	function initDialogBlocks(level, dialog) {
-		resetDialog(dialog);
+	function $e_initDialogBlocks(level, dialog) {
+		$e_resetDialog(dialog);
 		var instructions = $_eseecode.instructions.set;
 		var width = $_eseecode.setup.blockWidth[level];
 		var height = $_eseecode.setup.blockHeight[level];
 		var urlParts = window.location.href.match(/(\?|&)instructions=([^&#]+)/);
 		var clearNext = false;
-                if (urlParts !== null) {
-                        // Check that there is an explicit instruction set
-                        var instructions = urlParts[2].split(";");
-                        for (var i=0;i<instructions.length;i++) {	
-                                codeId = instructions[i];
-                                if (codeId == "blank") {
-                                        clearNext = true;
-                                        continue;
-                                }
-                                var div = document.createElement('div');
-                                if (clearNext) {
-                                        clearNext = false;
-                                        div.style.clear = "left";
-                                }
-                                dialog.appendChild(div);
+		if (urlParts !== null) {
+        	// Check that there is an explicit instruction set
+            var instructions = urlParts[2].split(";");
+            for (var i=0;i<instructions.length;i++) {	
+                codeId = instructions[i];
+                if (codeId == "blank") {
+                    clearNext = true;
+                    continue;
+                }
+                var div = document.createElement('div');
+                if (clearNext) {
+                    clearNext = false;
+                    div.style.clear = "left";
+                }
+                dialog.appendChild(div);
 				var newInstructionId;
 				if ($_eseecode.instructions.custom.length > 0) { // Custom instructions are already loaded in the instructionSet
 					newInstructionId = $_eseecode.instructions.custom[i];
 				} else {
-				        var instruction = $_eseecode.instructions.set[getInstructionSetIdFromName(codeId)];
-				        newInstructionId = $_eseecode.instructions.set.length;
-				        $_eseecode.instructions.set[newInstructionId] = clone(instruction);
-				        $_eseecode.instructions.set[newInstructionId].show = [];
+			        var instruction = $_eseecode.instructions.set[$e_getInstructionSetIdFromName(codeId)];
+			        newInstructionId = $_eseecode.instructions.set.length;
+			        $_eseecode.instructions.set[newInstructionId] = $e_clone(instruction);
+			        $_eseecode.instructions.set[newInstructionId].show = [];
 					$_eseecode.instructions.custom[$_eseecode.instructions.custom.length-1] = newInstructionId;
 				}
 				var j = 0;
-				while (i+1+j < instructions.length && (isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
-                                        // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
-				        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
-				        j++;
+				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
+                    // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
+			        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
+			        j++;
 				}
 				i += j;
-                                createBlock(level,div,newInstructionId,true);
-                        }
+                $e_createBlock(level,div,newInstructionId,true);
+            }
 		} else {
 		        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
 			        var category = $_eseecode.instructions.categories[n].name;
@@ -1977,7 +1987,7 @@
 						        clearNext = false;
 					        }
 					        dialog.appendChild(div);
-					        createBlock(level,div,i,true);
+					        $e_createBlock(level,div,i,true);
 				        }
 				}
 			}
@@ -1989,10 +1999,10 @@
 	 * @private
 	 * @param {String} level Level name
 	 * @param {!HTMLElement} dialog Dialog window element
-	 * @example initDialogWrite("level2", document.getElementById("dialog-window"))
+	 * @example $e_initDialogWrite("level2", document.getElementById("dialog-window"))
 	 */
-	function initDialogWrite(level, dialog) {
-		resetDialog(dialog);
+	function $e_initDialogWrite(level, dialog) {
+		$e_resetDialog(dialog);
 		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
 			$_eseecode.instructions.set[i].index = i;
 		}
@@ -2019,10 +2029,10 @@
 						div.className = "";
 						div.style.backgroundColor = color;
 						div.style.border = "1px solid #AAAAAA";
-						div.style.color = readableText(color);
+						div.style.color = $e_readableText(color);
 						div.setAttribute("title", _(instruction.tip));
 						div.setAttribute("instructionSetId", instruction.index);
-						div.addEventListener("click", writeText, false);
+						div.addEventListener("click", $e_writeText, false);
 						if (firstInCategory) {
 							div.style.marginTop = "5px";
 							firstInCategory = false;
@@ -2069,9 +2079,9 @@
 	 * Writes in the write console at the position where the cursor is the instruction clicked in the dialgo window
 	 * @private
 	 * @param {!Object} event Event
-	 * @example div.addEventListener("click", writeText, false)
+	 * @example div.addEventListener("click", $e_writeText, false)
 	 */
-	function writeText(event) {
+	function $e_writeText(event) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var div = event.target;
 		while (div && !div.getAttribute("instructionSetId")) { // Target could be a span in the div, so let's fetch the parent div
@@ -2108,12 +2118,12 @@
 	 * Undoes/Redoes the last action in the current level
 	 * @private
 	 * @param {Boolean} [redo] Whether we want to redo or undo
-	 * @example undo()
+	 * @example $e_undo()
 	 */
-	function undo(redo) {
+	function $e_undo(redo) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if (mode == "blocks") {
-			undoBlocks(redo);
+			$e_undoBlocks(redo);
 		} else if (mode == "write") {
 			ace.edit("console-write").execCommand(redo?"redo":"undo", false, null);
 		}
@@ -2122,37 +2132,38 @@
 	/**
 	 * Initializes/Resets all the drawing elements including execution
 	 * @private
-	 * @example resetDraw()
+	 * @example $e_resetCanvasFromUI()
 	 */
-	function resetDraw() {
-		resetCanvas();
+	function $e_resetCanvasFromUI() {
+		$e_resetCanvas();
+		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
 		goTo(0,0);
-		endExecution();
+		$e_endExecution();
 	}
 
 	/**
 	 * Initializes/Resets the whiteboard
 	 * @private
-	 * @example resetCanvas()
+	 * @example $e_resetCanvas()
 	 */
-	function resetCanvas() {
+	function $e_resetCanvas() {
 		document.getElementById("dialog-debug-execute").innerHTML = "";
 		// First delete bottom and top references so their layers aren't deleted twice in the for()
 		delete $_eseecode.canvasArray["bottom"];
 		delete $_eseecode.canvasArray["top"];
 		// reset canvas
   		for(key in $_eseecode.canvasArray) {
-			removeCanvas(key);
+			$e_removeCanvas(key);
 		}
 		delete $_eseecode.canvasArray;
 		$_eseecode.canvasArray = [];
-		initTurtle();
-		getCanvas("grid").canvas.style.zIndex = -1; // canvas-0 is special
-		switchCanvas(0); // canvas-0 is the default
-		updateAxisSettingsFromUI();
+		$e_initTurtle();
+		$e_getCanvas("grid").canvas.style.zIndex = -1; // canvas-0 is special
+		$e_switchCanvas(0); // canvas-0 is the default
+		$e_changeAxisBasedOnUISettings();
 		// reset turtle	
-		moveTurtle(user2systemCoords({x: 0, y: 0}));
-		setAngleTurtle(user2systemAngle(0));
+		$e_moveTurtle($e_user2systemCoords({x: 0, y: 0}));
+		$e_setAngleTurtle($e_user2systemAngle(0));
 		// reset windows
   		for(var i=0;i<$_eseecode.windowsArray.length;i++) {
 			if ($_eseecode.windowsArray[i]) {
@@ -2162,16 +2173,16 @@
 		}
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
-		windowSwitch(0); // window-0 is the default
+		document.getElementById("dialog-tabs-window").style.display = "none";
 	}
 
 	/**
 	 * Initializes/Resets the dialog window
 	 * @private
 	 * @param {!HTMLElement} dialog Dialog div element
-	 * @example resetDialog(document.getElementById("dialog-window"))
+	 * @example $e_resetDialog(document.getElementById("dialog-window"))
 	 */
-	function resetDialog(dialog) {
+	function $e_resetDialog(dialog) {
 		while (dialog.hasChildNodes()) {
 			dialog.removeChild(dialog.lastChild);
 		}
@@ -2181,23 +2192,23 @@
 	 * Initializes/Resets the blocks console window
 	 * @private
 	 * @param {!HTMLElement} dialog Console div element
-	 * @example resetBlocksConsole(document.getElementById("console-blocks"))
+	 * @example $e_resetBlocksConsole(document.getElementById("console-blocks"))
 	 */
-	function resetBlocksConsole(console) {
+	function $e_resetBlocksConsole(console) {
 		while (console.hasChildNodes()) {
 		    console.removeChild(console.lastChild);
 		}
-		cancelFloatingBlock();
-		checkAndAddBlocksTips();
+		$e_cancelFloatingBlock();
+		$e_checkAndAddBlocksTips();
 	}
 
 	/**
 	 * Initializes/Resets the write console window
 	 * @private
 	 * @param {!HTMLElement} dialog Console div element
-	 * @example resetWriteConsole(document.getElementById("console-write"))
+	 * @example $e_resetWriteConsole(document.getElementById("console-write"))
 	 */
-	function resetWriteConsole(code) {
+	function $e_resetWriteConsole(code) {
 		if (!code) {
 			code = "";
 		}
@@ -2214,25 +2225,25 @@
 		editor.setHighlightActiveLine(true);
 		// Only update code if it changed, to avoid adding empty changes into the ACE undo queue
 		if (code != ace.edit("console-write").getValue()) {
-			// We must unset writeChanged call on ace change event otherwise it unhighlights the code
-			editor.session.off("change",writeChanged);
+			// We must unset $e_writeChanged call on ace change event otherwise it unhighlights the code
+			editor.session.off("change",$e_writeChanged);
 			editor.setValue(code);
 		}
 		editor.gotoLine(0,0);
-		editor.session.on("change",writeChanged);
-		ace.edit("console-write").session.setUseWrapMode(true);
+		editor.session.on("change",$e_writeChanged);
+		ace.edit("console-write").session.setUseWrapMode(false);
 	}
 
 	/**
 	 * Added as a listener it informs $_eseecode.session.changesInCode that the code in write console changed
 	 * @private
 	 * @param {!Object} event Ace editor change event object
-	 * @example writeChanged()
+	 * @example $e_writeChanged()
 	 */
-	function writeChanged(event) {
+	function $e_writeChanged(event) {
 		$_eseecode.session.changesInCode = "write";
-		unhighlight();
-		updateWriteBreakpoints(event);
+		$e_unhighlight();
+		$e_updateWriteBreakpoints(event);
 	}
 
 	/**
@@ -2242,9 +2253,9 @@
 	 * @param {Number} pos Position of the axis, origin us upperleft corner
 	 * @param {Number} scale Scale by which to multiply the x coordinates, originaly increasing from left to right
 	 * @return The index if it is found, -1 otherwise
-	 * @example getGridPredefined(200, 200, 1, -1)
+	 * @example $e_getGridPredefined(200, 200, 1, -1)
 	 */
-	function getGridPredefined(pos, scale) {
+	function $e_getGridPredefined(pos, scale) {
 		if (pos === undefined) {
 			pos = $_eseecode.coordinates.position;
 			scale = $_eseecode.coordinates.scale;
@@ -2269,15 +2280,15 @@
 	 * @private
 	 * @param {Number} pos Position of the axis, origin us upperleft corner
 	 * @param {Number} scale Scale by which to multiply the coordinates, originaly increasing downwards
-	 * @example changeCoordinates({x: 200, y: 200}, {x: 1, y: -1})
+	 * @example $e_changeAxisCoordinates({x: 200, y: 200}, {x: 1, y: -1})
 	 */
-	function changeCoordinates(pos, scale) {
+	function $e_changeAxisCoordinates(pos, scale) {
 		$_eseecode.coordinates.position = pos;
 		$_eseecode.coordinates.scale = scale;
-		resetGrid();
+		$e_resetGrid();
 		var element = document.getElementById("setup-grid-coordinates");
 		var gridModes = $_eseecode.coordinates.predefined;
-		var gridIsPredefined = getGridPredefined(pos, scale);
+		var gridIsPredefined = $e_getGridPredefined(pos, scale);
 		if (gridIsPredefined >= 0) {
 			// Only change if it is not the one already selected, otherwise we enter a infinite loop
 			if (element.value != gridIsPredefined) {
@@ -2301,19 +2312,19 @@
 	/**
 	 * Change whiteboard axis setup, called by the UI
 	 * @private
-	 * @example changeCoordinatesFromUIromUI()
+	 * @example $e_changeAxisFromUI()
 	 */
-	function changeCoordinatesFromUI() {
-		updateAxisSettingsFromUI();
-		resetCanvas();
+	function $e_changeAxisFromUI() {
+		$e_changeAxisBasedOnUISettings();
+		$e_resetCanvas();
 	}
 
 	/**
-	 * Change whiteboard axis setup
+	 * Change whiteboard axis based on UI settings
 	 * @private
-	 * @example updateAxisSettingsFromUI()
+	 * @example $e_changeAxisBasedOnUISettings()
 	 */
-	function updateAxisSettingsFromUI() {
+	function $e_changeAxisBasedOnUISettings() {
 		var element = document.getElementById("setup-grid-coordinates");
 		var gridModes = $_eseecode.coordinates.predefined;
 		var selectValue = element.value;
@@ -2327,5 +2338,5 @@
 			}
 		}
 		$_eseecode.coordinates.userSelection = selectValue;
-		changeCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
+		$e_changeAxisCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
 	}

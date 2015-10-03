@@ -7,9 +7,9 @@
 	 * @param {String} level Level name
 	 * @param {!HTMLElement} div Div element
 	 * @return {{width:Number, height:Number}} Block's height in the given level
-	 * @example blockSize("level2", document.getElementById("div-123213213"))
+	 * @example $e_blockSize("level2", document.getElementById("div-123213213"))
 	 */
-	function blockSize(level, div) {
+	function $e_blockSize(level, div) {
 		var size = { width: div.clientWidth, height: div.clientHeight };
 		if (div.lastChild && div.lastChild.tagName === "DIV") {
 			// div is a block, check size based on the last child which is always a single element			
@@ -27,12 +27,12 @@
 	 * Cancels a block movement or edition
 	 * @private
 	 * @param {Object} event Event
-	 * @example cancelFloatingBlock()
+	 * @example $e_cancelFloatingBlock()
 	 */
-	function cancelFloatingBlock(event) {
+	function $e_cancelFloatingBlock(event) {
 		if ($_eseecode.session.floatingBlock.div) {
 			if ($_eseecode.session.floatingBlock.div.parentNode == document.body) { // it could be that the div has been reassigned to the console
-				deleteBlock($_eseecode.session.floatingBlock.div);
+				$e_deleteBlock($_eseecode.session.floatingBlock.div);
 			}
 			if ($_eseecode.session.floatingBlock.fromDiv) {
 				$_eseecode.session.floatingBlock.fromDiv.style.opacity = 1;
@@ -40,13 +40,13 @@
 		}
 		$_eseecode.session.floatingBlock.div = null;
 		$_eseecode.session.floatingBlock.fromDiv = null;
-		if (!isTouchDevice()) {
-			document.body.removeEventListener("mouseup", unclickBlock, false);
-			document.body.removeEventListener("mousemove", moveBlock, false);
+		if (!$e_isTouchDevice()) {
+			document.body.removeEventListener("mouseup", $e_unclickBlock, false);
+			document.body.removeEventListener("mousemove", $e_moveBlock, false);
 		} else {
-			document.body.removeEventListener("touchend", unclickBlock, false);
-			document.body.removeEventListener("touchmove", moveBlock, false);
-			document.body.removeEventListener("touchcancel", cancelFloatingBlock, false);
+			document.body.removeEventListener("touchend", $e_unclickBlock, false);
+			document.body.removeEventListener("touchmove", $e_moveBlock, false);
+			document.body.removeEventListener("touchcancel", $e_cancelFloatingBlock, false);
 		}
 		if (event) { // Only do this if it was tiggered by an event
 			$_eseecode.session.blocksUndo.pop(); // Sice the edition was cancelled, pop the half-written undo element
@@ -57,14 +57,14 @@
 	 * Block clicked listener. It listenes for clicks on blocks and acts accordingly
 	 * @private
 	 * @param {Object} event Event
-	 * @example div.addEventListener(handler,clickBlock)
+	 * @example div.addEventListener(handler,$e_clickBlock)
 	 */
-	function clickBlock(event) {
+	function $e_clickBlock(event) {
 		if ($_eseecode.session.breakpointHandler) {
-			addBreakpointEventEnd(event);
+			$e_addBreakpointEventEnd(event);
 			return;
 		}
-		unhighlight();
+		$e_unhighlight();
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var div = event.target;
 		if (div.tagName !== "DIV") {
@@ -93,7 +93,7 @@
 		if (div.parentNode.id.match(/^dialog-/)) {
 			dialog = true;
 		}
-		cancelFloatingBlock();
+		$e_cancelFloatingBlock();
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		if (blocksUndoIndex > $_eseecode.setup.undoDepth) { // never remember more than 20 actions (which means the array has 21 elements, since the first one is the index)
 			blocksUndoIndex--;
@@ -106,7 +106,7 @@
 			$_eseecode.session.blocksUndo[blocksUndoIndex].fromDiv = $_eseecode.session.floatingBlock.fromDiv;
 			var count = 0;
 			var element = document.getElementById("console-blocks").firstChild;
-			$_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition = recursiveCount(element, div).count;
+			$_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition = $e_recursiveCount(element, div).count;
 		}
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		// Copy parameters
@@ -118,51 +118,51 @@
 		}
 		$_eseecode.session.floatingBlock.div.style.position = "absolute";
 		document.body.appendChild($_eseecode.session.floatingBlock.div);
-		$_eseecode.session.floatingBlock.div.id = newDivId();
+		$_eseecode.session.floatingBlock.div.id = $e_newDivId();
 		if ($_eseecode.session.floatingBlock.div.classList) {
 			$_eseecode.session.floatingBlock.div.classList.add("floatingBlock");
 		} else {			
 			$_eseecode.session.floatingBlock.div.className += " floatingBlock";
 		}
-		paintBlock($_eseecode.session.floatingBlock.div);
-		moveBlock();
+		$e_paintBlock($_eseecode.session.floatingBlock.div);
+		$e_moveBlock();
 		var handler;
-		if (!isTouchDevice()) {
+		if (!$e_isTouchDevice()) {
 			handler = "click";
 		} else {
 			handler = "touchstart";
 		}
-		$_eseecode.session.floatingBlock.div.removeEventListener(handler, clickBlock, false);
+		$_eseecode.session.floatingBlock.div.removeEventListener(handler, $e_clickBlock, false);
 		if (level != "level1") {
 			// firefox is unable to use the mouse event handler if it is called from HTML handlers, so here we go
-			if (!isTouchDevice()) {
-				document.body.addEventListener("mouseup", unclickBlock, false);
-				document.body.addEventListener("mousemove", moveBlock, false);
+			if (!$e_isTouchDevice()) {
+				document.body.addEventListener("mouseup", $e_unclickBlock, false);
+				document.body.addEventListener("mousemove", $e_moveBlock, false);
 			} else {
-				document.body.addEventListener("touchend", unclickBlock, false);
-				document.body.addEventListener("touchmove", moveBlock, false);
-				document.body.addEventListener("touchcancel", cancelFloatingBlock, false);
+				document.body.addEventListener("touchend", $e_unclickBlock, false);
+				document.body.addEventListener("touchmove", $e_moveBlock, false);
+				document.body.addEventListener("touchcancel", $e_cancelFloatingBlock, false);
 			}
 		} else { // In level1 we stick the block immediately
-			unclickBlock();
+			$e_unclickBlock();
 		}
 		event.stopPropagation();
 	}
 
 	/**
-	 * Block unclicked listener. It listenes for unclicks on blocks and acts accordingly
+	 * Block unclicked listener. It listens for unclicks on blocks and acts accordingly
 	 * @private
 	 * @param {Object} event Event
-	 * @example div.addEventListener(handler,unclickBlock)
+	 * @example div.addEventListener(handler,$e_unclickBlock)
 	 */
-	function unclickBlock(event) {
+	function $e_unclickBlock(event) {
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		var consoleDiv = document.getElementById("console-blocks");
 		var div = $_eseecode.session.floatingBlock.div;
 		var divId = div.id;
 		var action;
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
-		var pos = eventPosition(event);
+		var pos = $e_eventPosition(event);
 		if (level == "level1" ||
 		    (pos.x > consoleDiv.offsetLeft &&
 		     pos.x < consoleDiv.offsetLeft+consoleDiv.offsetWidth &&
@@ -171,52 +171,52 @@
 			div.style.position = "static";
 			if (level == "level1") {
 				action = "add";
-				addBlock(div,true);
+				$e_addBlock(div,true);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = consoleDiv.childNodes.length-1;
 				setTimeout(function() {
-					smoothScroll(consoleDiv, consoleDiv.scrollHeight);
+					$e_smoothScroll(consoleDiv, consoleDiv.scrollHeight);
 				}, 100); // Scroll down to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
 			} else {
 				var handler;
-				if (!isTouchDevice()) {
+				if (!$e_isTouchDevice()) {
 					handler = "mousedown";
 				} else {
 					handler = "touchstart";
 				}
-				recursiveAddEventListener(div,handler,clickBlock);
+				$e_recursiveAddEventListener(div,handler,$e_clickBlock);
 				// The block was dropped in the code so we must add it
 				// Detect where in the code we must insert the div
-				var blockHeight = blockSize(level, div).height;
+				var blockHeight = $e_blockSize(level, div).height;
 				var position = (pos.y-consoleDiv.offsetTop+consoleDiv.scrollTop)/blockHeight;
 				position += 0.5; // +0.5 to allow click upper half of block to insert above, lower half of block to insert below
 				position = Math.floor(position);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = position;
-				if (($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition === $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) || (isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) && isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition) && $_eseecode.session.blocksUndo[blocksUndoIndex].divPosition-1 == $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition)) { // Nothing changed: Note that moving a block right below has no effect
+				if (($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition === $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) || ($e_isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) && $e_isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition) && $_eseecode.session.blocksUndo[blocksUndoIndex].divPosition-1 == $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition)) { // Nothing changed: Note that moving a block right below has no effect
 					// We aren't using the floating block
 					div = $_eseecode.session.floatingBlock.fromDiv;
 					divId = div.id;
 					action = "setup";
-					setupBlock(div, false);
-				} else if ($_eseecode.session.floatingBlock.fromDiv && positionIsInBlock(consoleDiv, $_eseecode.session.floatingBlock.fromDiv, position)) {
+					$e_setupBlock(div, false);
+				} else if ($_eseecode.session.floatingBlock.fromDiv && $e_positionIsInBlock(consoleDiv, $_eseecode.session.floatingBlock.fromDiv, position)) {
 					action = "cancel";
 				} else {
-					addBlock(div,position); // first we add the block, then we delete the old one, otherwise the positioning fails
+					$e_addBlock(div,position); // first we add the block, then we delete the old one, otherwise the positioning fails
 					if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog
 						action = "move";
 						$_eseecode.session.floatingBlock.fromDiv.parentNode.removeChild($_eseecode.session.floatingBlock.fromDiv);
 					} else {
 						action = "add";
 						if (level == "level2" || level == "level3") {
-							setupBlock(div, true);
+							$e_setupBlock(div, true);
 						}
-						paintBlock(div);
+						$e_paintBlock(div);
 					}
 					setTimeout(function() {
-						var blockHeight = blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].name, div).height;
+						var blockHeight = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].name, div).height;
 						if (position*blockHeight < consoleDiv.scrollTop) {
-							smoothScroll(consoleDiv, position*blockHeight-10);
+							$e_smoothScroll(consoleDiv, position*blockHeight-10);
 						} else if ((position+1)*blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
-							smoothScroll(consoleDiv, (position+1)*blockHeight-consoleDiv.clientHeight+10);
+							$e_smoothScroll(consoleDiv, (position+1)*blockHeight-consoleDiv.clientHeight+10);
 						}
 					}, 100); // Scroll appropiately to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
 				}
@@ -224,7 +224,7 @@
 			$_eseecode.session.blocksUndo[blocksUndoIndex].div = div;
 		} else { // The block is dropped
 			if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog	
-				deleteBlock($_eseecode.session.floatingBlock.fromDiv);
+				$e_deleteBlock($_eseecode.session.floatingBlock.fromDiv);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = false;
 			} else {
 				action = "cancel";
@@ -237,7 +237,7 @@
 				$_eseecode.session.floatingBlock.div.className = $_eseecode.session.floatingBlock.div.className.replace(/\s+floatingBlock/,"");
 			}
 		}
-		cancelFloatingBlock();
+		$e_cancelFloatingBlock();
 		if (action == "cancel") {
 			$_eseecode.session.blocksUndo.pop();
 		} else {
@@ -245,7 +245,7 @@
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
-				execute(true);
+				$e_execute(true);
 			}
 		}
 	}
@@ -257,11 +257,11 @@
 	 * @param {!HTMLElement} div Block div
 	 * @param {Number} position Position to check if it is inside div
 	 * @return {Boolean} true if the position-th position in the code is inside div
-	 * @example positionIsInBlock(document.getElementById("console-blocks"), document.getElementById("div-1231231231"), 34)
+	 * @example $e_positionIsInBlock(document.getElementById("console-blocks"), document.getElementById("div-1231231231"), 34)
 	 */
-	function positionIsInBlock(consoleDiv, div, position) {
-		var startPos = searchBlockPosition(consoleDiv.firstChild,div).count-1;
-		var endPos = searchBlockByPosition(div.firstChild.nextSibling,-1,startPos).count;
+	function $e_positionIsInBlock(consoleDiv, div, position) {
+		var startPos = $e_searchBlockPosition(consoleDiv.firstChild,div).count-1;
+		var endPos = $e_searchBlockByPosition(div.firstChild.nextSibling,-1,startPos).count;
 		return (position >= startPos && position <= endPos);
 	}
 
@@ -271,9 +271,9 @@
 	 * @param {!HTMLElement} div Div to add the listener to
 	 * @param {String} handler Event handler to add the listener to
 	 * @param {function()} callPointer Function to add the the listener
-	 * @example recursiveAddEventListener(document.getElementById("div-1231231231"), "click", clickBlock)
+	 * @example $e_recursiveAddEventListener(document.getElementById("div-1231231231"), "click", $e_clickBlock)
 	 */
-	function recursiveAddEventListener(div, handler, callPointer) {
+	function $e_recursiveAddEventListener(div, handler, callPointer) {
 		if (!div) {
 			return;
 		}
@@ -285,8 +285,8 @@
 				div.addEventListener(handler,callPointer,false);
 			}
 		}
-		recursiveAddEventListener(div.firstChild,handler,callPointer);
-		recursiveAddEventListener(div.nextSibling,handler,callPointer);
+		$e_recursiveAddEventListener(div.firstChild,handler,callPointer);
+		$e_recursiveAddEventListener(div.nextSibling,handler,callPointer);
 	}
 
 	/**
@@ -295,19 +295,19 @@
 	 * @param {!HTMLElement} div Block in which to search for targetDiv
 	 * @param {!HTMLElement} targetDiv Block to search for in div
 	 * @return {{found:Boolean, count:Number}} In found if targetDiv was found in div and in count the position of targetDiv in div
-	 * @example recursiveCount(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
+	 * @example $e_recursiveCount(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
-	function recursiveCount(div, targetDiv) {
+	function $e_recursiveCount(div, targetDiv) {
 		if (!div || (div == targetDiv)) {
 			return { count: 0, found: (div == targetDiv) };
 		} else if (div.tagName !== "DIV") {
-			return recursiveCount(div.nextSibling,targetDiv);
+			return $e_recursiveCount(div.nextSibling,targetDiv);
 		}
 		var count = 1;
-		var output = recursiveCount(div.firstChild,targetDiv);
+		var output = $e_recursiveCount(div.firstChild,targetDiv);
 		count += output.count;
 		if (!output.found) {
-			output = recursiveCount(div.nextSibling,targetDiv);
+			output = $e_recursiveCount(div.nextSibling,targetDiv);
 			count += output.count;
 		}
 		return { found: output.found, count: count };
@@ -317,26 +317,26 @@
 	 * Moves a block with the mouse movemement
 	 * @private
 	 * @param {Object} event Event
-	 * @example document.body.removeEventListener("mousemove", moveBlock, false)
+	 * @example document.body.removeEventListener("mousemove", $e_moveBlock, false)
 	 */
-	function moveBlock(event) {
+	function $e_moveBlock(event) {
 		event = event ? event : window.event;
 		if (!event) {  // firefox doesn't know window.event
 			return;
 		}
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var div = $_eseecode.session.floatingBlock.div;
-		var pos = eventPosition(event);
+		var pos = $e_eventPosition(event);
 		div.style.left = pos.x*1 - $_eseecode.setup.blockWidth[level]/2 +"px";
 		div.style.top = pos.y*1 - $_eseecode.setup.blockHeight[level]/2 +"px";
-		// if mouse is above the console or under the console, scroll. Don't use smoothScroll since it uses a timeout and it will queue up in the events to launch
+		// if mouse is above the console or under the console, scroll. Don't use $e_smoothScroll since it uses a timeout and it will queue up in the events to launch
 		var consoleDiv = document.getElementById("console-blocks");
 		if (pos.y < consoleDiv.offsetTop) {
 			consoleDiv.scrollTop -= 2;
 		} else if (pos.y > consoleDiv.offsetTop+consoleDiv.clientHeight) {
 			consoleDiv.scrollTop += 2;
 		}
-		if (isTouchDevice() && event) { // default action in touch devices is scroll
+		if ($e_isTouchDevice() && event) { // default action in touch devices is scroll
 			if (event.preventDefault) {
 				event.preventDefault();
 			} else {
@@ -351,13 +351,13 @@
 	 * @param {!HTMLElement} blockDiv Block to add
 	 * @param {Boolean|Number} position Position to add the block at. If set to true it adds it at the end
 	 * @param {HTMLElement} [parent] If set, blockDiv must be a child of parent. In this case position counts from the parent's position
-	 * @example addBlock(block, true)
+	 * @example $e_addBlock(block, true)
 	 */
-	function addBlock(blockDiv, position, parent) {
+	function $e_addBlock(blockDiv, position, parent) {
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
-			removeBlocksTips();
+			$e_removeBlocksTips();
 			// Ensure that we do not add the block with the tip red border
 			blockDiv.style.border = "";
 			blockDiv.style.marginBottom = "";
@@ -369,7 +369,7 @@
 		var nextDiv = null;
 		if (position !== true) {
 			// Insert the blockDiv in the appropiate position in the code
-			var output = searchBlockByPosition(parentDiv.firstChild,position,0);
+			var output = $e_searchBlockByPosition(parentDiv.firstChild,position,0);
 			if (output.element) {
 				nextDiv = output.element;
 				parentDiv = nextDiv.parentNode;
@@ -384,19 +384,57 @@
 		}
 		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
 		if (instruction.block && !blockDiv.firstChild.nextSibling && !instruction.text) { // If we are adding a block to the console for the first time, create its children
-			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
-			for (var i=0; i<instruction.block.length; i++) {
-				var instructionName = instruction.block[i];
-				var childDiv = document.createElement("div");
-				childDiv.id = newDivId();
-				childDiv.setAttribute("instructionSetId",getInstructionSetIdFromName(instructionName));
-				blockDiv.appendChild(childDiv);
-				createBlock(level,childDiv);
-			}
+			$e_createSubblocks(blockDiv);
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
-		paintBlock(blockDiv);
-		updateBlocksBreakpoints(blockDiv, "addBlock");
+		$e_paintBlock(blockDiv);
+		$e_updateBlocksBreakpoints(blockDiv, "addBlock");
+	}
+
+	/**
+	 * Adds a block subblocks
+	 * @private
+	 * @param {!HTMLElement} blockDiv Block to add
+	 * @example $e_createSubblocks(block)
+	 */
+	function $e_createSubblocks(blockDiv) {
+		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+		if (instruction.block) {
+			var oldChild = blockDiv.firstChild.nextSibling; // The first element inside a BlockDiv is its span title, so we can safely skip it
+			var action = "keep";
+			var instructionBlockIndex = 0;
+			var instructionName = instruction.block[instructionBlockIndex];
+			var instructionId = $e_getInstructionSetIdFromName(instructionName);
+			while (oldChild !== null) {
+				var oldInstructionId = oldChild.getAttribute("instructionSetId");
+				var oldInstruction = $_eseecode.instructions.set[oldInstructionId];
+				if (oldInstruction.dummy === true) {
+					if (instructionId !== oldInstructionId) {
+						action = "delete";
+					} else {
+						action = "keep";
+						instructionBlockIndex++;
+						instructionName = instruction.block[instructionBlockIndex];
+						instructionId = $e_getInstructionSetIdFromName(instructionName);
+					}
+				}
+				var oldChildSibling = oldChild.nextSibling; // we do this because we might delete old child before getting nextSibling
+				if (action === "delete") {
+					blockDiv.removeChild(oldChild);
+				}
+				oldChild = oldChildSibling;
+			}
+			for (var i=instructionBlockIndex; i<instruction.block.length; i++) {
+				var instructionName = instruction.block[i];
+				var instructionId = $e_getInstructionSetIdFromName(instructionName);
+				var childDiv = document.createElement("div");
+				childDiv.id = $e_newDivId();
+				childDiv.setAttribute("instructionSetId",instructionId);
+				blockDiv.appendChild(childDiv);
+				$e_createBlock(level,childDiv);
+			}
+		}
 	}
 
 	/**
@@ -405,15 +443,15 @@
 	 * @param {!HTMLElement} currentDiv Block in which to search for targetDiv
 	 * @param {!HTMLElement} targetDiv Block to search for in div
 	 * @return {{found:Boolean, count:Number}} In found if targetDiv was found in currentDiv or its siblings and in count its position
-	 * @example searchBlockPosition(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
+	 * @example $e_searchBlockPosition(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
-	function searchBlockPosition(currentDiv, targetDiv) {
+	function $e_searchBlockPosition(currentDiv, targetDiv) {
 		var count = 0;
 		var found = false;
 		while (currentDiv && !found) {
 			found = (currentDiv == targetDiv);
 			if (!found && currentDiv.firstChild.nextSibling) {
-				var output = searchBlockPosition(currentDiv.firstChild.nextSibling, targetDiv);
+				var output = $e_searchBlockPosition(currentDiv.firstChild.nextSibling, targetDiv);
 				count += output.count;
 				found = output.found
 			}
@@ -430,13 +468,13 @@
 	 * @param {Number} position Position to return the block from
 	 * @param {Number} count Initial counter (position of element)
 	 * @return {{element:HTMLElement, count:Number}} In element the position-th element in element or its siblings. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
-	 * @example searchBlockByPosition(document.getElementById("console-blocks").firstChild, 12, 1)
+	 * @example $e_searchBlockByPosition(document.getElementById("console-blocks").firstChild, 12, 1)
 	 */
-	function searchBlockByPosition(element, position, count) {
+	function $e_searchBlockByPosition(element, position, count) {
 		while (element && count != position) { // if the code is almost empty position could be far ahead of the last block
 			var instruction = $_eseecode.instructions.set[element.getAttribute("instructionSetId")];
 			if (instruction.block) {
-				var output = searchBlockByPosition(element.firstChild.nextSibling, position, count+1);
+				var output = $e_searchBlockByPosition(element.firstChild.nextSibling, position, count+1);
 				count = output.count-1;
 				if (output.element) {
 					element = output.element;
@@ -455,15 +493,15 @@
 	 * Removes a block from the console and deletes it
 	 * @private
 	 * @param {!HTMLElement} div Block to delete
-	 * @example deleteBlock(document.getElementById("div-123123123"))
+	 * @example $e_deleteBlock(document.getElementById("div-123123123"))
 	 */
-	function deleteBlock(div) {
+	function $e_deleteBlock(div) {
 		// We must do this before we delete the block
-		updateBlocksBreakpoints(div, "deleteBlock");
+		$e_updateBlocksBreakpoints(div, "deleteBlock");
 		var consoleDiv = document.getElementById("console-blocks");
 		div.parentNode.removeChild(div);
 		if (!consoleDiv.firstChild) {
-			resetBlocksConsole(consoleDiv);
+			$e_resetBlocksConsole(consoleDiv);
 		}
 	}
 
@@ -471,9 +509,9 @@
 	 * Returns a new valid and unique block id
 	 * @private
 	 * @return {String} A valid and unique block id
-	 * @example var id = newDivId()
+	 * @example var id = $e_newDivId()
 	 */
-	function newDivId() {
+	function $e_newDivId() {
 		var d = new Date();
 		var id = d.getTime()*10000+Math.floor((Math.random()*10000));
 		return "div-"+id;
@@ -483,11 +521,16 @@
 	 * Asks the user to setup the parameters of the instruction associated with the block
 	 * @private
 	 * @param {!HTMLElement} div Block div
-	 * @param {Boolean} blockId Whether the block is being added or modified
-	 * @example setupBlock(document.getElementById("div-123123123"))
+	 * @param {Boolean} blockAdd Whether the block is being added or modified
+	 * @example $e_setupBlock(document.getElementById("div-123123123"))
 	 */
-	function setupBlock(div, blockId) {
+	function $e_setupBlock(div, blockAdd) {
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		if (instruction.dummy && instruction.parameters === null) {
+			// This is a subblock, configure its parent node
+			div = div.parentNode;
+			instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		}
 		var instructionName = instruction.name;
 		var parameterInputs = [];
 		var paramNumber = 1; // parameters[0] is "param1"
@@ -506,10 +549,13 @@
 			if (defaultValue === undefined || defaultValue === null) {
 				defaultValue = "";
 			}
+			if (parameter.type == "number") {
+				defaultValue = parseInt($e_parsePredefinedConstants(defaultValue));
+			}
 			parameterInputs[i].initial = defaultValue;
 			paramNumber++;
-		} 
-		if (parameterInputs.length > 0) {		
+		}
+		if (parameterInputs.length > 0 || instruction.convert) {		
 			// We have parameters to ask for. Create a msgBox
 			var instructionSetId = div.getAttribute("instructionSetId");
 			var instruction = $_eseecode.instructions.set[instructionSetId];
@@ -523,14 +569,29 @@
 			msgDiv.appendChild(input);
 			input = document.createElement("input");
 			input.id = "setupBlockAdd";
-			input.value = blockId;
+			input.value = blockAdd;
 			input.type = "hidden";
 			msgDiv.appendChild(input);
 			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
+			if (instruction.convert) {
+				var convertDiv = document.createElement("div");
+				var span = document.createElement("span");
+				span.innerHTML = _("Convert to another instruction")+": ";
+				convertDiv.appendChild(span);
+				var element = document.createElement("select");
+				element.id = "setupBlockConvert";
+				element.innerHTML = "<option value='"+div.getAttribute("instructionSetId")+"' selected=\"selected\">"+instruction.name+"</option>";
+				for (var i = 0; i < instruction.convert.length; i++) {
+					var convertInstruction = instruction.convert[i];
+					element.innerHTML += "<option value='"+$e_getInstructionSetIdFromName(convertInstruction)+"'>"+convertInstruction+"</option>";
+				}
+				convertDiv.appendChild(element);
+				msgDiv.appendChild(convertDiv);
+			}
 			if (level === "level2") {
 				var msgTab = document.createElement("div");
 				msgTab.className = "msgBox-tabs";
-				msgTab.innerHTML = "<a href=\"#\" onclick=\"setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+				msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
 				msgDiv.appendChild(msgTab);
 				var iconDiv = document.createElement("div");
 				iconDiv.id = "setupBlockIcon";
@@ -538,7 +599,7 @@
 				iconDiv.style.float = "left";
 				iconDiv.setAttribute("instructionSetId", instructionSetId);
 				var icon = document.createElement("canvas");
-				paintBlock(iconDiv, false, false);
+				$e_paintBlock(iconDiv, false, false);
 				iconDiv.appendChild(icon);
 				msgDiv.appendChild(iconDiv);
 			}
@@ -547,7 +608,7 @@
 				var textDiv = document.createElement("div");
 				var helpText = "";
 				if (level != "level2") {
-					helpText += _("Enter the value for %s's %s parameter",[instructionName+"()", ordinal(parameter.id)])+" \""+_(parameter.name)+"\":\n";
+					helpText += _("Enter the value for %s's %s parameter",[instructionName+"()", $e_ordinal(parameter.id)])+" \""+_(parameter.name)+"\":\n";
 				}
 				var tipTrans = _(parameter.tip);
 				if (parameter.tip) {
@@ -584,9 +645,9 @@
 			input.value = parameterInputs.length;
 			input.type = "hidden";
 			msgDiv.appendChild(input);
-			msgBox(msgDiv, {acceptAction:setupBlockAccept,cancelAction:setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
+			$e_msgBox(msgDiv, {acceptAction:$e_setupBlockAccept,cancelAction:$e_setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
 			if (level === "level2") {
-				setupBlockVisual("Basic", instruction.parameters);
+				$e_setupBlockVisual("Basic", instruction.parameters);
 			}
 		}
 	}
@@ -595,9 +656,9 @@
 	 * Adds or removes the visual parameters setup in parameters setup dialog
 	 * @private
 	 * @param {Boolean} visualMode Whether to show visual setup or not
-	 * @example setupBlockVisual(true)
+	 * @example $e_setupBlockVisual(true)
 	 */
-	function setupBlockVisual(visualMode) {
+	function $e_setupBlockVisual(visualMode) {
 		var iconDiv = document.getElementById("setupBlockIcon");
 		if (!visualMode) {
 			iconDiv.style.display = "none";
@@ -608,7 +669,7 @@
 			iconDiv.innerHTML = "";	
 			for (var i=0; i<parametersCount; i++) {
 				iconDiv.setAttribute("param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
-				paintBlock(iconDiv, false, false);
+				$e_paintBlock(iconDiv, false, false);
 			}
 		}
 		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
@@ -663,7 +724,7 @@
 				visualTypeSupportedByBrowser = true;
 				var fonts = ["monospace", "serif", "sans-serif", "fantasy", "Arial", "Arial Black", "Arial Narrow", "Arial Rounded MT Bold", "Bookman Old Style", "Bradley Hand ITC", "Century", "Century Gothic", "Comic Sans MS", "Courier", "Courier New", "Georgia", "Gentium", "Impact", "King", "Lucida Console", "Lalit", "Modena", "Monotype Corsiva", "Papyrus", "Tahoma", "TeX", "Times", "Times New Roman", "Trebuchet MS", "Verdana", "Verona" ];
 				var fontDetect = new Detector();
-				element = document.createElement("select");
+				var element = document.createElement("select");
 				for (var j = 0; j < fonts.length; j++) {
 					if (fontDetect.detect(fonts[j])) {
 						element.innerHTML += "<option value='"+j+"'>"+fonts[j]+"</option>";
@@ -686,38 +747,8 @@
 				if (supportedInputs["range"]) {
 					visualTypeSupportedByBrowser = true;
 					var useSlider = false;
-					var canvasSize = $_eseecode.whiteboard.offsetWidth;
-					var minValue = parameter.minValue;
-					if (minValue == "minX") {
-						minValue = -$_eseecode.coordinates.position.x;
-					} else if (minValue == "maxX") {
-						minValue = canvasSize-$_eseecode.coordinates.position.x;
-					} else if (minValue == "minY") {
-						minValue = -$_eseecode.coordinates.position.y;
-					} else if (minValue == "maxY") {
-						minValue = canvasSize-$_eseecode.coordinates.position.y;
-					}
-					var maxValue = parameter.maxValue;
-					if (maxValue == "minX") {
-						maxValue = -$_eseecode.coordinates.position.x;
-					} else if (maxValue == "maxX") {
-						maxValue = canvasSize-$_eseecode.coordinates.position.x;
-					} else if (maxValue == "minY") {
-						maxValue = -$_eseecode.coordinates.position.y;
-					} else if (maxValue == "maxY") {
-						maxValue = canvasSize-$_eseecode.coordinates.position.y;
-					}
-					if (defaultValue == "minX") {
-						defaultValue = -$_eseecode.coordinates.position.x;
-					} else if (defaultValue == "maxX") {
-						defaultValue = canvasSize-$_eseecode.coordinates.position.x;
-					} else if (defaultValue == "minY") {
-						defaultValue = -$_eseecode.coordinates.position.y;
-					} else if (defaultValue == "maxY") {
-						defaultValue = canvasSize-$_eseecode.coordinates.position.y;
-					} else if (isNumber(defaultValue)) {
-						defaultValue = parseInt(defaultValue);
-					}
+					var minValue = $e_parsePredefinedConstants(parameter.minValue);
+					var maxValue = $e_parsePredefinedConstants(parameter.maxValue);
 					if (minValue !== undefined && maxValue !== undefined) {
 						useSlider = true;
 					}
@@ -740,7 +771,7 @@
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
-						if (isNumber(elem.value)) {
+						if ($e_isNumber(elem.value)) {
 							val = parseInt(elem.value);
 						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min")
@@ -818,7 +849,7 @@
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
-						if (isNumber(elem.value)) {
+						if ($e_isNumber(elem.value)) {
 							val = parseInt(elem.value);
 						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min");
@@ -909,27 +940,73 @@
 		}
 		updateIcon();
 	}
+	
+	/*
+	 * Returns the value corresponding to the name provied, or the original value otherwise
+	 * @param {Object} value Value to parse
+	 * @return Real value
+	 * @example {Object} $e_parsePredefinedConstants("maxX")
+	 */
+	function $e_parsePredefinedConstants(value) {
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
+		if (value == "minX") {
+			value = -$_eseecode.coordinates.position.x;
+		} else if (value == "maxX") {
+			value = canvasSize-$_eseecode.coordinates.position.x;
+		} else if (value == "minY") {
+			value = -$_eseecode.coordinates.position.y;
+		} else if (value == "maxY") {
+			value = canvasSize-$_eseecode.coordinates.position.y;
+		} else if (value == "centerX") {
+			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).x;
+		} else if (value == "centerY") {
+			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).y;
+		} else if (value == "originX") {
+			value = $e_user2systemCoords({x: 0, y: 0}).x;
+		} else if (value == "originY") {
+			value = $e_user2systemCoords({x: 0, y: 0}).y;
+		}
+		return value;
+	}
 
 	/**
 	 * Takes the parameters from a msgBox and applies them in the block. You probably want to call msgBoxClose() here
 	 * @see setupBlock
-	 * @see msgBoxClose
+	 * @see $e_msgBoxClose
 	 * @private
 	 * @param {Object} event Event
-	 * @example setupBlockAccept()
+	 * @example $e_setupBlockAccept()
 	 */
-	function setupBlockAccept(event) {
+	function $e_setupBlockAccept(event) {
 		var setupChanges = [];
 		var divId = document.getElementById("setupBlockDiv").value;
 		var div = document.getElementById(divId);
 		var parametersCount = document.getElementById("setupBlockCount").value;
 		var paramNumber = 1;
-		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		var instructionId = div.getAttribute("instructionSetId");
+		var instruction = $_eseecode.instructions.set[instructionId];
+		var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
+		if (document.getElementById("setupBlockConvert")) {
+			var newInstructionId = document.getElementById("setupBlockConvert").value;
+			if (newInstructionId != instructionId) {
+				var newDiv = div.cloneNode(true);
+				var newDivId = $e_newDivId();
+				newDiv.setAttribute("id", newDivId);
+				instructionId = newInstructionId;
+				newDiv.setAttribute("instructionSetId",instructionId);
+				$e_createSubblocks(newDiv);
+				div.parentNode.insertBefore(newDiv, div);
+				div.parentNode.removeChild(div);
+				$_eseecode.session.blocksUndo[blocksUndoIndex].div = newDiv;
+				div = newDiv;
+				divId = newDivId;
+			}
+		}
 		for (var i=0; i<parametersCount; i++) {
 			if (instruction.parameters[i] && instruction.parameters[i].validate) {
 				var value = document.getElementById("setupBlock"+paramNumber).value;
 				if (!instruction.parameters[i].validate(value)) {
-					msgBox(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
+					$e_msgBox(_("The value for parameter \"%s\" is invalid!",[_(instruction.parameters[i].name)]));
 					return;
 				}
 			}
@@ -945,31 +1022,30 @@
 		}
 		if (setupChanges.length > 0 && document.getElementById("setupBlockAdd").value !== "true") {
 			// Update undo array
-			var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
 			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
 		}
 		// Update the block icon
-		paintBlock(div);
-		msgBoxClose();
+		$e_paintBlock(div);
+		$e_msgBoxClose();
 	}
 
 	/**
-	 * Cancels a setupBlock. You probably want to call msgBoxClose() here
+	 * Cancels a setupBlock. You probably want to call $e_msgBoxClose() here
 	 * @see setupBlock
-	 * @see msgBoxClose
+	 * @see $e_msgBoxClose
 	 * @private
 	 * @param {Object} event Event
-	 * @example setupBlockCancel()
+	 * @example $e_setupBlockCancel()
 	 */
-	function setupBlockCancel(event) {
+	function $e_setupBlockCancel(event) {
 		if (document.getElementById("setupBlockAdd").value === "true") {
 			var divId = document.getElementById("setupBlockDiv").value;
 			var div = document.getElementById(divId);
-			deleteBlock(div);
+			$e_deleteBlock(div);
 			$_eseecode.session.blocksUndo.pop();
 			$_eseecode.session.blocksUndo[0]--;
 		}
-		msgBoxClose();
+		$e_msgBoxClose();
 	}
 
 	/**
@@ -979,49 +1055,49 @@
 	 * @param {!HTMLElement} div Block div
 	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
-	 * @example createBlock("level2", document.body.createElement("div"), 3)
+	 * @example $e_createBlock("level2", document.body.createElement("div"), 3)
 	 */
-	function createBlock(level, div, instructionSetId, dialog) {
+	function $e_createBlock(level, div, instructionSetId, dialog) {
 		var codeId;
 		if (instructionSetId == null) { // If no instructionSetId is passed we just want to update the block
 			instructionSetId = div.getAttribute("instructionSetId");
 			codeId = div.id;
 		} else { // This is a block that didn't exist before
-			codeId = newDivId();
+			codeId = $e_newDivId();
 			div.setAttribute("id", codeId);
 			div.setAttribute("instructionSetId", instructionSetId);
 		}
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		div.className = "block "+level+" "+instruction.name;
-		paintBlock(div,dialog);
+		$e_paintBlock(div,dialog);
 		if (instruction.dummy) {
 			return;
 		}
 		if (dialog) {
 			var handler;
-			if (!isTouchDevice()) {
+			if (!$e_isTouchDevice()) {
 				handler = "mousedown";
 			} else {
 				handler = "touchstart";
 			}
-			div.addEventListener(handler, clickBlock, false);
+			div.addEventListener(handler, $e_clickBlock, false);
 		} else {
 			if (level == "level1") {
 				var handler;
-				if (!isTouchDevice()) {
+				if (!$e_isTouchDevice()) {
 					handler = "mousedown";
 				} else {
 					handler = "touchstart";
 				}
-				div.removeEventListener(handler, clickBlock, false);
+				div.removeEventListener(handler, $e_clickBlock, false);
 			} else if (level == "level2" || level == "level3") {
 				var handler;
-				if (!isTouchDevice()) {
+				if (!$e_isTouchDevice()) {
 					handler = "mousedown";
 				} else {
 					handler = "touchstart";
 				}
-				div.addEventListener(handler, clickBlock, false);
+				div.addEventListener(handler, $e_clickBlock, false);
 			}
 		}
 	}
@@ -1032,9 +1108,9 @@
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @param {Boolean} [skipRecursiveRepaint=false] Whether or not skip the repainting of the blocks' children
-	 * @example paintBlock(document.getElementById("div-123123123"), false, true)
+	 * @example $e_paintBlock(document.getElementById("div-123123123"), false, true)
 	 */
-	function paintBlock(div, dialog, skipRecursiveRepaint) {
+	function $e_paintBlock(div, dialog, skipRecursiveRepaint) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].name;
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		var color = "transparent"; // default color
@@ -1061,11 +1137,11 @@
 		if (instruction.code && instruction.code.unindent) {
 			div.style.marginLeft = "0px";
 		}
-		var output = loadParameters(level, div, dialog);
+		var output = $e_loadParameters(level, div, dialog);
 		var text = output.text;
 		// We must first creat the inner text so the div expands its width if necessary
 		var span = document.createElement("span");
-		span.style.color = readableText(color);
+		span.style.color = $e_readableText(color);
 		span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
 		span.style.fontFamily = "Arial";
 		span.style.fontSize = "10px";
@@ -1151,7 +1227,7 @@
 			}
 /*
 			bgCtx.font="bold 10px Arial";
-			bgCtx.fillStyle = readableText(color);
+			bgCtx.fillStyle = $e_readableText(color);
 			bgCtx.fillText(text,1,12);
 */
 			div.style.backgroundImage = "url("+bgCanvas.toDataURL()+")";
@@ -1159,7 +1235,7 @@
 		if (!skipRecursiveRepaint) {
 			while (div.parentNode && div.parentNode.getAttribute("instructionSetId")) {
 				div = div.parentNode;
-				paintBlock(div,dialog,true);
+				$e_paintBlock(div,dialog,true);
 			}
 		}
 	}
@@ -1168,9 +1244,9 @@
 	 * Undoes/Redoes the last action in the block undo pile
 	 * @private
 	 * @param {Boolean} [redo] Whether we want to redo or undo
-	 * @example undoBlocks()
+	 * @example $e_undoBlocks()
 	 */
-	function undoBlocks(redo) {
+	function $e_undoBlocks(redo) {
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
 		var undo, oldDiv, newDiv, oldPosition, newPosition, newIndex;
 		if (redo) {
@@ -1193,7 +1269,7 @@
 				var parameter = undo.parameters[i];
 				div.setAttribute(parameter[0],parameter[newParm]);
 			}
-			paintBlock(div);
+			$e_paintBlock(div);
 		} else {
 			if (redo) {
 				newDiv = undo.div;
@@ -1207,10 +1283,10 @@
 				oldPosition = undo.divPosition;
 			}
 			if (oldDiv) {
-				deleteBlock(oldDiv);
+				$e_deleteBlock(oldDiv);
 			}
 			if (newDiv) {
-				addBlock(newDiv,newPosition);
+				$e_addBlock(newDiv,newPosition);
 			}
 		}
 		if (redo) {
@@ -1219,16 +1295,16 @@
 			$_eseecode.session.blocksUndo[0]--;
 		}
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].name == "level1") {
-			execute();
+			$e_execute();
 		}
 	}
 
 	/**
 	 * Initializes/Resets the blocks undo pile in $_eseecode.session.blocksUndo
 	 * @private
-	 * @example resetUndoBlocks()
+	 * @example $e_resetUndoBlocks()
 	 */
-	function resetUndoBlocks() {
+	function $e_resetUndoBlocks() {
 		$_eseecode.session.blocksUndo = [0, null];
 	}
 

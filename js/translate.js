@@ -34,9 +34,9 @@
 	 * @private
 	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new language, it takes "initial"
 	 * @param {Boolean} [force] Forces the language switch even if it is the same as the current language. If the language doens't exist it falls back to "initial"
-	 * @example switchLanguage("ca")
+	 * @example $e_switchLanguage("ca")
 	 */
-	function switchLanguage(lang, force) {
+	function $e_switchLanguage(lang, force) {
 		if (!lang) {
 			var urlParts = window.location.href.match(/(\?|&)lang=([^&#]+)/);
 			if (urlParts !== null) {
@@ -60,10 +60,10 @@
 			}
 		}
 		$_eseecode.i18n.current = lang;
-		addStaticText();
-		switchDialogMode();
-		resetGridModeSelect();
-		switchConsoleMode();
+		$e_addStaticText();
+		$e_switchDialogMode();
+		$e_resetGridModeSelect();
+		$e_switchConsoleMode();
 		document.getElementById("language-select").value = lang;
 		var translator = "";
 		if ($_eseecode.i18n.available[lang].translator) {
@@ -81,9 +81,9 @@
 	/**
 	 * Initializes/Resets static text translations
 	 * @private
-	 * @example addStaticText()
+	 * @example $e_addStaticText()
 	 */
-	function addStaticText() {
+	function $e_addStaticText() {
 		for (var i=1; i<$_eseecode.modes.console.length; i++) {
 			var levelName = $_eseecode.modes.console[i].name;
 			var levelText = levelName.substr(0,1).toUpperCase()+levelName.substr(1);
@@ -114,7 +114,7 @@
 		document.getElementById("dialog-write").title = _("Instructions available");
 		document.getElementById("dialog-window").title = _("Interactive window");
 		document.getElementById("dialog-debug").title = _("Debug dialog");
-		document.getElementById("dialog-debug-layers-title").innerHTML = '<span style="position:absolute;left:0px;font-weight:normal;font-size:small"><input type="checkbox" onclick="debugSelectAllNoneLayers(this)" style="float:left" checked /> '+_("All/None")+'</span>'+_("Layers")+":";
+		document.getElementById("dialog-debug-layers-title").innerHTML = '<span style="position:absolute;left:0px;font-weight:normal;font-size:small"><input type="checkbox" onclick="$e_debugSelectAllNoneLayers(this)" style="float:left" checked /> '+_("All/None")+'</span>'+_("Layers")+":";
 		document.getElementById("dialog-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its cursor\n * toggle layer visibility\n * set the active layer\n * run commands");
 		document.getElementById("dialog-debug-analyzer-title").innerHTML = _("Analyzer")+":";
 		document.getElementById("dialog-debug-analyzer-help").title = _("Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops");
@@ -145,9 +145,9 @@
 	/**
 	 * Initializes/Resets the language selection element to provide all available translations
 	 * @private
-	 * @example resetLanguageSelect("ca")
+	 * @example $e_resetLanguageSelect("ca")
 	 */
-	function resetLanguageSelect() {
+	function $e_resetLanguageSelect() {
 		var select = document.getElementById("language-select");
 		// Reset languages in dropdown menu
 		select.options.length = 0;

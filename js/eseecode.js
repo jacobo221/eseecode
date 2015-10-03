@@ -133,7 +133,7 @@
 			alert(browserNotSupportedErrorMessage+"!!");
 		} else {
 			// Init application
-			window.addEventListener("load",function(){resetUI()}, false);
+			window.addEventListener("load",function(){$e_resetUI()}, false);
 		}
 	}
 

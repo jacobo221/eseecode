@@ -7,13 +7,19 @@
 <p>Instruction: <select id="instructions"></select></p>
 <p>Parameters: <input id="param1" type="text" value="" style="width:80px" /> <input id="param2" type="text" value="" style="width:80px" /></p>
 <p>Size: <input id="width" type="number" value="68" style="width:50px" />x<input id="height" type="number" value="68" style="width:50px" /></p>
+<p>Show title: <select id="showTitle"><option value="yes">Yes</option><option value="no">No</option></option></select></p>
 <p><input type="button" onclick="createIcon()" value="CREATE" /></p>
-<p><canvas id="icon" width="68" height="68" style="border:1px solid black"></canvas></p>
+<p><div id="icon" style="width:68px;height:68px;border:1px solid black"></div></p>
 <p><b><a href="" onclick="downloadIcon(this)">Download</a></b></p>
 <script type="text/javascript">
+var defaultBlockSize = 68;
 var $_eseecode = {
 	instructions: {
 		icons: null
+	},
+	whiteboard: {
+		offsetWidth: defaultBlockSize,
+		offsetHeight: defaultBlockSize
 	}
 }
 </script>
@@ -33,20 +39,28 @@ for (key in icons) {
 }
 function createIcon() {
 	var instr = document.getElementById('instructions').value;
+	var showTitle = document.getElementById('showTitle').value;
 	var width = document.getElementById('width').value;
 	var height = document.getElementById('height').value;
-	document.getElementById('icon').width = width;
-	document.getElementById('icon').height = height;
-	var ctx = document.getElementById('icon').getContext("2d");
-	var instrId = getInstructionSetIdFromName(instr);
+	var iconDiv = document.getElementById('icon');
+	iconDiv.innerHTML = "";
+	iconDiv.style.width = width+"px";
+	$_eseecode.whiteboard.offsetWidth = width;
+	iconDiv.style.height = height+"px";
+	$_eseecode.whiteboard.offsetHeight = height;
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var ctx = canvas.getContext("2d");
+	var instrId = $e_getInstructionSetIdFromName(instr);
 	var instrObj = $_eseecode.instructions.set[instrId];
 	var color = "transparent";
 	for (var i=0; i<$_eseecode.instructions.categories.length; i++) {
-                if (instrObj.category == $_eseecode.instructions.categories[i].name) {
-                        color = $_eseecode.instructions.categories[i].color;
-                        break;
-                }
+        if (instrObj.category == $_eseecode.instructions.categories[i].name) {
+            color = $_eseecode.instructions.categories[i].color;
+            break;
         }
+    }
 	ctx.fillStyle = color;
 	ctx.fillRect(0,0,width,height);
 	var params = new Array();
@@ -57,6 +71,19 @@ function createIcon() {
 		params[1] = document.getElementById('param2').value;
 	}
 	icons[instr](ctx, document.getElementById('width').value, document.getElementById('height').value, params);
+	iconDiv.style.backgroundImage = "url("+canvas.toDataURL()+")";
+	var span = document.createElement("span");
+	span.style.color = $e_readableText(color);
+	span.style.fontFamily = "Arial";
+	span.style.fontSize = 10*(Math.min(width,height)/defaultBlockSize)+"px";
+	span.style.fontWeight = "bold";
+	span.className = "blockTitle";
+	span.style.display = "block";
+	if (showTitle == "no") {
+		span.style.display = "none";
+	}
+	span.innerHTML = instr;
+	iconDiv.appendChild(span);
 }
 function downloadIcon(link) {
 	var canvas = document.getElementById('icon');

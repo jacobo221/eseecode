@@ -4,9 +4,9 @@
 	 * Checks the layers list and returns the debug layers list content
 	 * @private
 	 * @return {String} Debug layers list content
-	 * @example debugLayers()
+	 * @example $e_debugLayers()
 	 */
-	function debugLayers() {
+	function $e_debugLayers() {
 		var list = [];
 		var listReverse = [];
 		var layer = $_eseecode.canvasArray["top"];
@@ -56,9 +56,9 @@
 	 * @private
 	 * @param {String} line Breakpoint to disable/enable
 	 * @param {!HTMLElement} element HTML checkbox that triggered the function
-	 * @example toggleBreakpoint(12, this)
+	 * @example $e_toggleBreakpoint(12, this)
 	 */
-	function toggleBreakpoint(line, element) {
+	function $e_toggleBreakpoint(line, element) {
 		$_eseecode.session.breakpointsStatus[line] = element.checked;
 	}
 
@@ -66,9 +66,9 @@
 	 * Deletes a breakpoint
 	 * @private
 	 * @param {String} line Line to remove breakpoint from
-	 * @example removeBreakpoint(12)
+	 * @example $e_removeBreakpoint(12)
 	 */
-	function removeBreakpoint(line) {
+	function $e_removeBreakpoint(line) {
 		delete $_eseecode.session.breakpoints[line];
 		delete $_eseecode.session.breakpointsStatus[line];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
@@ -79,9 +79,9 @@
 	 * Completes or cancels an asynchronous breakpoint addition event
 	 * @private
 	 * @param {Object} event Event. If unset and in blocks mode it will cancel the breakpoint event
-	 * @example addBreakpointEventEnd()
+	 * @example $e_addBreakpointEventEnd()
 	 */
-	function addBreakpointEventEnd(event) {
+	function $e_addBreakpointEventEnd(event) {
 		var line;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			line = ace.edit("console-write").selection.getCursor()["row"]+1;
@@ -95,34 +95,34 @@
 				}
 			}
 			if (target !== null) {
-				line = searchBlockPosition(document.getElementById("console-blocks").firstChild,target).count;
+				line = $e_searchBlockPosition(document.getElementById("console-blocks").firstChild,target).count;
 			}
 		}
 		if (line) {
-			if (isNumber($_eseecode.session.breakpointHandler)) {
-				updateBreakpoint($_eseecode.session.breakpointHandler,line)
+			if ($e_isNumber($_eseecode.session.breakpointHandler)) {
+				$e_updateBreakpoint($_eseecode.session.breakpointHandler,line)
 			} else {
-				addBreakpoint(line);
+				$e_addBreakpoint(line);
 			}
 		}
-		addBreakpointEventCancel();
+		$e_addBreakpointEventCancel();
 		event.stopPropagation();
 	}
 
 	/**
 	 * Cancels an asynchronous breakpoint addition event
 	 * @private
-	 * @example addBreakpointEventCancel()
+	 * @example $e_addBreakpointEventCancel()
 	 */
-	function addBreakpointEventCancel() {
+	function $e_addBreakpointEventCancel() {
 		$_eseecode.session.breakpointHandler = false;
 		var tabdiv = document.getElementById("console-tabdiv");
 		tabdiv.style.webkitFilter = "";
 		tabdiv.style.filter = "";
-		tabdiv.removeEventListener("mousedown", addBreakpointEventEnd, false);
-		tabdiv.removeEventListener("touchstart", addBreakpointEventEnd, false);
-		document.body.removeEventListener("mousedown", addBreakpointEventCancel, false);
-		document.body.removeEventListener("touchstart", addBreakpointEventCancel, false);
+		tabdiv.removeEventListener("mousedown", $e_addBreakpointEventEnd, false);
+		tabdiv.removeEventListener("touchstart", $e_addBreakpointEventEnd, false);
+		document.body.removeEventListener("mousedown", $e_addBreakpointEventCancel, false);
+		document.body.removeEventListener("touchstart", $e_addBreakpointEventCancel, false);
 		document.body.style.cursor = "auto";
 		var consoleDiv = document.getElementById("console-blocks");
 		var consoleDiv2 = document.getElementById("console-write");
@@ -139,9 +139,9 @@
 	 * Starts an asynchronous breakpoint addition event
 	 * @private
 	 * @param {String} [oldLine] Breakpoint handler. Use only when editting an existing breakpoint
-	 * @example addBreakpointEventStart()
+	 * @example $e_addBreakpointEventStart()
 	 */
-	function addBreakpointEventStart(oldLine) {
+	function $e_addBreakpointEventStart(oldLine) {
 		if (!oldLine) {
 			oldLine = true;
 		}
@@ -159,21 +159,21 @@
 		var tabdiv = document.getElementById("console-tabdiv");
 		tabdiv.style.webkitFilter = "invert(0.9)";
 		tabdiv.style.filter = "invert(90%)";
-		tabdiv.addEventListener("mousedown", addBreakpointEventEnd, false);
-		tabdiv.addEventListener("touchstart", addBreakpointEventEnd, false);
-		document.body.addEventListener("mousedown", addBreakpointEventCancel, false);
-		document.body.addEventListener("touchstart", addBreakpointEventCancel, false);
+		tabdiv.addEventListener("mousedown", $e_addBreakpointEventEnd, false);
+		tabdiv.addEventListener("touchstart", $e_addBreakpointEventEnd, false);
+		document.body.addEventListener("mousedown", $e_addBreakpointEventCancel, false);
+		document.body.addEventListener("touchstart", $e_addBreakpointEventCancel, false);
 	}
 
 	/**
 	 * Synchronous part of a breakpoint addition
 	 * @private
 	 * @param {String} [line] Line in code to add the breakpoint to. If unset it calls for the user to set it up via the UI
-	 * @example addBreakpoint(12)
+	 * @example $e_addBreakpoint(12)
 	 */
-	function addBreakpoint(line) {
+	function $e_addBreakpoint(line) {
 		if (!line) {
-			addBreakpointEventStart();
+			$e_addBreakpointEventStart();
 		} else if (!document.getElementById("dialog-debug-analyzer-line"+line)) {
 			if ($_eseecode.session.breakpoints[line] === undefined) {
 				$_eseecode.session.breakpoints[line] = {};
@@ -182,7 +182,7 @@
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"updateBreakpoint("+line+")\" onmouseover=\"highlight("+line+",'breakpoint')\" onmouseover=\"unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"removeBreakpoint("+line+")\">("+_("Delete")+")</span><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseover=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
 			var divAnalyzer = document.getElementById("dialog-debug-analyzer");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
@@ -216,11 +216,11 @@
 	 * @private
 	 * @param {String} oldLine Line where the breakpoint was
 	 * @param {String} [line] Line where the breakpoint will be. If unset just add the breakpoint
-	 * @example updateBreakpoint(12, 17)
+	 * @example $e_updateBreakpoint(12, 17)
 	 */
-	function updateBreakpoint(oldLine, line) {
+	function $e_updateBreakpoint(oldLine, line) {
 		if (!line) {
-			addBreakpointEventStart(oldLine);
+			$e_addBreakpointEventStart(oldLine);
 		} else {
 			if (oldLine != line) {
 				if ($_eseecode.session.breakpoints[line]) {
@@ -235,9 +235,9 @@
 					div.parentNode.removeChild(div);
 				}
 			}
-			addBreakpoint(line);
+			$e_addBreakpoint(line);
 			for (var watch in $_eseecode.session.breakpoints[line]) {
-				addBreakpointWatch(line, watch);
+				$e_addBreakpointWatch(line, watch);
 			}
 		}
 	}
@@ -247,30 +247,30 @@
 	 * @private
 	 * @param {String} line Breakpoint (line) to add the watch to
 	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
-	 * @example addBreakpointWatch(12, "count")
+	 * @example $e_addBreakpointWatch(12, "count")
 	 */
-	function addBreakpointWatch(line, watch) {
+	function $e_addBreakpointWatch(line, watch) {
 		if (!watch) {
 			var div = _("Enter the name of the variable you want to watch in line %s",[line])+"<br /> <input id=\"addBreakpointLine\" type=\"hidden\" value=\""+line+"\" /><input id=\"addBreakpointWatch\" type=\"text\" />";
-			msgBox(div,{acceptAction:addBreakpointWatchFromDialog,cancelAction:msgBoxClose,focus:"addBreakpointWatch"});
+			$e_msgBox(div,{acceptAction:$e_addBreakpointWatchFromDialog,cancelAction:$e_msgBoxClose,focus:"addBreakpointWatch"});
 		} else {
-			addBreakpointWatch2(line, watch);
+			$e_addBreakpointWatch2(line, watch);
 		}
 	}
 
 	/**
 	 * Adds a watch in a breakpoint, called from dialog
 	 * @private
-	 * @example addBreakpointWatchFromDialog()
+	 * @example $e_addBreakpointWatchFromDialog()
 	 */
-	function addBreakpointWatchFromDialog() {
+	function $e_addBreakpointWatchFromDialog() {
 		var line = document.getElementById("addBreakpointLine").value;
 		var watch = document.getElementById("addBreakpointWatch").value;
 		if (watch && watch.match(/^[A-Za-z][A-Za-z_0-9]*$/) !== null) {
-			msgBoxClose();
-			addBreakpointWatch2(line, watch);
+			$e_msgBoxClose();
+			$e_addBreakpointWatch2(line, watch);
 		} else {
-			msgBox(_("Invalid name of variable!"));
+			$e_msgBox(_("Invalid name of variable!"));
 		}
 	}
 
@@ -279,9 +279,9 @@
 	 * @private
 	 * @param {String} line Breakpoint (line) to add the watch to
 	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
-	 * @example addBreakpointWatch2(12, "count")
+	 * @example $e_addBreakpointWatch2(12, "count")
 	 */
-	function addBreakpointWatch2(line, watch) {
+	function $e_addBreakpointWatch2(line, watch) {
 		if (watch !== null && !document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch)) {
 			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\">"+watch+": ";
 			if ($_eseecode.session.breakpoints[line][watch] === undefined) {
@@ -289,7 +289,7 @@
 			} else {
 				watchText += $_eseecode.session.breakpoints[line][watch];
 			}
-			watchText += "<span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"removeBreakpointWatch("+line+",'"+watch+"')\">("+_("Delete")+")</span></div>";
+			watchText += "<span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpointWatch("+line+",'"+watch+"')\">("+_("Delete")+")</span></div>";
 			document.getElementById("dialog-debug-analyzer-line"+line+"-watches").innerHTML += watchText;
 		}
 	}
@@ -299,9 +299,9 @@
 	 * @private
 	 * @param {String} line Breakpoint (line) to remove the watch from
 	 * @param {String} watch Name of the variable to stop watching
-	 * @example removeBreakpointWatch(12, "count")
+	 * @example $e_removeBreakpointWatch(12, "count")
 	 */
-	function removeBreakpointWatch(line, watch) {
+	function $e_removeBreakpointWatch(line, watch) {
 		delete $_eseecode.session.breakpoints[line][watch];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch);
 		div.parentNode.removeChild(div);
@@ -310,12 +310,12 @@
 	/**
 	 * Resets the debug window
 	 * @private
-	 * @example resetDebug()
+	 * @example $e_resetDebug()
 	 */
-	function resetDebug() {
+	function $e_resetDebug() {
 		var debugDiv = document.getElementById("dialog-debug");
 		// Clean old debug info and create new debug info
-		var list = debugLayers();
+		var list = $e_debugLayers();
 		var layersText = ""
 		for (var i=0;i<list.length;i++) {
 			var id = list[i];
@@ -333,15 +333,15 @@
 			layersText += "</span></div>\n";
 		}
 		document.getElementById("dialog-debug-layers").innerHTML = layersText;
-		document.getElementById("dialog-debug-layers").addEventListener('mouseout', unhighlightCanvas, false);
+		document.getElementById("dialog-debug-layers").addEventListener('mouseout', $e_unhighlightCanvas, false);
 		for (var i=0;i<list.length;i++) {
-			document.getElementById("link-canvas-"+list[i]).addEventListener('mouseover', (function(id){return function (evt) {highlightCanvas(id)}})(list[i]), false);
-			document.getElementById("link-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {switchCanvas(id);resetDebug()}})(list[i]), false);
-			document.getElementById("toggle-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {toggleCanvas(id)}})(list[i]), false);
+			document.getElementById("link-canvas-"+list[i]).addEventListener('mouseover', (function(id){return function (evt) {$e_highlightCanvas(id)}})(list[i]), false);
+			document.getElementById("link-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_switchCanvas(id);$e_resetDebug()}})(list[i]), false);
+			document.getElementById("toggle-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_toggleCanvas(id)}})(list[i]), false);
 		}
-		document.getElementById("dialog-debug-analyzer").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"addBreakpoint()\" />";
+		document.getElementById("dialog-debug-analyzer").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" />";
 		for (var breakpoint in $_eseecode.session.breakpoints) {
-			updateBreakpoint(breakpoint, breakpoint);
+			$e_updateBreakpoint(breakpoint, breakpoint);
 		}
 	}
 
@@ -349,47 +349,47 @@
 	 * Keeps track of the breakpoints in the level4 code. This function is to be called by Ace's change event
 	 * @private
 	 * @param {!Object} event Ace editor change event object
-	 * @example editor.on("change",updateWriteBreakpoints);
+	 * @example editor.on("change",$e_updateWriteBreakpoints);
 	 */
-	function updateWriteBreakpoints(event) {
+	function $e_updateWriteBreakpoints(event) {
 		for (var breakpointLine in $_eseecode.session.breakpoints) {
 			breakpointLine = parseInt(breakpointLine);
 			if (event.data.action === "insertText") {
 				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
 					// The breakpoint line has been split, update breakpoint
-					updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
+					$e_updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
 				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
 					// A line was added before the breakpoint, update breakpoint
-					updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
+					$e_updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
 				}
 			} else if (event.data.action === "removeText" || event.data.action === "removeLines") {
 				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
 					// The breakpoint line has been merged, update breakpoint
-					updateBreakpoint(breakpointLine, event.data.range.end.row);
+					$e_updateBreakpoint(breakpointLine, event.data.range.end.row);
 				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
 					// A line was removed before the breakpoint, update breakpoint
-					updateBreakpoint(breakpointLine, breakpointLine - (event.data.range.end.row - event.data.range.start.row));
+					$e_updateBreakpoint(breakpointLine, breakpointLine - (event.data.range.end.row - event.data.range.start.row));
 				}
 			}
 		}
 	}
 
 	/**
-	 * Keeps track of the breakpoints in the blocks code. This function is to be called by addBlock() and deleteBlock()
+	 * Keeps track of the breakpoints in the blocks code. This function is to be called by $e_addBlock() and $e_deleteBlock()
 	 * @private
 	 * @param {!Object} div Div of a block
-	 * @example updateBlocksBreakpoints(blockDiv);
+	 * @example $e_updateBlocksBreakpoints(blockDiv);
 	 */
-	function updateBlocksBreakpoints(blockDiv, action) {
+	function $e_updateBlocksBreakpoints(blockDiv, action) {
 		var consoleDiv = document.getElementById("console-blocks");
 		for (var breakpointLine in $_eseecode.session.breakpoints) {
 			breakpointLine = parseInt(breakpointLine);
-			var line = searchBlockPosition(consoleDiv.firstChild, blockDiv).count;
+			var line = $e_searchBlockPosition(consoleDiv.firstChild, blockDiv).count;
 			if (line <= breakpointLine) {
 				if (action === "addBlock") {
-					updateBreakpoint(breakpointLine, breakpointLine + 1);
+					$e_updateBreakpoint(breakpointLine, breakpointLine + 1);
 				} else if (action === "deleteBlock") {
-					updateBreakpoint(breakpointLine, breakpointLine - 1);
+					$e_updateBreakpoint(breakpointLine, breakpointLine - 1);
 				}
 			}
 		}
@@ -398,18 +398,18 @@
 	/**
 	 * Initializes/Resets the breakpoints array in $_eseecode.session.breakpoints
 	 * @private
-	 * @example resetBreakpoints()
+	 * @example $e_resetBreakpoints()
 	 */
-	function resetBreakpoints() {
+	function $e_resetBreakpoints() {
 		$_eseecode.session.breakpoints = {};
 	}
 
 	/**
 	 * Initializes/Resets the breakpoint watches values in $_eseecode.session.breakpoints[breakpoint]
 	 * @private
-	 * @example resetBreakpointWatches()
+	 * @example $e_resetBreakpointWatches()
 	 */
-	function resetBreakpointWatches() {
+	function $e_resetBreakpointWatches() {
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			for (var watch in $_eseecode.session.breakpoints[breakpoint]) {
 				$_eseecode.session.breakpoints[breakpoint][watch] = ""
@@ -421,18 +421,18 @@
 	 * Select All/None of the debug layer checkboxes
 	 * @private
 	 * @param {!Object} checkbox Checkbox element
-	 * @example debugSelectAllNoneLayers(checkbox)
+	 * @example $e_debugSelectAllNoneLayers(checkbox)
 	 */
-	function debugSelectAllNoneLayers(checkbox) {
+	function $e_debugSelectAllNoneLayers(checkbox) {
 		if (checkbox.checked) {
-			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
+			for (var i=0; document.getElementById("toggle-canvas-"+i); i++) {
 				document.getElementById("toggle-canvas-"+i).checked = true;
-				toggleCanvas(i, true);
+				$e_toggleCanvas(i, true);
 			}
 		} else {
-			for (var i=1; document.getElementById("toggle-canvas-"+i); i++) {
+			for (var i=0; document.getElementById("toggle-canvas-"+i); i++) {
 				document.getElementById("toggle-canvas-"+i).checked = false;
-				toggleCanvas(i, false);
+				$e_toggleCanvas(i, false);
 			}
 		}
 	}
@@ -441,11 +441,11 @@
 	 * Shows only a layer (hides the others)
 	 * @private
 	 * @param {Number} id Layer id
-	 * @example highlightCanvas(3)
+	 * @example $e_highlightCanvas(3)
 	 */
-	function highlightCanvas(id) {
+	function $e_highlightCanvas(id) {
 		id = parseInt(id);
-		unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
+		$e_unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
 		// Since we destroy it and create it again every time it should always be on top of the canvas stack
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var div = document.createElement("div");
@@ -475,7 +475,7 @@
 			yScale *= -1;
 		}
 		var yScale = $_eseecode.coordinates.yScale;
-		drawCursor(context, targetCanvas.turtle, id);
+		$e_drawCursor(context, targetCanvas.turtle, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
 	}
@@ -483,9 +483,9 @@
 	/**
 	 * Resets the layers visibility back to normal after a highlightCanvas() call
 	 * @private
-	 * @example unhighlightCanvas()
+	 * @example $e_unhighlightCanvas()
 	 */
-	function unhighlightCanvas() {
+	function $e_unhighlightCanvas() {
 		var div = document.getElementById("canvas-div-highlight");
 		if (div) {
 			div.parentNode.removeChild(div);
@@ -496,9 +496,9 @@
 	 * Reset execution tracing platform
 	 * @private
 	 * @param {String} [type] Type of trace to reset its iterator. If none is passed all the platform is reset
-	 * @example executionTraceReset("randomNumber")
+	 * @example $e_executionTraceReset("randomNumber")
 	 */
-	function executionTraceReset(type) {
+	function $e_executionTraceReset(type) {
 		if (type === undefined) {
 			$_eseecode.execution.trace = [];
 		} else {
@@ -514,12 +514,12 @@
 	 * @private
 	 * @param {String} type Type of trace to modify
 	 * @param {String} value Value to add to the trace
-	 * @example executionTracePush("randomNumber", 213)
+	 * @example $e_executionTracePush("randomNumber", 213)
 	 */
-	function executionTracePush(type, value) {
+	function $e_executionTracePush(type, value) {
 		var traceType = $_eseecode.execution.trace[type];
 		if (!traceType) {
-			executionTraceReset(type);
+			$e_executionTraceReset(type);
 			traceType = $_eseecode.execution.trace[type];
 		}
 		traceType.push(value);
@@ -530,9 +530,9 @@
 	 * @private
 	 * @param {String} type Type of trace to reset its iterator. If none is passed all the platform is reset
 	 * @return Latest value stored
-	 * @example executionTracePop("randomNumber")
+	 * @example $e_executionTracePop("randomNumber")
 	 */
-	function executionTracePop(type) {
+	function $e_executionTracePop(type) {
 		var traceType = $_eseecode.execution.trace[type];
 		var value = undefined;
 		if (traceType.length > 1) {
@@ -548,14 +548,14 @@
 	 * @param {String} type Type of trace to use
 	 * @param {String} [value] Value to add to the trace if no more are available
 	 * @return Next value
-	 * @example executionTraceIterate("randomNumber", 213)
+	 * @example $e_executionTraceIterate("randomNumber", 213)
 	 */
-	function executionTraceIterate(type, value) {
+	function $e_executionTraceIterate(type, value) {
 		var traceType = $_eseecode.execution.trace[type];
 		if (traceType[0] < traceType.length) {
 			value = traceType[traceType[0]];
 		} else {
-			executionTracePush(type, value);
+			$e_executionTracePush(type, value);
 		}
 		traceType[0]++;
 		return value;
