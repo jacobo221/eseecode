@@ -1271,7 +1271,7 @@
 	 */
 	function $e_saveCode() {
 		if (navigator.userAgent.match(/MSIE/)) {
-			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to level4, copy the code and paste it into a file in your computer."));
+			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to Code view, copy the code and paste it into a file in your computer."));
 			return;
 		}
 		var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
@@ -1299,7 +1299,7 @@
 			uploadButton.click();
 			document.body.removeChild(uploadButton);
 		} else {
-			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into level4 and then switch to the level you wish to code with."));
+			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into Code view and then switch to the view you wish to code with."));
 		}
 	}
 

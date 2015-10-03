@@ -346,7 +346,7 @@
 	}
 
 	/**
-	 * Keeps track of the breakpoints in the level4 code. This function is to be called by Ace's change event
+	 * Keeps track of the breakpoints in the Code view code. This function is to be called by Ace's change event
 	 * @private
 	 * @param {!Object} event Ace editor change event object
 	 * @example editor.on("change",$e_updateWriteBreakpoints);

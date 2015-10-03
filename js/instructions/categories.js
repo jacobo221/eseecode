@@ -3,10 +3,10 @@
 	/**
 	 * Contains the color definition of each instruction catergory
 	 * @type {Array<{name:String, color:String}>}
-	 * @example {name: "cursor", color: "#FFFF00"}
+	 * @example {name: "guide", color: "#FFFF00"}
 	 */
 	$_eseecode.instructions.categories = [
-		{ name: "cursor", color: "#FFFF00" },
+		{ name: "guide", color: "#FFFF00" },
 		{ name: "canvas", color: "#D033D0" },
 		{ name: "draw", color: "#FF3030" },
 		{ name: "objects", color: "#606060" },

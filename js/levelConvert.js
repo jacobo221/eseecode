@@ -23,7 +23,7 @@
 	
 	/**
 	 * Returns as text the code from the blocks console
-	 * This function generates the pseudocode visible in level4
+	 * This function generates the pseudocode visible in Code view
 	 * @private
 	 * @param {!HTMLElement} blockDiv Blocks console element
 	 * @param {String} [indentation=""] Initial indentation

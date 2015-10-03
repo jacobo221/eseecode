@@ -780,11 +780,11 @@
 	}
 
 	/**
-	 * Returns the layer's cursor's position's X coordinate
+	 * Returns the layer's guide's position's X coordinate
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number} The layer's cursor's position's X coordinate
+	 * @return {Number} The layer's guide's position's X coordinate
 	 * @example getX()
 	 */
 	function getX(id) {
@@ -799,11 +799,11 @@
 	}
 
 	/**
-	 * Returns the layer's cursor's position's Y coordinate
+	 * Returns the layer's guide's position's Y coordinate
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number} The layer's cursor's position's Y coordinate
+	 * @return {Number} The layer's guide's position's Y coordinate
 	 * @example getY()
 	 */
 	function getY(id) {
@@ -818,12 +818,12 @@
 	}
 
 	/**
-	 * Returns the layer's cursor's position's angle
-	 * Angle 0 is when the cursor is looking horizontally right
+	 * Returns the layer's guide's position's angle
+	 * Angle 0 is when the guide is looking horizontally right
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
-	 * @return {Number} The layer's cursor's position's angle
+	 * @return {Number} The layer's guide's position's angle
 	 * @example getAngle()
 	 */
 	function getAngle(id) {
@@ -851,7 +851,7 @@
 	}
 	
 	/**
-	 * Draws a line from current cursor position to a specified coodinate
+	 * Draws a line from current guide position to a specified coodinate
 	 * @since 1.0
 	 * @public
 	 * @param {Number} destinationx X coordinate where the line ends
@@ -865,7 +865,7 @@
 	}
 
 	/**
-	 * Moves the cursor forward
+	 * Moves the guide forward
 	 * @since 1.0
 	 * @public
 	 * @param {Number} pixels Amount of pixels to move forward
@@ -883,7 +883,7 @@
 	}
 
 	/**
-	 * Moves the cursor backwards
+	 * Moves the guide backwards
 	 * @since 1.0
 	 * @public
 	 * @param {Number} pixels Amount of pixels to move backwards
@@ -899,7 +899,7 @@
 	 * @public
 	 * @param {Number} radius Radius of the arc
 	 * @param {Number} degrees Amount of degrees to arc
-	 * @param {Number} [axis=0] 0 = arc around the cursor, 1 = arc following the cursor's position and angle and move the cursor to the end of the arc
+	 * @param {Number} [axis=0] 0 = arc around the guide, 1 = arc following the guide's position and angle and move the guide to the end of the arc
 	 * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
 	 * @example arc(50, 270)
 	 */
@@ -960,7 +960,7 @@
 	}
 
 	/**
-	 * Writes text at cursor's position
+	 * Writes text at guide's position
 	 * @since 1.0
 	 * @public
 	 * @param {String} text Text to write
@@ -996,7 +996,7 @@
 	}
 
 	/**
-	 * Turns the cursor right
+	 * Turns the guide right
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
@@ -1007,7 +1007,7 @@
 	}
 
 	/**
-	 * Turns the cursor left
+	 * Turns the guide left
 	 * @since 1.0
 	 * @public
 	 * @param {Number} angle Angle
@@ -1018,8 +1018,8 @@
 	}
 
 	/**
-	 * Turns the cursor to it's original angle
-	 * The original angle is the cursor looking horizontally to the right
+	 * Turns the guide to it's original angle
+	 * The original angle is the guide looking horizontally to the right
 	 * @since 2.1
 	 * @public
 	 * @param {Number} angle Angle to set to
@@ -1061,11 +1061,11 @@
 	}
 
 	/**
-	 * Moves the cursor to a specific position
+	 * Moves the guide to a specific position
 	 * @since 1.0
 	 * @public
-	 * @param {Number} posx X coordinate where the cursor will be moved
-	 * @param {Number} posy Y coordinate where the cursor will be moved
+	 * @param {Number} posx X coordinate where the guide will be moved
+	 * @param {Number} posy Y coordinate where the guide will be moved
 	 * @example goTo(50, 50)
 	 */
 	function goTo(posx, posy) {
@@ -1074,7 +1074,7 @@
 	}
 
 	/**
-	 * Moves the cursor to the center of the whiteboard
+	 * Moves the guide to the center of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @example goToCenter()
@@ -1084,7 +1084,7 @@
 	}
 
 	/**
-	 * Moves the cursor to the upper-left corner of the whiteboard
+	 * Moves the guide to the upper-left corner of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @example goToUpLeft()
@@ -1094,7 +1094,7 @@
 	}
 
 	/**
-	 * Moves the cursor to the upper-right corner of the whiteboard
+	 * Moves the guide to the upper-right corner of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @example goToUpRight()
@@ -1104,7 +1104,7 @@
 	}
 
 	/**
-	 * Moves the cursor to the lower-left of the whiteboard
+	 * Moves the guide to the lower-left of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @example goToLowLeft()
@@ -1114,7 +1114,7 @@
 	}
 
 	/**
-	 * Moves the cursor to the lower-right of the whiteboard
+	 * Moves the guide to the lower-right of the whiteboard
 	 * @since 1.0
 	 * @public
 	 * @example goToLowRight()
