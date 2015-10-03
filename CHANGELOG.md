@@ -17,8 +17,9 @@
  * Easily convert between if and ifelse
  * Clicking on "}" block or "else" block will prompt for the parent block setup
  * New resize console button, much more intuitive than doubleclicking level tabs
+ * The platform now resizes to adapt to the browser size
  * Center of coordinates can be changed
- * Enable ACE editor worker and helper
+ * Enable ACE editor worker, helper and horizontal scroll
  * It is now Web App installable
  * New logo
  * Confirm before leaving page
@@ -34,6 +35,7 @@
  * New animateLayers() instruction to ease creating animations from Level2
  * Turtle icon slightly redesigned
  * Resetting the UI and switching the console level always leave the dialog in Pieces mode
+ * Wrapped all functions under the $e_ prefix
  * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly

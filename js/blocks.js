@@ -991,7 +991,8 @@
 			if (newInstructionId != instructionId) {
 				var newDiv = div.cloneNode(true);
 				var newDivId = $e_newDivId();
-				newDiv.setAttribute("id", newDivId);
+				newDiv.setAttribute("id", newDivId);	
+				$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].name, newDiv, newInstructionId)
 				instructionId = newInstructionId;
 				newDiv.setAttribute("instructionSetId",instructionId);
 				$e_createSubblocks(newDiv);
@@ -1070,6 +1071,21 @@
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		div.className = "block "+level+" "+instruction.name;
 		$e_paintBlock(div,dialog);
+		$e_addBlockEventListeners(level, div, instructionSetId, dialog);
+	}
+
+	/**
+	 * Creates the event listeners of a block
+	 * @private
+	 * @param {String} level Current level name
+	 * @param {!HTMLElement} div Block div
+	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
+	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
+	 * @example $e_addBlockEventListeners("level2", document.body.createElement("div"))
+	 */
+	
+	function $e_addBlockEventListeners(level, div, instructionSetId, dialog) {
+		var instruction = $_eseecode.instructions.set[instructionSetId];
 		if (instruction.dummy) {
 			return;
 		}
