@@ -32,6 +32,7 @@
  * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
  * Turtle starts at (0,0)
  * lineAt and writeAt icons are now dynamic
+ * Better icon for if/ifelse
  * New animateLayers() instruction to ease creating animations from Level2
  * Turtle icon slightly redesigned
  * Resetting the UI and switching the console level always leave the dialog in Pieces mode
@@ -49,6 +50,8 @@
  * Fix: Undesired tabs switches
  * Fix: unsetInvisible() had no tip
  * Fix: repeatCount in nested repeat()s is consistent uppon entry/exit of each loop
+ * Fix: clicking a block to setup but changing nothing no longer takes one slot in the undo stack
+ * Fix: moving a block downward, then undoing and then redoing no longer misplaces the block
 
 ## 2.0 (2015-01-29)
 

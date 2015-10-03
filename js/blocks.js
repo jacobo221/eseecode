@@ -196,9 +196,16 @@
 					div = $_eseecode.session.floatingBlock.fromDiv;
 					divId = div.id;
 					action = "setup";
-					$e_setupBlock(div, false);
+					if (!$e_setupBlock(div, false)) {
+						action = "cancel";
+					}
 				} else if ($_eseecode.session.floatingBlock.fromDiv && $e_positionIsInBlock(consoleDiv, $_eseecode.session.floatingBlock.fromDiv, position)) {
-					action = "cancel";
+					div = $_eseecode.session.floatingBlock.fromDiv;
+					divId = div.id;
+					action = "setup"; // This used to be "cancel" without setup but it may not be intuitive enough
+					if (!$e_setupBlock(div, false)) {
+						action = "cancel";
+					}
 				} else {
 					$e_addBlock(div,position); // first we add the block, then we delete the old one, otherwise the positioning fails
 					if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog
@@ -226,6 +233,7 @@
 			if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog	
 				$e_deleteBlock($_eseecode.session.floatingBlock.fromDiv);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = false;
+				action = "remove";
 			} else {
 				action = "cancel";
 			}
@@ -248,6 +256,7 @@
 				$e_execute(true);
 			}
 		}
+		console.log(action)
 	}
 
 	/**
@@ -261,7 +270,7 @@
 	 */
 	function $e_positionIsInBlock(consoleDiv, div, position) {
 		var startPos = $e_searchBlockPosition(consoleDiv.firstChild,div).count-1;
-		var endPos = $e_searchBlockByPosition(div.firstChild.nextSibling,-1,startPos).count;
+		var endPos = $e_searchBlockByPosition(div.firstChild.nextSibling,-1,startPos).count+1;
 		return (position >= startPos && position <= endPos);
 	}
 
@@ -522,9 +531,11 @@
 	 * @private
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} blockAdd Whether the block is being added or modified
+	 * @return {Boolean} true if the setup dialog was show, false otherwise
 	 * @example $e_setupBlock(document.getElementById("div-123123123"))
 	 */
 	function $e_setupBlock(div, blockAdd) {
+		var returnVal = true;
 		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
 		if (instruction.dummy && instruction.parameters === null) {
 			// This is a subblock, configure its parent node
@@ -649,7 +660,13 @@
 			if (level === "level2") {
 				$e_setupBlockVisual("Basic", instruction.parameters);
 			}
+		} else {
+			if ($_eseecode.session.blocksUndo[$_eseecode.session.blocksUndo[0]+1].fromDiv) { // Check this is a block setup, not a block add
+				// Nothing to setup so don't update undo stack
+				returnVal = false;
+			}
 		}
+		return returnVal;
 	}
 
 	/**
@@ -986,9 +1003,11 @@
 		var instructionId = div.getAttribute("instructionSetId");
 		var instruction = $_eseecode.instructions.set[instructionId];
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
+		var instructionConverted = false;
 		if (document.getElementById("setupBlockConvert")) {
 			var newInstructionId = document.getElementById("setupBlockConvert").value;
 			if (newInstructionId != instructionId) {
+				instructionConverted = true;
 				var newDiv = div.cloneNode(true);
 				var newDivId = $e_newDivId();
 				newDiv.setAttribute("id", newDivId);	
@@ -1024,6 +1043,12 @@
 		if (setupChanges.length > 0 && document.getElementById("setupBlockAdd").value !== "true") {
 			// Update undo array
 			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+		} else if (instructionConverted) {
+			// Already saved the div into the undo stack earlier
+		} else if ($_eseecode.session.blocksUndo[blocksUndoIndex].fromDiv) {
+			// If nothing changed don't update undo stack
+			$_eseecode.session.blocksUndo.pop();
+			$_eseecode.session.blocksUndo[0]--;
 		}
 		// Update the block icon
 		$e_paintBlock(div);
@@ -1043,9 +1068,9 @@
 			var divId = document.getElementById("setupBlockDiv").value;
 			var div = document.getElementById(divId);
 			$e_deleteBlock(div);
-			$_eseecode.session.blocksUndo.pop();
-			$_eseecode.session.blocksUndo[0]--;
 		}
+		$_eseecode.session.blocksUndo.pop();
+		$_eseecode.session.blocksUndo[0]--;
 		$e_msgBoxClose();
 	}
 
@@ -1292,6 +1317,10 @@
 				oldDiv = undo.fromDiv;
 				newPosition = undo.divPosition;
 				oldPosition = undo.fromDivPosition;
+				if (newPosition > oldPosition) {
+					// Since we'll be deleting the old block from above the new position we need to shift the position
+					newPosition--;
+				}
 			} else {
 				newDiv = undo.fromDiv;
 				oldDiv = undo.div;

@@ -460,11 +460,11 @@
 			ctx.lineTo(width-margin,margin*1.5);
 			ctx.lineTo(width-margin*2,margin*2);
 			ctx.fill();
-			ctx.beginPath();
-			ctx.moveTo(width-margin*2,height-margin);
-			ctx.lineTo(width-margin,height-margin*1.5);
+			ctx.moveTo(width-margin,height-margin);
 			ctx.lineTo(width-margin*2,height-margin*2);
-			ctx.fill();
+			ctx.moveTo(width-margin,height-margin*2);
+			ctx.lineTo(width-margin*2,height-margin);
+			ctx.stroke();
 		},
 		"ifelse": function(ctx, width, height, param) {
 			var margin = 15;
@@ -484,14 +484,6 @@
 			ctx.moveTo(width-margin*2,height-margin);
 			ctx.lineTo(width-margin,height-margin*1.5);
 			ctx.lineTo(width-margin*2,height-margin*2);
-			ctx.fill();	
-			ctx.moveTo(margin,height/2);
-			ctx.lineTo(width-margin*2,height/2);
-			ctx.stroke();
-			ctx.beginPath();
-			ctx.moveTo(width-margin*2,height/2-margin/2);
-			ctx.lineTo(width-margin,height/2);
-			ctx.lineTo(width-margin*2,height/2+margin/2);
 			ctx.fill();
 		},
 		"line": function(ctx, width, height, param) {
