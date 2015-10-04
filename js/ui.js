@@ -1392,6 +1392,7 @@
 			return false;
 		}
 		$e_initUIElements();
+		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.platform.logo.text+'" title="" /></a>';
 		$e_resetGridModeSelect();
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();
