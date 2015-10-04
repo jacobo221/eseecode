@@ -1881,7 +1881,11 @@
 						text += " ";
 					}
 				}
-				text += parameters[i];
+				if (parameters[i] == "" && i < parameters.length-1) { // if there are more parameters left to parse use "undefined" instead of leaving blank
+					text += "undefined";
+				} else {
+					text += parameters[i];
+				}
 			}
 			if (bracketsStatus) {
 				text += ")";

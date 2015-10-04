@@ -725,7 +725,6 @@
 			if (i !== 0) {
 				str += ", ";
 			}
-
 			str += args[i].makeWrite(level, "", "", realCode);
 		}
 
