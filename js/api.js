@@ -22,7 +22,7 @@
 	 * Loads code into the console
 	 * @public
 	 * @param {String} code Code to upload
-	 * @param {Boolean} If true, runs code and stores it to be run before every execution of user code
+	 * @param {Boolean} [preload] If true, runs code and stores it to be run before every execution of user code
 	 * @example API_uploadCode("repeat(4){forward(100)}",false)
 	 */
 	function API_uploadCode(code,preload) {

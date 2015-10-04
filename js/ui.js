@@ -164,7 +164,7 @@
 	 * Shows a message box overlapping all the platform's user interface
 	 * @private
 	 * @param {String|HTMLElement} text Message to show in the message box
-	 * @param {{acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String,noSubmit:{Boolean}} config Configuration parameters for the message box
+	 * @param {acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String,noSubmit:Boolean} config Configuration parameters for the message box
 	 * @example $e_msgBox("Alert!")
 	 */
 	function $e_msgBox(text, config) {
@@ -1803,7 +1803,7 @@
 	 * @param {String} level Current level name
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
-	 * @return {{parameters:Array<String>, text:String} Parameters of a block, or the default parameters if none were set
+	 * @return {parameters:Array<String>, text:String} Parameters of a block, or the default parameters if none were set
 	 * @example $e_loadParameters("level2", document.getElementById("div-123123123"))
 	 */
 	function $e_loadParameters(level, div, dialog) {
