@@ -5,9 +5,9 @@ eSeeCode
 
 The platform is free and open source and is available online at [http://www.eseecode.com](http://www.eseecode.com).
 
-The platform offers **4 different views** of the code, being able to program from a pure **graphical** click-and-run interface to a pure **text** synthax highlighting editor, with two middle interfaces. This allows for a **smooth progress in programming learning** while keeping a common general interface, platform and instruction set, avoiding the need to learn a new language every now and then during the learning process.
+The platform offers **4 different views** of the code, being able to program from a pure **graphical** click-and-run interface (called the Touch view) to a pure **text** synthax highlighting editor (called the Code view, with two middle interfaces (Drag and Build views). This allows for a **smooth progress in programming learning** while keeping a common general interface, platform and instruction set, avoiding the need to learn a new language every now and then during the learning process.
 
-The language is based on JavaScript (although this base is well hidden) so after mastering in Level4 the user can program freely on a real programming language like JavaScript.
+The language is based on JavaScript (although this base is well hidden) so after mastering in Code view the user can program freely on a real programming language like JavaScript.
 
 How to use it
 -------------
