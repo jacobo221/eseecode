@@ -1039,18 +1039,25 @@
 	 * @param {String} src image source. Can be an external http:// image or an image from getLayerImage()
 	 * @param {Number} posx X coordinate where the image will be placed
 	 * @param {Number} posy Y coordinate where the image will be placed
-	 * @param {Number} width Image width
-	 * @param {Number} height Image height
-	 * @example image(getLayerImage(3), 50, 50, 200, 150)
+	 * @param {Boolean} [centered] Whether or not the image should be centered in the given position
+	 * @param {Number} [width] Image width
+	 * @param {Number} [height] Image height
+	 * @example image(getLayerImage(3), 50, 50, true, 200, 150)
 	 */
-	function image(src, posx, posy, width, height) {
+	function image(src, posx, posy, centered, width, height) {
 		var img = new Image();
 		var canvas = $_eseecode.currentCanvas;
 		var systemPos = $e_user2systemCoords({x: posx, y: posy});
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
-			if (typeof height === "undefined") {
-				canvas.context.drawImage(img, systemPos.x, systemPos.y);
+			if (width === undefined) {
+				width = this.width;
+			}
+			if (height === undefined) {
+				height = this.height;
+			}
+			if (centered) {
+				canvas.context.drawImage(img, systemPos.x-width/2, systemPos.y-height/2, width, height);
 			} else {
 				canvas.context.drawImage(img, systemPos.x, systemPos.y, width, height);
 			}

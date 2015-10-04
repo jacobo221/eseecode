@@ -556,16 +556,11 @@
 			if (div.getAttribute("param"+paramNumber) !== undefined) {
 				defaultValue = div.getAttribute("param"+paramNumber);
 			}
-			if (defaultValue === undefined || defaultValue === null) {
-				defaultValue = "";
-			}
 			if (parameter.type == "number") {
-				if ($e_isNumber(defaultValue)) {
-					defaultValue = parseInt(defaultValue);
-				} else if (defaultValue === undefined || defaultValue == "") {
-					defaultValue = "";
-				} else {
+				if (defaultValue !== "" && defaultValue !== undefined && defaultValue !== null) {
 					defaultValue = parseInt($e_parsePredefinedConstants(defaultValue));
+				} else {
+					defaultValue = "";
 				}
 			}
 			parameterInputs[i].initial = defaultValue;
@@ -724,48 +719,58 @@
 			}
 			var defaultValue = input.value;
 			var visualTypeSupportedByBrowser = false;
+			var element;
 			if (parameter.type === "text") {
 				visualTypeSupportedByBrowser = true;
-				var element;
-				element = document.createElement("input");
-				element.type = "text";
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				var input = document.createElement("input");
+				input.id = parameterInputId+"VisualInput";
+				input.type = "text";
 				if (defaultValue !== undefined) {
 					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
 						defaultValue = defaultValue.substring(1,defaultValue.length-1);
 					}
-					element.value = defaultValue;
+					input.value = defaultValue;
 				}
 				var changeFunction = function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = '"'+this.value+'"';
 					updateIcon();
 				};
-				element.addEventListener("change", changeFunction, false);
-				element.addEventListener("keyup", changeFunction, false);
+				input.addEventListener("change", changeFunction, false);
+				input.addEventListener("keyup", changeFunction, false);
+				element.appendChild(input);
 			} else if (parameter.type === "font") {
 				visualTypeSupportedByBrowser = true;
 				var fonts = ["monospace", "serif", "sans-serif", "fantasy", "Arial", "Arial Black", "Arial Narrow", "Arial Rounded MT Bold", "Bookman Old Style", "Bradley Hand ITC", "Century", "Century Gothic", "Comic Sans MS", "Courier", "Courier New", "Georgia", "Gentium", "Impact", "King", "Lucida Console", "Lalit", "Modena", "Monotype Corsiva", "Papyrus", "Tahoma", "TeX", "Times", "Times New Roman", "Trebuchet MS", "Verdana", "Verona" ];
 				var fontDetect = new Detector();
-				var element = document.createElement("select");
+				visualTypeSupportedByBrowser = true;
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				var input = document.createElement("select");
+				input.id = parameterInputId+"VisualInput";
 				for (var j = 0; j < fonts.length; j++) {
 					if (fontDetect.detect(fonts[j])) {
-						element.innerHTML += "<option value='"+j+"'>"+fonts[j]+"</option>";
+						input.innerHTML += "<option value='"+j+"'>"+fonts[j]+"</option>";
 					}
 				}
 				if (defaultValue !== undefined) {
 					for (var j = 0; j < fonts.length; j++) {
 						if ('"'+fonts[j]+'"' === defaultValue) {
-							element.value = j;
+							input.value = j;
 						}
 					}
 				}
-				element.addEventListener("change", function() {
+				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = '"'+fonts[this.value]+'"';
 					updateIcon();
 				}, false);
+				element.appendChild(input);
 			} else if (parameter.type === "number") {
 				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
 				if (supportedInputs["range"]) {
 					visualTypeSupportedByBrowser = true;
 					var useSlider = false;
@@ -905,36 +910,43 @@
 				}
 			} else if (parameter.type === "bool") {
 				visualTypeSupportedByBrowser = true;
-				element = document.createElement("select");
-				element.innerHTML = "<option value='true'>"+_("true")+"</option><option value='false'>"+_("false")+"</option>";
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				var input = document.createElement("select");
+				input.id = parameterInputId+"VisualInput";
+				input.innerHTML = "<option value='true'>"+_("true")+"</option><option value='false'>"+_("false")+"</option>";
 				if (defaultValue === "false") {
-					element.value = "false";
+					input.value = "false";
 				} else {
-					element.value = "true";
+					input.value = "true";
 				}
-				element.addEventListener("change", function() {
+				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					document.getElementById(parameterInputId).value = (this.value === "false")?false:true;
 					updateIcon();
 				}, false);
+				element.appendChild(input);
 			} else if (parameter.type === "color") {
 				visualTypeSupportedByBrowser = true;
-				element = document.createElement("input");
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				var input = document.createElement("input");
+				input.id = parameterInputId+"VisualInput";
 				if (supportedInputs["color"]) {
-					element.setAttribute("type", "color");
+					input.setAttribute("type", "color");
 				} else {
 					// Use jsColor
-					element.className = "color";
-					jscolor.color(element, {});
+					input.className = "color";
+					jscolor.color(input, {});
 				}
 				if (defaultValue !== undefined) {
 					var value = defaultValue;
 					if (value.charAt(0) == '"') {
 						value = value.substring(1,value.length-1);
 					}
-					element.value = value;
+					input.value = value;
 				}
-				element.addEventListener("change", function() {
+				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
 					var value = this.value;
 					if (value.charAt(0) === "#") {
@@ -948,6 +960,7 @@
 					document.getElementById(parameterInputId).value = value;
 					updateIcon();
 				}, false);
+				element.appendChild(input);
 			}
 			if (!visualTypeSupportedByBrowser) {
 				element = document.createElement("input");
@@ -959,6 +972,32 @@
 				}, false);
 			}
 			div.appendChild(element);
+			if (parameter.optional) {
+				element = document.createElement("div");
+				element.id = parameterInputId+"Toggle";
+				var input = document.createElement("input");
+				input.type = "checkbox";
+				var span = document.createElement("span");
+				span.innerHTML = _("Leave without value");
+				element.appendChild(input);
+				element.appendChild(span);
+				input.addEventListener("change", function() {
+					var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					if (this.checked) {
+						document.getElementById(parameterInputId).value = "";
+						document.getElementById(parameterInputId+"Block").style.display = "none";
+					} else {
+						document.getElementById(parameterInputId).value = document.getElementById(parameterInputId+"VisualInput").value;
+						document.getElementById(parameterInputId+"Block").style.display = "block";
+					}
+					updateIcon();
+				}, false);
+				div.appendChild(element);
+				if (document.getElementById(parameterInputId).value === "") {
+					input.checked = true;
+					document.getElementById(parameterInputId+"Block").style.display = "none";
+				}
+			}
 		}
 		updateIcon();
 	}
@@ -1038,6 +1077,9 @@
 		}
 		for (var i=0; i<parametersCount; i++) {
 			var value = document.getElementById("setupBlock"+paramNumber).value;
+			if (document.getElementById("setupBlock"+paramNumber+"Toggle") && document.getElementById("setupBlock"+paramNumber+"Toggle").checked) {
+				value = "";
+			}
 			var defaultValue = document.getElementById("setupBlock"+paramNumber+"Default").value;
 			if (value !== defaultValue) {
 				div.setAttribute("param"+paramNumber, value);

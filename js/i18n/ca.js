@@ -309,5 +309,7 @@ $_eseecode.i18n.available.ca = {
 	"Build": "Construeix",
 	"Code": "Codi",
 	"Views": "Vistes",
-	"Enter the name of the variable you want to control": "Introdueix el nom de la variable que vols controlars"
+	"Enter the name of the variable you want to control": "Introdueix el nom de la variable que vols controlars",
+	"Leave without value": "Deixar sense valor",
+	"Do you want the image to be centered in the given position?": "Vols centrar la imatge a la posició indicada?"
 }

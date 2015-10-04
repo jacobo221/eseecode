@@ -30,7 +30,9 @@
  *   Center of coordinates can be changed
  *   Layers, windows and repeatCount now start numbering at 0
  *   Easily convert between if and ifelse in blocks modes
+ *   Added option in visual block setup to leave parameters without value, and instructionSet parameter "optional"
  *   Clicking on "}" block or "else" block will prompt for the parent block setup
+ *   Additional parameter in "image" allows the image to be centered in teh given position
  *   Wrapped all functions under the $e_ prefix so it is much less probably to have a conflict with function/variable names
  *   Added the possibility to include global variables in the language
  *   Allow predefined constants in the instruction set definitions: minX, minY, maxX, maxY, centerX, centerY, originX, originY (only applies to type "number")
