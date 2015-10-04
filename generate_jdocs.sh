@@ -7,6 +7,7 @@ cssFile="../jsdoc.css"
 mkdir "$dirOut" 2>/dev/null
 jsdocFileOut="$dirOut/symbols/_global_.html"
 for file in $files; do
+	echo "Generating $file docs..."
 	jsdoc -d="$dirOut" -q -s "$HOME/workspace/js/$file.js" >/dev/null
 	fileOut="$dirOut/$(basename $file).html"
 	firstLine="$(grep "====== methods summary =====" "$jsdocFileOut" -n | cut -d: -f1)"
