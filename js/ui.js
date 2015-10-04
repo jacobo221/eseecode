@@ -343,10 +343,14 @@
 		var level = $_eseecode.modes.console[id].id;
 		if ($_eseecode.modes.console[oldMode].div == "blocks") {
 			if ($_eseecode.modes.console[id].div == "write") {
-				if (document.getElementById("console-blocks").firstChild.id == "console-blocks-tip") {
-					$e_resetWriteConsole("");
-				} else {
-					$e_blocks2write();
+				if ($_eseecode.session.changesInCode && $_eseecode.session.changesInCode !== "write") {
+					// Only reset the write console if changes were made in the blocks, this preserves the undo's
+					if (document.getElementById("console-blocks").firstChild.id == "console-blocks-tip") {
+						$e_resetWriteConsole("");
+					} else {
+						$e_blocks2write();
+					}
+					$e_resetUndoWrite();
 				}
 			} else if ($_eseecode.modes.console[id].div == "blocks") {
 				$e_blocks2blocks(level);
@@ -2223,7 +2227,7 @@
 		}
 		document.getElementById('console-write').style.fontSize = $_eseecode.setup.blockHeight.level3+"px";
 		var editor = ace.edit("console-write");
-    		ace.require("ace/ext/language_tools");
+		ace.require("ace/ext/language_tools");
 		editor.setTheme("ace/theme/chrome");
 		editor.getSession().setMode("ace/mode/eseecode");
 		editor.setOptions({
@@ -2348,4 +2352,14 @@
 		}
 		$_eseecode.coordinates.userSelection = selectValue;
 		$e_changeAxisCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
+	}
+
+	/**
+	 * Initializes/Resets the write undo stack in ace
+	 * @private
+	 * @example $e_resetUndoWrite()
+	 */
+	function $e_resetUndoWrite() {
+		var UndoManager = require("ace/undomanager").UndoManager; 
+		ace.edit("console-write").session.setUndoManager(new UndoManager());
 	}

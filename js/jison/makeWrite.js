@@ -116,7 +116,7 @@
 		if (realCode) {
 			str += realCodeAddition(realCode,this.loc.end.line);
 			// Finish stepped/breakpointed execution
-			str += "$e_endExecution()";
+			str += "$e_endExecution();";
 		}
 		return str;
 	};

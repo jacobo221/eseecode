@@ -50,6 +50,7 @@
 			$_eseecode.execution.precode = code;
 			$e_execute();
 		} else {
+				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
 		        if (mode == "blocks") {
 			        program.makeBlocks(level,document.getElementById("console-blocks"));
 		        } else if (mode == "write") {
