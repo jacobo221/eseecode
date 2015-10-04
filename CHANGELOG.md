@@ -1,44 +1,51 @@
 ## 2.1 (ongoing work)
- * Removed advanced parameter description from level 2
- * Added instruction snapshot() (by request from J.Alemany)
- * Added options to download all layers as an animation (by request from J.Alemany)
- * Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
- * Pre-run instructions through API for exercise
- * Focus back to code when clicking instruction in dialog
- * Added some interesting mathematical examples by Joan Alemany Flos
- * Added some fractal examples adapted from the FMSLogo documentation
- * Added examples exercices showing the new embedding capabilities
- * Added a shortcut to run the code: CTRL+R
- * Level1 has no text in blocks no more
- * UI cleanup
- * Download layer images hides/shows guide and grid based on settings
- * Added the possibility to include global variables in the language
- * Breakpoints can now be enabled/disabled
- * Easily convert between if and ifelse
- * Clicking on "}" block or "else" block will prompt for the parent block setup
- * New resize console button, much more intuitive than doubleclicking level tabs
- * The platform now resizes to adapt to the browser size
- * Center of coordinates can be changed
- * Enable ACE editor worker, helper and horizontal scroll
- * It is now Web App installable
- * New logo
- * Confirm before leaving page
- * Option to go fullscreen
- * Allow predefined constants in the instruction set definitions: minX, minY, maxX, maxY, centerX, centerY, originX, originY (only applies to type "number")
- * Default to landscape view
- * GUI restyled
- * Layers, windows and repeatCount now start numbering at 0
- * Began work on better execution error messages
- * New tracing platform allows to keep random/interactive values from one breakpoint/step to another
- * Guide starts at (0,0)
- * lineAt and writeAt icons are now dynamic
- * Better icon for if/ifelse
- * New animateLayers() instruction to ease creating animations from Level2
- * Guide icon slightly redesigned
- * Resetting the UI and switching the console level always leave the dialog in Pieces mode
- * Wrapped all functions under the $e_ prefix
- * Added real watchpoints to debug
- * Introduced the notion of Guide for the pointer and Touch,Drag,Build,Code for the levels we now call Views
+
+ *Milestone reached: Better design to make it easy to be used by teachers and students*
+ * This is a major update with so many new features we had to split them into categories to list them all
+ * Interface:
+ *   Introduced the notion of Guide for the pointer and Touch,Drag,Build,Code for the levels we now call Views
+ *   GUI restyled and cleaned up
+ *   New logo ( thanks to Rodolfo Espina from rodolfoespina.com )
+ *   It is now Web App installable
+ *   The platform now resizes to adapt to the browser size
+ *   Option to go fullscreen (disabled if embedded)
+ *   Confirm before leaving page (disabled if embedded)
+ *   Default to landscape view
+ *   Added options to download all layers as an animation
+ *   Level1 has no text in blocks no more
+ *   Removed advanced parameter description from level 2
+ *   New resize console button, much more intuitive than doubleclicking level tabs
+ *   Enable ACE editor worker, helper and horizontal scroll
+ *   Download layer images hides/shows guide and grid based on settings
+ *   Added a shortcut to run the code: CTRL+R
+ *   Focus back to code when clicking instruction in dialog
+ *   Resetting the UI and switching the console level always leave the dialog in Pieces mode
+ *   Guide icon slightly redesigned
+ *   Better icon for if/ifelse
+ *   lineAt and writeAt icons are now dynamic
+ * Programming:
+ *   New animateLayers() instruction to ease creating animations from Level2
+ *   Added instruction snapshot()
+ *   Guide starts at (0,0)
+ *   Center of coordinates can be changed
+ *   Layers, windows and repeatCount now start numbering at 0
+ *   Easily convert between if and ifelse in blocks modes
+ *   Clicking on "}" block or "else" block will prompt for the parent block setup
+ *   Wrapped all functions under the $e_ prefix so it is much less probably to have a conflict with function/variable names
+ *   Added the possibility to include global variables in the language
+ *   Allow predefined constants in the instruction set definitions: minX, minY, maxX, maxY, centerX, centerY, originX, originY (only applies to type "number")
+ * Debug:
+ *   Added real watchpoints
+ *   Breakpoints can now be enabled/disabled
+ *   New tracing platform allows to keep random/interactive values from one breakpoint/step to another
+ *   Began work on better execution error messages
+ * Embedding:
+ *   Pre-run instructions through API for exercise
+ *   Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)
+ * Misc:
+ *   Added some interesting mathematical examples ( by Joan Alemany Flos from joanalemany.name )
+ *   Added some fractal examples adapted from the FMSLogo documentation
+ *   Added examples exercices showing the new embedding capabilities
  * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
  * Fix: line() second parameter to type "number"
  * Fix: FlipHoritzontally was not working correctly
@@ -57,7 +64,7 @@
 
 ## 2.0 (2015-01-29)
 
- *Milestone: Purely graphical programming in levels 1 and 2*
+ *Milestone reached: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface
  * Add basic animations capability
  * Autocomplete in level4

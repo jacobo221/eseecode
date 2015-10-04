@@ -240,38 +240,6 @@
 		document.body.addEventListener("mousedown", $e_addBreakpointEventCancel, false);
 		document.body.addEventListener("touchstart", $e_addBreakpointEventCancel, false);
 	}
-	
-	/**
-	 * Analyzes the type of a variable
-	 * @private
-	 * @param {*} variable Variable to analyze
-	 * @return {Object<type:String,text:String>} Type of object and its value as in text if possible
-	 * @example $e_analyzeVariable(num)
-	 */
-	function $e_analyzeVariable(variable) {
-		var retValue = {
-			type: typeof variable,
-			text: variable
-		};
-		if (retValue.type === "undefined") {
-			retValue.text = "";
-		} else if (retValue.type === "object") {
-			if (variable === null) {
-				retValue.text = "null";
-			} else if (Array.isArray(variable)) {
-				retValue.type = "array";
-			}
-		} else if (retValue.type === "number") {
-			if (variable === Infinity) {
-				retValue.text = "Infinity";
-			} else if (variable === NaN) {
-				retValue.text = "NaN";
-			}
-		} else if (retValue.type === "function") {
-			retValue.text = "";
-		}
-		return retValue;
-	}
 
 	/**
 	 * Synchronous part of a watchpoint addition
@@ -736,5 +704,37 @@
 		}
 		traceType[0]++;
 		return value;
+	}
+	
+	/**
+	 * Analyzes the type of a variable
+	 * @private
+	 * @param {*} variable Variable to analyze
+	 * @return {Object<type:String,text:String>} Type of object and its value as in text if possible
+	 * @example $e_analyzeVariable(num)
+	 */
+	function $e_analyzeVariable(variable) {
+		var retValue = {
+			type: typeof variable,
+			text: variable
+		};
+		if (retValue.type === "undefined") {
+			retValue.text = "";
+		} else if (retValue.type === "object") {
+			if (variable === null) {
+				retValue.text = "null";
+			} else if (Array.isArray(variable)) {
+				retValue.type = "array";
+			}
+		} else if (retValue.type === "number") {
+			if (variable === Infinity) {
+				retValue.text = "Infinity";
+			} else if (variable === NaN) {
+				retValue.text = "NaN";
+			}
+		} else if (retValue.type === "function") {
+			retValue.text = "";
+		}
+		return retValue;
 	}
 	
