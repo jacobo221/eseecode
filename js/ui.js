@@ -266,15 +266,15 @@
 	}
 
 	/**
-	 * Switches the user interface to the specified level
+	 * Switches the user interface to the specified view
 	 * @private
-	 * @param {Number|String} [id] Can refer to a level number or to a level name. If unset it checks the "level" parameter in the browser's URL. If it can't determine the new level, it keeps the current level
+	 * @param {Number|String} [id] Can refer to a view number or to a view name. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
 	 * @example $e_switchConsoleMode(2)
 	 */
 	function $e_switchConsoleMode(id) {
 		var oldMode = $_eseecode.modes.console[0];
 		if (!id) {
-			var urlParts = window.location.href.match(/(\?|&)level=([^&#]+)/);
+			var urlParts = window.location.href.match(/(\?|&)view=([^&#]+)/);
 			if (urlParts !== null) {
 				// Check that the level exists
 				var newLevel = urlParts[2].toLowerCase();

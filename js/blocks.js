@@ -530,7 +530,7 @@
 	 * @private
 	 * @param {!HTMLElement} div Block div
 	 * @param {Boolean} blockAdd Whether the block is being added or modified
-	 * @return {Boolean} true if the setup dialog was show, false otherwise
+	 * @return {Boolean} true if the setup dialog was shown, false otherwise
 	 * @example $e_setupBlock(document.getElementById("div-123123123"))
 	 */
 	function $e_setupBlock(div, blockAdd) {
@@ -560,7 +560,13 @@
 				defaultValue = "";
 			}
 			if (parameter.type == "number") {
-				defaultValue = parseInt($e_parsePredefinedConstants(defaultValue));
+				if ($e_isNumber(defaultValue)) {
+					defaultValue = parseInt(defaultValue);
+				} else if (defaultValue === undefined || defaultValue == "") {
+					defaultValue = "";
+				} else {
+					defaultValue = parseInt($e_parsePredefinedConstants(defaultValue));
+				}
 			}
 			parameterInputs[i].initial = defaultValue;
 			paramNumber++;

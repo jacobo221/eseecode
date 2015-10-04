@@ -1173,7 +1173,7 @@
 			if (!$e_isNumber(param)) {
 				var fontSize;
 				var text;
-				if (param === undefined || param === "") {
+				if (param == undefined || param == "") {
 					fontSize = 20;
 					text = _("New");
 				} else {
