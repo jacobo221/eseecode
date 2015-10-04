@@ -9,7 +9,24 @@
 			if (inCondition !== true) {
 				str += ";";
 			}
-			str += "$e_eseeCodeInjection("+lineNumber+",(function(){for(var watch in $_eseecode.session.breakpoints["+lineNumber+"]){try{$_eseecode.session.breakpoints["+lineNumber+"][watch]=eval('if(typeof '+watch+'!==\\'undefined\\')'+watch);}catch(e){}}}()))";
+			str += "$e_eseeCodeInjection("+lineNumber+",(function(){\
+				for (var watch in $_eseecode.session.breakpoints["+lineNumber+"]) {\
+					try {\
+						$_eseecode.session.breakpoints["+lineNumber+"][watch] = eval(watch);\
+					} catch(e) {}\
+				}\
+				$_eseecode.execution.watchpointsChanged = [];\
+				for (var watch in $_eseecode.session.watchpoints) {\
+					try {\
+						var newValue;\
+						newValue = eval(watch);\
+						if (newValue !== $_eseecode.session.watchpoints[watch]) {\
+							$_eseecode.session.watchpoints[watch] = newValue;\
+							$_eseecode.execution.watchpointsChanged.push(watch);\
+						}\
+					} catch(e) {}\
+				}\
+			}()))";
 			if (inCondition !== true) {
 				str += ";";
 			}
@@ -97,6 +114,7 @@
 			str += elements[line].makeWrite(level, indent, indentChar, realCode) + "\n";
 		}
 		if (realCode) {
+			str += realCodeAddition(realCode,this.loc.end.line);
 			// Finish stepped/breakpointed execution
 			str += "$e_endExecution()";
 		}

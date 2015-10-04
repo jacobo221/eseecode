@@ -41,12 +41,13 @@ $_eseecode.i18n.available.ca = {
 	"Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands": "Aquí pots:\n * analitzar l'ordre de capes\n * veure una capa sola i la seva guia\n * mostrar/ocultar capes\n * establir la capa activa\n * executar comandes",
 	"Layer": "Capa",
 	"Toggle layer": "Mostrar/ocultar capa",
-	"Breakpoint": "Control",
-	"Watch": "Vista",
+	"Breakpoint": "Interrupció",
+	"Value": "Valor",
+	"Watchpoint": "Control",
 	"Delete": "Esborra",
 	"Invalid name of variable!": "Nom de variable invàlid!",
-	"Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops": "Aquí pots:\n * marcar una línia per aturar el programa en aquell punt\n * veure valors de variables en aquests punts",
-	"Enter the name of the variable you want to watch in line %s": "Introdueix el nom de la variable que vols controlar a la línia %s",
+	"Here you can:\n * mark a line to stop the program at that point\n * see values of variables at those stops\n * stop the program when a controlled variable is updated": "Aquí pots:\n * marcar una línia per aturar el programa en aquell punt\n * veure valors de variables en aquests punts\n * aturar el programa quan una variable controlada s'actualitzi",
+	"Enter the name of the variable you want to see in line %s": "Introdueix el nom de la variable que vols veure a la línia %s",
 	"Remove": "Eliminar",
 	"Line": "Línia",
 	"Grid": "Malla",
@@ -306,5 +307,6 @@ $_eseecode.i18n.available.ca = {
 	"Drag": "Arrossega",
 	"Build": "Construeix",
 	"Code": "Codi",
-	"Views": "Vistes"
+	"Views": "Vistes",
+	"Enter the name of the variable you want to control": "Introdueix el nom de la variable que vols controlars"
 }

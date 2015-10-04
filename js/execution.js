@@ -28,15 +28,15 @@
 	}
 
 	/**
-	 * Function to trace breakpoints during execution, injected un the runtime code
+	 * Function to trace breakpoints during execution, injected in the runtime code
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
-	 * @param {Object} variables This parameter is ignores but is necessary to be able to run an inline function uppon call to obtain the watch vairable valueS
+	 * @param {Object} variables This parameter is ignored but is necessary to be able to run an inline function uppon call to obtain the watchpoint variable values
 	 * @example $e_eseeCodeInjection(123)
 	 */
 	function $e_eseeCodeInjection(lineNumber, variables) {
 		$e_checkExecutionLimits(lineNumber);
-		// The only case in which we need to return soemthing is for return, since it could be with no parameters leave undefined
+		// The only case in which we need to return something is for return, since it could be with no parameters leave undefined
 		return undefined;
 	}
 
@@ -51,6 +51,21 @@
 		var executionTime = new Date().getTime();
 		$_eseecode.execution.programCounter++;
 		$e_setHighlight(lineNumber);
+		if ($_eseecode.execution.watchpointsChanged.length > 0) {
+			var watchpointTriggered = false;
+			for (var i=0; i < $_eseecode.execution.watchpointsChanged.length && !watchpointTriggered; i++) {
+				var watch = $_eseecode.execution.watchpointsChanged[i];
+				if ($_eseecode.session.watchpointsStatus[watch]) {
+					watchpointTriggered = true;
+				}
+			}
+			if (watchpointTriggered) {
+				$_eseecode.execution.breakpointCounter++;
+				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+					throw "executionWatchpointed";
+				}
+			}
+		}
 		if ($_eseecode.session.breakpoints[lineNumber] && $_eseecode.session.breakpointsStatus[lineNumber]) {
 			$_eseecode.execution.breakpointCounter++;
 			if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
@@ -92,6 +107,10 @@
 		} else if (err === "executionBreakpointed") {
 			$e_highlight($_eseecode.session.highlight.lineNumber);
 			$e_switchDialogMode("debug");
+		} else if (err == "executionWatchpointed") {
+			$e_highlight($_eseecode.session.highlight.lineNumber-1); // We detect it before running the next instruction, so highlight the previous instuction
+			$e_switchDialogMode("debug");
+			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
 		} else if (err.type == "codeError") {
 			$e_msgBox(_("Error found during execution at line %s:",[err.line])+"\n"+err.text);
 			$e_highlight(err.line,"error");
@@ -99,8 +118,6 @@
 			// The code didn't finish running and there is no known reason
 			$e_printExecutionError(err);
 		}
-		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-		document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed")+": "+$_eseecode.execution.programCounter+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 	}
 
 	/**
@@ -282,6 +299,7 @@
 			}
 			$e_resetCanvas();
 			$e_resetBreakpointWatches();
+			$e_resetWatchpoints();
 		}
 		try {
 			var jsCode = "";
@@ -310,10 +328,12 @@
 			$e_updateSandboxChanges(oldWindowProperties,newWindowProperties);
 		}
 		document.getElementById("eseecode").removeChild(script);
+		/*
 		// if debug is open refresh it
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebug();
 		}
+		*/
 	}
 
 	/**
@@ -347,6 +367,8 @@
 	 * @example $e_endExecution();
 	 */
 	function $e_endExecution() {
+		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
+		document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 		$e_initProgramCounter(true);
 		$e_unhighlight();
 		$e_resetDebug();

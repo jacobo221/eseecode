@@ -5,7 +5,7 @@
 
 	// Main initialization
 	/**
-	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:String},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointsStatus:Array<{*}>,breakpointHandler:Boolean|Number,timeoutHandlers:Array<{*}>,tipInterval:Object,scrollTimeout:Object},whiteboard:HTMLElement,coordinates:Array<{position:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,default:Boolean}>}>,dialogWindow:HTMLElement,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}>
+	 * @type Array<{platform:{name:{text:String,link:String},version:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:String,watchpointsChanged:Array<String>},codeFileName:String,session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointsStatus:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>,tipInterval:Object,scrollTimeout:Object},whiteboard:HTMLElement,coordinates:Array<{position:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,default:Boolean}>}>,dialogWindow:HTMLElement,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}>
 	 */
 	var $_eseecode = {
 		platform: {
@@ -54,7 +54,8 @@
 			startTime: undefined,
 			trace: [],
 			sandboxProperties: [],
-			precode: ""
+			precode: "",
+			watchpointsChanged: []
 		},
 		codeFilename: "",
 		session: {
@@ -68,6 +69,8 @@
 			breakpoints: {},
 			breakpointsStatus: {},
 			breakpointHandler: false,
+			watchpoints: {},
+			watchpointsStatus: {},
 			timeoutHandlers: [],
 			scrollTimeout: null,
 			tipInterval: null

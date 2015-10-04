@@ -37,6 +37,7 @@
  * Guide icon slightly redesigned
  * Resetting the UI and switching the console level always leave the dialog in Pieces mode
  * Wrapped all functions under the $e_ prefix
+ * Added real watchpoints to debug
  * Introduced the notion of Guide for the pointer and Touch,Drag,Build,Code for the levels we now call Views
  * Fix: Clicking twice on the play button should run the code twice, currently you need to manually reset
  * Fix: line() second parameter to type "number"

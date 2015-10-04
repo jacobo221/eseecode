@@ -52,6 +52,17 @@
 	}
 
 	/**
+	 * Enables/disables a watchpoint
+	 * @private
+	 * @param {String} line Watchpoint to disable/enable
+	 * @param {!HTMLElement} element HTML checkbox that triggered the function
+	 * @example $e_toggleWatchpoint("num", this)
+	 */
+	function $e_toggleWatchpoint(watch, element) {
+		$_eseecode.session.watchpointsStatus[watch] = element.checked;
+	}
+
+	/**
 	 * Enables/disables a breakpoint
 	 * @private
 	 * @param {String} line Breakpoint to disable/enable
@@ -60,6 +71,38 @@
 	 */
 	function $e_toggleBreakpoint(line, element) {
 		$_eseecode.session.breakpointsStatus[line] = element.checked;
+	}
+
+	/**
+	 * Highlights a watchpoint
+	 * @private
+	 * @param {Array<String>} watches Watchpoints to highlight
+	 * @example $e_highlightWatchpoint("num")
+	 */
+	function $e_highlightWatchpoint(watches) {
+		var i = 0;
+		var div = document.getElementById("dialog-debug-analyzer-watches").firstChild;
+		while (div !== null && i < watches.length) {
+			if (div.id == "dialog-debug-analyzer-watch-"+watches[i]) {
+				div.style.fontWeight = "bold";
+			} else {
+				div.style.fontWeight = "normal";
+			}
+			div = div.nextSibling;
+		}
+	}
+
+	/**
+	 * Deletes a watchpoint
+	 * @private
+	 * @param {String} watch Watchpoint to remove
+	 * @example $e_removeWatchpoint("num")
+	 */
+	function $e_removeWatchpoint(watch) {
+		delete $_eseecode.session.watchpoints[watch];
+		delete $_eseecode.session.watchpointsStatus[watch];
+		var div = document.getElementById("dialog-debug-analyzer-watch-"+watch);
+		div.parentNode.removeChild(div);
 	}
 
 	/**
@@ -73,6 +116,23 @@
 		delete $_eseecode.session.breakpointsStatus[line];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
 		div.parentNode.removeChild(div);
+	}
+
+	/**
+	 * Completes an asynchronous watchpoint addition event
+	 * @private
+	 * @param {Object} event Event
+	 * @example $e_addWatchpointEventEnd()
+	 */
+	function $e_addWatchpointEventEnd(event) {
+		var watch = document.getElementById("watchpointAddInput").value;
+		if (watch.match(/^[A-Za-z][A-Za-z_0-9]*$/)) {
+			$e_addWatchpoint(watch);
+			$e_msgBoxClose();
+		} else {
+			$e_msgBox(_("The variable name you entered is invalid!"));
+		}
+		event.stopPropagation();
 	}
 
 	/**
@@ -136,6 +196,22 @@
 	}
 
 	/**
+	 * Starts an asynchronous watchpoint addition event
+	 * @private
+	 * @example $e_addWatchpointEventStart()
+	 */
+	function $e_addWatchpointEventStart() {
+		var msgDiv = document.createElement("div");
+		var div = document.createElement("div");
+		div.innerHTML = _("Enter the name of the variable you want to control")+":";
+		msgDiv.appendChild(div);
+		var input = document.createElement("input");
+		input.id = "watchpointAddInput";
+		msgDiv.appendChild(input);
+		$e_msgBox(msgDiv, {acceptAction:$e_addWatchpointEventEnd,cancelAction:$e_msgBoxClose,focus:"watchpointAddInput"});
+	}
+
+	/**
 	 * Starts an asynchronous breakpoint addition event
 	 * @private
 	 * @param {String} [oldLine] Breakpoint handler. Use only when editting an existing breakpoint
@@ -164,6 +240,85 @@
 		document.body.addEventListener("mousedown", $e_addBreakpointEventCancel, false);
 		document.body.addEventListener("touchstart", $e_addBreakpointEventCancel, false);
 	}
+	
+	/**
+	 * Analyzes the type of a variable
+	 * @private
+	 * @param {*} variable Variable to analyze
+	 * @return {Object<type:String,text:String>} Type of object and its value as in text if possible
+	 * @example $e_analyzeVariable(num)
+	 */
+	function $e_analyzeVariable(variable) {
+		var retValue = {
+			type: typeof variable,
+			text: variable
+		};
+		if (retValue.type === "undefined") {
+			retValue.text = "";
+		} else if (retValue.type === "object") {
+			if (variable === null) {
+				retValue.text = "null";
+			} else if (Array.isArray(variable)) {
+				retValue.type = "array";
+			}
+		} else if (retValue.type === "number") {
+			if (variable === Infinity) {
+				retValue.text = "Infinity";
+			} else if (variable === NaN) {
+				retValue.text = "NaN";
+			}
+		} else if (retValue.type === "function") {
+			retValue.text = "";
+		}
+		return retValue;
+	}
+
+	/**
+	 * Synchronous part of a watchpoint addition
+	 * @private
+	 * @param {String} watch Variable to control
+	 * @example $e_addWatchpoint("num")
+	 */
+	function $e_addWatchpoint(watch) {
+		if (!watch) {
+			$e_addWatchpointEventStart();
+		} else if (watch !== null && !document.getElementById("dialog-debug-analyzer-watch-"+watch)) {
+			if ($_eseecode.session.watchpointsStatus[watch] === undefined) {
+				$_eseecode.session.watchpoints[watch] = undefined;
+				$_eseecode.session.watchpointsStatus[watch] = true;
+			}
+			var watchObject = $e_analyzeVariable($_eseecode.session.watchpoints[watch]);
+			var watchText = "<input type=\"checkbox\" onchange=\"$e_toggleWatchpoint(\'"+watch+"\', this)\" "+($_eseecode.session.watchpointsStatus[watch]?"checked":"")+" />"+watch+": ";
+			watchText += watchObject.text+" <span style=\"font-size:smaller;\">["+watchObject.type+"]</span>";
+			watchText += "<span class=\"dialog-debug-analyzer-watch-trash link\" onclick=\"$e_removeWatchpoint('"+watch+"')\">("+_("Delete")+")</span></div>";
+			var div = document.createElement("div");
+			div.id = "dialog-debug-analyzer-watch-"+watch;
+			div.className = "dialog-debug-analyzer-watch";
+			div.innerHTML = watchText;
+			var divAnalyzer = document.getElementById("dialog-debug-analyzer-watches");
+			if (divAnalyzer.hasChildNodes()) {
+				var child = divAnalyzer.firstChild;
+				// Find the right alphabetical order place for the watchpoint
+				while (child !== null) {
+					var watchName = child.id.match(/^dialog-debug-analyzer-watch-([A-Za-z0-9]+)$/);
+					if (watchName !== null) {
+						watchName = watchName[1];
+						if (watchName > watch) {
+							break;
+						}
+					}
+					child = child.nextSibling;
+				}
+				if (child !== null) {
+					divAnalyzer.insertBefore(div, child);
+				} else {
+					divAnalyzer.appendChild(div);
+				}
+			} else {
+				divAnalyzer.appendChild(div);
+			}
+		}
+	}
 
 	/**
 	 * Synchronous part of a breakpoint addition
@@ -182,8 +337,8 @@
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseover=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Watch")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
-			var divAnalyzer = document.getElementById("dialog-debug-analyzer");
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseover=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Value")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br /><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			var divAnalyzer = document.getElementById("dialog-debug-analyzer-breakpoints");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
 				while (child !== null) {
@@ -246,12 +401,12 @@
 	 * Adds a watch in a breakpoint, its only a wrapper to call the dialog or directly the function
 	 * @private
 	 * @param {String} line Breakpoint (line) to add the watch to
-	 * @param {String} [watch] Name of the variable to watch. If unset it calls for the user to set it up via the UI
+	 * @param {String} [watch] Name of the variable to see. If unset it calls for the user to set it up via the UI
 	 * @example $e_addBreakpointWatch(12, "count")
 	 */
 	function $e_addBreakpointWatch(line, watch) {
 		if (!watch) {
-			var div = _("Enter the name of the variable you want to watch in line %s",[line])+"<br /> <input id=\"addBreakpointLine\" type=\"hidden\" value=\""+line+"\" /><input id=\"addBreakpointWatch\" type=\"text\" />";
+			var div = _("Enter the name of the variable you want to see in line %s",[line])+"<br /> <input id=\"addBreakpointLine\" type=\"hidden\" value=\""+line+"\" /><input id=\"addBreakpointWatch\" type=\"text\" />";
 			$e_msgBox(div,{acceptAction:$e_addBreakpointWatchFromDialog,cancelAction:$e_msgBoxClose,focus:"addBreakpointWatch"});
 		} else {
 			$e_addBreakpointWatch2(line, watch);
@@ -283,12 +438,13 @@
 	 */
 	function $e_addBreakpointWatch2(line, watch) {
 		if (watch !== null && !document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch)) {
-			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\">"+watch+": ";
 			if ($_eseecode.session.breakpoints[line][watch] === undefined) {
-				$_eseecode.session.breakpoints[line][watch] = "";
-			} else {
-				watchText += $_eseecode.session.breakpoints[line][watch];
+				// This looks stupid but what we are doing is creating the 'watch' key without altering its 'undefined' value if it already existed
+				$_eseecode.session.breakpoints[line][watch] = undefined;
 			}
+			var watchObject = $e_analyzeVariable($_eseecode.session.breakpoints[line][watch]);
+			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\">"+watch+": ";
+			watchText += watchObject.text+" <span style=\"font-size:smaller;\">["+watchObject.type+"]</span>";
 			watchText += "<span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpointWatch("+line+",'"+watch+"')\">("+_("Delete")+")</span></div>";
 			document.getElementById("dialog-debug-analyzer-line"+line+"-watches").innerHTML += watchText;
 		}
@@ -339,9 +495,14 @@
 			document.getElementById("link-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_switchCanvas(id);$e_resetDebug()}})(list[i]), false);
 			document.getElementById("toggle-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_toggleCanvas(id)}})(list[i]), false);
 		}
-		document.getElementById("dialog-debug-analyzer").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" />";
+		document.getElementById("dialog-debug-analyzer-toolbar").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" /><input type=\"button\" value=\"+ "+_("Watchpoint")+"\" onclick=\"$e_addWatchpoint()\" />";
+		document.getElementById("dialog-debug-analyzer-breakpoints").innerHTML = "";
+		document.getElementById("dialog-debug-analyzer-watches").innerHTML = "";
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			$e_updateBreakpoint(breakpoint, breakpoint);
+		}
+		for (var watch in $_eseecode.session.watchpoints) {
+			$e_addWatchpoint(watch);
 		}
 	}
 
@@ -396,6 +557,22 @@
 	}
 
 	/**
+	 * Initializes/Resets the watchpoints array in $_eseecode.session.watchpoints
+	 * @private
+	 * @param {Boolean} complete Whether to completely delete the list of watchpoints (true) or just its stored values (false)
+	 * @example $e_resetWatchpoints()
+	 */
+	function $e_resetWatchpoints(complete) {
+		if (complete) {
+			$_eseecode.session.watchpoints = {};
+		} else {
+			for (var watch in $_eseecode.session.watchpoints) {
+				$_eseecode.session.watchpoints[watch] = undefined;
+			}
+		}
+	}
+
+	/**
 	 * Initializes/Resets the breakpoints array in $_eseecode.session.breakpoints
 	 * @private
 	 * @example $e_resetBreakpoints()
@@ -412,7 +589,7 @@
 	function $e_resetBreakpointWatches() {
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			for (var watch in $_eseecode.session.breakpoints[breakpoint]) {
-				$_eseecode.session.breakpoints[breakpoint][watch] = ""
+				$_eseecode.session.breakpoints[breakpoint][watch] = undefined;
 			}
 		}
 	}

@@ -41,12 +41,13 @@ $_eseecode.i18n.available.es = {
 	"Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands": "Aquí puedes:\n * analizar el orden de capas\n * ver una capa verla sola con su guía\n * mostrar/ocultar capas\n * establecer la capa activa\n * ejecutar comandos",
 	"Layer": "Capa",
 	"Toggle layer": "Mostrar/ocultar capa",
-	"Breakpoint": "Control",
-	"Watch": "Vista",
+	"Breakpoint": "Interrupción",
+	"Value": "Valor",
+	"Watchpoint": "Control",
 	"Delete": "Elimina",
 	"Invalid name of variable!": "¡Nombre de variable inválido!",
-	"Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops": "Aquí puedes:\n * marcar una línea para detener el programa en ese punto\n * ver valores de variables en estos puntos",
-	"Enter the name of the variable you want to watch in line %s": "Introduce el nombre de la variable que quieres controlar en la línea %s",
+	"Here you can:\n * mark a line to stop the program at that point\n * see values of variables at those stops\n * stop the program when a controlled variable is updated": "Aquí puedes:\n * marcar una línea para detener el programa en ese punto\n * ver valores de variables en estos puntos\n * detener el programa cuando una variable controlada se actualice",
+	"Enter the name of the variable you want to see in line %s": "Introduce el nombre de la variable que quieres ver en la línea %s",
 	"Remove": "Eliminar",
 	"Line": "Línea",
 	"Grid": "Malla",
@@ -306,5 +307,6 @@ $_eseecode.i18n.available.es = {
 	"Drag": "Arrastra",
 	"Build": "Construye",
 	"Code": "Código",
-	"Views": "Vistas"
+	"Views": "Vistas",
+	"Enter the name of the variable you want to control": "Introduce el nombre de la variable que deseas controlar"
 }

@@ -1394,6 +1394,7 @@
 		$e_resetGridModeSelect();
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();
+		$e_resetWatchpoints(true);
 		// Hide filemenu if asked to do so (to integrate with other platforms)
 		var urlParts = window.location.href.match(/(\?|&)filemenu=([^&#]+)/);
 		if (urlParts !== null) {
@@ -2155,6 +2156,8 @@
   		for(key in $_eseecode.canvasArray) {
 			$e_removeCanvas(key);
 		}
+		$e_resetBreakpointWatches();
+		$e_resetWatchpoints();
 		delete $_eseecode.canvasArray;
 		$_eseecode.canvasArray = [];
 		$e_initGuide();
