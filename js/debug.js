@@ -80,13 +80,13 @@
 	 * @example $e_highlightWatchpoint("num")
 	 */
 	function $e_highlightWatchpoint(watches) {
-		var i = 0;
 		var div = document.getElementById("dialog-debug-analyzer-watches").firstChild;
-		while (div !== null && i < watches.length) {
-			if (div.id == "dialog-debug-analyzer-watch-"+watches[i]) {
-				div.style.fontWeight = "bold";
-			} else {
-				div.style.fontWeight = "normal";
+		while (div !== null) {
+			div.style.fontWeight = "normal";
+			for (var i = 0; i < watches.length; i++) {
+				if (div.id == "dialog-debug-analyzer-watch-"+watches[i]) {
+					div.style.fontWeight = "bold";
+				}
 			}
 			div = div.nextSibling;
 		}

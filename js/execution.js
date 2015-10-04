@@ -118,6 +118,10 @@
 			// The code didn't finish running and there is no known reason
 			$e_printExecutionError(err);
 		}
+		if (err !== undefined) {
+			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
+			document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
+		}
 	}
 
 	/**

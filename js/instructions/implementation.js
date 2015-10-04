@@ -21,10 +21,10 @@
 			button.value = text;
 		}
 		if (posx) {
-			button.style.left = ($_eseecode.dialogWindow.offsetLeft+posx)+"px";
+			button.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
 		}
 		if (posy) {
-			button.style.top = ($_eseecode.dialogWindow.offsetTop+posy)+"px";
+			button.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
 		}
 		if (action) {
 			var oldButton = button;
@@ -66,10 +66,10 @@
 	    		div.innerHTML = text;
 		}
 		if (posx !== undefined) {
-			div.style.left = ($_eseecode.dialogWindow.offsetLeft+posx)+"px";
+			div.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
 		}
 		if (posy !== undefined) {
-			div.style.top = ($_eseecode.dialogWindow.offsetTop+posy)+"px";
+			div.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
 		}
 		if (width) {
 			div.style.width = width+"px";
@@ -116,10 +116,10 @@
 			img.src = $_eseecode.canvasArray[canvasId].canvas.toDataURL();
 		}
 		if (posx !== undefined) {
-			img.style.left = ($_eseecode.dialogWindow.offsetLeft+posx)+"px";
+			img.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
 		}
 		if (posy !== undefined) {
-			img.style.top = ($_eseecode.dialogWindow.offsetTop+posy)+"px";
+			img.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
 		}
 		if (width) {
 			img.width = width;
@@ -185,8 +185,8 @@
 		if (height) {
 			input.style.height = height+"px";
 		}
-		input.style.left = ($_eseecode.dialogWindow.offsetLeft+posx)+"px";
-		input.style.top = ($_eseecode.dialogWindow.offsetTop+posy)+"px";
+		input.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
+		input.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
 		if (type) {
     			input.type = type;
 		}
@@ -305,7 +305,7 @@
 	 * @example windowRemove(2)
 	 */
 	function windowRemove(id) {
-		$_eseecode.dialogWindow.removeChild($_eseecode.windowsArray[id]);
+		$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[id]);
 	}
 
 	/**

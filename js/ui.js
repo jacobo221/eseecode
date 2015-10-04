@@ -835,7 +835,7 @@
 		canvas.height = canvasSize;
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
-		$_eseecode.canvasArray[name] = {name: name, canvas: canvas, div: div, visible: true};
+		$_eseecode.canvasArray[name] = {name: name, canvas: canvas, div: div};
 	}
 
 	/**
@@ -845,11 +845,12 @@
 	 */
 	function $e_toggleGuide() {
 		var guideCanvas = $_eseecode.canvasArray["guide"];
-		if (guideCanvas.visible) {
-			guideCanvas.visible = false;
+		if ($_eseecode.ui.guideVisible) {
+			$_eseecode.ui.guideVisible = false;
 			guideCanvas.div.style.display = "none";
 		} else {
-			guideCanvas.visible = true;
+			$_eseecode.ui.guideVisible = true;
+			$e_resetGuide(); // Since we weren't drawing it draw it now
 			guideCanvas.div.style.display = "block";
 		}
 	}
@@ -936,7 +937,7 @@
 		var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
 		var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
 		if (canvas === undefined) {
-			if (!$_eseecode.canvasArray["guide"].visible) {
+			if (!$_eseecode.ui.guideVisible) {
 				return;
 			}
 			canvas = $_eseecode.canvasArray["guide"].canvas;
@@ -1277,7 +1278,7 @@
 		var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
 		var downloadLink = document.createElement("a");
 		downloadLink.href = codeURI;
-		downloadLink.download = (($_eseecode.codeFilename && $_eseecode.codeFilename.length > 0)?$_eseecode.codeFilename:"code.esee");
+		downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
 		downloadLink.style.display = "none";
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
@@ -1324,7 +1325,7 @@
       		var reader = new FileReader();
 		reader.onload = function(event) {
 			API_uploadCode(event.target.result)
-			$_eseecode.codeFilename = file.name;
+			$_eseecode.ui.codeFilename = file.name;
 		}
 		reader.readAsText(file);
 	}
@@ -1338,7 +1339,7 @@
 	 * @example $e_smoothScroll()
 	 */
 	function $e_smoothScroll(div, height, startTop) {
-		clearTimeout($_eseecode.session.scrollTimeout); // This is to prevent two scroll timeouts tunning at the same time
+		clearTimeout($_eseecode.ui.scrollTimeout); // This is to prevent two scroll timeouts tunning at the same time
 		if (!startTop) {
 			startTop = div.scrollTop;
 		}
@@ -1356,7 +1357,7 @@
 		}
 		div.scrollTop += increment;
 		if (div.scrollTop != height) {
-			$_eseecode.session.scrollTimeout = setTimeout(function() { $e_smoothScroll(div, height, startTop) }, 1);
+			$_eseecode.ui.scrollTimeout = setTimeout(function() { $e_smoothScroll(div, height, startTop) }, 1);
 		}
 	}
 
@@ -1385,7 +1386,7 @@
 	 */
 	function $e_resetUI(notInitial, force) {
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
-		$_eseecode.dialogWindow = document.getElementById("dialog-window");
+		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		if (notInitial === true && !$e_codeIsEmpty() && !force) {
 			$e_msgBox(_("Do you really want to start over?"), {acceptAction:$e_resetUIForced,cancelAction:$e_msgBoxClose});
 			return false;
@@ -1664,7 +1665,7 @@
 				}
 				if (startInstructionDiv !== null && startInstructionDiv.offsetTop > 0) {
 					var style = "3px solid #FF5555";
-					$_eseecode.session.tipInterval = setInterval(function() {
+					$_eseecode.ui.tipInterval = setInterval(function() {
 							if (startInstructionDiv.style.border === "") {
 								startInstructionDiv.style.border = style;
 								startInstructionDiv.style.marginBottom = "";
@@ -1736,8 +1737,8 @@
 		var consoleDiv = document.getElementById("console-blocks");
 		consoleDiv.innerHTML = "";
 		// Remove dialog highlight
-		if ($_eseecode.session.tipInterval) {
-			clearInterval($_eseecode.session.tipInterval);
+		if ($_eseecode.ui.tipInterval) {
+			clearInterval($_eseecode.ui.tipInterval);
 		}
 		var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
 		var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
@@ -2170,7 +2171,7 @@
 		// reset windows
   		for(var i=0;i<$_eseecode.windowsArray.length;i++) {
 			if ($_eseecode.windowsArray[i]) {
-				$_eseecode.dialogWindow.removeChild($_eseecode.windowsArray[i]);
+				$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[i]);
 				delete $_eseecode.windowsArray[i];
 			}
 		}

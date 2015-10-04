@@ -92,12 +92,12 @@
 		if (!$_eseecode.windowsArray[id]) {
 			var newWindow = document.createElement("div");
 			newWindow.id = "window-"+id;
-			newWindow.style.left = $_eseecode.dialogWindow.offsetLeft;
-			newWindow.style.top = $_eseecode.dialogWindow.offsetTop;
+			newWindow.style.left = $_eseecode.ui.dialogWindow.offsetLeft;
+			newWindow.style.top = $_eseecode.ui.dialogWindow.offsetTop;
 			newWindow.style.display = "none";
 			newWindow.className = "dialog-window";
 			$_eseecode.windowsArray[id] = newWindow;
-			$_eseecode.dialogWindow.appendChild(newWindow);
+			$_eseecode.ui.dialogWindow.appendChild(newWindow);
 		}
 		return $_eseecode.windowsArray[id];
 	}
