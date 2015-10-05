@@ -145,6 +145,7 @@
 		var line;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			line = ace.edit("console-write").selection.getCursor()["row"]+1;
+			//TODO: ace.edit("console-write").session.setBreakpoint(line-1,"line"+line+" console-write-breakpoint")
 		} else {
 			var target = event.target;
 			while (target !== null && target.id.match(/^div-[0-9]+$/) === null) {
@@ -331,7 +332,6 @@
 				document.getElementById("dialog-debug-analyzer-line"+line).style.fontWeight = "bold";
 			}
 		}
-		var editor = ace.edit("console-write");
 	}
 
 	/**

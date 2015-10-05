@@ -398,7 +398,6 @@
 	 * @example windowUse(2)
 	 */
 	function windowUse(id) {
-		console.log($_eseecode.currentWindow.id)
 		$e_windowSwitch(id);
 	}
 

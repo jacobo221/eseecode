@@ -1158,7 +1158,7 @@
 	function $e_selectTextareaLine(lineStart, lineEnd, style) {
 		lineStart--; // array starts at 0, we leave lineEnd as is beacuse we'll select until the beginning of the next line
 		var Range = require('ace/range').Range;
-		return ace.edit("console-write").session.addMarker(new Range(lineStart,0,lineEnd-1,ace.edit("console-write").session.getLine(lineEnd-1).length), style, "fullLine");
+		ace.edit("console-write").session.addMarker(new Range(lineStart,0,lineEnd-1,ace.edit("console-write").session.getLine(lineEnd-1).length-1), style, "fullLine");
 	}
 
 	/**
