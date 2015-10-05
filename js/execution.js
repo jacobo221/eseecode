@@ -47,7 +47,10 @@
 	 * @example $e_checkExecutionLimits(31)
 	 */
 	function $e_checkExecutionLimits(lineNumber) {
-		// If $_eseecode.execution.programCounterLimit === false the step limit is ignored
+		if ($_eseecode.execution.precode.running) {
+			// Precode is run as is with no checks and without altering $_eseecode.execution variables
+			return;
+		}
 		var executionTime = new Date().getTime();
 		$_eseecode.execution.programCounter++;
 		$e_setHighlight(lineNumber);
@@ -84,43 +87,16 @@
 			throw "executionStepped";
 		}
 	}
-
+	
 	/**
-	 * Show execution results
+	 * Stops previous execution animations
 	 * @private
-	 * @param {String|Object} [err] Caught exception
-	 * @example $e_showExecutionResults()
+	 * @example $e_stopPreviousAnimations()
 	 */
-	function $e_showExecutionResults(err) {
-		if (err === undefined) {
-			if ($_eseecode.execution.programCounterLimit !== false) {
-				// If in step by step, highlight last line
-				$e_highlight($_eseecode.session.highlight.lineNumber);
-			} else {
-				$e_unhighlight();
-			}
-		} else if (err === "executionTimeout") {
-			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
-			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
-		} else if (err === "executionStepped") {
-			$e_highlight($_eseecode.session.highlight.lineNumber);
-		} else if (err === "executionBreakpointed") {
-			$e_highlight($_eseecode.session.highlight.lineNumber);
-			$e_switchDialogMode("debug");
-		} else if (err == "executionWatchpointed") {
-			$e_highlight($_eseecode.session.highlight.lineNumber-1); // We detect it before running the next instruction, so highlight the previous instuction
-			$e_switchDialogMode("debug");
-			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
-		} else if (err.type == "codeError") {
-			$e_msgBox(_("Error found during execution at line %s:",[err.line])+"\n"+err.text);
-			$e_highlight(err.line,"error");
-		} else {
-			// The code didn't finish running and there is no known reason
-			$e_printExecutionError(err);
-		}
-		if (err !== undefined) {
-			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-			document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
+	function $e_stopPreviousAnimations() {	
+		// Stop previous execution remaining animations
+		for (var i=0; i<$_eseecode.session.timeoutHandlers.length; i++) {
+			clearTimeout($_eseecode.session.timeoutHandlers[i]);
 		}
 	}
 
@@ -131,9 +107,9 @@
 	 * @example $e_initProgramCounter()
 	 */
 	function $e_initProgramCounter(resetStepLimit) {
-		// Stop previous execution remaining animations
-		for (var i=0; i<$_eseecode.session.timeoutHandlers.length; i++) {
-			clearTimeout($_eseecode.session.timeoutHandlers[i]);
+		if ($_eseecode.execution.precode.running) {
+			// Precode is run as is with no checks and without altering $_eseecode.execution variables
+			return;
 		}
 		var withStep = $_eseecode.execution.stepped;
 		if (resetStepLimit === "disabled") {
@@ -162,7 +138,7 @@
 				if (step < 1) {
 					step = 1;
 					$_eseecode.execution.step = step;
-					$e_initSetup();			
+					$e_initSetup();
 				}
 				$_eseecode.execution.programCounterLimit = ($_eseecode.execution.programCounterLimit?$_eseecode.execution.programCounterLimit:0) + step;
 			}
@@ -254,7 +230,7 @@
 	 * Runs code
 	 * @private
 	 * @param {Boolean} [forceNoStep] Whether or not to force to ignore the stepping
-	 * @param {String} [code] Code to run. If unset run the code in the console window
+	 * @param {String} [inCode] Code to run. If unset run the code in the console window
 	 * @param {Boolean} [justPrecode] Whether or not to ignore the usercode and just run the precode
 	 * @example $e_execute()
 	 */
@@ -269,7 +245,6 @@
 			withStep = "disabled";
 		}
 		$e_unhighlight();
-		$e_initProgramCounter(withStep);
 		if (code === undefined) {
 			var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 			if (mode == "blocks") {
@@ -307,11 +282,12 @@
 		}
 		try {
 			var jsCode = "";
-			if (!inCode && $_eseecode.execution.precode) { // Don't load precode again when running the code of an event
-				jsCode += $e_code2run($_eseecode.execution.precode)+";$e_initProgramCounter("+(withStep=== "disabled"?'"disabled"':withStep)+");\n";
+			if (!inCode && $_eseecode.execution.precode.code) { // Don't load precode again when running the code of an event
+				// We want to run precode inline so it shares the same context, so we don't use $e_executePrecode()
+				jsCode += "$_eseecode.execution.precode.running=true;"+$e_code2run($_eseecode.execution.precode.code)+";$_eseecode.execution.precode.running=false;\n";
 			}
 			if (!justPrecode) {
-				jsCode += $e_code2run(code);
+				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'"disabled"':withStep)+");"+$e_code2run(code);
 			}
 		} catch (exception) {
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
@@ -341,15 +317,95 @@
 	}
 
 	/**
+	 * Converts user code to executable code and returns it
+	 * @private
+	 * @param {String} pseudoCode User code to convert
+	 * @return {String} Executable code
+	 * @example eval($e_code2run("repeat(4){forward(100)}"))
+	 */
+	function $e_code2run(pseudoCode) {
+		var program = eseecodeLanguage.parse(pseudoCode);
+		var level;
+		for (var i=0;i<$_eseecode.modes.console.length;i++) {
+			if ($_eseecode.modes.console[i].div == "write") {
+				level = $_eseecode.modes.console[i].id;
+			}
+		}
+		var userCode = program.makeWrite(level,"","\t",true);
+		var code = "\"use strict\";";
+		var globalVars = $_eseecode.instructions.variables;
+		for (var i=0; i<globalVars.length; i++) {
+			code += "var "+globalVars[i].name+"="+globalVars[i].value+";";
+		}
+		code += "try {"+userCode+";\n\
+				$e_showExecutionResults();\n\
+			} catch(err) {\n\
+				$e_showExecutionResults(err);\n\
+			}";
+		return code;
+	}
+
+	/**
+	 * Show execution results
+	 * @private
+	 * @param {String|Object} [err] Caught exception
+	 * @example $e_showExecutionResults()
+	 */
+	function $e_showExecutionResults(err) {
+		if (err === undefined) {
+			if ($_eseecode.execution.programCounterLimit !== false) {
+				// If in step by step, highlight last line
+				$e_highlight($_eseecode.session.highlight.lineNumber);
+			} else {
+				$e_unhighlight();
+			}
+		} else if (err === "executionTimeout") {
+			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
+			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
+		} else if (err === "executionStepped") {
+			$e_highlight($_eseecode.session.highlight.lineNumber);
+		} else if (err === "executionBreakpointed") {
+			$e_highlight($_eseecode.session.highlight.lineNumber);
+			$e_switchDialogMode("debug");
+		} else if (err == "executionWatchpointed") {
+			$e_highlight($_eseecode.session.highlight.lineNumber-1); // We detect it before running the next instruction, so highlight the previous instuction
+			$e_switchDialogMode("debug");
+			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
+		} else if (err.type == "codeError") {
+			$e_msgBox(_("Error found during execution at line %s:",[err.line])+"\n"+err.text);
+			$e_highlight(err.line,"error");
+		} else {
+			// The code didn't finish running and there is no known reason
+			$e_printExecutionError(err);
+		}
+		if (err !== undefined) {
+			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
+			document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
+		}
+	}
+
+	/**
 	 * Runs precode
 	 * @private
 	 * @example $e_executePrecode()
 	 */
 	function $e_executePrecode() {
 		// Run precode if there is one
-		if ($_eseecode.execution.precode) {
+		if ($_eseecode.execution.precode.code) {
+			$_eseecode.execution.precode.running = true;
 			$e_execute("disabled", null, true);
+			$_eseecode.execution.precode.running = false;
 		}
+	}
+
+	/**
+	 * Runs the code, triggered by the user
+	 * @private
+	 * @example $e_executeFromUI()
+	 */
+	function $e_executeFromUI() {
+		$e_stopPreviousAnimations();
+		$e_execute();
 	}
 
 	/**
@@ -376,5 +432,4 @@
 		$e_initProgramCounter(true);
 		$e_unhighlight();
 		$e_resetDebug();
-		$e_executePrecode();
 	}

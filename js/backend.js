@@ -77,15 +77,29 @@
 		return $_eseecode.canvasArray[id];
 	}
 
-	/** Returns a window
+	/** Returns a window and focuses to it if none had focus
+	 * @private
+	 * @param {Number} [id] Window id (if blank it creates a new id)
+	 * @return {!HTMLElement} Div HTML element representing the Window
+	 * @example $_eseecode.currentWindow = $e_getWindow(id)
+	 */
+	function $e_getWindow(id) {
+		var windowElement = $e_getOrCreateWindow(id);
+		if (!$_eseecode.currentWindow) {
+			$e_windowSwitch(id);
+		}
+		return windowElement;
+	}
+	
+	/** Returns the window
 	 * If needed, window is created overlapping exactly the whiteboard div element
 	 * The created window can be accessed via $_eseecode.windowsArray[id]
 	 * @private
 	 * @param {Number} [id] Window id (if blank it creates a new id)
 	 * @return {!HTMLElement} Div HTML element representing the Window
-	 * @example $_eseecode.currentWiundow = $e_getWindow(id)
+	 * @example $_eseecode.currentWindow = $e_getOrCreateWindow(id)
 	 */
-	function $e_getWindow(id) {
+	function $e_getOrCreateWindow(id) {
 		if (typeof id === "undefined") {
 			id = $_eseecode.windowsArray.length;
 		}
@@ -136,7 +150,7 @@
 	 */
 	function $e_windowSwitch(id) {
 		if (id !== undefined) { // 0 is a valid id
-			$_eseecode.currentWindow = $e_getWindow(id);
+			$_eseecode.currentWindow = $e_getOrCreateWindow(id);
 		}
 		// even if we did $e_getWindow() still do the following, since it fixes rendering issues
 		for (var i=0;i<$_eseecode.windowsArray.length;i++) {

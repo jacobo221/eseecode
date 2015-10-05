@@ -96,7 +96,7 @@
 		if (this.alternate !== null) {
 			// Now we convert the block into an ifelse
 			// We couldn't do it before because we wanted the inner blocks to go _before_ the else block
-			div.setAttribute("instructionSetId",getInstructionSetIdFromName("ifelse"));
+			div.setAttribute("instructionSetId",$e_getInstructionSetIdFromName("ifelse"));
 			if (this.alternate.type == "IfStatement") {
 				 // else if
 				this.alternate.makeBlocks(level,div,true);

@@ -1184,18 +1184,20 @@
 		if (mode == "blocks") {
 			var consoleDiv = document.getElementById("console-blocks");
 			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
-			var style;
-			if (reason === "error") {
-				style = "#FF0000";
-			} else {
-				var r = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
-				var g = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
-				var b = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
-				style = "#"+ r.toString()+g.toString()+b.toString();
+			if (div) { // after last instruction in code there is no block (execution finished) so we must check if the block exists
+				var style;
+				if (reason === "error") {
+					style = "#FF0000";
+				} else {
+					var r = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
+					var g = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
+					var b = ("0" + Math.floor((Math.random()*256)).toString(16)).slice(-2);
+					style = "#"+ r.toString()+g.toString()+b.toString();
+				}
+				div.style.border = "2px solid "+style;
+				div.style.boxShadow = "5px 5px 5px "+style;
+				$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+$e_blockSize(level,consoleDiv.firstChild).height/2);
 			}
-			div.style.border = "2px solid "+style;
-			div.style.boxShadow = "5px 5px 5px "+style;
-			$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+$e_blockSize(level,consoleDiv.firstChild).height/2);
 		} else if (mode == "write") {
 			var style;
 			if (reason == "error") {
@@ -1382,19 +1384,26 @@
 	}
 
 	/**
-	 * Initializes/Resets all UI elements
+	 * Initializes/Resets all UI elements, called by the user
 	 * @private
-	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost
-	 * @param {Boolean} force Force reset
-	 * @example $e_resetUI()
+	 * @example $e_resetUIFromUI()
 	 */
-	function $e_resetUI(notInitial, force) {
-		$_eseecode.whiteboard = document.getElementById("whiteboard");
-		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
-		if (notInitial === true && !$e_codeIsEmpty() && !force) {
+	function $e_resetUIFromUI() {
+		if (!$e_codeIsEmpty()) {
 			$e_msgBox(_("Do you really want to start over?"), {acceptAction:$e_resetUIForced,cancelAction:$e_msgBoxClose});
 			return false;
 		}
+	}
+
+	/**
+	 * Initializes/Resets all UI elements
+	 * @private
+	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost
+	 * @example $e_resetUI()
+	 */
+	function $e_resetUI(notInitial) {
+		$_eseecode.whiteboard = document.getElementById("whiteboard");
+		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		$e_initUIElements();
 		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.platform.logo.text+'" title="" /></a>';
 		$e_resetGridModeSelect();
@@ -1430,7 +1439,6 @@
 			$e_changeAxisCoordinates(grid.position, grid.scale);
 		}
 		$e_resetCanvas();
-		$e_executePrecode();
 		$e_resetDebug();
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		$e_initSetup();
@@ -1548,7 +1556,7 @@
 	 * @example $e_resetUIForced()
 	 */
 	function $e_resetUIForced() {
-		$e_resetUI(true, true);
+		$e_resetUI(true);
 		$e_msgBoxClose();
 	}
 
@@ -2141,6 +2149,24 @@
 	}
 
 	/**
+	 * Undoes the last action in the current level, called by the user
+	 * @private
+	 * @example $e_undoFromUI()
+	 */
+	function $e_undoFromUI() {
+		$e_undo(false);
+	}
+
+	/**
+	 * Redoes the last action in the current level, called by the user
+	 * @private
+	 * @example $e_undoFromUI()
+	 */
+	function $e_redoFromUI() {
+		$e_undo(true);
+	}
+
+	/**
 	 * Initializes/Resets all the drawing elements including execution
 	 * @private
 	 * @example $e_resetCanvasFromUI()
@@ -2184,9 +2210,11 @@
 				delete $_eseecode.windowsArray[i];
 			}
 		}
+		$_eseecode.currentWindow = undefined;
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
 		document.getElementById("dialog-tabs-window").style.display = "none";
+		$e_executePrecode();
 	}
 
 	/**

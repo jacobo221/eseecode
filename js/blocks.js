@@ -253,7 +253,7 @@
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
-				$e_execute(true);
+				$e_executeFromUI();
 			}
 		}
 	}
@@ -1387,7 +1387,7 @@
 			$_eseecode.session.blocksUndo[0]--;
 		}
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
-			$e_execute();
+			$e_executeFromUI();
 		}
 	}
 

@@ -66,32 +66,3 @@
 			$e_createBlock(level,div);
 		}
 	}
-
-	/**
-	 * Converts user code to executable code and returns it
-	 * @private
-	 * @param {String} pseudoCode User code to convert
-	 * @return {String} Executable code
-	 * @example eval($e_code2run("repeat(4){forward(100)}"))
-	 */
-	function $e_code2run(pseudoCode) {
-		var program = eseecodeLanguage.parse(pseudoCode);
-		var level;
-		for (var i=0;i<$_eseecode.modes.console.length;i++) {
-			if ($_eseecode.modes.console[i].div == "write") {
-				level = $_eseecode.modes.console[i].id;
-			}
-		}
-		var userCode = program.makeWrite(level,"","\t",true);
-		var code = "\"use strict\";";
-		var globalVars = $_eseecode.instructions.variables;
-		for (var i=0; i<globalVars.length; i++) {
-			code += "var "+globalVars[i].name+"="+globalVars[i].value+";";
-		}
-		code += "try {"+userCode+";\n\
-				$e_showExecutionResults();\n\
-			} catch(err) {\n\
-				$e_showExecutionResults(err);\n\
-			}";
-		return code;
-	}

@@ -9,7 +9,7 @@
 	 * @param {Number} [posx] X coordinate to place the button in the window
 	 * @param {Number} [posy] Y coordinate to place the button in the window
 	 * @param {String} [action] Code to run on button click
-	 * @example windowButtonCreate("b2", "turn", 170, 90, "turnRight(15)")
+	 * @example windowButtonEdit("b2", "turn", 170, 90, "turnRight(15)")
 	 */
 	function windowButtonEdit(id, text, posx, posy, action) {
 		var id = "element-"+id;
@@ -398,6 +398,7 @@
 	 * @example windowUse(2)
 	 */
 	function windowUse(id) {
+		console.log($_eseecode.currentWindow.id)
 		$e_windowSwitch(id);
 	}
 

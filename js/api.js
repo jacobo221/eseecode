@@ -47,7 +47,7 @@
 			$e_msgBox(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode",[level]));
 		}
 		if (preload === true) {
-			$_eseecode.execution.precode = code;
+			$_eseecode.execution.precode.code = code;
 			$e_execute();
 		} else {
 				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost

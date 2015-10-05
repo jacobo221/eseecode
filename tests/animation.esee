@@ -1,50 +1,50 @@
 function hideAll() {
 	repeat (8) {
-		hide(repeatCount + 2)
+		hide(repeatCount + 1)
 	}
 }
 
 function up() {
-	if (getLayerVisibility(6)) {
+	if (getLayerVisibility(5)) {
 		hideAll()
-		show(7)
+		show(6)
 	} else {
-			hideAll()
-			show(6)
+		hideAll()
+		show(5)
 	}
 }
 
 function down() {
-	if (getLayerVisibility(8)) {
+	if (getLayerVisibility(7)) {
 		hideAll()
-		show(9)
+		show(8)
 	} else {
-			hideAll()
-			show(8)
+		hideAll()
+		show(7)
 	}
 }
 
 function right() {
-	if (getLayerVisibility(2)) {
+	if (getLayerVisibility(1)) {
 		hideAll()
-		show(3)
+		show(2)
 	} else {
-			hideAll()
-			show(2)
+		hideAll()
+		show(1)
 	}
 }
 
 function left() {
-	if (getLayerVisibility(4)) {
+	if (getLayerVisibility(3)) {
 		hideAll()
-		show(5)
+		show(4)
 	} else {
-			hideAll()
-			show(4)
+		hideAll()
+		show(3)
 	}
-	show(1)
 }
 
+changeAxis(0,0,1,1);
 goTo(200, 100)
 beginShape()
 setColor("#FF6600")
@@ -115,7 +115,7 @@ turnRight(90)
 forward(35)
 turnRight(45)
 forward(40)
-hide(3)
+hide()
 use()
 image(getLayerImage(2), 0, 0)
 flipHorizontally()
@@ -204,9 +204,8 @@ beginShape()
 arc(4, 360)
 endShape()
 hide()
-windowButtonCreate(1, "up", "^", 125, 100, "animate(\"up()\",0.5)")
-windowButtonCreate(1, "down", "v", 125, 200, "animate(\"down()\",0.5)")
-windowButtonCreate(1, "right", ">", 175, 150, "animate(\"right()\",0.5)")
-windowButtonCreate(1, "left", "<", 75, 150, "animate(\"left()\",0.5)")
-show(2)
-
+windowButtonCreate(0, "up", "^", 125, 100, "animate(\"up()\",0.5)")
+windowButtonCreate(0, "down", "v", 125, 200, "animate(\"down()\",0.5)")
+windowButtonCreate(0, "right", ">", 175, 150, "animate(\"right()\",0.5)")
+windowButtonCreate(0, "left", "<", 75, 150, "animate(\"left()\",0.5)")
+show(1)

@@ -142,13 +142,13 @@
 				<div id="console-write" class="program"></div>
 			</div>
 			<div id="console-buttons">
-				<div id="button-undo" class="button"><canvas width="40" height="20" onclick="$e_undo(false)"></canvas></div>
+				<div id="button-undo" class="button"><canvas width="40" height="20" onclick="$e_undoFromUI()"></canvas></div>
 				<div>
-					<span id="button-execute" class="button"><canvas width="20" height="20" onclick="$e_execute()"></canvas></span>
+					<span id="button-execute" class="button"><canvas width="20" height="20" onclick="$e_executeFromUI()"></canvas></span>
 					<span id="button-clear" class="button"><canvas width="20" height="20" onclick="$e_resetCanvasFromUI()"></canvas></span>
-					<span id="button-reset" class="button"><canvas width="20" height="20" onclick="$e_resetUI(true)"></canvas></span>
+					<span id="button-reset" class="button"><canvas width="20" height="20" onclick="$e_resetUIFromUI()"></canvas></span>
 				</div>
-				<div id="button-redo" class="button"><canvas width="40" height="20" onclick="$e_undo(true)"></canvas></div>
+				<div id="button-redo" class="button"><canvas width="40" height="20" onclick="$e_redoFromUI()"></canvas></div>
 			</div>
 		</div>
 	</div>
