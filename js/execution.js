@@ -276,7 +276,7 @@
 					$e_resetWriteConsole(code);
 				}
 			}
-			$e_resetCanvas();
+			$e_resetCanvas(true);
 			$e_resetBreakpointWatches();
 			$e_resetWatchpoints();
 		}
@@ -381,20 +381,6 @@
 		if (err !== undefined) {
 			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
 			document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
-		}
-	}
-
-	/**
-	 * Runs precode
-	 * @private
-	 * @example $e_executePrecode()
-	 */
-	function $e_executePrecode() {
-		// Run precode if there is one
-		if ($_eseecode.execution.precode.code) {
-			$_eseecode.execution.precode.running = true;
-			$e_execute("disabled", null, true);
-			$_eseecode.execution.precode.running = false;
 		}
 	}
 

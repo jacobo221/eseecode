@@ -1184,7 +1184,7 @@
 		if (mode == "blocks") {
 			var consoleDiv = document.getElementById("console-blocks");
 			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
-			if (div) { // after last instruction in code there is no block (execution finished) so we must check if the block exists
+			if (div && div.id != "console-blocks-tip") { // after last instruction in code there is no block (execution finished) so we must check if the block exists
 				var style;
 				if (reason === "error") {
 					style = "#FF0000";
@@ -2181,9 +2181,10 @@
 	/**
 	 * Initializes/Resets the whiteboard
 	 * @private
+	 * @param {Boolean} noPrecode If true precode is not executed
 	 * @example $e_resetCanvas()
 	 */
-	function $e_resetCanvas() {
+	function $e_resetCanvas(noPrecode) {
 		document.getElementById("dialog-debug-execute").innerHTML = "";
 		// First delete bottom and top references so their layers aren't deleted twice in the for()
 		delete $_eseecode.canvasArray["bottom"];
@@ -2214,7 +2215,9 @@
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
 		document.getElementById("dialog-tabs-window").style.display = "none";
-		$e_executePrecode();
+		if (!noPrecode) {
+			$e_execute("disabled", null, true);
+		}
 	}
 
 	/**
