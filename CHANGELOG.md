@@ -41,6 +41,7 @@
  *   Breakpoints can now be enabled/disabled
  *   New tracing platform allows to keep random/interactive values from one breakpoint/step to another
  *   Began work on better execution error messages
+ *   Stepping moved from setup window to debug window
  * Embedding:
  *   Pre-run instructions through API for exercise
  *   Adapt instructionSet by param for exercise (instructions= instruction;parameter or blank)

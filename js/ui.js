@@ -982,11 +982,11 @@
 	 */
 	function $e_initSetup() {
 		var debugDiv = document.getElementById("dialog-setup");
-		document.getElementById("setup-execute-step").value = $_eseecode.execution.step;
+		document.getElementById("dialog-debug-execute-step").value = $_eseecode.execution.step;
 		if ($_eseecode.execution.stepped) {
-			document.getElementById("setup-execute-stepped").checked = true;
+			document.getElementById("dialog-debug-execute-stepped").checked = true;
 		} else {
-			document.getElementById("setup-execute-stepped").checked = false;
+			document.getElementById("dialog-debug-execute-stepped").checked = false;
 		}
 		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
@@ -2174,7 +2174,6 @@
 	function $e_resetCanvasFromUI() {
 		$e_resetCanvas();
 		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
-		goTo(0,0);
 		$e_endExecution();
 	}
 
@@ -2185,7 +2184,7 @@
 	 * @example $e_resetCanvas()
 	 */
 	function $e_resetCanvas(noPrecode) {
-		document.getElementById("dialog-debug-execute").innerHTML = "";
+		document.getElementById("dialog-debug-execute-stats").innerHTML = "";
 		// First delete bottom and top references so their layers aren't deleted twice in the for()
 		delete $_eseecode.canvasArray["bottom"];
 		delete $_eseecode.canvasArray["top"];

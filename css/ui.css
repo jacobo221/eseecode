@@ -205,6 +205,12 @@
 		background-color: #E9E9E9;
 		border-top-left-radius: 10px;
 	}
+	#dialog-debug {
+		position: relative;
+	}
+	#dialog-debug-analyzer-toolbar {
+		text-align: center;
+	}
 	#dialog-debug-analyzer-watches {
 		border-top:1px solid #000000;
 	}
@@ -222,11 +228,17 @@
 		width: 220px;
 		float: left;
 	}
-	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute {
+	#dialog-debug-execute-step-buttons {
+		width: 100%;
+		text-align: center;
+		position: absolute;
+		bottom: 0px;
+	}
+	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute-stats {
 		width: auto;
 		overflow-x: hidden;
 	}
-	#dialog-debug-layers-help, #dialog-debug-analyzer-help, #dialog-debug-execute-help {
+	#dialog-debug-layers-help, #dialog-debug-analyzer-help, #dialog-debug-execute-stats-help {
 		float: right;
 		font-weight: bold;
 		width: 10px;
@@ -236,13 +248,16 @@
 	#dialog-debug-layers-title {
 		position: relative;
 	}
-	#dialog-debug-layers-title, #dialog-debug-analyzer-title, #dialog-debug-execute-title  {
+	#dialog-debug-layers-title, #dialog-debug-analyzer-title, #dialog-debug-execute-stats-title  {
 		padding: 3px 0px 3px 0px;
 		border-bottom: 1px solid #000000;
 		text-align: center;
 		font-weight: bold;
 		background-color: #CCCCCC;
 		color: inherit;
+	}
+	#dialog-debug input[type="number"] {
+		width: 40px;
 	}
 	#dialog-setup {
 		text-align: center;

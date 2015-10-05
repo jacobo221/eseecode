@@ -85,9 +85,12 @@
 					<div id="dialog-debug-analyzer-breakpoints" class="dialog-debug-analyzer-breakpoint-block"></div>
 					<div id="dialog-debug-analyzer-watches" class="dialog-debug-analyzer-breakpoint-block"></div>
 					<div class="separator"></div>
-					<div id="dialog-debug-execute-title"></div>
-					<div id="dialog-debug-execute-help">?</div>
-					<div id="dialog-debug-execute"></div>
+					<div id="dialog-debug-execute-stats-title"></div>
+					<div id="dialog-debug-execute-stats-help">?</div>
+					<div id="dialog-debug-execute-stats"></div>
+					<div id="dialog-debug-execute-step-buttons">
+						<span id="dialog-debug-execute-step-title"></span><input id="dialog-debug-execute-step" type="number" min="1" onchange="$e_updateExecutionStep()" /><span id="dialog-debug-execute-step-title2"></span><label id="dialog-debug-execute-stepped-label" for="dialog-debug-execute-stepped"></label><input id="dialog-debug-execute-stepped" type="checkbox" onchange="$e_updateExecutionStepped()" />
+					</div>
 				</div>
 				<div id="dialog-setup" class="program">
 					<br />
@@ -110,9 +113,6 @@
 						<span id="setup-guide-enable-title"></span><label id="setup-guide-enable-label" for="setup-guide-enable"></label><input id="setup-guide-enable" type="checkbox" onclick="$e_toggleGuide()" checked />
 					</div>
 					<br />
-					<div id="setup-execute-step-buttons">
-						<span id="setup-execute-step-title"></span><input id="setup-execute-step" type="number" min="1" onchange="$e_updateExecutionStep()" /><span id="setup-execute-step-title2"></span><label id="setup-execute-stepped-label" for="setup-execute-stepped"></label><input id="setup-execute-stepped" type="checkbox" onchange="$e_updateExecutionStepped()" />
-					</div>
 					<div id="setup-execute-time-buttons">
 						<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="$e_updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
 					</div><br />

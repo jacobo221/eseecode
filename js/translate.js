@@ -119,9 +119,13 @@
 		document.getElementById("dialog-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands");
 		document.getElementById("dialog-debug-analyzer-title").innerHTML = _("Analyzer")+":";
 		document.getElementById("dialog-debug-analyzer-help").title = _("Here you can:\n * mark a line to stop the program at that point\n * watch values of variables at those stops\n * stop the program when a controlled variable is updated");
-		document.getElementById("dialog-debug-execute-title").innerHTML = _("Execution")+":";
-		document.getElementById("dialog-debug-execute-help").title = _("Execution statistics");
-		document.getElementById("dialog-debug-execute").innerHTML = "";
+		document.getElementById("dialog-debug-execute-stats-title").innerHTML = _("Execution")+":";
+		document.getElementById("dialog-debug-execute-stats-help").title = _("Execution statistics");
+		document.getElementById("dialog-debug-execute-stats").innerHTML = "";
+		document.getElementById("dialog-debug-execute-step-title").innerHTML = _("Pause every")+" ";
+		document.getElementById("dialog-debug-execute-step").title = _("Number of instructions until pause");
+		document.getElementById("dialog-debug-execute-step-title2").innerHTML = " "+_("instructions")+" ";
+		document.getElementById("dialog-debug-execute-step").title = _("Run stepped");
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
 		document.getElementById("dialog-setup").title = _("Setup dialog");
@@ -134,10 +138,6 @@
 		document.getElementById("setup-downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
 		document.getElementById("setup-downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
 		document.getElementById("setup-downloadLayers-interval-title").innerHTML = _("Interval (in msecs)")+": ";
-		document.getElementById("setup-execute-step-title").innerHTML = _("Pause every")+" ";
-		document.getElementById("setup-execute-step").title = _("Number of instructions until pause");
-		document.getElementById("setup-execute-step-title2").innerHTML = " "+_("instructions")+" ";
-		document.getElementById("setup-execute-stepped").title = _("Run stepped");
 		document.getElementById("setup-execute-time-title").innerHTML = _("Stop execution after")+" ";
 		document.getElementById("setup-execute-time").title = _("Number of seconds to run");
 		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");

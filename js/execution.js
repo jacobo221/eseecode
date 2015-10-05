@@ -6,7 +6,7 @@
 	 * @example $e_updateExecutionStep()
 	 */
 	function $e_updateExecutionStep() {
-		$_eseecode.execution.step = parseInt(document.getElementById("setup-execute-step").value);
+		$_eseecode.execution.step = parseInt(document.getElementById("dialog-debug-execute-step").value);
 	}
 
 	/**
@@ -15,7 +15,7 @@
 	 * @example $e_updateExecutionStepped()
 	 */
 	function $e_updateExecutionStepped() {
-		$_eseecode.execution.stepped = document.getElementById("setup-execute-stepped").checked;
+		$_eseecode.execution.stepped = document.getElementById("dialog-debug-execute-stepped").checked;
 	}
 
 	/**
@@ -380,7 +380,7 @@
 		}
 		if (err !== undefined) {
 			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-			document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
+			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
 		}
 	}
 
@@ -414,7 +414,7 @@
 	 */
 	function $e_endExecution() {
 		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-		document.getElementById("dialog-debug-execute").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
+		document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 		$e_initProgramCounter(true);
 		$e_unhighlight();
 		$e_resetDebug();
