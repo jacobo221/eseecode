@@ -1,6 +1,6 @@
-## 2.1 (2015-10-06)
+## 2.2 (ongoing work)
 
- *Milestone reached: Easily understandable runtime errors*
+ *Milestone: Easily understandable runtime errors*
  *   
 
 ## 2.1 (2015-10-06)
