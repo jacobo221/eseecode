@@ -1,7 +1,7 @@
 ## 2.2 (ongoing work)
 
  *Milestone: Easily understandable runtime errors*
- *   
+ *   Allow breakpoints and stepping to work together in debug
 
 ## 2.1 (2015-10-06)
 

@@ -15,7 +15,7 @@
 				link: undefined
 			},
 			version: {
-				text: "2.1",
+				text: "2.2",
 				link: "CHANGELOG.md"
 			},
 			logo: {
@@ -49,7 +49,7 @@
 		},
 		execution: {
 			breakpointCounter: 0,
-			breakpointCounterLimit: 0,
+			breakpointCounterLimit: 1,
 			step: 1,
 			stepped: false,
 			timeLimit: 10,

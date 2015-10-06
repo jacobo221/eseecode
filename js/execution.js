@@ -72,13 +72,14 @@
 		if ($_eseecode.session.breakpoints[lineNumber] && $_eseecode.session.breakpointsStatus[lineNumber]) {
 			$_eseecode.execution.breakpointCounter++;
 			if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+				$_eseecode.execution.breakpointCounterLimit++;
 				throw "executionBreakpointed";
 			}
 		}
 		if (executionTime > $_eseecode.execution.endLimit) {
 			throw "executionTimeout";
 		}
-		if ($_eseecode.execution.programCounterLimit && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
+		if ($_eseecode.execution.stepped && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
 			if ($_eseecode.execution.programCounter == 1) {
 				$_eseecode.execution.programCounterLimit++;
 				// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
@@ -123,15 +124,11 @@
 			$e_initSetup();
 		}
 		$_eseecode.execution.endLimit = $_eseecode.execution.startTime+time*1000;
-		$_eseecode.execution.programCounter = 0;
-		$_eseecode.execution.breakpointCounter = 0;
 		if (resetStepLimit) {
 			$_eseecode.execution.programCounterLimit = 0;
-			$_eseecode.execution.breakpointCounterLimit = 0;
+			$_eseecode.execution.breakpointCounterLimit = 1;
 			$e_executionTraceReset();
-		} else {			
-			$_eseecode.execution.breakpointCounterLimit++;
-		}
+		}			
 		if (withStep) {
 			if (!resetStepLimit) {
 				var step = $_eseecode.execution.step;
@@ -140,11 +137,11 @@
 					$_eseecode.execution.step = step;
 					$e_initSetup();
 				}
-				$_eseecode.execution.programCounterLimit = ($_eseecode.execution.programCounterLimit?$_eseecode.execution.programCounterLimit:0) + step;
+				$_eseecode.execution.programCounterLimit = $_eseecode.execution.programCounter + step;
 			}
-		} else {
-			$_eseecode.execution.programCounterLimit = false;
 		}
+		$_eseecode.execution.programCounter = 0;
+		$_eseecode.execution.breakpointCounter = 0;
 		$e_executionTraceReset("randomColor");
 		$e_executionTraceReset("randomNumber");
 	}
@@ -353,12 +350,7 @@
 	 */
 	function $e_showExecutionResults(err) {
 		if (err === undefined) {
-			if ($_eseecode.execution.programCounterLimit !== false) {
-				// If in step by step, highlight last line
-				$e_highlight($_eseecode.session.highlight.lineNumber);
-			} else {
-				$e_unhighlight();
-			}
+			$e_unhighlight();
 		} else if (err === "executionTimeout") {
 			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
 			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
