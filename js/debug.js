@@ -71,6 +71,25 @@
 	 */
 	function $e_toggleBreakpoint(line, element) {
 		$_eseecode.session.breakpointsStatus[line] = element.checked;
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+			if ($_eseecode.session.breakpointsStatus[line]) {
+				ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
+			} else {
+				ace.edit("console-write").session.clearBreakpoint(line-1);
+			}
+		} else {
+			var consoleDiv = document.getElementById("console-blocks");
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
+			if ($_eseecode.session.breakpointsStatus[line]) {
+				if (div && div.id != "console-blocks-tip") {
+					div.style.boxShadow = "5px 5px 5px #FF0000";
+				}
+			} else {
+				if (div && div.id != "console-blocks-tip") {
+					div.style.boxShadow = "";
+				}
+			}
+		}
 	}
 
 	/**
@@ -114,6 +133,9 @@
 	function $e_removeBreakpoint(line) {
 		delete $_eseecode.session.breakpoints[line];
 		delete $_eseecode.session.breakpointsStatus[line];
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+			ace.edit("console-write").session.clearBreakpoint(line-1);
+		}
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
 		div.parentNode.removeChild(div);
 	}
@@ -145,7 +167,6 @@
 		var line;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			line = ace.edit("console-write").selection.getCursor()["row"]+1;
-			//TODO: ace.edit("console-write").session.setBreakpoint(line-1,"line"+line+" console-write-breakpoint")
 		} else {
 			var target = event.target;
 			while (target !== null && target.id.match(/^div-[0-9]+$/) === null) {
@@ -306,7 +327,7 @@
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseover=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Value")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br /><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseout=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Value")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br /><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
 			var divAnalyzer = document.getElementById("dialog-debug-analyzer-breakpoints");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
@@ -332,6 +353,17 @@
 				document.getElementById("dialog-debug-analyzer-line"+line).style.fontWeight = "bold";
 			}
 		}
+		if ($_eseecode.session.breakpointsStatus[line]) {
+			if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+				ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
+			} else {
+				var consoleDiv = document.getElementById("console-blocks");
+				var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
+				if (div && div.id != "console-blocks-tip") {
+					div.style.boxShadow = "5px 5px 5px #FF0000";
+				}
+			}
+		}
 	}
 
 	/**
@@ -353,6 +385,25 @@
 				$_eseecode.session.breakpointsStatus[line] = $_eseecode.session.breakpointsStatus[oldLine];
 				delete $_eseecode.session.breakpoints[oldLine];
 				delete $_eseecode.session.breakpointsStatus[oldLine];
+				if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+					if ($_eseecode.session.breakpointsStatus[line]) {
+						ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
+					}
+					ace.edit("console-write").session.clearBreakpoint(oldLine-1);
+				} else {
+					var consoleDiv = document.getElementById("console-blocks");
+					var div;
+					if ($_eseecode.session.breakpointsStatus[line]) {
+						div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
+						if (div && div.id != "console-blocks-tip") {
+							div.style.boxShadow = "5px 5px 5px #FF0000";
+						}
+					}
+					div = $e_searchBlockByPosition(consoleDiv.firstChild,oldLine,1).element;
+					if (div && div.id != "console-blocks-tip") {
+						div.style.boxShadow = "";
+					}
+				}
 				var div = document.getElementById("dialog-debug-analyzer-line"+oldLine);
 				if (div) {
 					div.parentNode.removeChild(div);
@@ -484,18 +535,24 @@
 		for (var breakpointLine in $_eseecode.session.breakpoints) {
 			breakpointLine = parseInt(breakpointLine);
 			if (event.data.action === "insertText") {
-				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+				if (event.data.range.start.row === breakpointLine-1 && event.data.range.start.row !== event.data.range.end.row) {
 					// The breakpoint line has been split, update breakpoint
-					$e_updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
-				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+					if (!ace.edit("console-write").session.getLine(breakpointLine-1).replace(/\s/g, '').length) {
+						// Only move breakpoint if we are moving the instruction line down, not if we are splitting it
+						$e_updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
+					}
+				} else if (event.data.range.start.row < breakpointLine-1 && event.data.range.start.row !== event.data.range.end.row) {
 					// A line was added before the breakpoint, update breakpoint
 					$e_updateBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
 				}
 			} else if (event.data.action === "removeText" || event.data.action === "removeLines") {
-				if (event.data.range.start.row === breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+				if (event.data.range.start.row === breakpointLine-1 && event.data.range.start.row !== event.data.range.end.row) {
 					// The breakpoint line has been merged, update breakpoint
 					$e_updateBreakpoint(breakpointLine, event.data.range.end.row);
-				} else if (event.data.range.start.row < breakpointLine && event.data.range.start.row !== event.data.range.end.row) {
+				} else if (event.data.range.start.row < breakpointLine-1 && event.data.range.end.row > breakpointLine-1) {
+					// Several lines where removed and this breakpoint was in the middle of those
+					$e_removeBreakpoint(breakpointLine);
+				} else if (event.data.range.start.row < breakpointLine-1 && event.data.range.start.row !== event.data.range.end.row) {
 					// A line was removed before the breakpoint, update breakpoint
 					$e_updateBreakpoint(breakpointLine, breakpointLine - (event.data.range.end.row - event.data.range.start.row));
 				}
@@ -546,6 +603,14 @@
 	 * @example $e_resetBreakpoints()
 	 */
 	function $e_resetBreakpoints() {
+		ace.edit("console-write").session.clearBreakpoints();
+		for (var breakpoint in $_eseecode.session.breakpoints) {
+			var consoleDiv = document.getElementById("console-blocks");
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
+			if (div && div.id != "console-blocks-tip") {
+				div.style.boxShadow = "";
+			}
+		}
 		$_eseecode.session.breakpoints = {};
 	}
 

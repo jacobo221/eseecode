@@ -40,6 +40,7 @@
  *   Added real watchpoints
  *   Breakpoints can now be enabled/disabled
  *   New tracing platform allows to keep random/interactive values from one breakpoint/step to another
+ *   Breakpoints in Code view and blocks modes are now marked
  *   Began work on better execution error messages
  *   Stepping moved from setup window to debug window
  * Embedding:
@@ -64,6 +65,8 @@
  * Fix: repeatCount in nested repeat()s is consistent uppon entry/exit of each loop
  * Fix: clicking a block to setup but changing nothing no longer takes one slot in the undo stack
  * Fix: moving a block downward, then undoing and then redoing no longer misplaces the block
+ * Fix: unhilighting breakpoints in Code view when moving mouse out
+ * Fix: several fixes in breakpoint position handing in write mode and when converting to blocks mode
 
 ## 2.0 (2015-01-29)
 

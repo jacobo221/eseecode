@@ -359,9 +359,10 @@
 	 * @param {!HTMLElement} blockDiv Block to add
 	 * @param {Boolean|Number} position Position to add the block at. If set to true it adds it at the end
 	 * @param {HTMLElement} [parent] If set, blockDiv must be a child of parent. In this case position counts from the parent's position
+	 * @param {Boolean] [isConverting] Set to true if the block is being added as part of a level conversion operation
 	 * @example $e_addBlock(block, true)
 	 */
-	function $e_addBlock(blockDiv, position, parent) {
+	function $e_addBlock(blockDiv, position, parent, isConverting) {
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
@@ -396,7 +397,9 @@
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
 		$e_paintBlock(blockDiv);
-		$e_updateBlocksBreakpoints(blockDiv, "addBlock");
+		if (!isConverting) {
+			$e_updateBlocksBreakpoints(blockDiv, "addBlock");
+		}
 	}
 
 	/**

@@ -29,7 +29,7 @@
 			document.body.appendChild(div); // We need it to exist in order to draw the end div background
 		}
 		$e_createBlock(level,div,instructionSetId);
-		$e_addBlock(div,true,parentDiv);
+		$e_addBlock(div,true,parentDiv,true);
 		return div;
 	}
 

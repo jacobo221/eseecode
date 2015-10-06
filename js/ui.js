@@ -352,6 +352,7 @@
 					}
 					$e_resetUndoWrite();
 				}
+				ace.edit("console-write").session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakponts
 			} else if ($_eseecode.modes.console[id].div == "blocks") {
 				$e_blocks2blocks(level);
 			}
@@ -1195,7 +1196,9 @@
 					style = "#"+ r.toString()+g.toString()+b.toString();
 				}
 				div.style.border = "2px solid "+style;
-				div.style.boxShadow = "5px 5px 5px "+style;
+				if (reason != "breakpoint") {
+					div.style.boxShadow = "5px 5px 5px "+style;
+				}
 				$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+$e_blockSize(level,consoleDiv.firstChild).height/2);
 			}
 		} else if (mode == "write") {
@@ -1220,15 +1223,18 @@
 	 * @example $e_unhighlight()
 	 */
 	function $e_unhighlight() {
-		if (!$_eseecode.session.highlight.lineNumber) {
+		var line = $_eseecode.session.highlight.lineNumber;
+		if (!line) {
 			return;
 		}
 		var consoleDiv = document.getElementById("console-blocks");
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id !== "console-blocks-tip") {
-			var div = $e_searchBlockByPosition(consoleDiv.firstChild,$_eseecode.session.highlight.lineNumber,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
 			if (div) { // by the time we have to unhighlight it the div might not exist anymore
 				div.style.border = ""; // accesses the canvas
-				div.style.boxShadow = ""
+				if (!$_eseecode.session.breakpointsStatus[line]) {
+					div.style.boxShadow = "";
+				}
 			}
 		}
 		var markers = ace.edit("console-write").session.getMarkers(false);
