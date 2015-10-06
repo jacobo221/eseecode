@@ -1179,17 +1179,14 @@
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
-		if (levels == 0) {
+		if (levels < 1) {
 			return;
 		}
 		var layer = $_eseecode.currentCanvas;
-		if ($_eseecode.canvasArray["bottom"] == layer.layerUnder) {
-			$_eseecode.canvasArray["bottom"] = layer;
-		}
-		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant pull() calls
+		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
 			$_eseecode.canvasArray["top"] = layer.layerUnder;
 		}
-		while (layer.layerUnder && levels != 0) { // this works also for levels=-1 meaning push to background
+		while (layer.layerUnder && levels > 0) {
 			var oldLayerOver = layer.layerOver;
 			var oldLayerUnder = layer.layerUnder;
 			var oldlayerZIndex = layer.div.style.zIndex;
@@ -1207,6 +1204,9 @@
 			oldLayerUnder.layerUnder = layer;
 			levels--;
 		}
+		if (!layer.layerUnder) {
+			$_eseecode.canvasArray["bottom"] = layer;
+		}
 	}
 
 	/**
@@ -1221,17 +1221,14 @@
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
-		if (levels == 0) {
+		if (levels < 1) {
 			return;
 		}
 		var layer = $_eseecode.currentCanvas;
 		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
 			$_eseecode.canvasArray["bottom"] = layer.layerOver;
 		}
-		if ($_eseecode.canvasArray["top"].layerUnder == layer) {
-			$_eseecode.canvasArray["top"] = layer;
-		}
-		while (layer.layerOver && levels != 0) { // this works also for levels=-1 meaning push to background
+		while (layer.layerOver && levels > 0) {
 			var oldLayerOver = layer.layerOver;
 			var oldLayerUnder = layer.layerUnder;
 			var oldlayerZIndex = layer.div.style.zIndex;
@@ -1248,6 +1245,9 @@
 			oldLayerOver.layerOver = layer;
 			oldLayerOver.layerUnder = oldLayerUnder;
 			levels--;
+		}
+		if (!layer.layerOver == layer) {
+			$_eseecode.canvasArray["top"] = layer;
 		}
 	}
 
