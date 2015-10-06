@@ -1,4 +1,4 @@
-## 2.1 (ongoing work)
+## 2.1 (2015-10-06)
 
  *Milestone reached: Better design to make it easy to be used by teachers and students*
  * This is a major update with so many new features we had to split them into categories to list them all
