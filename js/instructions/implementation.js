@@ -8,10 +8,12 @@
 	 * @param {String} [text] Text to show in the button
 	 * @param {Number} [posx] X coordinate to place the button in the window
 	 * @param {Number} [posy] Y coordinate to place the button in the window
+	 * @param {Number} [width] Width of the button
+	 * @param {Number} [height] Height of the button
 	 * @param {String} [action] Code to run on button click
 	 * @example windowButtonEdit("b2", "turn", 170, 90, "turnRight(15)")
 	 */
-	function windowButtonEdit(id, text, posx, posy, action) {
+	function windowButtonEdit(id, text, posx, posy, action, width, height) {
 		var id = "element-"+id;
 		var button = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
@@ -25,6 +27,12 @@
 		}
 		if (posy) {
 			button.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
+		}
+		if (width) {
+			button.style.width = width+"px";
+		}
+		if (height) {
+			button.style.height = height+"px";
 		}
 		if (action) {
 			var oldButton = button;
@@ -215,16 +223,18 @@
 	 * @param {String} [text] Text to show in the button
 	 * @param {Number} [posx] X coordinate to place the button in the window
 	 * @param {Number} [posy] Y coordinate to place the button in the window
+	 * @param {Number} [width] Width of the button
+	 * @param {Number} [height] Height of the button
 	 * @param {String} [action] Code to run on button click
 	 * @example windowButtonCreate(1, "b2", "turn", 170, 90, "turnRight(15)")
 	 */
-	function windowButtonCreate(windowId, id, text, posx, posy, action) {
+	function windowButtonCreate(windowId, id, text, posx, posy, action, width, height) {
 		var window = $e_getWindow(windowId);
   		var button = document.createElement("input");
 		button.id = "element-"+id;
 		button.type = "button";
 		window.appendChild(button);
-		windowButtonEdit(id, text, posx, posy, action);
+		windowButtonEdit(id, text, posx, posy, action, width, height);
 	}
 
 	/**
@@ -327,10 +337,17 @@
 	 * Hides the current window
 	 * @since 1.0
 	 * @public
-	 * @example windowHide()
+	 * @param {Number} [id] Window id
+	 * @example windowHide(id)
 	 */
-	function windowHide() {
-		$_eseecode.currentWindow.style.display = "none";
+	function windowHide(id) {
+		var theWindow;
+		if (id === undefined) {
+			theWindow = $_eseecode.currentWindow;
+		} else {
+			theWindow = $_eseecode.windowsArray[id];
+		}
+		theWindow.style.display = "none";
 	}
 
 	/**
@@ -384,10 +401,15 @@
 	 * Shows the current window
 	 * @since 1.0
 	 * @public
+	 * @param {Number} [id] Window id
 	 * @example windowShow()
 	 */
-	function windowShow() {
-		$e_windowSwitch();
+	function windowShow(id) {
+		if (id === undefined) {
+			$e_windowSwitch();
+		} else {
+			$e_windowSwitch(id);
+		}
 	}
 
 	/**
@@ -524,7 +546,7 @@
 	}
 
 	/**
-	 * Rotates the current layer
+	 * Rotates the current layer right
 	 * Any part of the image left outside the whiteboard will be lost
 	 * @since 1.0
 	 * @public
@@ -563,6 +585,16 @@
 		clean();
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
+
+	/**
+	 * Rotates the current layer left
+	 * Any part of the image left outside the whiteboard will be lost
+	 * @since 1.0
+	 * @public
+	 * @param {Number} degrees Amount of degrees to rotate
+	 * @param {Number} [axis=0] 0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner
+	 * @example rotateRight(90)
+	 */
 	function rotateLeft(degrees, axis) {
 		rotateRight(-degrees, axis);
 	}
@@ -899,7 +931,7 @@
 	 * @public
 	 * @param {Number} radius Radius of the arc
 	 * @param {Number} degrees Amount of degrees to arc
-	 * @param {Number} [axis=0] 0 = arc around the guide, 1 = arc following the guide's position and angle and move the guide to the end of the arc
+	 * @param {Boolean} [axis=false] false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc
 	 * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
 	 * @example arc(50, 270)
 	 */
@@ -913,7 +945,7 @@
 		} else {
 			move = -1;
 		}
-		if (axis == 1) {
+		if (axis) {
 			startradians = ($_eseecode.currentCanvas.guide.angle+90*move)*Math.PI/180;	
 			posx = $_eseecode.currentCanvas.guide.x+radius*Math.cos(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
 			posy = $_eseecode.currentCanvas.guide.y+radius*Math.sin(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
@@ -932,7 +964,7 @@
 			$_eseecode.currentCanvas.context.closePath();
 		}
 
-		if (axis == 1) {
+		if (axis) {
 			var COx, COy; // vector from center to origin
 			COx = $_eseecode.currentCanvas.guide.x-posx;
 			COy = $_eseecode.currentCanvas.guide.y-posy;
@@ -1173,16 +1205,22 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to push the layer down
+	 * @param {Number} [id] Id of the layer to affect
 	 * @example push(3)
 	 */
-	function push(levels) {
+	function push(levels, id) {
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
 		if (levels < 1) {
 			return;
 		}
-		var layer = $_eseecode.currentCanvas;
+		var layer;
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
 		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
 			$_eseecode.canvasArray["top"] = layer.layerUnder;
 		}
@@ -1215,16 +1253,22 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to pull the layer up
+	 * @param {Number} [id] Id of the layer to affect
 	 * @example pull(3)
 	 */
-	function pull(levels) {
+	function pull(levels, id) {
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
 		if (levels < 1) {
 			return;
 		}
-		var layer = $_eseecode.currentCanvas;
+		var layer;
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
 		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
 			$_eseecode.canvasArray["bottom"] = layer.layerOver;
 		}

@@ -602,21 +602,19 @@
 				convertDiv.appendChild(element);
 				msgDiv.appendChild(convertDiv);
 			}
-			if (level === "level2") {
-				var msgTab = document.createElement("div");
-				msgTab.className = "msgBox-tabs";
-				msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
-				msgDiv.appendChild(msgTab);
-				var iconDiv = document.createElement("div");
-				iconDiv.id = "setupBlockIcon";
-				iconDiv.className = "block";
-				iconDiv.style.float = "left";
-				iconDiv.setAttribute("instructionSetId", instructionSetId);
-				var icon = document.createElement("canvas");
-				$e_paintBlock(iconDiv, false, false);
-				iconDiv.appendChild(icon);
-				msgDiv.appendChild(iconDiv);
-			}
+			var msgTab = document.createElement("div");
+			msgTab.className = "msgBox-tabs";
+			msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+			msgDiv.appendChild(msgTab);
+			var iconDiv = document.createElement("div");
+			iconDiv.id = "setupBlockIcon";
+			iconDiv.className = "block";
+			iconDiv.style.float = "left";
+			iconDiv.setAttribute("instructionSetId", instructionSetId);
+			var icon = document.createElement("canvas");
+			$e_paintBlock(iconDiv, false, false);
+			iconDiv.appendChild(icon);
+			msgDiv.appendChild(iconDiv);
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
 				var textDiv = document.createElement("div");
@@ -641,11 +639,9 @@
 				input.value = parameter.initial;
 				input.type = "text";
 				input.style.width = "100px";
-				if (level === "level2") {
-					var div = document.createElement("div");
-					div.id = input.id+"Visual";
-					textDiv.appendChild(div);
-				}
+				var div = document.createElement("div");
+				div.id = input.id+"Visual";
+				textDiv.appendChild(div);
 				textDiv.appendChild(input);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id+"Default";
@@ -661,7 +657,9 @@
 			msgDiv.appendChild(input);
 			$e_msgBox(msgDiv, {acceptAction:$e_setupBlockAccept,cancelAction:$e_setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
 			if (level === "level2") {
-				$e_setupBlockVisual("Basic", instruction.parameters);
+				$e_setupBlockVisual(true, instruction.parameters);
+			} else {
+				$e_setupBlockVisual(false, instruction.parameters);
 			}
 		} else {
 			if ($_eseecode.session.blocksUndo[$_eseecode.session.blocksUndo[0]+1].fromDiv) { // Check this is a block setup, not a block add
@@ -680,10 +678,10 @@
 	 */
 	function $e_setupBlockVisual(visualMode) {
 		var iconDiv = document.getElementById("setupBlockIcon");
-		if (!visualMode) {
-			iconDiv.style.display = "none";
-		} else {
+		if (visualMode) {
 			iconDiv.style.display = "block";
+		} else {
+			iconDiv.style.display = "none";
 		}
 		var updateIcon = function() {		
 			iconDiv.innerHTML = "";	
@@ -714,11 +712,11 @@
 			var input = document.getElementById(parameterInputId);
 			var div = document.getElementById(parameterInputId+"Visual");
 			div.innerHTML = "";
-			if (!visualMode) {
+			if (visualMode) {
+				input.style.display = "none";
+			} else {
 				input.style.display = "block";
 				continue;
-			} else {
-				input.style.display = "none";
 			}
 			var defaultValue = input.value;
 			var visualTypeSupportedByBrowser = false;
