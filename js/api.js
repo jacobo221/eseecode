@@ -22,10 +22,11 @@
 	 * Loads code into the console
 	 * @public
 	 * @param {String} code Code to upload
-	 * @param {Boolean} [preload] If true, runs code and stores it to be run before every execution of user code
+	 * @param {Boolean} [noRun] If true, it doesn't run the code yet. Also, if preload is true, only runs the precode when user presses run
+	 * @param {Boolean} [preload] If true, stores it to be run before every execution of user code. By default it runs immediately after
 	 * @example API_uploadCode("repeat(4){forward(100)}",false)
 	 */
-	function API_uploadCode(code,preload) {
+	function API_uploadCode(code,noRun,preload) {
 		if (!code) {
 			return;
 		}
@@ -48,7 +49,7 @@
 		}
 		if (preload === true) {
 			$_eseecode.execution.precode.code = code;
-			$e_execute();
+			$_eseecode.execution.precode.standby = noRun;
 		} else {
 				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
 		        if (mode == "blocks") {
@@ -57,6 +58,9 @@
 			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
 		        }
 		        $e_resetCanvas();
+		}
+		if (!noRun) {
+			$e_execute();
 		}
 	}
 

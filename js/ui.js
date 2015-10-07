@@ -1232,7 +1232,7 @@
 			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
 			if (div) { // by the time we have to unhighlight it the div might not exist anymore
 				div.style.border = ""; // accesses the canvas
-				if (!$_eseecode.session.breakpointsStatus[line]) {
+				if (!$_eseecode.session.breakpoints[line] || !$_eseecode.session.breakpoints[line].status) {
 					div.style.boxShadow = "";
 				}
 			}
@@ -2181,6 +2181,7 @@
 		$e_resetCanvas();
 		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
 		$e_endExecution();
+		$e_initProgramCounter();
 	}
 
 	/**
@@ -2220,7 +2221,7 @@
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
 		document.getElementById("dialog-tabs-window").style.display = "none";
-		if (!noPrecode) {
+		if (!noPrecode && !$_eseecode.execution.precode.standby) {
 			$e_execute("disabled", null, true);
 		}
 	}

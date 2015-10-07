@@ -59,7 +59,7 @@
 	 * @example $e_toggleWatchpoint("num", this)
 	 */
 	function $e_toggleWatchpoint(watch, element) {
-		$_eseecode.session.watchpointsStatus[watch] = element.checked;
+		$_eseecode.session.watchpoints[watch].status = element.checked;
 	}
 
 	/**
@@ -70,9 +70,9 @@
 	 * @example $e_toggleBreakpoint(12, this)
 	 */
 	function $e_toggleBreakpoint(line, element) {
-		$_eseecode.session.breakpointsStatus[line] = element.checked;
+		$_eseecode.session.breakpoints[line].status = element.checked;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
-			if ($_eseecode.session.breakpointsStatus[line]) {
+			if ($_eseecode.session.breakpoints[line].status) {
 				ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
 			} else {
 				ace.edit("console-write").session.clearBreakpoint(line-1);
@@ -80,7 +80,7 @@
 		} else {
 			var consoleDiv = document.getElementById("console-blocks");
 			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
-			if ($_eseecode.session.breakpointsStatus[line]) {
+			if ($_eseecode.session.breakpoints[line].status) {
 				if (div && div.id != "console-blocks-tip") {
 					div.style.boxShadow = "5px 5px 5px #FF0000";
 				}
@@ -119,7 +119,6 @@
 	 */
 	function $e_removeWatchpoint(watch) {
 		delete $_eseecode.session.watchpoints[watch];
-		delete $_eseecode.session.watchpointsStatus[watch];
 		var div = document.getElementById("dialog-debug-analyzer-watch-"+watch);
 		div.parentNode.removeChild(div);
 	}
@@ -132,7 +131,6 @@
 	 */
 	function $e_removeBreakpoint(line) {
 		delete $_eseecode.session.breakpoints[line];
-		delete $_eseecode.session.breakpointsStatus[line];
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			ace.edit("console-write").session.clearBreakpoint(line-1);
 		}
@@ -273,12 +271,11 @@
 		if (!watch) {
 			$e_addWatchpointEventStart();
 		} else if (watch !== null && !document.getElementById("dialog-debug-analyzer-watch-"+watch)) {
-			if ($_eseecode.session.watchpointsStatus[watch] === undefined) {
-				$_eseecode.session.watchpoints[watch] = undefined;
-				$_eseecode.session.watchpointsStatus[watch] = true;
+			if ($_eseecode.session.watchpoints[watch] === undefined) {
+				$_eseecode.session.watchpoints[watch] = { value: undefined, status: true};
 			}
-			var watchObject = $e_analyzeVariable($_eseecode.session.watchpoints[watch]);
-			var watchText = "<input type=\"checkbox\" onchange=\"$e_toggleWatchpoint(\'"+watch+"\', this)\" "+($_eseecode.session.watchpointsStatus[watch]?"checked":"")+" />"+watch+": ";
+			var watchObject = $e_analyzeVariable($_eseecode.session.watchpoints[watch].value);
+			var watchText = "<input type=\"checkbox\" onchange=\"$e_toggleWatchpoint(\'"+watch+"\', this)\" "+($_eseecode.session.watchpoints[watch].status?"checked":"")+" />"+watch+": ";
 			watchText += watchObject.text+" <span style=\"font-size:smaller;\">["+watchObject.type+"]</span>";
 			watchText += "<span class=\"dialog-debug-analyzer-watch-trash link\" onclick=\"$e_removeWatchpoint('"+watch+"')\">("+_("Delete")+")</span></div>";
 			var div = document.createElement("div");
@@ -321,13 +318,12 @@
 			$e_addBreakpointEventStart();
 		} else if (!document.getElementById("dialog-debug-analyzer-line"+line)) {
 			if ($_eseecode.session.breakpoints[line] === undefined) {
-				$_eseecode.session.breakpoints[line] = {};
-				$_eseecode.session.breakpointsStatus[line] = true;
+				$_eseecode.session.breakpoints[line] = { watches: {}, status: true, count: 0};
 			}
 			var div = document.createElement("div");
 			div.id = "dialog-debug-analyzer-line"+line;
 			div.className = "dialog-debug-analyzer-breakpoint";
-			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpointsStatus[line]?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseout=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Value")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br /><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
+			div.innerHTML = "<input type=\"checkbox\" onchange=\"$e_toggleBreakpoint("+line+", this)\" "+($_eseecode.session.breakpoints[line].status?"checked":"")+" /><span class=\"link\" onclick=\"$e_updateBreakpoint("+line+")\" onmouseover=\"$e_highlight("+line+",'breakpoint')\" onmouseout=\"$e_unhighlight()\">"+_("Line")+" "+line+"</span>: <input type=\"button\" value=\"+ "+_("Value")+"\" onclick=\"$e_addBreakpointWatch("+line+")\" /> <span id=\"dialog-debug-analyzer-line"+line+"-count\">"+_("Count")+": "+$_eseecode.session.breakpoints[line].count+"</span><span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpoint("+line+")\">("+_("Delete")+")</span><br /><div id=\"dialog-debug-analyzer-line"+line+"-watches\"></div>";
 			var divAnalyzer = document.getElementById("dialog-debug-analyzer-breakpoints");
 			if (divAnalyzer.hasChildNodes()) {
 				var child = divAnalyzer.firstChild;
@@ -352,15 +348,15 @@
 			if ($_eseecode.session.highlight.lineNumber == line) {
 				document.getElementById("dialog-debug-analyzer-line"+line).style.fontWeight = "bold";
 			}
-		}
-		if ($_eseecode.session.breakpointsStatus[line]) {
-			if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
-				ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
-			} else {
-				var consoleDiv = document.getElementById("console-blocks");
-				var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
-				if (div && div.id != "console-blocks-tip") {
-					div.style.boxShadow = "5px 5px 5px #FF0000";
+			if ($_eseecode.session.breakpoints[line].status) {
+				if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
+					ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
+				} else {
+					var consoleDiv = document.getElementById("console-blocks");
+					var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
+					if (div && div.id != "console-blocks-tip") {
+						div.style.boxShadow = "5px 5px 5px #FF0000";
+					}
 				}
 			}
 		}
@@ -382,18 +378,16 @@
 					return;
 				}
 				$_eseecode.session.breakpoints[line] = $_eseecode.session.breakpoints[oldLine];
-				$_eseecode.session.breakpointsStatus[line] = $_eseecode.session.breakpointsStatus[oldLine];
 				delete $_eseecode.session.breakpoints[oldLine];
-				delete $_eseecode.session.breakpointsStatus[oldLine];
 				if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
-					if ($_eseecode.session.breakpointsStatus[line]) {
+					if ($_eseecode.session.breakpoints[line].status) {
 						ace.edit("console-write").session.setBreakpoint(line-1,"ace-breakpoint");
 					}
 					ace.edit("console-write").session.clearBreakpoint(oldLine-1);
 				} else {
 					var consoleDiv = document.getElementById("console-blocks");
 					var div;
-					if ($_eseecode.session.breakpointsStatus[line]) {
+					if ($_eseecode.session.breakpoints[line].status) {
 						div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
 						if (div && div.id != "console-blocks-tip") {
 							div.style.boxShadow = "5px 5px 5px #FF0000";
@@ -410,7 +404,7 @@
 				}
 			}
 			$e_addBreakpoint(line);
-			for (var watch in $_eseecode.session.breakpoints[line]) {
+			for (var watch in $_eseecode.session.breakpoints[line].watches) {
 				$e_addBreakpointWatch(line, watch);
 			}
 		}
@@ -457,11 +451,11 @@
 	 */
 	function $e_addBreakpointWatch2(line, watch) {
 		if (watch !== null && !document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch)) {
-			if ($_eseecode.session.breakpoints[line][watch] === undefined) {
+			if ($_eseecode.session.breakpoints[line].watches[watch] === undefined) {
 				// This looks stupid but what we are doing is creating the 'watch' key without altering its 'undefined' value if it already existed
-				$_eseecode.session.breakpoints[line][watch] = undefined;
+				$_eseecode.session.breakpoints[line].watches[watch] = undefined;
 			}
-			var watchObject = $e_analyzeVariable($_eseecode.session.breakpoints[line][watch]);
+			var watchObject = $e_analyzeVariable($_eseecode.session.breakpoints[line].watches[watch]);
 			var watchText = "<div id=\"dialog-debug-analyzer-line"+line+"-"+watch+"\">"+watch+": ";
 			watchText += watchObject.text+" <span style=\"font-size:smaller;\">["+watchObject.type+"]</span>";
 			watchText += "<span class=\"dialog-debug-analyzer-breakpoint-trash link\" onclick=\"$e_removeBreakpointWatch("+line+",'"+watch+"')\">("+_("Delete")+")</span></div>";
@@ -477,7 +471,7 @@
 	 * @example $e_removeBreakpointWatch(12, "count")
 	 */
 	function $e_removeBreakpointWatch(line, watch) {
-		delete $_eseecode.session.breakpoints[line][watch];
+		delete $_eseecode.session.breakpoints[line].watches[watch];
 		var div = document.getElementById("dialog-debug-analyzer-line"+line+"-"+watch);
 		div.parentNode.removeChild(div);
 	}
@@ -592,7 +586,7 @@
 			$_eseecode.session.watchpoints = {};
 		} else {
 			for (var watch in $_eseecode.session.watchpoints) {
-				$_eseecode.session.watchpoints[watch] = undefined;
+				$_eseecode.session.watchpoints[watch].value = undefined;
 			}
 		}
 	}
@@ -621,8 +615,8 @@
 	 */
 	function $e_resetBreakpointWatches() {
 		for (var breakpoint in $_eseecode.session.breakpoints) {
-			for (var watch in $_eseecode.session.breakpoints[breakpoint]) {
-				$_eseecode.session.breakpoints[breakpoint][watch] = undefined;
+			for (var watch in $_eseecode.session.breakpoints[breakpoint].watches) {
+				$_eseecode.session.breakpoints[breakpoint].watches[watch] = undefined;
 			}
 		}
 	}

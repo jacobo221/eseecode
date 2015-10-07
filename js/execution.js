@@ -58,22 +58,26 @@
 			var watchpointTriggered = false;
 			for (var i=0; i < $_eseecode.execution.watchpointsChanged.length && !watchpointTriggered; i++) {
 				var watch = $_eseecode.execution.watchpointsChanged[i];
-				if ($_eseecode.session.watchpointsStatus[watch]) {
+				if ($_eseecode.session.watchpoints[watch].status) {
 					watchpointTriggered = true;
 				}
 			}
 			if (watchpointTriggered) {
 				$_eseecode.execution.breakpointCounter++;
 				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+					$_eseecode.execution.breakpointCounterLimit++;
 					throw "executionWatchpointed";
 				}
 			}
 		}
-		if ($_eseecode.session.breakpoints[lineNumber] && $_eseecode.session.breakpointsStatus[lineNumber]) {
-			$_eseecode.execution.breakpointCounter++;
-			if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
-				$_eseecode.execution.breakpointCounterLimit++;
-				throw "executionBreakpointed";
+		if ($_eseecode.session.breakpoints[lineNumber]) {
+			$_eseecode.session.breakpoints[lineNumber].count++;
+			if ($_eseecode.session.breakpoints[lineNumber].status) {
+				$_eseecode.execution.breakpointCounter++;
+				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+					$_eseecode.execution.breakpointCounterLimit++;
+					throw "executionBreakpointed";
+				}
 			}
 		}
 		if (executionTime > $_eseecode.execution.endLimit) {
@@ -104,16 +108,16 @@
 	/**
 	 * Resets and sets up internal configuration for a new code execution
 	 * @private
-	 * @param {Boolean|String} [resetStepLimit] true = restart the stepping, false = update the stepping, "disabled" = ignore the stepping
+	 * @param {Boolean|String} [disableStepping] true = ignore the stepping
 	 * @example $e_initProgramCounter()
 	 */
-	function $e_initProgramCounter(resetStepLimit) {
+	function $e_initProgramCounter(disableStepping) {
 		if ($_eseecode.execution.precode.running) {
 			// Precode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
 		var withStep = $_eseecode.execution.stepped;
-		if (resetStepLimit === "disabled") {
+		if (disableStepping === "disabled") {
 			withStep = false;
 		}
 		$_eseecode.execution.startTime = new Date().getTime();
@@ -124,13 +128,8 @@
 			$e_initSetup();
 		}
 		$_eseecode.execution.endLimit = $_eseecode.execution.startTime+time*1000;
-		if (resetStepLimit) {
-			$_eseecode.execution.programCounterLimit = 0;
-			$_eseecode.execution.breakpointCounterLimit = 1;
-			$e_executionTraceReset();
-		}			
 		if (withStep) {
-			if (!resetStepLimit) {
+			if (!disableStepping) {
 				var step = $_eseecode.execution.step;
 				if (step < 1) {
 					step = 1;
@@ -142,6 +141,9 @@
 		}
 		$_eseecode.execution.programCounter = 0;
 		$_eseecode.execution.breakpointCounter = 0;
+		for (key in $_eseecode.session.breakpoints) {
+			$_eseecode.session.breakpoints[key].count = 0;
+		}
 		$e_executionTraceReset("randomColor");
 		$e_executionTraceReset("randomNumber");
 	}
@@ -284,7 +286,7 @@
 				jsCode += "$_eseecode.execution.precode.running=true;"+$e_code2run($_eseecode.execution.precode.code)+";$_eseecode.execution.precode.running=false;\n";
 			}
 			if (!justPrecode) {
-				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'"disabled"':withStep)+");"+$e_code2run(code);
+				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+$e_code2run(code);
 			}
 		} catch (exception) {
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
@@ -305,12 +307,10 @@
 			$e_updateSandboxChanges(oldWindowProperties,newWindowProperties);
 		}
 		document.getElementById("eseecode").removeChild(script);
-		/*
 		// if debug is open refresh it
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebug();
 		}
-		*/
 	}
 
 	/**
@@ -407,7 +407,9 @@
 	function $e_endExecution() {
 		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
 		document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
-		$e_initProgramCounter(true);
+		$_eseecode.execution.programCounter = 0;
+		$_eseecode.execution.programCounterLimit = 0;
+		$_eseecode.execution.breakpointCounterLimit = 1;
+		$e_executionTraceReset();
 		$e_unhighlight();
-		$e_resetDebug();
 	}
