@@ -187,5 +187,7 @@
 	 */
 	$_eseecode.instructions.variables = [
 		{ name: "repeatCount", value: undefined },
-		{ name: "pi", value: Math.PI }
+		{ name: "Pi", value: Math.PI },
+		{ name: "Phi", value: (1+Math.sqrt(5))/2 },
+		{ name: "E", value: Math.E }
 	];
