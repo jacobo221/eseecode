@@ -610,8 +610,8 @@
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
 		div = document.getElementById("console-blocks");
-		width = div.parentNode.clientWidth; // Use parent in case it had display:none at this moment
-		height = div.parentNode.clientHeight;
+		width = div.parentNode.offsetWidth; // Use parent in case it had display:none at this moment
+		height = div.parentNode.offsetHeight;
 		canvas.width = width;
 		canvas.height = height;
 		var rBackground ="D5";

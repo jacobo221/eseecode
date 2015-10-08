@@ -44,25 +44,6 @@
 	.maximized #console-buttons {
 		border-bottom-left-radius: 10px !important;
 	}
-	.tab-button {
-		height: 18px;
-		margin: 1px auto 1px auto;
-		padding: 2px 3px 0px 3px;
-		border: 1px solid #FFFFFF;
-		background-color: #456789;
-		color: #FFFFFF;
-		text-align: center;
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
-		border-bottom-left-radius: 5px;
-		border-bottom-right-radius: 5px;
-		text-decoration: none;
-		cursor: default;
-	}
-	.tab-button:hover {
-		background-color: #789ABC;
-		color: #FFFFFF;
-	}
 	.msgBox {
 		position: relative;
 		margin: auto;
@@ -153,6 +134,29 @@
 	.tab-active a {
 		background-color: inherit;
 		color: #123456;
+	}
+	.tab-button {
+		height: 20px;
+		display: inline-block;
+		padding: 0px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		text-decoration: none;
+		cursor: default;
+	}
+	.tab-button:hover {
+		background-color: #789ABC;
+		color: #FFFFFF;
+	}
+	.tab-buttons {
+		text-align: center;
+		padding: 0px 20px 0px 20px;
 	}
 	span.tab-title {
 		float: left;
@@ -398,7 +402,4 @@
 	#whiteboard div {
 		position: absolute;
 		border-radius: 10px;
-	}
-	#whiteboard-tabs {
-		text-align: center;
 	}
