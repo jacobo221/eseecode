@@ -104,7 +104,7 @@
 		{ name: "blank", category: "guide", show: ["level1"]},
 		{ name: "setBold", category: "guide", parameters: [{name: "bool", initial: true, type: "bool", tip: "Do you want the text to be bold?" }], tip: "Sets the bold property for future text", show: ["level2","level3","level4"] },
 		{ name: "unsetBold", category: "guide", parameters: [], tip: "Unsets the bold property for future text", show: ["level2","level3","level4"] },
-		{ name: "line", category: "guide", parameters: [{name: "destinationx", initial: 0, type: "number", tip: "Set X coordinate to go to"},{name: "destinationy", initial: 0, type: "number", tip: "Set Y coordinate to go to"}], tip: "Draws a line from current position to specified coordinates", show: ["level2","level3","level4"] },
+		{ name: "line", category: "guide", parameters: [{name: "destinationx", initial: 0, type: "number", minvalue: "minX", maxValue: "maxX", tip: "Set X coordinate to go to"},{name: "destinationy", initial: 0, type: "number", minvalue: "minY", maxValue: "maxY", tip: "Set Y coordinate to go to"}], tip: "Draws a line from current position to specified coordinates", show: ["level2","level3","level4"] },
 		{ name: "blank", category: "guide", show: ["level2"] },
 		{ name: "setFont", category: "guide", parameters: [{name: "font", initial: "\"Comic Sans MS\"", type: "font", tip: "Which font do you want to use?" }], tip: "Sets the font for future text", show: ["level2","level3","level4"] },
 		{ name: "unsetFont", category: "guide", parameters: [], tip: "Resets the font for future text", show: ["level2","level3","level4"] },
