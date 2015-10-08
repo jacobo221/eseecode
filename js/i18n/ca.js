@@ -386,5 +386,6 @@ $_eseecode.i18n.available.ca = {
 	"Set the font of the text": "Tipus de lletra del text",
 	"Which layer do you want to pull?\n(Leave blank to affect the current layer": "Quina capa vols estirar?\n(Deixa en blanc per estirar la capa actual)",
 	"Which layer do you want to push?\n(Leave blank to affect the current layer": "Quina capa vols emputxar?\n(Deixa en blanc per emputxar la capa actual)",
-	"Identifier of the window to affect\n(Leave blank to affect the current window)": "Identificador de la finestra a afectar\n(Deixa en blanc per afectar al finestra actual"
+	"Identifier of the window to affect\n(Leave blank to affect the current window)": "Identificador de la finestra a afectar\n(Deixa en blanc per afectar al finestra actual",
+	"Close": "Tancar"
 }

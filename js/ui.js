@@ -60,7 +60,12 @@
 	 * @example $e_downloadWhiteboardMsgBox()
 	 */
 	function $e_downloadWhiteboardMsgBox() {
-		$e_msgBox("<div style=\"text-align:center\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-animation\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(false)\">"+_("Download layers as animation")+"</a></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-grid\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(true)\">"+_("Download layers in a grid")+"</a></div></div>");
+		var msgBoxContent = "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
+		// If there is more than one layer offer to download animation/grid
+		if ($_eseecode.canvasArray["bottom"].layerOver) {
+			msgBoxContent += "<div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-animation\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(false)\">"+_("Download layers as animation")+"</a><div>"+_("Animation interval (in msecs)")+": <input id=\"setup-downloadLayers-interval\" type=\"number\" value=\"500\" min=\"0\" style=\"width:40px\" /></div></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-grid\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(true)\">"+_("Download layers in a grid")+"</a><div>"+_("Layers per row")+": <input id=\"setup-downloadLayers-columns\" type=\"number\" value=\"3\" min=\"1\" style=\"width:40px\" /></div></div>"
+		}
+		$e_msgBox(msgBoxContent,{noSubmit:true,cancelName:_("Close")});
 	}
 
 	/**
