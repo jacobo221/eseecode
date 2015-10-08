@@ -834,6 +834,40 @@
 		ctx.fill();
 		ctx.stroke();
 		ctx.closePath();
+		// Download whiteboard button
+		canvas = document.getElementById("whiteboard-tabs-download-button").firstChild;
+		ctx = canvas.getContext("2d");
+		width = canvas.width;
+		height = canvas.height;
+		var margin = 2;
+		ctx.fillStyle = "#000000";
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(margin,1*height/3);
+		ctx.lineTo(width-margin,1*height/3);
+		ctx.lineTo(width-margin,height-margin);
+		ctx.lineTo(margin,height-margin);
+		ctx.fill();
+		ctx.closePath();
+		ctx.beginPath();
+		ctx.moveTo(width/4,1*height/3);
+		ctx.lineTo(3*width/4,1*height/3);
+		ctx.lineTo(3*width/4-margin,margin);
+		ctx.lineTo(1*width/4+margin,margin);
+		ctx.fill();
+		ctx.closePath();
+		ctx.strokeStyle = "#FFFFFF";
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		ctx.arc(width/2, 2*height/3-margin, height/5, 0, 360*Math.PI/180, true);
+		ctx.lineTo(marginX,height/2);
+		ctx.stroke();
+		ctx.closePath();
+		ctx.beginPath();
+		ctx.moveTo(width-margin,1*height/3+margin);
+		ctx.lineTo(width-2*margin,1*height/3+margin);
+		ctx.stroke();
+		ctx.closePath();
 	}
 
 	/**

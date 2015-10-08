@@ -138,7 +138,7 @@
 		document.getElementById("setup-execute-time-title").innerHTML = _("Stop execution after")+" ";
 		document.getElementById("setup-execute-time").title = _("Number of seconds to run");
 		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");
-		document.getElementById("whiteboard-tabs-download-button").innerHTML = _("Download as an image");
+		document.getElementById("whiteboard-tabs-download-button").title = _("Download as an image");
 	}
 
 	/**
