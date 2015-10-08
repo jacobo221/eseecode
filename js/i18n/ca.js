@@ -59,7 +59,7 @@ $_eseecode.i18n.available.ca = {
 	"Download as an image": "Descarregar com una imatge",
 	"Download whiteboard image": "Descarregar la imatge de la pissarra",
 	"Download layers": "Descarregar les capes",
-	"Download layers as an animation": "Descarregar les capes com a animació",
+	"Download layers as animation": "Descarregar les capes com a animació",
 	"Download layers in a grid": "Descarregar les capes en una graella",
 	"Generating download file": "Generant arxiu de descàrrega",
 	"Made with %s": "Fet amb %s",

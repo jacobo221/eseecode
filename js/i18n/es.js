@@ -59,7 +59,7 @@ $_eseecode.i18n.available.es = {
 	"Download as an image": "Descargar como una imagen",
 	"Download whiteboard image": "Descargar la imagen de la pizarra",
 	"Download layers": "Descargar las capas",
-	"Download layers as an animation": "Descargar las capas como animación",
+	"Download layers as animation": "Descargar las capas como animación",
 	"Download layers in a grid": "Descargar las capas en una cuadrícula",
 	"Generating download file": "Generando archivo de descarga",
 	"Made with %s": "Hecho con %s",
