@@ -11,6 +11,7 @@
  *   Hide undo/redo buttons when the action isn't possible
  *   Moved download layers/canvas to whiteboard tabs space
  *   Added option to download layers in a grid
+ *   Added constants E and Phi, renamed pi to Pi
  *   Fix: Remove extra space in single line comments
 
 ## 2.1 (2015-10-06)
