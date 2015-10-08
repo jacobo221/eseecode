@@ -44,6 +44,26 @@
 	.maximized #console-buttons {
 		border-bottom-left-radius: 10px !important;
 	}
+	.tab-button {
+		height: 18px;
+		width: 160px;
+		margin: 2px auto 0px auto;
+		padding: 2px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+		text-decoration: none;
+		cursor: default;
+	}
+	.tab-button:hover {
+		background-color: #789ABC;
+		color: #FFFFFF;
+	}
 	.msgBox {
 		position: relative;
 		margin: auto;
@@ -349,6 +369,10 @@
 		width: 100%;
 		text-align: center;
 	}
+	#setup-downloadLayers-title {
+		font-weight: bold;
+		text-decoration: underline;
+	}
 	#title {
 	}
 	#title-logo {
@@ -375,7 +399,4 @@
 	#whiteboard div {
 		position: absolute;
 		border-radius: 10px;
-	}
-	#whiteboard-tabs {
-		visibility: hidden;
 	}

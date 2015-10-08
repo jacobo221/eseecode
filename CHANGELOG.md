@@ -7,6 +7,11 @@
  *   Build view now also shows visual setup, although by default it shows the advanced setup
  *   Added tips, initial, minValue, etc to all parameters in instructions
  *   Added a few new parameters to existing instructions
+ *   Hide execute and clear buttons in Touch view
+ *   Hide undo/redo buttons when the action isn't possible
+ *   Moved download layers/canvas to whiteboard tabs space
+ *   Added option to download layers in a grid
+ *   Fix: Remove extra space in single line comments
 
 ## 2.1 (2015-10-06)
 

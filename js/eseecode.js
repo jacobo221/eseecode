@@ -31,8 +31,8 @@
 				link: "https://gnu.org/licenses/gpl.html"
 			},
 			web: {
-				text: "eSeeCode.org",
-				link: "http://www.eseecode.org"
+				text: "eSeeCode.com",
+				link: "http://www.eseecode.com"
 			},
 		},
 		i18n: {

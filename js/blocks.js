@@ -256,6 +256,7 @@
 				$e_executeFromUI();
 			}
 		}
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -1398,6 +1399,6 @@
 	 * @example $e_resetUndoBlocks()
 	 */
 	function $e_resetUndoBlocks() {
-		$_eseecode.session.blocksUndo = [0, null];
+		$_eseecode.session.blocksUndo = [0];
 	}
 

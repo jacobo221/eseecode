@@ -32,9 +32,10 @@
 	/**
 	 * Downloads the layers as a file, called from the UI
 	 * @private
+	 * @param {Boolean} grid Set to true to download as a grid
 	 * @example $e_downloadLayersFromUI()
 	 */
-	function $e_downloadLayersFromUI() {
+	function $e_downloadLayersFromUI(grid) {
 		// Create one layer GIF to measure how long it takes
 		var start = new Date().getTime();
 		var encoder = new GIFEncoder();
@@ -47,62 +48,123 @@
 		var secondsPerLayer = (finish - start) / 1000;
 		var estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
 		if (estimatedTime >= 3) {
-			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers()\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
+			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers("+grid+")\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
 		} else {
-			$e_downloadLayers();
+			$e_downloadLayers(grid);
 		}
+	}
+
+	/**
+	 * Pops up a MsgBox to decide which whiteboard image to download
+	 * @private
+	 * @example $e_downloadWhiteboardMsgBox()
+	 */
+	function $e_downloadWhiteboardMsgBox() {
+		$e_msgBox("<div style=\"text-align:center\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-animation\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(false)\">"+_("Download layers as animation")+"</a></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-grid\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(true)\">"+_("Download layers in a grid")+"</a></div></div>");
 	}
 
 	/**
 	 * Links an A HTML element to an image containing all the layers
 	 * @private
-	 * @param {!HTMLElement} link HTML A element to add the link to
+	 * @param {Boolean} grid Set to true to download as a grid
 	 * @example $e_downloadLayers(document.body.createElement("a"))
 	 */
-	function $e_downloadLayers() {
+	function $e_downloadLayers(grid) {
 		var link = document.getElementById("downloadLayers-link");
 		if (!link) {
-			link = document.getElementById("setup-downloadLayers");
+			if (grid) {
+				link = document.getElementById("whiteboard-downloadLayers-grid");
+			} else {
+				link = document.getElementById("whiteboard-downloadLayers-animation");
+			}
 		}
-		var encoder = new GIFEncoder();
-		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
-		var interval = document.getElementById("setup-downloadLayers-interval").value;
-		if (!$e_isNumber(interval)) {
-			interval = 500;
+		var columns = document.getElementById("setup-downloadLayers-columns").value
+		if (columns < 1 || !$e_isNumber(columns)) {
+			columns = 1;
 		}
-		encoder.setDelay(interval); //go to next frame every n milliseconds 
-		encoder.start();
-
+		var imageBinary;
+		if (!grid) {
+			var encoder = new GIFEncoder();
+			encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
+			var interval = document.getElementById("setup-downloadLayers-interval").value;
+			if (!$e_isNumber(interval)) {
+				interval = 500;
+			}
+			encoder.setDelay(interval); //go to next frame every n milliseconds 
+			encoder.start();
+		}
 		var layer = $_eseecode.canvasArray["bottom"]; // We skip first frame which is the grid
 		var canvas = document.createElement('canvas');
-		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
-		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
+		if (!grid) {
+			canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
+			canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
+		} else {
+			var count = 0;
+			var currentLayer = $_eseecode.canvasArray["bottom"];
+			while (currentLayer) {
+				currentLayer = currentLayer.layerOver;
+				count++;
+			}
+			if (count < columns) {
+				canvas.width = $_eseecode.canvasArray["grid"].canvas.width*count;
+			} else {
+				canvas.width = $_eseecode.canvasArray["grid"].canvas.width*columns;
+			}
+			canvas.height = $_eseecode.canvasArray["grid"].canvas.height*(Math.floor((count-1)/columns)+1);
+		}
+		var whiteboardWidth = $_eseecode.canvasArray["grid"].canvas.width;
+		var whiteboardHeight = $_eseecode.canvasArray["grid"].canvas.height;
+		var count = 0;
 		var ctx = canvas.getContext("2d");
 		while (layer) {
+			var shiftX = 0, shiftY = 0;
+			if (grid) {
+				shiftX = whiteboardWidth*(count%columns);
+				shiftY = whiteboardHeight*Math.floor(count/columns);
+			}
 			ctx.fillStyle="#FFFFFF";
-			ctx.fillRect(0,0,canvas.width,canvas.height);
+			ctx.fillRect(shiftX,shiftY,whiteboardWidth,whiteboardHeight);
 			if (document.getElementById("setup-grid-enable").checked) {
-				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0); // draw grid
+				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,shiftX,shiftY); // draw grid
 			}
 			if (layer != $_eseecode.canvasArray["grid"]) {
-				ctx.drawImage(layer.canvas,0,0);
+				ctx.drawImage(layer.canvas,shiftX,shiftY);
 			}
 			if (document.getElementById("setup-guide-enable").checked) {
-				$e_drawGuide(ctx, layer.guide, layer.name);
+				$e_drawGuide(ctx, layer.guide, layer.name, shiftX, shiftY);
+			}
+			if (grid) {
+				ctx.strokeStyle="#000000";
+				ctx.moveTo(shiftX,shiftY);
+				ctx.lineTo(shiftX+whiteboardWidth,shiftY);
+				ctx.lineTo(shiftX+whiteboardWidth,whiteboardHeight+shiftY);
+				ctx.lineTo(whiteboardWidth,whiteboardHeight+shiftY);
+				ctx.lineTo(whiteboardWidth,shiftY);
+				ctx.stroke();
 			}
 			// Watermark
 			ctx.font = "20px Arial";
 			ctx.strokeStyle="#99AAAAAA";
-			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),canvas.width/4,canvas.height-20);
-			encoder.addFrame(ctx);
+			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),shiftX+whiteboardWidth/4,shiftY+whiteboardHeight-20);
+			if (!grid) {
+				encoder.addFrame(ctx);
+			}
 			layer = layer.layerOver;
+			count++;
 		}
-		encoder.finish();
-		var binary_gif = encoder.stream().getData();
-		var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
+		var extension;
+		if (!grid) {
+			encoder.finish();
+			imageBinary = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
+			extension = "gif"
+		} else {
+			imageBinary = canvas.toDataURL();
+			extension = "png"
+		}
+		var data_url = imageBinary;
 		link.href = data_url;
 		var d = new Date();
-		link.download = "layers-"+d.getTime()+".gif";
+		link.download = "layers-"+d.getTime()+"."+extension;
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -141,7 +203,7 @@
 			dialogColumn.style.display = "none";
 			iconMargin = 5;
 		}
-		$e_switchDialogMode();
+		$e_switchDialogMode($_eseecode.modes.console[0]);
 		ace.edit("console-write").resize();
 		// Console resize tab
 		var canvas = document.getElementById("console-tabs-resize").firstChild;
@@ -395,12 +457,23 @@
 		// if write mode, focus in the textarea. Do this after $e_switchDialogMode() in case the dialog tries to steal focus
 		if ($_eseecode.modes.console[id].div == "write") {
 			ace.edit("console-write").focus();
+			document.getElementById("console-tabs-resize").style.display = "block";
 		} else {
+			$e_resizeConsole(true);
+			document.getElementById("console-tabs-resize").style.display = "none";
 			$e_checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
 		}
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.changesInCode) {
 			$_eseecode.session.changesInCode = false;
 		}
+		if (level == "level1") {
+			document.getElementById("button-execute").style.display = "none";
+			document.getElementById("button-clear").style.display = "none";
+		} else {
+			document.getElementById("button-execute").style.display = "inline";
+			document.getElementById("button-clear").style.display = "inline";
+		}
+		$e_refreshUndoUI();
 		$e_highlight();
 	}
 
@@ -1014,9 +1087,17 @@
 	 * @param {Object} context Context object where to draw the guide
 	 * @param {Array} pos Coordinates of the guide
 	 * @param {Number} id Id of the layer
+	 * @param {Number} [shiftX=0] Shift X coordinates by this value
+	 * @param {Number} [shiftY=0] Shift Y coordinates by this value
 	 * @example $e_drawGuide(ctx, {x: 200, y: 200}, id)
 	 */
-	function $e_drawGuide(context, pos, id) {
+	function $e_drawGuide(context, pos, id, shiftX, shiftY) {
+		if (shiftX === undefined) {
+			shiftX = 0;
+		}
+		if (shiftY === undefined) {
+			shiftY = 0;
+		}
 		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
 		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
 		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
@@ -1048,27 +1129,27 @@
 			ctx.strokeStyle = "#FF5555";
 			ctx.fillStyle = "#FF9999";
 			ctx.beginPath();
-			ctx.moveTo(rightx, righty);
-			ctx.lineTo(leftx, lefty);
-			ctx.lineTo(frontx, fronty);
+			ctx.moveTo(shiftX+rightx, shiftY+righty);
+			ctx.lineTo(shiftX+leftx, shiftY+lefty);
+			ctx.lineTo(shiftX+frontx, shiftY+fronty);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2, 2*Math.PI, 0, false);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
 			ctx.stroke();
 			ctx.lineWidth = 2;
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
 			ctx.stroke();
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
 			ctx.stroke();
 		} else {
 			var guideCanvas = document.createElement("canvas");
@@ -1076,7 +1157,7 @@
 			guideCanvas.width = canvasWidth;
 			guideCanvas.height = canvasHeight;
 			$e_resetGuide(id, guideCanvas);
-			context.drawImage(guideCanvas, 0, 0);
+			context.drawImage(guideCanvas, shiftX, shiftY);
 		}
 	}
 
@@ -1446,6 +1527,8 @@
 		}
 		$e_resetCanvas();
 		$e_resetDebug();
+		$e_resetUndo();
+		$e_refreshUndoUI();
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		$e_initSetup();
 		$e_resetLanguageSelect();
@@ -1869,9 +1952,6 @@
 		}
 		if (dialog && level != "level1" && level != "level2") {
 			if (instruction.parameters !== null && (!instruction.code || !instruction.code.noBrackets)) {
-				if (instruction.code && instruction.code.space) {
-					text += " ";
-				}
 				text += "()";
 			}
 		}
@@ -1883,7 +1963,7 @@
 			var bracketsExist = false;
 			for (i=0; i<parameters.length; i++) {
 				if (!bracketsStatus && !instruction.parameters[i].noBrackets) {
-					if (instruction.code && instruction.code.space) {
+					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
 					}
 					text += "(";
@@ -1895,7 +1975,7 @@
 				} else if (bracketsStatus !== null) {
 					text += ", ";
 				} else if (bracketsStatus === null) {
-					if (instruction.code && instruction.code.space) {
+					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
 					}
 				}
@@ -2150,7 +2230,11 @@
 		if (mode == "blocks") {
 			$e_undoBlocks(redo);
 		} else if (mode == "write") {
-			ace.edit("console-write").execCommand(redo?"redo":"undo", false, null);
+			if (redo) {
+				ace.edit("console-write").session.getUndoManager().redo();
+			} else {
+				ace.edit("console-write").session.getUndoManager().undo();
+			}
 		}
 	}
 
@@ -2161,6 +2245,7 @@
 	 */
 	function $e_undoFromUI() {
 		$e_undo(false);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2170,6 +2255,7 @@
 	 */
 	function $e_redoFromUI() {
 		$e_undo(true);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2294,6 +2380,7 @@
 		$_eseecode.session.changesInCode = "write";
 		$e_unhighlight();
 		$e_updateWriteBreakpoints(event);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2389,6 +2476,48 @@
 		}
 		$_eseecode.coordinates.userSelection = selectValue;
 		$e_changeAxisCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
+	}
+	
+	/**
+	 * Shows/Hide unro/redo buttons
+	 * @private
+	 * @example $e_refreshUndoUI()
+	 */
+	function $e_refreshUndoUI() {
+		var hasUndo = true, hasRedo = true;
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
+			var aceUndoManager =  ace.edit("console-write").session.getUndoManager();
+			hasUndo = aceUndoManager.hasUndo();
+			hasRedo = aceUndoManager.hasRedo();
+		} else {
+			var undoBlocksIndex = $_eseecode.session.blocksUndo[0];
+			if (undoBlocksIndex == 0) {
+				hasUndo = false;
+			}
+			if (undoBlocksIndex == $_eseecode.session.blocksUndo.length-1) {
+				hasRedo = false;
+			}
+		}
+		if (hasUndo) {
+			document.getElementById("button-undo").style.visibility = "visible";
+		} else {
+			document.getElementById("button-undo").style.visibility = "hidden";
+		}
+		if (hasRedo) {
+			document.getElementById("button-redo").style.visibility = "visible";
+		} else {
+			document.getElementById("button-redo").style.visibility = "hidden";
+		}
+	}
+
+	/**
+	 * Resets the undo stacks
+	 * @private
+	 * @example $e_resetUndo()
+	 */
+	function $e_resetUndo() {
+		$e_resetUndoBlocks();
+		$e_resetUndoWrite();
 	}
 
 	/**
