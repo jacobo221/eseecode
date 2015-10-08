@@ -387,5 +387,6 @@ $_eseecode.i18n.available.ca = {
 	"Which layer do you want to pull?\n(Leave blank to affect the current layer": "Quina capa vols estirar?\n(Deixa en blanc per estirar la capa actual)",
 	"Which layer do you want to push?\n(Leave blank to affect the current layer": "Quina capa vols emputxar?\n(Deixa en blanc per emputxar la capa actual)",
 	"Identifier of the window to affect\n(Leave blank to affect the current window)": "Identificador de la finestra a afectar\n(Deixa en blanc per afectar al finestra actual",
-	"Close": "Tancar"
+	"Close": "Tancar",
+	"You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.": "Has fet canvis al codi però encara no l'has executat.\nPer tant la pissarra podria no reflexar el teu codi actual."
 }

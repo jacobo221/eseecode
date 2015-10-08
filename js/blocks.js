@@ -250,13 +250,16 @@
 			$_eseecode.session.blocksUndo.pop();
 		} else {
 			$_eseecode.session.changesInCode = "blocks";
+			if (action != "setup") {
+				$_eseecode.session.changesNotRun = true;
+			}
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
 				$e_executeFromUI();
 			}
+			$e_refreshUndoUI();
 		}
-		$e_refreshUndoUI();
 	}
 
 	/**
@@ -1090,6 +1093,7 @@
 			paramNumber++;
 		}
 		if (setupChanges.length > 0 && document.getElementById("setupBlockAdd").value !== "true") {
+			$_eseecode.session.changesNotRun = true;
 			// Update undo array
 			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
 		} else if (instructionConverted) {

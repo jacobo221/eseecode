@@ -292,6 +292,9 @@
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 			return;
 		}
+		if (!inCode) {
+			$_eseecode.session.changesNotRun = false;
+		}
 		var script = document.createElement("script");
 		script.id = "executionCode";
 		script.type = "text/javascript";
