@@ -12,6 +12,7 @@
  *   Moved download layers/canvas to whiteboard tabs space
  *   Added option to download layers in a grid
  *   Added constants E and Phi, renamed pi to Pi
+ *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
  *   Fix: Remove extra space in single line comments
  *   Fix: line() was missing minValue/maxValue definition
 

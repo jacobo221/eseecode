@@ -61,7 +61,7 @@
 	 */
 	function $e_downloadWhiteboardMsgBox() {
 		var msgBoxContent = "";
-		if ($_eseecode.session.changesNotRun) {
+		if ($_eseecode.session.lastChange > $_eseecode.session.lastRun) {
 			msgBoxContent += "<div style=\"text-align:center;margin-top:20px;color:#882222;\">"+_("You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.")+"</div>";
 		}
 		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
@@ -1432,6 +1432,7 @@
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
 		document.body.removeChild(downloadLink);
+		$_eseecode.session.lastSave = new Date().getTime();
 	}
 
 	/**
@@ -1735,7 +1736,7 @@
 	 * @example $e_windowRefresh()
 	 */
 	function $e_windowRefresh(event) {
-		if (!$e_isEmbedded()) {
+		if ($_eseecode.session.lastSave < $_eseecode.session.lastChange) {
                 event.returnValue = _("Careful, any code you haven't saved will be lost if you leave this page!");
 		}
 	}
@@ -2434,7 +2435,7 @@
 	 */
 	function $e_writeChanged(event) {
 		$_eseecode.session.changesInCode = "write";
-		$_eseecode.session.changesNotRun = true;
+		$_eseecode.session.lastChange = new Date().getTime();
 		$e_unhighlight();
 		$e_updateWriteBreakpoints(event);
 		$e_refreshUndoUI();

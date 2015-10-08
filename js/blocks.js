@@ -250,13 +250,13 @@
 			$_eseecode.session.blocksUndo.pop();
 		} else {
 			$_eseecode.session.changesInCode = "blocks";
-			if (action != "setup") {
-				$_eseecode.session.changesNotRun = true;
-			}
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
+				$_eseecode.session.lastChange = new Date().getTime();
 				$e_executeFromUI();
+			} else if (action != "setup" && action != "add") {
+				$_eseecode.session.lastChange = new Date().getTime();
 			}
 			$e_refreshUndoUI();
 		}
@@ -1092,16 +1092,22 @@
 			}
 			paramNumber++;
 		}
-		if (setupChanges.length > 0 && document.getElementById("setupBlockAdd").value !== "true") {
-			$_eseecode.session.changesNotRun = true;
-			// Update undo array
-			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+		if (setupChanges.length > 0) {
+			$_eseecode.session.lastChange = new Date().getTime();
+			if (document.getElementById("setupBlockAdd").value !== "true") {
+				// Update undo array
+				$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+			}
 		} else if (instructionConverted) {
+			$_eseecode.session.lastChange = new Date().getTime();
 			// Already saved the div into the undo stack earlier
 		} else if ($_eseecode.session.blocksUndo[blocksUndoIndex].fromDiv) {
 			// If nothing changed don't update undo stack
 			$_eseecode.session.blocksUndo.pop();
 			$_eseecode.session.blocksUndo[0]--;
+			$e_refreshUndoUI();
+		} else if (document.getElementById("setupBlockAdd").value === "true") {
+			$_eseecode.session.lastChange = new Date().getTime();
 		}
 		// Update the block icon
 		$e_paintBlock(div);
@@ -1124,6 +1130,7 @@
 		}
 		$_eseecode.session.blocksUndo.pop();
 		$_eseecode.session.blocksUndo[0]--;
+		$e_refreshUndoUI();
 		$e_msgBoxClose();
 	}
 

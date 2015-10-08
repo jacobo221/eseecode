@@ -15,6 +15,7 @@
 			var code;
 			code = ace.edit("console-write").getValue();
 		}
+		$_eseecode.session.lastSave = new Date().getTime();
 		return code;
 	}
 

@@ -292,8 +292,8 @@
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 			return;
 		}
-		if (!inCode) {
-			$_eseecode.session.changesNotRun = false;
+		if (inCode === undefined || inCode === null) {
+			$_eseecode.session.lastRun = new Date().getTime();
 		}
 		var script = document.createElement("script");
 		script.id = "executionCode";
