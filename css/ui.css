@@ -154,9 +154,30 @@
 		background-color: #789ABC;
 		color: #FFFFFF;
 	}
+	.tab-button-disabled {
+		height: 20px;
+		display: inline-block;
+		padding: 0px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #BBBBBB;
+		color: #666666;
+		text-align: center;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		text-decoration: none;
+		cursor: default;
+	}
 	.tab-buttons {
 		text-align: center;
 		padding: 0px 20px 0px 20px;
+	}
+	.text-disabled {
+		color: #666666;
+	}
+	.text-disabled input:hover {
+		box-shadow: none;
 	}
 	span.tab-title {
 		float: left;

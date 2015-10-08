@@ -66,9 +66,22 @@
 		}
 		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
 		// If there is more than one layer offer to download animation/grid
+		var msgClass = "";
+		var linkSrc = "";
+		var textStyle = "";
+		var inputType = "";
 		if ($_eseecode.canvasArray["bottom"].layerOver) {
-			msgBoxContent += "<div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-animation\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(false)\">"+_("Download layers as animation")+"</a><div>"+_("Animation interval (in msecs)")+": <input id=\"setup-downloadLayers-interval\" type=\"number\" value=\"500\" min=\"0\" style=\"width:40px\" /></div></div><br /><div style=\"text-align:center\"><a id=\"whiteboard-downloadLayers-grid\" class=\"tab-button\" onclick=\"$e_downloadLayersFromUI(true)\">"+_("Download layers in a grid")+"</a><div>"+_("Layers per row")+": <input id=\"setup-downloadLayers-columns\" type=\"number\" value=\"3\" min=\"1\" style=\"width:40px\" /></div></div>"
+			msgClass = "tab-button";
+			linkSrc = ["$e_downloadLayersFromUI(true)", "$e_downloadLayersFromUI(false)"];
+			textStyle = "";
+			inputType = "";
+		} else {
+			msgClass = "tab-button-disabled";
+			linkSrc = ["", ""];
+			textStyle = "text-disabled";
+			inputType = "disabled";
 		}
+		msgBoxContent += "<div style=\"text-align:center\" class=\""+textStyle+"\"><a id=\"whiteboard-downloadLayers-animation\" class=\""+msgClass+"\" onclick=\""+linkSrc[0]+"\">"+_("Download layers as animation")+"</a><div>"+_("Animation interval (in msecs)")+": <input id=\"setup-downloadLayers-interval\" type=\"number\" "+inputType+" value=\"500\" min=\"0\" style=\"width:40px\" /></div></div><br /><div style=\"text-align:center\" class=\""+textStyle+"\"><a id=\"whiteboard-downloadLayers-grid\" class=\""+msgClass+"\" onclick=\""+linkSrc[1]+"\">"+_("Download layers in a grid")+"</a><div>"+_("Layers per row")+": <input id=\"setup-downloadLayers-columns\" type=\"number\" value=\"3\" "+inputType+" min=\"1\" style=\"width:40px\" /></div></div>"
 		$e_msgBox(msgBoxContent,{noSubmit:true,cancelName:_("Close")});
 	}
 
