@@ -391,6 +391,7 @@
 
 	/**
 	 * Defines an error to handle during user code execution
+	 * @private
 	 * @param {String} name Name of the instruction
 	 * @param {String} text Text to show the user
 	 * @return Returns an exception codeError object
@@ -405,6 +406,7 @@
 
 	/**
 	 * Prepares execution environment for the next run
+	 * @private
 	 * @example $e_endExecution();
 	 */
 	function $e_endExecution() {
@@ -415,4 +417,39 @@
 		$_eseecode.execution.breakpointCounterLimit = 1;
 		$e_executionTraceReset();
 		$e_unhighlight();
+	}
+	
+
+	/**
+	 * Checks the passed parameters to a given function
+	 * @private
+	 * @param {String} instructionName Name of the instruction calling it
+	 * @example $e_parseParameters("forward",arguments);
+	 */
+	function $e_parseParameters(instructionName,params) {
+		var instructionId = $e_getInstructionSetIdFromName(instructionName);
+		var instruction = $_eseecode.instructions.set[instructionId];
+		var instructionParams = instruction.parameters;
+		var msg = "";
+		var invalidCount = 0;
+		for (var i=0; i< instructionParams.length; i++) {
+			var parameter = instructionParams[i];
+			var value = params[i];
+			if ((parameter.type == "number" && !$e_isNumber(value)) ||
+				(parameter.type == "bool" && !$e_isBoolean(value))) {
+				msg += "The "+$e_ordinal(i+1)+" parameter ("+parameter.name+") should be a "+parameter.type+" but instead recieved this value: "+value+"\n";
+				invalidCount++;
+			}
+		}
+		if (invalidCount > 0) {
+			var header = "Invalid parameter"+((invalidCount>1)?"s":"")+" in "+instructionName;
+			if (!instruction.code || instruction.code.noBrackets !== true) {
+				header += "()";
+			}
+			header += " call: ";
+			if (invalidCount > 1) {
+				header += "\n";
+			}
+			throw new $e_codeError(instructionName,header+msg);
+		}
 	}
