@@ -2354,7 +2354,7 @@
 		$e_moveGuide($e_user2systemCoords({x: 0, y: 0}));
 		$e_setAngleGuide($e_user2systemAngle(0));
 		// reset windows
-  		for(var key in $_eseecode.windowsArray {
+  		for(var key in $_eseecode.windowsArray) {
 			if ($_eseecode.windowsArray[key]) {
 				$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[key]);
 				delete $_eseecode.windowsArray[key];
