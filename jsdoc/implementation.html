@@ -421,7 +421,7 @@ Any part of the image left outside the whiteboard will be lost</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#pull">pull</a></b>(levels)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#pull">pull</a></b>(levels, id)
 								</div>
 								<div class="description">Pulls a layer up in the layers order
 Upper layers overlap lower layers</div>
@@ -431,7 +431,7 @@ Upper layers overlap lower layers</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#push">push</a></b>(levels)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#push">push</a></b>(levels, id)
 								</div>
 								<div class="description">Pushes a layer down in the layers order
 Upper layers overlap lower layers</div>
@@ -441,9 +441,19 @@ Upper layers overlap lower layers</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#rotateLeft">rotateLeft</a></b>(degrees, axis)
+								</div>
+								<div class="description">Rotates the current layer left
+Any part of the image left outside the whiteboard will be lost</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#rotateRight">rotateRight</a></b>(degrees, axis)
 								</div>
-								<div class="description">Rotates the current layer
+								<div class="description">Rotates the current layer right
 Any part of the image left outside the whiteboard will be lost</div>
 							</td>
 						</tr>
@@ -642,7 +652,7 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowButtonCreate">windowButtonCreate</a></b>(windowId, id, text, posx, posy, action)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowButtonCreate">windowButtonCreate</a></b>(windowId, id, text, posx, posy, width, height, action)
 								</div>
 								<div class="description">Creates an existing window button</div>
 							</td>
@@ -651,7 +661,7 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowButtonEdit">windowButtonEdit</a></b>(id, text, posx, posy, action)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowButtonEdit">windowButtonEdit</a></b>(id, text, posx, posy, width, height, action)
 								</div>
 								<div class="description">Edits an existing window button</div>
 							</td>
@@ -687,7 +697,7 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowHide">windowHide</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowHide">windowHide</a></b>(id)
 								</div>
 								<div class="description">Hides the current window</div>
 							</td>
@@ -813,7 +823,7 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowShow">windowShow</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowShow">windowShow</a></b>(id)
 								</div>
 								<div class="description">Shows the current window</div>
 							</td>
@@ -1084,10 +1094,10 @@ It will run a code on every specified time until the code returns false or an am
 								<dd>Amount of degrees to arc</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>axis</b>
-									<i>Optional, Default: 0</i>
+									<span class="light fixedFont">{Boolean}</span> <b>axis</b>
+									<i>Optional, Default: false</i>
 								</dt>
-								<dd>0 = arc around the guide, 1 = arc following the guide's position and angle and move the guide to the end of the arc</dd>
+								<dd>false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Boolean}</span> <b>counterclockwise</b>
@@ -3223,7 +3233,7 @@ Any part of the image left outside the whiteboard will be lost
 					<div class="fixedFont">
 					
 					
-					<b>pull</b>(levels)
+					<b>pull</b>(levels, id)
 					
 					</div>
 					<div class="description">
@@ -3252,6 +3262,12 @@ Upper layers overlap lower layers
 								</dt>
 								<dd>Amount of steps to pull the layer up</dd>
 							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Id of the layer to affect</dd>
+							
 							</dl>
 						
 						
@@ -3273,7 +3289,7 @@ Upper layers overlap lower layers
 					<div class="fixedFont">
 					
 					
-					<b>push</b>(levels)
+					<b>push</b>(levels, id)
 					
 					</div>
 					<div class="description">
@@ -3302,6 +3318,68 @@ Upper layers overlap lower layers
 								</dt>
 								<dd>Amount of steps to push the layer down</dd>
 							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Id of the layer to affect</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="rotateLeft"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>rotateLeft</b>(degrees, axis)
+					
+					</div>
+					<div class="description">
+						Rotates the current layer left
+Any part of the image left outside the whiteboard will be lost
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">rotateRight(90)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>degrees</b>
+									
+								</dt>
+								<dd>Amount of degrees to rotate</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>axis</b>
+									<i>Optional, Default: 0</i>
+								</dt>
+								<dd>0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner</dd>
+							
 							</dl>
 						
 						
@@ -3327,7 +3405,7 @@ Upper layers overlap lower layers
 					
 					</div>
 					<div class="description">
-						Rotates the current layer
+						Rotates the current layer right
 Any part of the image left outside the whiteboard will be lost
 						
 							<br />
@@ -4359,7 +4437,7 @@ The original angle is the guide looking horizontally to the right
 					<div class="fixedFont">
 					
 					
-					<b>windowButtonCreate</b>(windowId, id, text, posx, posy, action)
+					<b>windowButtonCreate</b>(windowId, id, text, posx, posy, width, height, action)
 					
 					</div>
 					<div class="description">
@@ -4412,6 +4490,18 @@ The original angle is the guide looking horizontally to the right
 								<dd>Y coordinate to place the button in the window</dd>
 							
 								<dt>
+									<span class="light fixedFont">{Number}</span> <b>width</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Width of the button</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>height</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Height of the button</dd>
+							
+								<dt>
 									<span class="light fixedFont">{String}</span> <b>action</b>
 									<i>Optional</i>
 								</dt>
@@ -4438,7 +4528,7 @@ The original angle is the guide looking horizontally to the right
 					<div class="fixedFont">
 					
 					
-					<b>windowButtonEdit</b>(id, text, posx, posy, action)
+					<b>windowButtonEdit</b>(id, text, posx, posy, width, height, action)
 					
 					</div>
 					<div class="description">
@@ -4452,7 +4542,7 @@ The original angle is the guide looking horizontally to the right
 					
 					
 					
-					<pre class="code">windowButtonCreate("b2", "turn", 170, 90, "turnRight(15)")</pre>
+					<pre class="code">windowButtonEdit("b2", "turn", 170, 90, "turnRight(15)")</pre>
 					
 					
 					
@@ -4483,6 +4573,18 @@ The original angle is the guide looking horizontally to the right
 									<i>Optional</i>
 								</dt>
 								<dd>Y coordinate to place the button in the window</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>width</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Width of the button</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>height</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Height of the button</dd>
 							
 								<dt>
 									<span class="light fixedFont">{String}</span> <b>action</b>
@@ -4658,7 +4760,7 @@ The original angle is the guide looking horizontally to the right
 					<div class="fixedFont">
 					
 					
-					<b>windowHide</b>()
+					<b>windowHide</b>(id)
 					
 					</div>
 					<div class="description">
@@ -4672,10 +4774,21 @@ The original angle is the guide looking horizontally to the right
 					
 					
 					
-					<pre class="code">windowHide()</pre>
+					<pre class="code">windowHide(id)</pre>
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Window id</dd>
+							
+							</dl>
 						
 						
 						
@@ -5514,7 +5627,7 @@ The original angle is the guide looking horizontally to the right
 					<div class="fixedFont">
 					
 					
-					<b>windowShow</b>()
+					<b>windowShow</b>(id)
 					
 					</div>
 					<div class="description">
@@ -5532,6 +5645,17 @@ The original angle is the guide looking horizontally to the right
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Window id</dd>
+							
+							</dl>
 						
 						
 						
