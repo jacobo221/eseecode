@@ -904,9 +904,7 @@
 	 * @example forward(50)
 	 */
 	function forward(pixels) {
-		if (!$e_isNumber(pixels)) {
-			throw new codeError("forward","Invalid parameter in forward() call");
-		}
+		$e_parseParameters("forward", arguments);
 		var pos = {};
 		pos.x = $_eseecode.currentCanvas.guide.x+pixels*Math.cos($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
 		pos.y = $_eseecode.currentCanvas.guide.y+pixels*Math.sin($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
