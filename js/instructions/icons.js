@@ -277,7 +277,7 @@
 		"forward": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 50;
 			}
@@ -347,8 +347,8 @@
 			if (!param) {
 				return;
 			}
-			var param1 = param[0];
-			var param2 = param[1];
+			var param1 = parseInt(param[0]);
+			var param2 = parseInt(param[1]);
 			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
@@ -766,12 +766,13 @@
 			ctx.closePath();
 		},
 		"repeat": function(ctx, width, height, param) {
-			param = param[0].toString();
+			param = parseInt(param[0]);
 			var margin = 15;
 			if (!$e_isNumber(param)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
+				param = "N";
 			}
 			var lineWidth = 3
 			ctx.lineWidth = lineWidth;
@@ -789,8 +790,8 @@
 			ctx.lineTo(width/2+margin/2-3,margin*1.5);
 			ctx.lineTo(width/2-3,margin*2);
 			ctx.fill();
-			ctx.font = "bold "+(height-(margin+lineWidth))/(param.length*1.5)+"px Verdana";
-      			ctx.fillStyle = '#000000';
+			ctx.font = "bold "+(height-(margin+lineWidth))/(param.toString().length*1.5)+"px Verdana";
+      		ctx.fillStyle = '#000000';
 			ctx.fillText(param,margin+lineWidth,height-(margin+lineWidth));
 		},
 		"rotateLeft": function(ctx, width, height, param) {
@@ -941,7 +942,7 @@
 		"setSize": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param)) {
 				ctx.font = 12+"px Verdana";
@@ -1054,7 +1055,7 @@
 		"turnLeft": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 275;
 			}
@@ -1176,6 +1177,10 @@
 				if (param == undefined || param == "") {
 					fontSize = 20;
 					text = _("New");
+				} else if (param.charAt(0) === '"' && param.charAt(param.length-1) === '"') {
+					param = param.substring(1,param.length-1);
+					fontSize = 16;
+					text = param;
 				} else {
 					fontSize = 12;
 					text = _("variable");
@@ -1347,7 +1352,7 @@
 			if (fontSize > maxFontSize) {
 				fontSize = maxFontSize;
 			};
-			if (param.charAt(0) === '"' && param.charAt(param-1) === '"') {
+			if (param.charAt(0) === '"' && param.charAt(param.length-1) === '"') {
 				param = param.substring(1,param.length-1);
 			}
 			var margin = 15

@@ -266,7 +266,7 @@
 					} catch (exception) {
 						$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 						var lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
-						if (lineNumber && neNumber[2]) {
+						if (lineNumber && lineNumber[2]) {
 							lineNumber = lineNumber[2];
 							$e_highlight(lineNumber,"error");
 							ace.edit("console-write").gotoLine(lineNumber,0,true);
@@ -425,23 +425,31 @@
 	 * @private
 	 * @param {String} instructionName Name of the instruction calling it
 	 * @throws codeError
-	 * @example $e_parseParameters("forward",arguments);
+	 * @example $e_parseParameterTypes("forward",arguments);
 	 */
-	function $e_parseParameters(instructionName,params) {
+	function $e_parseParameterTypes(instructionName,params) {
 		var instructionId = $e_getInstructionSetIdFromName(instructionName);
 		var instruction = $_eseecode.instructions.set[instructionId];
 		var instructionParams = instruction.parameters;
 		var msg = "";
+		var invalidParameter = false;
 		var invalidCount = 0;
-		console.log($e_parseParameters.caller)
 		for (var i=0; i< instructionParams.length; i++) {
 			var parameter = instructionParams[i];
 			var value = params[i];
-			if ((parameter.optional && value === undefined) ||
-				(parameter.type == "number" && !$e_isNumber(value)) ||
-				(parameter.type == "bool" && !$e_isBoolean(value)) ||
-				(parameter.type == "color" && !$e_isColor(value))) {
-				msg += "The "+$e_ordinal(i+1)+" parameter ("+parameter.name+") should be a "+parameter.type+" but instead recieved this value: "+value+"\n";
+			if (value === undefined || value === null || value === "") {
+				if (!parameter.optional) {
+					invalidParameter = true;
+				}
+			} else if ((parameter.type == "number" && !$e_isNumber(value)) ||
+			 (parameter.type == "bool" && !$e_isBoolean(value)) ||
+			 (parameter.type == "color" && !$e_isColor(value)) ||
+			 (parameter.type == "layer" && !$e_isLayer(value)) ||
+			 (parameter.type == "window" && !$e_isWindow(value))) {
+				invalidParameter = true;
+			}
+			if (invalidParameter) {
+				msg += "The "+$e_ordinal(i+1)+" parameter ("+parameter.name+") should be a "+parameter.type+" but instead recieved this "+$e_analyzeVariable(value).type+": "+value+"\n";
 				invalidCount++;
 			}
 		}
