@@ -814,7 +814,7 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowRemove">windowRemove</a></b>(windowId)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowRemove">windowRemove</a></b>(id)
 								</div>
 								<div class="description">Removes a window and all of its child elements</div>
 							</td>
@@ -992,6 +992,16 @@ It will run a code on every specified time until the code returns false or an am
 							</dl>
 							</dl>
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>Code execution exception</dd>
+							
+							</dl>
 						
 						
 							<dl class="detailList">
@@ -1237,25 +1247,25 @@ It will run a code on every specified time until the code returns false or an am
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>posx</b>
-									
+									<i>Optional, Default: 0</i>
 								</dt>
 								<dd>X position of the vertical axis, origin us upperleft corner</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>posy</b>
-									
+									<i>Optional, Default: 0</i>
 								</dt>
 								<dd>Y position of the horizontal axis, origin us upperleft corner</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>xScale</b>
-									
+									<i>Optional, Default: 1</i>
 								</dt>
 								<dd>Scale by which to multiply the x coordinates, originaly increasing from left to right</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>yScale</b>
-									
+									<i>Optional, Default: 1</i>
 								</dt>
 								<dd>Scale by which to multiply the y coordinates, originaly increasing downwards</dd>
 							
@@ -1844,7 +1854,7 @@ Angle 0 is when the guide is looking horizontally right
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Layer id</dd>
 							
@@ -1900,7 +1910,7 @@ Angle 0 is when the guide is looking horizontally right
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Layer id</dd>
 							
@@ -1956,7 +1966,7 @@ Angle 0 is when the guide is looking horizontally right
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Layer id</dd>
 							
@@ -2116,6 +2126,16 @@ Angle 0 is when the guide is looking horizontally right
 							</dl>
 							</dl>
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
 						
 						
 							<dl class="detailList">
@@ -2845,6 +2865,16 @@ Angle 0 is when the guide is looking horizontally right
 							</dl>
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
+						
 						
 						
 						
@@ -3279,6 +3309,16 @@ Upper layers overlap lower layers
 							</dl>
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
+						
 						
 						
 						
@@ -3334,6 +3374,16 @@ Upper layers overlap lower layers
 							</dl>
 							</dl>
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
 						
 						
 						
@@ -3705,6 +3755,16 @@ Any part of the image left outside the whiteboard will be lost
 							</dl>
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
+						
 						
 						
 						
@@ -3837,7 +3897,7 @@ Any part of the image left outside the whiteboard will be lost
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Layer id</dd>
 							
@@ -3900,6 +3960,16 @@ Any part of the image left outside the whiteboard will be lost
 							</dl>
 							</dl>
 						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
 						
 						
 							<dl class="detailList">
@@ -4030,7 +4100,7 @@ The original angle is the guide looking horizontally to the right
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>angle</b>
-									
+									<i>Optional, Default: 0</i>
 								</dt>
 								<dd>Angle to set to</dd>
 							
@@ -5578,7 +5648,7 @@ The original angle is the guide looking horizontally to the right
 					<div class="fixedFont">
 					
 					
-					<b>windowRemove</b>(windowId)
+					<b>windowRemove</b>(id)
 					
 					</div>
 					<div class="description">
@@ -5601,7 +5671,7 @@ The original angle is the guide looking horizontally to the right
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>windowId</b>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
 									
 								</dt>
 								<dd>Window id</dd>
@@ -6115,7 +6185,7 @@ The original angle is the guide looking horizontally to the right
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
+									<i>Optional</i>
 								</dt>
 								<dd>Window id</dd>
 							
