@@ -58,8 +58,8 @@
 			var margin = 15;
 			var param1, param2;
 			if (param) {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			} else {
 				param1 = (height-margin*2)/3;
 				param2 = 50;
@@ -418,8 +418,8 @@
 		"hide": function(ctx, width, height, param) {
 			var margin = 15;
 			ctx.beginPath()
-      			ctx.strokeStyle = '#000000';
-        		ctx.setLineDash([5]);
+  			ctx.strokeStyle = '#000000';
+    		ctx.setLineDash([5]);
 			ctx.moveTo(width/4,margin);
 			ctx.lineTo(width/4,height-margin);
 			ctx.lineTo(3*width/4,height/2);
@@ -498,10 +498,10 @@
 			var literals = true;
 			var param1, param2, param3, param4;
 			if (param && param.length) {
-				param1 = param[0];
-				param2 = param[1];
-				param3 = param[2];
-				param4 = param[3];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
+				param3 = parseInt(param[2]);
+				param4 = parseInt(param[3]);
 				if (!$e_isNumber(param1) || !$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
 					literals = false;
 				}
@@ -533,8 +533,8 @@
 		"move": function(ctx, width, height, param) {
 			var param1, param2;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			}
 			var margin = 15;
 			if ($e_isNumber(param1) && $e_isNumber(param2)) {
@@ -569,7 +569,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -599,7 +599,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -629,7 +629,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -659,7 +659,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -706,7 +706,7 @@
 		"pull": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param != null && param != undefined && param != "") {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 1;
 			}
@@ -737,7 +737,7 @@
 		"push": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param != null && param != undefined && param != "") {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 1;
 			}
@@ -798,7 +798,7 @@
 			var margin = 15;
 			var param1;
 			if (param) {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -833,7 +833,7 @@
 			var margin = 30;
 			var param1;
 			if (param) {
-				param1 = -param[0];
+				param1 = -parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -869,8 +869,8 @@
 			var param1;
 			var param2;
 			if (param) {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			} else {
 				param1 = 1;
 				param2 = 1;
@@ -1025,7 +1025,7 @@
 		"show": function(ctx, width, height, param) {
 			var margin = 15;
 			ctx.beginPath()
-      			ctx.fillStyle = '#000000';
+      		ctx.fillStyle = '#000000';
 			ctx.moveTo(width/4,margin);
 			ctx.lineTo(width/4,height-margin);
 			ctx.lineTo(3*width/4,height/2);
@@ -1370,9 +1370,9 @@
 			var param1, param2, param3, param4;
 			if (param && param.length) {
 				param1 = param[0];
-				param2 = param[1];
-				param3 = param[2];
-				param4 = param[3];
+				param2 = parseInt(param[1]);
+				param3 = parseInt(param[2]);
+				param4 = parseInt(param[3]);
 				if (!$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
 					literals = false;
 				}
