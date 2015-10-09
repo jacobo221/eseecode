@@ -139,8 +139,8 @@
 			if (!param) {
 				return;
 			}
-			var param1 = param[0];
-			var param2 = param[1];
+			var param1 = parseInt(param[0]);
+			var param2 = parseInt(param[1]);
 			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
