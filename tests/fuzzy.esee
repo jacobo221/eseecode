@@ -1,7 +1,6 @@
-goToCenter()
+goTo(100, 100)
 setSize(1)
 repeat (360) {
- //setColor(getRGB(getRandomNumber(100), getRandomNumber(100), getRandomNumber(200)))
- setColor(getRandomColor())
- line(getLayerWidth()/2+getSine(255*repeatCount)*150, getLayerWidth()/2+getSine(201*repeatCount)*150)
+	setColor(getRandomColor())
+	line(getLayerWidth() / 2 + getSine(255 * repeatCount) * 150, getLayerWidth() / 2 + getSine(201 * repeatCount) * 150)
 }

@@ -388,5 +388,15 @@ $_eseecode.i18n.available.ca = {
 	"Which layer do you want to push?\n(Leave blank to affect the current layer": "Quina capa vols emputxar?\n(Deixa en blanc per emputxar la capa actual)",
 	"Identifier of the window to affect\n(Leave blank to affect the current window)": "Identificador de la finestra a afectar\n(Deixa en blanc per afectar al finestra actual",
 	"Close": "Tancar",
-	"You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.": "Has fet canvis al codi però encara no l'has executat.\nPer tant la pissarra podria no reflexar el teu codi actual."
+	"You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.": "Has fet canvis al codi però encara no l'has executat.\nPer tant la pissarra podria no reflexar el teu codi actual.",
+	"The %s parameter (%s)": "El paràmetre %s (%s)",
+	"has no value, but a value is required. The value recieved is:": "no te valor, però un valor és requerit. El valor rebut és:",
+	"should be a %s but instead recieved this %s:": "hauria de ser un %s però en comptes ha rebut un %s:",
+	"Invalid parameter in %s": "Paràmetre invàlid a %s",
+	"Invalid parameters in %s": "Paràmetre invàlid a %s",
+	"number": "número",
+	"text": "texto",
+	"layer": "capa",
+	"window": "ventana",
+	"bool": "booleano"
 }

@@ -388,5 +388,15 @@ $_eseecode.i18n.available.es = {
 	"Which layer do you want to push?\n(Leave blank to affect the current layer": "¿Qué capa quieres empujar?\n(Deja en blanco para empujar la capa actual)",
 	"Identifier of the window to affect\n(Leave blank to affect the current window)": "Identificador de la ventana a afectar\n(Deja en blanco para afectar a la ventana actual",
 	"Close": "Cerrar",
-	"You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.": "Has hecho cambios en el código pero todavía no los has ejecutada\nPor este motivo la pizarra podría no reflejar tu código actual."
+	"You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.": "Has hecho cambios en el código pero todavía no los has ejecutada\nPor este motivo la pizarra podría no reflejar tu código actual.",
+	"The %s parameter (%s)": "El parámetro %s (%s)",
+	"has no value, but a value is required. The value recieved is:": "no tiene valor, pero un valor es requerido. El valor recibido es:",
+	"should be a %s but instead recieved this %s:": "debería ser un %s pero en su lugar recibió un %s:",
+	"Invalid parameter in %s": "Parámetro inválido en %s",
+	"Invalid parameters in %s": "Parámetro inválido en %s",
+	"number": "numero",
+	"text": "text",
+	"layer": "capa",
+	"window": "finestra",
+	"bool": "booleà"
 }

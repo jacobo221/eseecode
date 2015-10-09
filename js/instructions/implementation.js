@@ -705,7 +705,19 @@
 	 * @example getRandomColor()
 	 */
 	function getRandomColor() {
-		var color = $e_executionTraceIterate("randomColor", "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16));
+		var r = getRandomNumber(256).toString(16);
+		if (r.length < 2) {
+			r = "0"+r;
+		}
+		var g = getRandomNumber(256).toString(16);
+		if (g.length < 2) {
+			g = "0"+g;
+		}
+		var b = getRandomNumber(256).toString(16);
+		if (b.length < 2) {
+			b = "0"+b;
+		}
+		var color = $e_executionTraceIterate("randomColor", "#"+r+g+b);
 		return color;
 	}
 

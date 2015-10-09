@@ -16,6 +16,7 @@
  *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
  *   Fix: Remove extra space in single line comments
  *   Fix: line() was missing minValue/maxValue definition
+ *   Fix: getRandomColor() was giving sometimes invalid color codes
 
 ## 2.1 (2015-10-06)
 

@@ -437,8 +437,10 @@
 		for (var i=0; i< instructionParams.length; i++) {
 			var parameter = instructionParams[i];
 			var value = params[i];
+			var msgParam;
 			if (value === undefined || value === null || value === "") {
 				if (!parameter.optional) {
+					msgParam = _("has no value, but a value is required. The value recieved is:")+" "+value+" ("+$e_analyzeVariable(value).type+")\n";
 					invalidParameter = true;
 				}
 			} else if ((parameter.type == "number" && !$e_isNumber(value)) ||
@@ -446,19 +448,24 @@
 			 (parameter.type == "color" && !$e_isColor(value)) ||
 			 (parameter.type == "layer" && !$e_isLayer(value)) ||
 			 (parameter.type == "window" && !$e_isWindow(value))) {
+					msgParam = _("should be a %s but instead recieved this %s:",[parameter.type,$e_analyzeVariable(value).type])+" "+value+"\n";
 				invalidParameter = true;
 			}
 			if (invalidParameter) {
-				msg += "The "+$e_ordinal(i+1)+" parameter ("+parameter.name+") should be a "+parameter.type+" but instead recieved this "+$e_analyzeVariable(value).type+": "+value+"\n";
+				msg = _("The %s parameter (%s)",[$e_ordinal(i+1),parameter.name])+" "+msgParam;
 				invalidCount++;
 			}
 		}
 		if (invalidCount > 0) {
-			var header = "Invalid parameter"+((invalidCount>1)?"s":"")+" in "+instructionName;
+			var header = "";
+			if (invalidCount>1) {
+				header += _("Invalid parameters in %s",[instructionName]);
+			} else {
+				header += _("Invalid parameter in %s",[instructionName]);
+			}
 			if (!instruction.code || instruction.code.noBrackets !== true) {
 				header += "()";
 			}
-			header += " call: ";
 			if (invalidCount > 1) {
 				header += "\n";
 			}
