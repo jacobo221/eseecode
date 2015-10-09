@@ -44,6 +44,7 @@
 	 * Check the execution control limits
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
+	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_checkExecutionLimits(31)
 	 */
 	function $e_checkExecutionLimits(lineNumber) {
@@ -418,12 +419,12 @@
 		$e_executionTraceReset();
 		$e_unhighlight();
 	}
-	
 
 	/**
 	 * Checks the passed parameters to a given function
 	 * @private
 	 * @param {String} instructionName Name of the instruction calling it
+	 * @throws codeError
 	 * @example $e_parseParameters("forward",arguments);
 	 */
 	function $e_parseParameters(instructionName,params) {
@@ -432,11 +433,14 @@
 		var instructionParams = instruction.parameters;
 		var msg = "";
 		var invalidCount = 0;
+		console.log($e_parseParameters.caller)
 		for (var i=0; i< instructionParams.length; i++) {
 			var parameter = instructionParams[i];
 			var value = params[i];
-			if ((parameter.type == "number" && !$e_isNumber(value)) ||
-				(parameter.type == "bool" && !$e_isBoolean(value))) {
+			if ((parameter.optional && value === undefined) ||
+				(parameter.type == "number" && !$e_isNumber(value)) ||
+				(parameter.type == "bool" && !$e_isBoolean(value)) ||
+				(parameter.type == "color" && !$e_isColor(value))) {
 				msg += "The "+$e_ordinal(i+1)+" parameter ("+parameter.name+") should be a "+parameter.type+" but instead recieved this value: "+value+"\n";
 				invalidCount++;
 			}
