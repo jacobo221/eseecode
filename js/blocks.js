@@ -112,8 +112,10 @@
 		}
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
-		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft;
-		$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop;
+		if (div.offsetLeft > 0) { // Make sure the browser is compatible with offsetLeftTop
+			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft;
+			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop;
+		}
 		// Copy parameters
 		for (var i=1; div.getAttribute("param"+i) !== null; i++) {
 			$_eseecode.session.floatingBlock.div.setAttribute("param"+i,div.getAttribute("param"+i));
@@ -344,10 +346,13 @@
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var div = $_eseecode.session.floatingBlock.div;
 		var pos = $e_eventPosition(event);
-		//div.style.left = pos.x - $_eseecode.setup.blockWidth[level]/2 +"px";
-		//div.style.top = pos.y - $_eseecode.setup.blockHeight[level]/2 +"px";
-		div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x +"px";
-		div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
+		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x +"px";
+			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
+		} else {
+			div.style.left = pos.x - $_eseecode.setup.blockWidth[level]/2 +"px";
+			div.style.top = pos.y - $_eseecode.setup.blockHeight[level]/2 +"px";
+		}
 		// if mouse is above the console or under the console, scroll. Don't use $e_smoothScroll since it uses a timeout and it will queue up in the events to launch
 		var consoleDiv = document.getElementById("console-blocks");
 		if (pos.y < consoleDiv.offsetTop) {
