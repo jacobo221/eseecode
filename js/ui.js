@@ -542,12 +542,12 @@
 		var debugCommand = document.getElementById("dialog-debug-command-form");
 		if ($_eseecode.modes.dialog[id].id == "debug") {
 			$e_resetDebug();
-			debugCommand.style.visibility = "visible";
+			debugCommand.style.display = "block";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
 			debugCommandInput.style.width = (debugCommand.offsetWidth - document.getElementById("dialog-debug-command-button").offsetWidth - 15) +"px";
 			//debugCommandInput.focus();
 		} else {
-			debugCommand.style.visibility = "hidden";
+			debugCommand.style.display = "none";
 		}
 		// Paint setup tab image
 		var margin = 2;

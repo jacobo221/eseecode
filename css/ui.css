@@ -269,7 +269,7 @@
 		border-bottom-left-radius: 10px;
 	}
 	#dialog-debug-command-form {
-		visibility: hidden;
+		display: none;
 	}
 	#dialog-debug-command-input {
 		height: 17px;

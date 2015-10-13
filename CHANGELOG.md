@@ -14,9 +14,11 @@
  *   Added option to download layers in a grid
  *   Added constants E and Phi, renamed pi to Pi
  *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
+ *   Drag blocks relative to original mouse position in the block, not centered
  *   Fix: Remove extra space in single line comments
  *   Fix: line() was missing minValue/maxValue definition
  *   Fix: getRandomColor() was giving sometimes invalid color codes
+ *   Fix: visibility issue in iPads
 
 ## 2.1 (2015-10-06)
 
