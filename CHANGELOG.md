@@ -1,3 +1,25 @@
+## 2.2 (2015-10-14)
+
+ *Milestone reached: Easily understandable runtime errors*
+ *   Detect runtime call errors and show easily understandable explanations of such errors
+ *   Allow breakpoints and stepping to work together in debug
+ *   API_uploadCode() allows to immediately run the code: Regarding preload it defined whether the code should be preloaded in the whiteboard or run when the user clicks run
+ *   Breakpoints in debug now count how many times the app has gone through them (most useful when the breakpoint exists but is disabled)
+ *   Build view now also shows visual setup, although by default it shows the advanced setup
+ *   Added option to download layers in a grid
+ *   Hide execute and clear buttons in Touch view
+ *   Hide undo/redo buttons when the action isn't possible
+ *   Moved download layers/canvas to whiteboard tabs space
+ *   Drag blocks relative to original mouse position in the block, not centered
+ *   Added a few new parameters to existing instructions
+ *   Added tips, initial, minValue, etc to all parameters in instructions
+ *   Added constants E and Phi, renamed pi to Pi
+ *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
+ *   Fix: visibility issue in iPads
+ *   Fix: getRandomColor() was giving sometimes invalid color codes
+ *   Fix: Remove extra space in single line comments
+ *   Fix: line() was missing minValue/maxValue definition
+
 ## 2.1 (2015-10-06)
 
  *Milestone reached: Better design to make it easy to be used by teachers and students*

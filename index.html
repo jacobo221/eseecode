@@ -58,8 +58,8 @@
 	</div>
 	<div id="body">
 		<div id="whiteboard-wrapper" class="column">
-			<div id="whiteboard-tabs" class="tabs">
-				<div id="whiteboard-tabs-blank" class="tab"><canvas width="20" height="20"></canvas></div>
+			<div id="whiteboard-tabs" class="tab-buttons">
+				<span id="whiteboard-tabs-download-button" class="tab-button" onclick="$e_downloadWhiteboardMsgBox()"><canvas width="20" height="20"></canvas></span>
 			</div>
 			<div id="whiteboard"></div>
 		</div>
@@ -115,10 +115,6 @@
 					<br />
 					<div id="setup-execute-time-buttons">
 						<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="$e_updateExecutionTime()" /><span id="setup-execute-time-title2"></span>
-					</div><br />
-					<div>
-						<p><a id="setup-downloadImage" class="link" onclick="$e_downloadCanvas(this)"></a></p>
-						<p><a id="setup-downloadLayers" class="link" onclick="$e_downloadLayersFromUI()"></a><br /><span id="setup-downloadLayers-interval-title"></span> <input id="setup-downloadLayers-interval" type="number" value="500" min="0" /></p>
 					</div>
 					<div id="dialog-setup-author"></div>
 				</div>

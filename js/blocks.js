@@ -40,6 +40,8 @@
 		}
 		$_eseecode.session.floatingBlock.div = null;
 		$_eseecode.session.floatingBlock.fromDiv = null;
+		$_eseecode.session.floatingBlock.mouse.x = undefined;
+		$_eseecode.session.floatingBlock.mouse.y = undefined;
 		if (!$e_isTouchDevice()) {
 			document.body.removeEventListener("mouseup", $e_unclickBlock, false);
 			document.body.removeEventListener("mousemove", $e_moveBlock, false);
@@ -109,6 +111,11 @@
 			$_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition = $e_recursiveCount(element, div).count;
 		}
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
+		var mousePos = $e_eventPosition(event);
+		if (div.offsetLeft > 0) { // Make sure the browser is compatible with offsetLeftTop
+			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft;
+			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop;
+		}
 		// Copy parameters
 		for (var i=1; div.getAttribute("param"+i) !== null; i++) {
 			$_eseecode.session.floatingBlock.div.setAttribute("param"+i,div.getAttribute("param"+i));
@@ -253,8 +260,12 @@
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
+				$_eseecode.session.lastChange = new Date().getTime();
 				$e_executeFromUI();
+			} else if (action != "setup" && action != "add") {
+				$_eseecode.session.lastChange = new Date().getTime();
 			}
+			$e_refreshUndoUI();
 		}
 	}
 
@@ -335,8 +346,13 @@
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var div = $_eseecode.session.floatingBlock.div;
 		var pos = $e_eventPosition(event);
-		div.style.left = pos.x*1 - $_eseecode.setup.blockWidth[level]/2 +"px";
-		div.style.top = pos.y*1 - $_eseecode.setup.blockHeight[level]/2 +"px";
+		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x +"px";
+			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
+		} else {
+			div.style.left = pos.x - $_eseecode.setup.blockWidth[level]/2 +"px";
+			div.style.top = pos.y - $_eseecode.setup.blockHeight[level]/2 +"px";
+		}
 		// if mouse is above the console or under the console, scroll. Don't use $e_smoothScroll since it uses a timeout and it will queue up in the events to launch
 		var consoleDiv = document.getElementById("console-blocks");
 		if (pos.y < consoleDiv.offsetTop) {
@@ -602,21 +618,19 @@
 				convertDiv.appendChild(element);
 				msgDiv.appendChild(convertDiv);
 			}
-			if (level === "level2") {
-				var msgTab = document.createElement("div");
-				msgTab.className = "msgBox-tabs";
-				msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
-				msgDiv.appendChild(msgTab);
-				var iconDiv = document.createElement("div");
-				iconDiv.id = "setupBlockIcon";
-				iconDiv.className = "block";
-				iconDiv.style.float = "left";
-				iconDiv.setAttribute("instructionSetId", instructionSetId);
-				var icon = document.createElement("canvas");
-				$e_paintBlock(iconDiv, false, false);
-				iconDiv.appendChild(icon);
-				msgDiv.appendChild(iconDiv);
-			}
+			var msgTab = document.createElement("div");
+			msgTab.className = "msgBox-tabs";
+			msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+			msgDiv.appendChild(msgTab);
+			var iconDiv = document.createElement("div");
+			iconDiv.id = "setupBlockIcon";
+			iconDiv.className = "block";
+			iconDiv.style.float = "left";
+			iconDiv.setAttribute("instructionSetId", instructionSetId);
+			var icon = document.createElement("canvas");
+			$e_paintBlock(iconDiv, false, false);
+			iconDiv.appendChild(icon);
+			msgDiv.appendChild(iconDiv);
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
 				var textDiv = document.createElement("div");
@@ -641,11 +655,9 @@
 				input.value = parameter.initial;
 				input.type = "text";
 				input.style.width = "100px";
-				if (level === "level2") {
-					var div = document.createElement("div");
-					div.id = input.id+"Visual";
-					textDiv.appendChild(div);
-				}
+				var div = document.createElement("div");
+				div.id = input.id+"Visual";
+				textDiv.appendChild(div);
 				textDiv.appendChild(input);
 				input = document.createElement("input");
 				input.id = "setupBlock"+parameter.id+"Default";
@@ -661,7 +673,9 @@
 			msgDiv.appendChild(input);
 			$e_msgBox(msgDiv, {acceptAction:$e_setupBlockAccept,cancelAction:$e_setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
 			if (level === "level2") {
-				$e_setupBlockVisual("Basic", instruction.parameters);
+				$e_setupBlockVisual(true, instruction.parameters);
+			} else {
+				$e_setupBlockVisual(false, instruction.parameters);
 			}
 		} else {
 			if ($_eseecode.session.blocksUndo[$_eseecode.session.blocksUndo[0]+1].fromDiv) { // Check this is a block setup, not a block add
@@ -680,10 +694,10 @@
 	 */
 	function $e_setupBlockVisual(visualMode) {
 		var iconDiv = document.getElementById("setupBlockIcon");
-		if (!visualMode) {
-			iconDiv.style.display = "none";
-		} else {
+		if (visualMode) {
 			iconDiv.style.display = "block";
+		} else {
+			iconDiv.style.display = "none";
 		}
 		var updateIcon = function() {		
 			iconDiv.innerHTML = "";	
@@ -714,11 +728,11 @@
 			var input = document.getElementById(parameterInputId);
 			var div = document.getElementById(parameterInputId+"Visual");
 			div.innerHTML = "";
-			if (!visualMode) {
+			if (visualMode) {
+				input.style.display = "none";
+			} else {
 				input.style.display = "block";
 				continue;
-			} else {
-				input.style.display = "none";
 			}
 			var defaultValue = input.value;
 			var visualTypeSupportedByBrowser = false;
@@ -1090,15 +1104,22 @@
 			}
 			paramNumber++;
 		}
-		if (setupChanges.length > 0 && document.getElementById("setupBlockAdd").value !== "true") {
-			// Update undo array
-			$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+		if (setupChanges.length > 0) {
+			$_eseecode.session.lastChange = new Date().getTime();
+			if (document.getElementById("setupBlockAdd").value !== "true") {
+				// Update undo array
+				$_eseecode.session.blocksUndo[blocksUndoIndex].parameters = setupChanges;
+			}
 		} else if (instructionConverted) {
+			$_eseecode.session.lastChange = new Date().getTime();
 			// Already saved the div into the undo stack earlier
 		} else if ($_eseecode.session.blocksUndo[blocksUndoIndex].fromDiv) {
 			// If nothing changed don't update undo stack
 			$_eseecode.session.blocksUndo.pop();
 			$_eseecode.session.blocksUndo[0]--;
+			$e_refreshUndoUI();
+		} else if (document.getElementById("setupBlockAdd").value === "true") {
+			$_eseecode.session.lastChange = new Date().getTime();
 		}
 		// Update the block icon
 		$e_paintBlock(div);
@@ -1121,6 +1142,7 @@
 		}
 		$_eseecode.session.blocksUndo.pop();
 		$_eseecode.session.blocksUndo[0]--;
+		$e_refreshUndoUI();
 		$e_msgBoxClose();
 	}
 
@@ -1400,6 +1422,6 @@
 	 * @example $e_resetUndoBlocks()
 	 */
 	function $e_resetUndoBlocks() {
-		$_eseecode.session.blocksUndo = [0, null];
+		$_eseecode.session.blocksUndo = [0];
 	}
 

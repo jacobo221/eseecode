@@ -25,7 +25,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#API_uploadCode">API_uploadCode</a></b>(code, preload)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#API_uploadCode">API_uploadCode</a></b>(code, noRun, preload)
 								</div>
 								<div class="description">Loads code into the console</div>
 							</td>
@@ -95,7 +95,7 @@
 					<div class="fixedFont">
 					
 					
-					<b>API_uploadCode</b>(code, preload)
+					<b>API_uploadCode</b>(code, noRun, preload)
 					
 					</div>
 					<div class="description">
@@ -124,10 +124,16 @@
 								<dd>Code to upload</dd>
 							
 								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>noRun</b>
+									<i>Optional</i>
+								</dt>
+								<dd>If true, it doesn't run the code yet. Also, if preload is true, only runs the precode when user presses run</dd>
+							
+								<dt>
 									<span class="light fixedFont">{Boolean}</span> <b>preload</b>
 									<i>Optional</i>
 								</dt>
-								<dd>If true, runs code and stores it to be run before every execution of user code</dd>
+								<dd>If true, stores it to be run before every execution of user code. By default it runs immediately after</dd>
 							
 							</dl>
 						

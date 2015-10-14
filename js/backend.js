@@ -153,9 +153,9 @@
 			$_eseecode.currentWindow = $e_getOrCreateWindow(id);
 		}
 		// even if we did $e_getWindow() still do the following, since it fixes rendering issues
-		for (var i=0;i<$_eseecode.windowsArray.length;i++) {
-			if ($_eseecode.windowsArray[i]) {
-				$_eseecode.windowsArray[i].style.display = "none";
+		for (var key in $_eseecode.windowsArray) {
+			if ($_eseecode.windowsArray[key]) {
+				$_eseecode.windowsArray[key].style.display = "none";
 			}
 		}
 		$_eseecode.currentWindow.style.display = "block";

@@ -32,9 +32,10 @@
 	/**
 	 * Downloads the layers as a file, called from the UI
 	 * @private
+	 * @param {Boolean} grid Set to true to download as a grid
 	 * @example $e_downloadLayersFromUI()
 	 */
-	function $e_downloadLayersFromUI() {
+	function $e_downloadLayersFromUI(grid) {
 		// Create one layer GIF to measure how long it takes
 		var start = new Date().getTime();
 		var encoder = new GIFEncoder();
@@ -47,62 +48,145 @@
 		var secondsPerLayer = (finish - start) / 1000;
 		var estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
 		if (estimatedTime >= 3) {
-			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers()\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
+			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers("+grid+")\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
 		} else {
-			$e_downloadLayers();
+			$e_downloadLayers(grid);
 		}
+	}
+
+	/**
+	 * Pops up a MsgBox to decide which whiteboard image to download
+	 * @private
+	 * @example $e_downloadWhiteboardMsgBox()
+	 */
+	function $e_downloadWhiteboardMsgBox() {
+		var msgBoxContent = "";
+		if ($_eseecode.session.lastChange > $_eseecode.session.lastRun) {
+			msgBoxContent += "<div style=\"text-align:center;margin-top:20px;color:#882222;\">"+_("You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.")+"</div>";
+		}
+		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
+		// If there is more than one layer offer to download animation/grid
+		var msgClass = "";
+		var linkSrc = "";
+		var textStyle = "";
+		var inputType = "";
+		if ($_eseecode.canvasArray["bottom"].layerOver) {
+			msgClass = "tab-button";
+			linkSrc = ["$e_downloadLayersFromUI(true)", "$e_downloadLayersFromUI(false)"];
+			textStyle = "";
+			inputType = "";
+		} else {
+			msgClass = "tab-button-disabled";
+			linkSrc = ["", ""];
+			textStyle = "text-disabled";
+			inputType = "disabled";
+		}
+		msgBoxContent += "<div style=\"text-align:center\" class=\""+textStyle+"\"><a id=\"whiteboard-downloadLayers-animation\" class=\""+msgClass+"\" onclick=\""+linkSrc[0]+"\">"+_("Download layers as animation")+"</a><div>"+_("Animation interval (in msecs)")+": <input id=\"setup-downloadLayers-interval\" type=\"number\" "+inputType+" value=\"500\" min=\"0\" style=\"width:40px\" /></div></div><br /><div style=\"text-align:center\" class=\""+textStyle+"\"><a id=\"whiteboard-downloadLayers-grid\" class=\""+msgClass+"\" onclick=\""+linkSrc[1]+"\">"+_("Download layers in a grid")+"</a><div>"+_("Layers per row")+": <input id=\"setup-downloadLayers-columns\" type=\"number\" value=\"3\" "+inputType+" min=\"1\" style=\"width:40px\" /></div></div>"
+		$e_msgBox(msgBoxContent,{noSubmit:true,cancelName:_("Close")});
 	}
 
 	/**
 	 * Links an A HTML element to an image containing all the layers
 	 * @private
-	 * @param {!HTMLElement} link HTML A element to add the link to
+	 * @param {Boolean} grid Set to true to download as a grid
 	 * @example $e_downloadLayers(document.body.createElement("a"))
 	 */
-	function $e_downloadLayers() {
+	function $e_downloadLayers(grid) {
 		var link = document.getElementById("downloadLayers-link");
 		if (!link) {
-			link = document.getElementById("setup-downloadLayers");
+			if (grid) {
+				link = document.getElementById("whiteboard-downloadLayers-grid");
+			} else {
+				link = document.getElementById("whiteboard-downloadLayers-animation");
+			}
 		}
-		var encoder = new GIFEncoder();
-		encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
-		var interval = document.getElementById("setup-downloadLayers-interval").value;
-		if (!$e_isNumber(interval)) {
-			interval = 500;
+		var columns = document.getElementById("setup-downloadLayers-columns").value
+		if (columns < 1 || !$e_isNumber(columns)) {
+			columns = 1;
 		}
-		encoder.setDelay(interval); //go to next frame every n milliseconds 
-		encoder.start();
-
+		var imageBinary;
+		if (!grid) {
+			var encoder = new GIFEncoder();
+			encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
+			var interval = document.getElementById("setup-downloadLayers-interval").value;
+			if (!$e_isNumber(interval)) {
+				interval = 500;
+			}
+			encoder.setDelay(interval); //go to next frame every n milliseconds 
+			encoder.start();
+		}
 		var layer = $_eseecode.canvasArray["bottom"]; // We skip first frame which is the grid
 		var canvas = document.createElement('canvas');
-		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
-		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
+		if (!grid) {
+			canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
+			canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
+		} else {
+			var count = 0;
+			var currentLayer = $_eseecode.canvasArray["bottom"];
+			while (currentLayer) {
+				currentLayer = currentLayer.layerOver;
+				count++;
+			}
+			if (count < columns) {
+				canvas.width = $_eseecode.canvasArray["grid"].canvas.width*count;
+			} else {
+				canvas.width = $_eseecode.canvasArray["grid"].canvas.width*columns;
+			}
+			canvas.height = $_eseecode.canvasArray["grid"].canvas.height*(Math.floor((count-1)/columns)+1);
+		}
+		var whiteboardWidth = $_eseecode.canvasArray["grid"].canvas.width;
+		var whiteboardHeight = $_eseecode.canvasArray["grid"].canvas.height;
+		var count = 0;
 		var ctx = canvas.getContext("2d");
 		while (layer) {
+			var shiftX = 0, shiftY = 0;
+			if (grid) {
+				shiftX = whiteboardWidth*(count%columns);
+				shiftY = whiteboardHeight*Math.floor(count/columns);
+			}
 			ctx.fillStyle="#FFFFFF";
-			ctx.fillRect(0,0,canvas.width,canvas.height);
+			ctx.fillRect(shiftX,shiftY,whiteboardWidth,whiteboardHeight);
 			if (document.getElementById("setup-grid-enable").checked) {
-				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0); // draw grid
+				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,shiftX,shiftY); // draw grid
 			}
 			if (layer != $_eseecode.canvasArray["grid"]) {
-				ctx.drawImage(layer.canvas,0,0);
+				ctx.drawImage(layer.canvas,shiftX,shiftY);
 			}
 			if (document.getElementById("setup-guide-enable").checked) {
-				$e_drawGuide(ctx, layer.guide, layer.name);
+				$e_drawGuide(ctx, layer.guide, layer.name, shiftX, shiftY);
+			}
+			if (grid) {
+				ctx.strokeStyle="#000000";
+				ctx.moveTo(shiftX,shiftY);
+				ctx.lineTo(shiftX+whiteboardWidth,shiftY);
+				ctx.lineTo(shiftX+whiteboardWidth,whiteboardHeight+shiftY);
+				ctx.lineTo(whiteboardWidth,whiteboardHeight+shiftY);
+				ctx.lineTo(whiteboardWidth,shiftY);
+				ctx.stroke();
 			}
 			// Watermark
 			ctx.font = "20px Arial";
 			ctx.strokeStyle="#99AAAAAA";
-			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),canvas.width/4,canvas.height-20);
-			encoder.addFrame(ctx);
+			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),shiftX+whiteboardWidth/4,shiftY+whiteboardHeight-20);
+			if (!grid) {
+				encoder.addFrame(ctx);
+			}
 			layer = layer.layerOver;
+			count++;
 		}
-		encoder.finish();
-		var binary_gif = encoder.stream().getData();
-		var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
+		var extension;
+		if (!grid) {
+			encoder.finish();
+			imageBinary = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
+			extension = "gif"
+		} else {
+			imageBinary = canvas.toDataURL();
+			extension = "png"
+		}
+		var data_url = imageBinary;
 		link.href = data_url;
 		var d = new Date();
-		link.download = "layers-"+d.getTime()+".gif";
+		link.download = "layers-"+d.getTime()+"."+extension;
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -141,7 +225,7 @@
 			dialogColumn.style.display = "none";
 			iconMargin = 5;
 		}
-		$e_switchDialogMode();
+		$e_switchDialogMode($_eseecode.modes.console[0]);
 		ace.edit("console-write").resize();
 		// Console resize tab
 		var canvas = document.getElementById("console-tabs-resize").firstChild;
@@ -395,12 +479,23 @@
 		// if write mode, focus in the textarea. Do this after $e_switchDialogMode() in case the dialog tries to steal focus
 		if ($_eseecode.modes.console[id].div == "write") {
 			ace.edit("console-write").focus();
+			document.getElementById("console-tabs-resize").style.display = "block";
 		} else {
+			$e_resizeConsole(true);
+			document.getElementById("console-tabs-resize").style.display = "none";
 			$e_checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
 		}
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.changesInCode) {
 			$_eseecode.session.changesInCode = false;
 		}
+		if (level == "level1") {
+			document.getElementById("button-execute").style.display = "none";
+			document.getElementById("button-clear").style.display = "none";
+		} else {
+			document.getElementById("button-execute").style.display = "inline";
+			document.getElementById("button-clear").style.display = "inline";
+		}
+		$e_refreshUndoUI();
 		$e_highlight();
 	}
 
@@ -447,12 +542,12 @@
 		var debugCommand = document.getElementById("dialog-debug-command-form");
 		if ($_eseecode.modes.dialog[id].id == "debug") {
 			$e_resetDebug();
-			debugCommand.style.visibility = "visible";
+			debugCommand.style.display = "block";
 			var debugCommandInput = document.getElementById("dialog-debug-command-input");
 			debugCommandInput.style.width = (debugCommand.offsetWidth - document.getElementById("dialog-debug-command-button").offsetWidth - 15) +"px";
 			//debugCommandInput.focus();
 		} else {
-			debugCommand.style.visibility = "hidden";
+			debugCommand.style.display = "none";
 		}
 		// Paint setup tab image
 		var margin = 2;
@@ -528,8 +623,8 @@
 		canvas = document.createElement("canvas");
 		ctx = canvas.getContext("2d");
 		div = document.getElementById("console-blocks");
-		width = div.parentNode.clientWidth; // Use parent in case it had display:none at this moment
-		height = div.parentNode.clientHeight;
+		width = div.parentNode.offsetWidth; // Use parent in case it had display:none at this moment
+		height = div.parentNode.offsetHeight;
 		canvas.width = width;
 		canvas.height = height;
 		var rBackground ="D5";
@@ -750,6 +845,40 @@
 		ctx.lineTo(margin,height-margin);
 		ctx.lineTo(margin,margin);
 		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+		// Download whiteboard button
+		canvas = document.getElementById("whiteboard-tabs-download-button").firstChild;
+		ctx = canvas.getContext("2d");
+		width = canvas.width;
+		height = canvas.height;
+		var margin = 2;
+		ctx.fillStyle = "#000000";
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(margin,1*height/3);
+		ctx.lineTo(width-margin,1*height/3);
+		ctx.lineTo(width-margin,height-margin);
+		ctx.lineTo(margin,height-margin);
+		ctx.fill();
+		ctx.closePath();
+		ctx.beginPath();
+		ctx.moveTo(width/4,1*height/3);
+		ctx.lineTo(3*width/4,1*height/3);
+		ctx.lineTo(3*width/4-margin,margin);
+		ctx.lineTo(1*width/4+margin,margin);
+		ctx.fill();
+		ctx.closePath();
+		ctx.strokeStyle = "#FFFFFF";
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		ctx.arc(width/2, 2*height/3-margin, height/5, 0, 360*Math.PI/180, true);
+		ctx.lineTo(marginX,height/2);
+		ctx.stroke();
+		ctx.closePath();
+		ctx.beginPath();
+		ctx.moveTo(width-margin,1*height/3+margin);
+		ctx.lineTo(width-2*margin,1*height/3+margin);
 		ctx.stroke();
 		ctx.closePath();
 	}
@@ -1014,9 +1143,17 @@
 	 * @param {Object} context Context object where to draw the guide
 	 * @param {Array} pos Coordinates of the guide
 	 * @param {Number} id Id of the layer
+	 * @param {Number} [shiftX=0] Shift X coordinates by this value
+	 * @param {Number} [shiftY=0] Shift Y coordinates by this value
 	 * @example $e_drawGuide(ctx, {x: 200, y: 200}, id)
 	 */
-	function $e_drawGuide(context, pos, id) {
+	function $e_drawGuide(context, pos, id, shiftX, shiftY) {
+		if (shiftX === undefined) {
+			shiftX = 0;
+		}
+		if (shiftY === undefined) {
+			shiftY = 0;
+		}
 		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
 		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
 		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
@@ -1048,27 +1185,27 @@
 			ctx.strokeStyle = "#FF5555";
 			ctx.fillStyle = "#FF9999";
 			ctx.beginPath();
-			ctx.moveTo(rightx, righty);
-			ctx.lineTo(leftx, lefty);
-			ctx.lineTo(frontx, fronty);
+			ctx.moveTo(shiftX+rightx, shiftY+righty);
+			ctx.lineTo(shiftX+leftx, shiftY+lefty);
+			ctx.lineTo(shiftX+frontx, shiftY+fronty);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2, 2*Math.PI, 0, false);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+2, angle-Math.PI/1.5, angle+Math.PI/1.5, true);
 			ctx.stroke();
 			ctx.lineWidth = 2;
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+5, angle-Math.PI/1.4, angle+Math.PI/1.4, true);
 			ctx.stroke();
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
+			ctx.arc(shiftX+org.x, shiftY+org.y, size/2+9, angle-Math.PI/1.3, angle+Math.PI/1.3, true);
 			ctx.stroke();
 		} else {
 			var guideCanvas = document.createElement("canvas");
@@ -1076,7 +1213,7 @@
 			guideCanvas.width = canvasWidth;
 			guideCanvas.height = canvasHeight;
 			$e_resetGuide(id, guideCanvas);
-			context.drawImage(guideCanvas, 0, 0);
+			context.drawImage(guideCanvas, shiftX, shiftY);
 		}
 	}
 
@@ -1232,7 +1369,7 @@
 			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
 			if (div) { // by the time we have to unhighlight it the div might not exist anymore
 				div.style.border = ""; // accesses the canvas
-				if (!$_eseecode.session.breakpointsStatus[line]) {
+				if (!$_eseecode.session.breakpoints[line] || !$_eseecode.session.breakpoints[line].status) {
 					div.style.boxShadow = "";
 				}
 			}
@@ -1295,6 +1432,7 @@
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
 		document.body.removeChild(downloadLink);
+		$_eseecode.session.lastSave = new Date().getTime();
 	}
 
 	/**
@@ -1446,6 +1584,8 @@
 		}
 		$e_resetCanvas();
 		$e_resetDebug();
+		$e_resetUndo();
+		$e_refreshUndoUI();
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		$e_initSetup();
 		$e_resetLanguageSelect();
@@ -1596,7 +1736,7 @@
 	 * @example $e_windowRefresh()
 	 */
 	function $e_windowRefresh(event) {
-		if (!$e_isEmbedded()) {
+		if ($_eseecode.session.lastSave < $_eseecode.session.lastChange) {
                 event.returnValue = _("Careful, any code you haven't saved will be lost if you leave this page!");
 		}
 	}
@@ -1869,9 +2009,6 @@
 		}
 		if (dialog && level != "level1" && level != "level2") {
 			if (instruction.parameters !== null && (!instruction.code || !instruction.code.noBrackets)) {
-				if (instruction.code && instruction.code.space) {
-					text += " ";
-				}
 				text += "()";
 			}
 		}
@@ -1883,7 +2020,7 @@
 			var bracketsExist = false;
 			for (i=0; i<parameters.length; i++) {
 				if (!bracketsStatus && !instruction.parameters[i].noBrackets) {
-					if (instruction.code && instruction.code.space) {
+					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
 					}
 					text += "(";
@@ -1895,7 +2032,7 @@
 				} else if (bracketsStatus !== null) {
 					text += ", ";
 				} else if (bracketsStatus === null) {
-					if (instruction.code && instruction.code.space) {
+					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
 					}
 				}
@@ -2150,7 +2287,11 @@
 		if (mode == "blocks") {
 			$e_undoBlocks(redo);
 		} else if (mode == "write") {
-			ace.edit("console-write").execCommand(redo?"redo":"undo", false, null);
+			if (redo) {
+				ace.edit("console-write").session.getUndoManager().redo();
+			} else {
+				ace.edit("console-write").session.getUndoManager().undo();
+			}
 		}
 	}
 
@@ -2161,6 +2302,7 @@
 	 */
 	function $e_undoFromUI() {
 		$e_undo(false);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2170,6 +2312,7 @@
 	 */
 	function $e_redoFromUI() {
 		$e_undo(true);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2181,6 +2324,7 @@
 		$e_resetCanvas();
 		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
 		$e_endExecution();
+		$e_initProgramCounter();
 	}
 
 	/**
@@ -2210,17 +2354,17 @@
 		$e_moveGuide($e_user2systemCoords({x: 0, y: 0}));
 		$e_setAngleGuide($e_user2systemAngle(0));
 		// reset windows
-  		for(var i=0;i<$_eseecode.windowsArray.length;i++) {
-			if ($_eseecode.windowsArray[i]) {
-				$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[i]);
-				delete $_eseecode.windowsArray[i];
+  		for(var key in $_eseecode.windowsArray) {
+			if ($_eseecode.windowsArray[key]) {
+				$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[key]);
+				delete $_eseecode.windowsArray[key];
 			}
 		}
 		$_eseecode.currentWindow = undefined;
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
 		document.getElementById("dialog-tabs-window").style.display = "none";
-		if (!noPrecode) {
+		if (!noPrecode && !$_eseecode.execution.precode.standby) {
 			$e_execute("disabled", null, true);
 		}
 	}
@@ -2291,8 +2435,10 @@
 	 */
 	function $e_writeChanged(event) {
 		$_eseecode.session.changesInCode = "write";
+		$_eseecode.session.lastChange = new Date().getTime();
 		$e_unhighlight();
 		$e_updateWriteBreakpoints(event);
+		$e_refreshUndoUI();
 	}
 
 	/**
@@ -2388,6 +2534,48 @@
 		}
 		$_eseecode.coordinates.userSelection = selectValue;
 		$e_changeAxisCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
+	}
+	
+	/**
+	 * Shows/Hide unro/redo buttons
+	 * @private
+	 * @example $e_refreshUndoUI()
+	 */
+	function $e_refreshUndoUI() {
+		var hasUndo = true, hasRedo = true;
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
+			var aceUndoManager =  ace.edit("console-write").session.getUndoManager();
+			hasUndo = aceUndoManager.hasUndo();
+			hasRedo = aceUndoManager.hasRedo();
+		} else {
+			var undoBlocksIndex = $_eseecode.session.blocksUndo[0];
+			if (undoBlocksIndex == 0) {
+				hasUndo = false;
+			}
+			if (undoBlocksIndex == $_eseecode.session.blocksUndo.length-1) {
+				hasRedo = false;
+			}
+		}
+		if (hasUndo) {
+			document.getElementById("button-undo").style.visibility = "visible";
+		} else {
+			document.getElementById("button-undo").style.visibility = "hidden";
+		}
+		if (hasRedo) {
+			document.getElementById("button-redo").style.visibility = "visible";
+		} else {
+			document.getElementById("button-redo").style.visibility = "hidden";
+		}
+	}
+
+	/**
+	 * Resets the undo stacks
+	 * @private
+	 * @example $e_resetUndo()
+	 */
+	function $e_resetUndo() {
+		$e_resetUndoBlocks();
+		$e_resetUndoWrite();
 	}
 
 	/**

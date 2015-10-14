@@ -8,10 +8,13 @@
 	 * @param {String} [text] Text to show in the button
 	 * @param {Number} [posx] X coordinate to place the button in the window
 	 * @param {Number} [posy] Y coordinate to place the button in the window
+	 * @param {Number} [width] Width of the button
+	 * @param {Number} [height] Height of the button
 	 * @param {String} [action] Code to run on button click
 	 * @example windowButtonEdit("b2", "turn", 170, 90, "turnRight(15)")
 	 */
-	function windowButtonEdit(id, text, posx, posy, action) {
+	function windowButtonEdit(id, text, posx, posy, action, width, height) {
+		$e_parseParameterTypes("windowButtonEdit", arguments);
 		var id = "element-"+id;
 		var button = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
@@ -25,6 +28,12 @@
 		}
 		if (posy) {
 			button.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
+		}
+		if (width) {
+			button.style.width = width+"px";
+		}
+		if (height) {
+			button.style.height = height+"px";
 		}
 		if (action) {
 			var oldButton = button;
@@ -57,8 +66,9 @@
 	 * @example windowTextCreate("t2", "Repeticions:", 10, 100, undefined, true)
 	 */
 	function windowTextEdit(id, text, posx, posy, width, bold, italic, size, color, family) {
+		$e_parseParameterTypes("windowTextEdit", arguments);
 		var id = "element-"+id;
-    		var div = document.getElementById(id);
+    	var div = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
 		$e_switchDialogMode("window");
 		div.style.position = "absolute";
@@ -107,6 +117,7 @@
 	 * @example windowImageEdit("img1", "3", 100, 100, 60, 15)
 	 */
 	function windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
+		$e_parseParameterTypes("windowImageEdit", arguments);
 		var id = "element-"+id;
     		var div = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
@@ -174,8 +185,9 @@
 	 * @example windowInputEdit("i1", 70, 75, 90, 15, "color")
 	 */
 	function windowInputEdit(id, posx, posy, width, height, type) {
+		$e_parseParameterTypes("windowInputEdit", arguments);
 		var id = "element-"+id;
-    		var input = document.getElementById(id);
+    	var input = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
 		$e_switchDialogMode("window");
 		input.style.position = "absolute";
@@ -185,8 +197,12 @@
 		if (height) {
 			input.style.height = height+"px";
 		}
-		input.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
-		input.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
+		if (posx !== undefined) {
+			input.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
+		}
+		if (posy !== undefined) {
+			input.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
+		}
 		if (type) {
     			input.type = type;
 		}
@@ -200,8 +216,9 @@
 	 * @example windowInputSet("secret", "")
 	 */
 	function windowInputSet(id, value) {
+		$e_parseParameterTypes("windowInputSet", arguments);
 		var id = "element-"+id;
-    		var input = document.getElementById(id);
+    	var input = document.getElementById(id);
 		$e_switchDialogMode("window");
 		input.value = value;
 	}
@@ -215,16 +232,19 @@
 	 * @param {String} [text] Text to show in the button
 	 * @param {Number} [posx] X coordinate to place the button in the window
 	 * @param {Number} [posy] Y coordinate to place the button in the window
+	 * @param {Number} [width] Width of the button
+	 * @param {Number} [height] Height of the button
 	 * @param {String} [action] Code to run on button click
 	 * @example windowButtonCreate(1, "b2", "turn", 170, 90, "turnRight(15)")
 	 */
-	function windowButtonCreate(windowId, id, text, posx, posy, action) {
+	function windowButtonCreate(windowId, id, text, posx, posy, action, width, height) {
+		$e_parseParameterTypes("windowButtonCreate", arguments);
 		var window = $e_getWindow(windowId);
   		var button = document.createElement("input");
 		button.id = "element-"+id;
 		button.type = "button";
 		window.appendChild(button);
-		windowButtonEdit(id, text, posx, posy, action);
+		windowButtonEdit(id, text, posx, posy, action, width, height);
 	}
 
 	/**
@@ -245,8 +265,9 @@
 	 * @example windowTextCreate(1, "t2", "Repeticions:", 10, 100, undefined, true)
 	 */
 	function windowTextCreate(windowId, id, text, posx, posy, width, bold, italic, size, color, family) {
+		$e_parseParameterTypes("windowTextCreate", arguments);
 		var window = $e_getWindow(windowId);
-    		var div = document.createElement("div");
+    	var div = document.createElement("div");
 		div.id = "element-"+id;
 		window.appendChild(div);
 		windowTextEdit(id, text, posx, posy, width, bold, italic, size, color, family);
@@ -269,8 +290,9 @@
 	 * @example windowImageCreate(1, "img1", "3", 100, 100, 60, 15)
 	 */
 	function windowImageCreate(windowId, id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
+		$e_parseParameterTypes("windowImageCreate", arguments);
 		var window = $e_getWindow(windowId);
-    		var img = document.createElement("img");
+    	var img = document.createElement("img");
 		img.id = "element-"+id;
 		window.appendChild(img);
 		windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout);
@@ -290,6 +312,7 @@
 	 * @example windowInputCreate(1, "i1", 70, 75, 90, 15, "color")
 	 */
 	function windowInputCreate(windowId, id, posx, posy, width, height, type) {
+		$e_parseParameterTypes("windowInputCreate", arguments);
 		var window = $e_getWindow(windowId);
     		var input = document.createElement("input");
 		input.id = "element-"+id;
@@ -301,10 +324,11 @@
 	 * Removes a window and all of its child elements
 	 * @since 1.0
 	 * @public
-	 * @param {Number} windowId Window id
+	 * @param {Number} id Window id
 	 * @example windowRemove(2)
 	 */
 	function windowRemove(id) {
+		$e_parseParameterTypes("windowRemove", arguments);
 		$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[id]);
 	}
 
@@ -316,6 +340,7 @@
 	 * @example hide(2)
 	 */
 	function hide(id) {
+		$e_parseParameterTypes("hide", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
@@ -327,10 +352,18 @@
 	 * Hides the current window
 	 * @since 1.0
 	 * @public
-	 * @example windowHide()
+	 * @param {Number} [id] Window id
+	 * @example windowHide(id)
 	 */
-	function windowHide() {
-		$_eseecode.currentWindow.style.display = "none";
+	function windowHide(id) {
+		$e_parseParameterTypes("windowHide", arguments);
+		var theWindow;
+		if (id === undefined) {
+			theWindow = $_eseecode.currentWindow;
+		} else {
+			theWindow = $_eseecode.windowsArray[id];
+		}
+		theWindow.style.display = "none";
 	}
 
 	/**
@@ -342,6 +375,7 @@
 	 * @example windowInputGet("i1")
 	 */
 	function windowInputGet(id) {
+		$e_parseParameterTypes("windowInputGet", arguments);
 		var value = undefined;
 		if (document.getElementById("element-"+id) !== null) {
 			value = document.getElementById("element-"+id).value;
@@ -358,6 +392,7 @@
 	 * @example windowTextGet("t2")
 	 */
 	function windowTextGet(id) {
+		$e_parseParameterTypes("windowTextGet", arguments);
 		var value = undefined;
 		if (document.getElementById("element-"+id) !== null) {
 			value = document.getElementById("element-"+id).innerHTML;
@@ -369,10 +404,11 @@
 	 * Shows a layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Layer id
+	 * @param {Number} [id] Layer id
 	 * @example show(2)
 	 */
 	function show(id) {
+		$e_parseParameterTypes("show", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
@@ -384,20 +420,27 @@
 	 * Shows the current window
 	 * @since 1.0
 	 * @public
+	 * @param {Number} [id] Window id
 	 * @example windowShow()
 	 */
-	function windowShow() {
-		$e_windowSwitch();
+	function windowShow(id) {
+		$e_parseParameterTypes("windowShow", arguments);
+		if (id === undefined) {
+			$e_windowSwitch();
+		} else {
+			$e_windowSwitch(id);
+		}
 	}
 
 	/**
 	 * Changes the active window
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Window id
+	 * @param {Number} [id] Window id
 	 * @example windowUse(2)
 	 */
 	function windowUse(id) {
+		$e_parseParameterTypes("windowUse", arguments);
 		$e_windowSwitch(id);
 	}
 
@@ -405,11 +448,12 @@
 	 * Returns the layer name
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Layer id
+	 * @param {Number} [id] Layer id
 	 * @return {String} Layer name
 	 * @example getLayerName(2)
 	 */
 	function getLayerName(id) {
+		$e_parseParameterTypes("getLayerName", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
@@ -422,11 +466,12 @@
 	 * Returns if the specified layer is visible or hidden
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Layer id
+	 * @param {Number} [id] Layer id
 	 * @return {Boolean} Whether the specified layer is visible or hidden
 	 * @example getLayerVisibility(2)
 	 */
 	function getLayerVisibility(id) {
+		$e_parseParameterTypes("getLayerVisibility", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
@@ -439,19 +484,17 @@
 	 * Returns as a value the image visible in the specified layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Layer id
+	 * @param {Number} [id] Layer id
 	 * @return {String} Image in the specified layer
 	 * @example getLayerImage(2)
 	 */
 	function getLayerImage(id) {
-		if (typeof id === "undefined") {
-			id = $_eseecode.canvasArray.length;
+		$e_parseParameterTypes("getLayerImage", arguments);
+		var canvas = $_eseecode.currentCanvas;
+		if (id !== undefined) {
+			canvas = $_eseecode.canvasArray[id];
 		}
-		var value = null;
-		if ($_eseecode.canvasArray[id]) {
-			value = $_eseecode.canvasArray[id].canvas.toDataURL();
-		}
-		return value;
+		return canvas.canvas.toDataURL();
 	}
 
 	/**
@@ -464,6 +507,7 @@
 	 * @example move(20,50)
 	 */
 	function move(right, down) {
+		$e_parseParameterTypes("move", arguments);
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var tempCanvas = document.createElement("canvas");
 		tempCanvas.width = canvasSize;
@@ -484,6 +528,7 @@
 	 * @example moveRight(20,50)
 	 */
 	function moveRight(pixels) {
+		$e_parseParameterTypes("moveRight", arguments);
 		move(pixels, 0);
 	}
 
@@ -496,6 +541,7 @@
 	 * @example moveLeft(20,50)
 	 */
 	function moveLeft(pixels) {
+		$e_parseParameterTypes("moveLeft", arguments);
 		moveRight(-pixels);
 	}
 
@@ -508,6 +554,7 @@
 	 * @example moveDown(20,50)
 	 */
 	function moveDown(pixels) {
+		$e_parseParameterTypes("moveDown", arguments);
 		move(0, pixels);
 	}
 
@@ -520,11 +567,12 @@
 	 * @example moveUp(20,50)
 	 */
 	function moveUp(pixels) {
+		$e_parseParameterTypes("moveUp", arguments);
 		moveDown(-pixels);
 	}
 
 	/**
-	 * Rotates the current layer
+	 * Rotates the current layer right
 	 * Any part of the image left outside the whiteboard will be lost
 	 * @since 1.0
 	 * @public
@@ -533,6 +581,7 @@
 	 * @example rotateRight(90)
 	 */
 	function rotateRight(degrees, axis) {
+		$e_parseParameterTypes("rotateRight", arguments);
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var tempCanvas = document.createElement("canvas");
 		tempCanvas.width = canvasSize;
@@ -563,7 +612,18 @@
 		clean();
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
+
+	/**
+	 * Rotates the current layer left
+	 * Any part of the image left outside the whiteboard will be lost
+	 * @since 1.0
+	 * @public
+	 * @param {Number} degrees Amount of degrees to rotate
+	 * @param {Number} [axis=0] 0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner
+	 * @example rotateRight(90)
+	 */
 	function rotateLeft(degrees, axis) {
+		$e_parseParameterTypes("rotateLeft", arguments);
 		rotateRight(-degrees, axis);
 	}
 
@@ -578,6 +638,7 @@
 	 * @example scale(2,2)
 	 */
 	function scale(horizontal, vertical, axis) {
+		$e_parseParameterTypes("scale", arguments);
 		var color = $_eseecode.currentCanvas.style.color;
 		var size = $_eseecode.currentCanvas.style.size;
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
@@ -644,7 +705,19 @@
 	 * @example getRandomColor()
 	 */
 	function getRandomColor() {
-		var color = $e_executionTraceIterate("randomColor", "#"+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16)+getRandomNumber(256).toString(16));
+		var r = getRandomNumber(256).toString(16);
+		if (r.length < 2) {
+			r = "0"+r;
+		}
+		var g = getRandomNumber(256).toString(16);
+		if (g.length < 2) {
+			g = "0"+g;
+		}
+		var b = getRandomNumber(256).toString(16);
+		if (b.length < 2) {
+			b = "0"+b;
+		}
+		var color = $e_executionTraceIterate("randomColor", "#"+r+g+b);
 		return color;
 	}
 
@@ -654,9 +727,14 @@
 	 * @public
 	 * @param {Number} [upperbound] The highest number desired, excluding this number
 	 * @return {Number} A positive random integer number [0,upperbound-1]
+	 * @throws codeError
 	 * @example getRandomNumber(100)
 	 */
 	function getRandomNumber(upperbound) {
+		$e_parseParameterTypes("getRandomNumber", arguments);
+		if (upperbound < 0) {
+			throw new $e_codeError("getRandomNumber","Upperbound cannot be lower than 0, recieved: "+upperbound);
+		}
 		if (upperbound === undefined) {
 			upperbound = Number.MAX_VALUE;
 		}
@@ -673,6 +751,7 @@
 	 * @example getSine(90)
 	 */
 	function getSine(angle) {
+		$e_parseParameterTypes("getSine", arguments);
 		var value = Math.sin(angle*Math.PI/180);
 		return value;
 	}
@@ -686,6 +765,7 @@
 	 * @example getArcsine(90)
 	 */
 	function getArcsine(angle) {
+		$e_parseParameterTypes("getArcsine", arguments);
 		var value = Math.asin(angle)*180/Math.PI;
 		return value;
 	}
@@ -699,6 +779,7 @@
 	 * @example getCosine(90)
 	 */
 	function getCosine(angle) {
+		$e_parseParameterTypes("getCosine", arguments);
 		var value = Math.cos(angle*Math.PI/180);
 		return value;
 	}
@@ -712,6 +793,7 @@
 	 * @example getArccosine(90)
 	 */
 	function getArccosine(angle) {
+		$e_parseParameterTypes("getArccosine", arguments);
 		var value = Math.acos(angle)*180/Math.PI;
 		return value;
 	}
@@ -725,6 +807,7 @@
 	 * @example getTangent(90)
 	 */
 	function getTangent(angle) {
+		$e_parseParameterTypes("getTangent", arguments);
 		var value = Math.tan(angle*Math.PI/180);
 		return value;
 	}
@@ -738,6 +821,7 @@
 	 * @example getArctangent(90)
 	 */
 	function getArctangent(angle) {
+		$e_parseParameterTypes("getArctangent", arguments);
 		var value = Math.atan(angle)*180/Math.PI;
 		return value;
 	}
@@ -751,6 +835,7 @@
 	 * @example getSquareRoot(9)
 	 */
 	function getSquareRoot(number) {
+		$e_parseParameterTypes("getSquareRoot", arguments);
 		var value = Math.sqrt(number);
 		return value;
 	}
@@ -788,6 +873,7 @@
 	 * @example getX()
 	 */
 	function getX(id) {
+		$e_parseParameterTypes("getX", arguments);
 		var guide;
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
@@ -807,6 +893,7 @@
 	 * @example getY()
 	 */
 	function getY(id) {
+		$e_parseParameterTypes("getY", arguments);
 		var guide;
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
@@ -827,6 +914,7 @@
 	 * @example getAngle()
 	 */
 	function getAngle(id) {
+		$e_parseParameterTypes("getAngle", arguments);
 		var guide;
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
@@ -847,6 +935,7 @@
 	 * @example lineAt(200, 200, 50, 50)
 	 */
 	function lineAt(originx, originy, destinationx, destinationy) {
+		$e_parseParameterTypes("lineAt", arguments);
 		$e_systemLineAt($e_user2systemCoords({x: originx, y: originy}), $e_user2systemCoords({x: destinationx, y: destinationy}));
 	}
 	
@@ -859,6 +948,7 @@
 	 * @example line(50, 50)
 	 */
 	function line(destinationx, destinationy) {
+		$e_parseParameterTypes("line", arguments);
 		var coords = $e_user2systemCoords({x: destinationx, y: destinationy});
 		$e_systemLineAt($_eseecode.currentCanvas.guide,coords);
 		$e_moveGuide(coords);
@@ -872,9 +962,7 @@
 	 * @example forward(50)
 	 */
 	function forward(pixels) {
-		if (!$e_isNumber(pixels)) {
-			throw new codeError("forward","Invalid parameter in forward() call");
-		}
+		$e_parseParameterTypes("forward", arguments);
 		var pos = {};
 		pos.x = $_eseecode.currentCanvas.guide.x+pixels*Math.cos($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.x);
 		pos.y = $_eseecode.currentCanvas.guide.y+pixels*Math.sin($_eseecode.currentCanvas.guide.angle*Math.PI/180)*Math.abs($_eseecode.coordinates.scale.y);
@@ -890,6 +978,7 @@
 	 * @example back(50)
 	 */
 	function back(pixels) {
+		$e_parseParameterTypes("back", arguments);
 		forward(-pixels);
 	}
 
@@ -899,11 +988,12 @@
 	 * @public
 	 * @param {Number} radius Radius of the arc
 	 * @param {Number} degrees Amount of degrees to arc
-	 * @param {Number} [axis=0] 0 = arc around the guide, 1 = arc following the guide's position and angle and move the guide to the end of the arc
+	 * @param {Boolean} [axis=false] false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc
 	 * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
 	 * @example arc(50, 270)
 	 */
 	function arc(radius, degrees, axis, counterclockwise) {
+		$e_parseParameterTypes("arc", arguments);
 		var posx, posy;
 		var startradians, endradians;
 		var move;
@@ -913,7 +1003,7 @@
 		} else {
 			move = -1;
 		}
-		if (axis == 1) {
+		if (axis) {
 			startradians = ($_eseecode.currentCanvas.guide.angle+90*move)*Math.PI/180;	
 			posx = $_eseecode.currentCanvas.guide.x+radius*Math.cos(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
 			posy = $_eseecode.currentCanvas.guide.y+radius*Math.sin(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
@@ -932,7 +1022,7 @@
 			$_eseecode.currentCanvas.context.closePath();
 		}
 
-		if (axis == 1) {
+		if (axis) {
 			var COx, COy; // vector from center to origin
 			COx = $_eseecode.currentCanvas.guide.x-posx;
 			COy = $_eseecode.currentCanvas.guide.y-posy;
@@ -955,6 +1045,7 @@
 	 * @example writeAt("Hello!", 200, 200, 90)
 	 */
 	function writeAt(text, posx, posy, angle) {
+		$e_parseParameterTypes("writeAt", arguments);
 		var coords = $e_user2systemCoords({x: posx, y: posy});
 		$e_systemWriteAt(text, coords, $e_user2systemAngle(angle));
 	}
@@ -967,6 +1058,7 @@
 	 * @example write("Hello!")
 	 */
 	function write(text) {
+		$e_parseParameterTypes("write", arguments);
 		$e_systemWriteAt(text, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.guide.angle);
 	}
 
@@ -1003,6 +1095,7 @@
 	 * @example turnRight(90)
 	 */
 	function turnRight(angle) {
+		$e_parseParameterTypes("turnRight", arguments);
 		$e_setAngleGuide($_eseecode.currentCanvas.guide.angle+angle);
 	}
 
@@ -1014,6 +1107,7 @@
 	 * @example turnLeft(90)
 	 */
 	function turnLeft(angle) {
+		$e_parseParameterTypes("turnLeft", arguments);
 		$e_setAngleGuide($_eseecode.currentCanvas.guide.angle-angle);
 	}
 
@@ -1022,10 +1116,11 @@
 	 * The original angle is the guide looking horizontally to the right
 	 * @since 2.1
 	 * @public
-	 * @param {Number} angle Angle to set to
+	 * @param {Number} [angle=0] Angle to set to
 	 * @example turnReset(90)
 	 */
 	function turnReset(angle) {
+		$e_parseParameterTypes("turnReset", arguments);
 		if (angle === undefined) {
 			angle = 0;
 		}
@@ -1042,9 +1137,17 @@
 	 * @param {Boolean} [centered] Whether or not the image should be centered in the given position
 	 * @param {Number} [width] Image width
 	 * @param {Number} [height] Image height
+	 * @throws codeError
 	 * @example image(getLayerImage(3), 50, 50, true, 200, 150)
 	 */
 	function image(src, posx, posy, centered, width, height) {
+		$e_parseParameterTypes("image", arguments);
+		if (width < 0) {
+			throw new $e_codeError("image","Width cannot be lower than 0, recieved: "+width);
+		}
+		if (height < 0) {
+			throw new $e_codeError("image","Height cannot be lower than 0, recieved: "+height);
+		}
 		var img = new Image();
 		var canvas = $_eseecode.currentCanvas;
 		var systemPos = $e_user2systemCoords({x: posx, y: posy});
@@ -1076,6 +1179,7 @@
 	 * @example goTo(50, 50)
 	 */
 	function goTo(posx, posy) {
+		$e_parseParameterTypes("goTo", arguments);
 		var pos = $e_user2systemCoords({x: posx, y: posy});
 		$e_moveGuide(pos);
 	}
@@ -1141,6 +1245,7 @@
 	 * @example getRGB(0,128,256)
 	 */
 	function getRGB(red, green, blue) {
+		$e_parseParameterTypes("getRGB", arguments);
 		var color = "rgb("+red+","+green+","+blue+")";
 		return color;
 	}
@@ -1150,9 +1255,17 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} index Transparency index in the range [0,1]
+	 * @throws codeError
 	 * @example setInvisible(0.5)
 	 */
 	function setInvisible(index) {
+		$e_parseParameterTypes("setInvisible", arguments);
+		if (index < 0) {
+			throw new $e_codeError("setinvisible","Index cannot be lower than 0, recieved: "+index);
+		}
+		if (index > 1) {
+			throw new $e_codeError("setinvisible","Index cannot be higher than 1, recieved: "+index);
+		}
 		$_eseecode.currentCanvas.style.alpha = index;
 		$_eseecode.currentCanvas.context.globalAlpha = index;
 	}
@@ -1173,16 +1286,27 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to push the layer down
+	 * @param {Number} [id] Id of the layer to affect
+	 * @throws codeError
 	 * @example push(3)
 	 */
-	function push(levels) {
+	function push(levels, id) {
+		$e_parseParameterTypes("push", arguments);
+		if (levels < 0) {
+			throw new $e_codeError("push","levels cannot be lower than 0, recieved: "+levels);
+		}
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
 		if (levels < 1) {
 			return;
 		}
-		var layer = $_eseecode.currentCanvas;
+		var layer;
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
 		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
 			$_eseecode.canvasArray["top"] = layer.layerUnder;
 		}
@@ -1215,16 +1339,27 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to pull the layer up
+	 * @param {Number} [id] Id of the layer to affect
+	 * @throws codeError
 	 * @example pull(3)
 	 */
-	function pull(levels) {
+	function pull(levels, id) {
+		$e_parseParameterTypes("pull", arguments);
+		if (levels < 0) {
+			throw new $e_codeError("pull","levels cannot be lower than 0, recieved: "+levels);
+		}
 		if (typeof levels === "undefined") {
 			levels = 1;
 		}
 		if (levels < 1) {
 			return;
 		}
-		var layer = $_eseecode.currentCanvas;
+		var layer;
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
 		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
 			$_eseecode.canvasArray["bottom"] = layer.layerOver;
 		}
@@ -1259,6 +1394,7 @@
 	 * @example clean()
 	 */
 	function clean(id) {
+		$e_parseParameterTypes("clean", arguments);
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
 		}
@@ -1275,9 +1411,11 @@
 	 * @param {Number} [count] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
 	 * @return {Number} Animation handler
+	 * @throws Code execution exception
 	 * @example animate(0.25, "stepForward()")
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
+		$e_parseParameterTypes("animate", arguments);
 		var returnValue;
 		try {
 			returnValue = eval(command);
@@ -1306,6 +1444,7 @@
 	 * @example animateLayers(0.1)
 	 */
 	function animateLayers(delay) {
+		$e_parseParameterTypes("animateLayers", arguments);
 		var numLayers = $_eseecode.canvasArray.length;
 		if (delay === undefined) {
 			delay = 0.5;
@@ -1339,6 +1478,7 @@
 	 * @example unanimate(2)
 	 */
 	function unanimate(timeoutHandlersIndex) {
+		$e_parseParameterTypes("unanimate", arguments);
 		clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
 		delete $_eseecode.session.timeoutHandlers[timeoutHandlersIndex];
 	}
@@ -1352,6 +1492,7 @@
 	 * @example use()
 	 */
 	function use(id) {
+		$e_parseParameterTypes("use", arguments);
 		var canvas = $e_switchCanvas(id);
 		return canvas.name;
 	}
@@ -1362,9 +1503,14 @@
 	 * @public
 	 * @param {Number} [id] Layer id. If unset it creates it in a new layer
 	 * @return {Number} Layer name
+	 * @throws codeError
 	 * @example snapshot()
 	 */
 	function snapshot(id) {
+		$e_parseParameterTypes("snapshot", arguments);
+		if (id < 0) {
+			throw new $e_codeError("snapshot","ID cannot be lower than 0, recieved: "+id);
+		}
 		var currentCanvas = $_eseecode.currentCanvas;
 		var canvas = $e_switchCanvas(id);
 		var imageClone = getLayerImage(currentCanvas.name);
@@ -1386,6 +1532,7 @@
 	 * @example setSize(2)
 	 */
 	function setSize(size) {
+		$e_parseParameterTypes("setSize", arguments);
 		$e_setSizeStyle(size);
 	}
 
@@ -1407,6 +1554,7 @@
 	 * @example setColor("#FF0000")
 	 */
 	function setColor(color) {
+		$e_parseParameterTypes("setColor", arguments);
 		$e_setColorStyle(color);
 	}
 
@@ -1428,6 +1576,7 @@
 	 * @example setFont("Arial")
 	 */
 	function setFont(font) {
+		$e_parseParameterTypes("setFont", arguments);
 		$_eseecode.currentCanvas.style.font = font;
 		$e_setTextStyle();
 	}
@@ -1450,6 +1599,7 @@
 	 * @example setBold(true)
 	 */
 	function setBold(bold) {
+		$e_parseParameterTypes("setBold", arguments);
 		if (bold === undefined || bold) { // optional parameter
 			$_eseecode.currentCanvas.style.bold = true;
 		} else {
@@ -1476,6 +1626,7 @@
 	 * @example setItalic(true)
 	 */
 	function setItalic(italic) {
+		$e_parseParameterTypes("setItalic", arguments);
 		if (italic === undefined || italic) { // optional parameter
 			$_eseecode.currentCanvas.style.italic = true;
 		} else {
@@ -1502,6 +1653,7 @@
 	 * @example windowButtonRemove("b1")
 	 */
 	function windowButtonRemove(id) {
+		$e_parseParameterTypes("windowButtonRemove", arguments);
 		return $e_windowElementRemove(id);
 	}
 
@@ -1513,6 +1665,7 @@
 	 * @example windowTextRemove("b1")
 	 */
 	function windowTextRemove(id) {
+		$e_parseParameterTypes("windowTextRemove", arguments);
 		return $e_windowElementRemove(id);
 	}
 
@@ -1524,6 +1677,7 @@
 	 * @example windowImageRemove("b1")
 	 */
 	function windowImageRemove(id) {
+		$e_parseParameterTypes("windowImageRemove", arguments);
 		return $e_windowElementRemove(id);
 	}
 
@@ -1535,6 +1689,7 @@
 	 * @example windowInputRemove("b1")
 	 */
 	function windowInputRemove(id) {
+		$e_parseParameterTypes("windowInputRemove", arguments);
 		return $e_windowElementRemove(id);
 	}
 
@@ -1546,6 +1701,7 @@
 	 * @example windowButtonHide("b1")
 	 */
 	function windowButtonHide(id) {
+		$e_parseParameterTypes("windowButtonHide", arguments);
 		$e_windowElementHide(id);
 	}
 
@@ -1557,6 +1713,7 @@
 	 * @example windowTextHide("t1")
 	 */
 	function windowTextHide(id) {
+		$e_parseParameterTypes("windowTextHide", arguments);
 		$e_windowElementHide(id);
 	}
 
@@ -1568,6 +1725,7 @@
 	 * @example windowInputHide("i1")
 	 */
 	function windowInputHide(id) {
+		$e_parseParameterTypes("windowInputHide", arguments);
 		$e_windowElementHide(id);
 	}
 
@@ -1579,6 +1737,7 @@
 	 * @example windowImageHide("img1")
 	 */
 	function windowImageHide(id) {
+		$e_parseParameterTypes("windowImageHide", arguments);
 		$e_windowElementHide(id);
 	}
 
@@ -1590,6 +1749,7 @@
 	 * @example windowButtonShow("b1")
 	 */
 	function windowButtonShow(id) {
+		$e_parseParameterTypes("windowButtonShow", arguments);
 		$e_windowElementShow(id);
 	}
 
@@ -1601,6 +1761,7 @@
 	 * @example windowTextShow("t1")
 	 */
 	function windowTextShow(id) {
+		$e_parseParameterTypes("windowTextShow", arguments);
 		$e_windowElementShow(id);
 	}
 
@@ -1612,6 +1773,7 @@
 	 * @example windowImageShow("img1")
 	 */
 	function windowImageShow(id) {
+		$e_parseParameterTypes("windowImageShow", arguments);
 		$e_windowElementShow(id);
 	}
 
@@ -1623,6 +1785,7 @@
 	 * @example windowInputShow("i1")
 	 */
 	function windowInputShow(id) {
+		$e_parseParameterTypes("windowInputShow", arguments);
 		$e_windowElementShow(id);
 	}
 
@@ -1630,13 +1793,14 @@
 	 * Changes the axis of the whiteboard
 	 * @since 2.1
 	 * @public
-	 * @param {Number} posx X position of the vertical axis, origin us upperleft corner
-	 * @param {Number} posy Y position of the horizontal axis, origin us upperleft corner
-	 * @param {Number} xScale Scale by which to multiply the x coordinates, originaly increasing from left to right
-	 * @param {Number} yScale Scale by which to multiply the y coordinates, originaly increasing downwards
+	 * @param {Number} [posx=0] X position of the vertical axis, origin us upperleft corner
+	 * @param {Number} [posy=0] Y position of the horizontal axis, origin us upperleft corner
+	 * @param {Number} [xScale=1] Scale by which to multiply the x coordinates, originaly increasing from left to right
+	 * @param {Number} [yScale=1] Scale by which to multiply the y coordinates, originaly increasing downwards
 	 * @example changeAxis(200, 200)
 	 */
 	function changeAxis(posx, posy, xScale, yScale) {
+		$e_parseParameterTypes("changeAxis", arguments);
 		if (posx === undefined) {
 			posx = 0;
 		}

@@ -44,6 +44,7 @@
 	 * Check the execution control limits
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
+	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_checkExecutionLimits(31)
 	 */
 	function $e_checkExecutionLimits(lineNumber) {
@@ -58,27 +59,32 @@
 			var watchpointTriggered = false;
 			for (var i=0; i < $_eseecode.execution.watchpointsChanged.length && !watchpointTriggered; i++) {
 				var watch = $_eseecode.execution.watchpointsChanged[i];
-				if ($_eseecode.session.watchpointsStatus[watch]) {
+				if ($_eseecode.session.watchpoints[watch].status) {
 					watchpointTriggered = true;
 				}
 			}
 			if (watchpointTriggered) {
 				$_eseecode.execution.breakpointCounter++;
 				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+					$_eseecode.execution.breakpointCounterLimit++;
 					throw "executionWatchpointed";
 				}
 			}
 		}
-		if ($_eseecode.session.breakpoints[lineNumber] && $_eseecode.session.breakpointsStatus[lineNumber]) {
-			$_eseecode.execution.breakpointCounter++;
-			if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
-				throw "executionBreakpointed";
+		if ($_eseecode.session.breakpoints[lineNumber]) {
+			$_eseecode.session.breakpoints[lineNumber].count++;
+			if ($_eseecode.session.breakpoints[lineNumber].status) {
+				$_eseecode.execution.breakpointCounter++;
+				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
+					$_eseecode.execution.breakpointCounterLimit++;
+					throw "executionBreakpointed";
+				}
 			}
 		}
 		if (executionTime > $_eseecode.execution.endLimit) {
 			throw "executionTimeout";
 		}
-		if ($_eseecode.execution.programCounterLimit && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
+		if ($_eseecode.execution.stepped && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
 			if ($_eseecode.execution.programCounter == 1) {
 				$_eseecode.execution.programCounterLimit++;
 				// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
@@ -103,16 +109,16 @@
 	/**
 	 * Resets and sets up internal configuration for a new code execution
 	 * @private
-	 * @param {Boolean|String} [resetStepLimit] true = restart the stepping, false = update the stepping, "disabled" = ignore the stepping
+	 * @param {Boolean|String} [disableStepping] true = ignore the stepping
 	 * @example $e_initProgramCounter()
 	 */
-	function $e_initProgramCounter(resetStepLimit) {
+	function $e_initProgramCounter(disableStepping) {
 		if ($_eseecode.execution.precode.running) {
 			// Precode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
 		var withStep = $_eseecode.execution.stepped;
-		if (resetStepLimit === "disabled") {
+		if (disableStepping === "disabled") {
 			withStep = false;
 		}
 		$_eseecode.execution.startTime = new Date().getTime();
@@ -123,27 +129,21 @@
 			$e_initSetup();
 		}
 		$_eseecode.execution.endLimit = $_eseecode.execution.startTime+time*1000;
-		$_eseecode.execution.programCounter = 0;
-		$_eseecode.execution.breakpointCounter = 0;
-		if (resetStepLimit) {
-			$_eseecode.execution.programCounterLimit = 0;
-			$_eseecode.execution.breakpointCounterLimit = 0;
-			$e_executionTraceReset();
-		} else {			
-			$_eseecode.execution.breakpointCounterLimit++;
-		}
 		if (withStep) {
-			if (!resetStepLimit) {
+			if (!disableStepping) {
 				var step = $_eseecode.execution.step;
 				if (step < 1) {
 					step = 1;
 					$_eseecode.execution.step = step;
 					$e_initSetup();
 				}
-				$_eseecode.execution.programCounterLimit = ($_eseecode.execution.programCounterLimit?$_eseecode.execution.programCounterLimit:0) + step;
+				$_eseecode.execution.programCounterLimit = $_eseecode.execution.programCounter + step;
 			}
-		} else {
-			$_eseecode.execution.programCounterLimit = false;
+		}
+		$_eseecode.execution.programCounter = 0;
+		$_eseecode.execution.breakpointCounter = 0;
+		for (key in $_eseecode.session.breakpoints) {
+			$_eseecode.session.breakpoints[key].count = 0;
 		}
 		$e_executionTraceReset("randomColor");
 		$e_executionTraceReset("randomNumber");
@@ -266,7 +266,7 @@
 					} catch (exception) {
 						$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 						var lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
-						if (lineNumber && neNumber[2]) {
+						if (lineNumber && lineNumber[2]) {
 							lineNumber = lineNumber[2];
 							$e_highlight(lineNumber,"error");
 							ace.edit("console-write").gotoLine(lineNumber,0,true);
@@ -287,11 +287,14 @@
 				jsCode += "$_eseecode.execution.precode.running=true;"+$e_code2run($_eseecode.execution.precode.code)+";$_eseecode.execution.precode.running=false;\n";
 			}
 			if (!justPrecode) {
-				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'"disabled"':withStep)+");"+$e_code2run(code);
+				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+$e_code2run(code);
 			}
 		} catch (exception) {
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 			return;
+		}
+		if (inCode === undefined || inCode === null) {
+			$_eseecode.session.lastRun = new Date().getTime();
 		}
 		var script = document.createElement("script");
 		script.id = "executionCode";
@@ -308,12 +311,10 @@
 			$e_updateSandboxChanges(oldWindowProperties,newWindowProperties);
 		}
 		document.getElementById("eseecode").removeChild(script);
-		/*
 		// if debug is open refresh it
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebug();
 		}
-		*/
 	}
 
 	/**
@@ -353,12 +354,7 @@
 	 */
 	function $e_showExecutionResults(err) {
 		if (err === undefined) {
-			if ($_eseecode.execution.programCounterLimit !== false) {
-				// If in step by step, highlight last line
-				$e_highlight($_eseecode.session.highlight.lineNumber);
-			} else {
-				$e_unhighlight();
-			}
+			$e_unhighlight();
 		} else if (err === "executionTimeout") {
 			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
 			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
@@ -396,6 +392,7 @@
 
 	/**
 	 * Defines an error to handle during user code execution
+	 * @private
 	 * @param {String} name Name of the instruction
 	 * @param {String} text Text to show the user
 	 * @return Returns an exception codeError object
@@ -410,12 +407,68 @@
 
 	/**
 	 * Prepares execution environment for the next run
+	 * @private
 	 * @example $e_endExecution();
 	 */
 	function $e_endExecution() {
 		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
 		document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
-		$e_initProgramCounter(true);
+		$_eseecode.execution.programCounter = 0;
+		$_eseecode.execution.programCounterLimit = 0;
+		$_eseecode.execution.breakpointCounterLimit = 1;
+		$e_executionTraceReset();
 		$e_unhighlight();
-		$e_resetDebug();
+	}
+
+	/**
+	 * Checks the passed parameters to a given function
+	 * @private
+	 * @param {String} instructionName Name of the instruction calling it
+	 * @throws codeError
+	 * @example $e_parseParameterTypes("forward",arguments);
+	 */
+	function $e_parseParameterTypes(instructionName,params) {
+		var instructionId = $e_getInstructionSetIdFromName(instructionName);
+		var instruction = $_eseecode.instructions.set[instructionId];
+		var instructionParams = instruction.parameters;
+		var msg = "";
+		var invalidParameter = false;
+		var invalidCount = 0;
+		for (var i=0; i< instructionParams.length; i++) {
+			var parameter = instructionParams[i];
+			var value = params[i];
+			var msgParam;
+			if (value === undefined || value === null || value === "") {
+				if (!parameter.optional) {
+					msgParam = _("has no value, but a value is required. The value recieved is:")+" "+value+" ("+$e_analyzeVariable(value).type+")\n";
+					invalidParameter = true;
+				}
+			} else if ((parameter.type == "number" && !$e_isNumber(value)) ||
+			 (parameter.type == "bool" && !$e_isBoolean(value)) ||
+			 (parameter.type == "color" && !$e_isColor(value)) ||
+			 (parameter.type == "layer" && !$e_isLayer(value)) ||
+			 (parameter.type == "window" && !$e_isWindow(value))) {
+					msgParam = _("should be a %s but instead recieved this %s:",[parameter.type,$e_analyzeVariable(value).type])+" "+value+"\n";
+				invalidParameter = true;
+			}
+			if (invalidParameter) {
+				msg = _("The %s parameter (%s)",[$e_ordinal(i+1),parameter.name])+" "+msgParam;
+				invalidCount++;
+			}
+		}
+		if (invalidCount > 0) {
+			var header = "";
+			if (invalidCount>1) {
+				header += _("Invalid parameters in %s",[instructionName]);
+			} else {
+				header += _("Invalid parameter in %s",[instructionName]);
+			}
+			if (!instruction.code || instruction.code.noBrackets !== true) {
+				header += "()";
+			}
+			if (invalidCount > 1) {
+				header += "\n";
+			}
+			throw new $e_codeError(instructionName,header+msg);
+		}
 	}

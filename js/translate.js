@@ -135,12 +135,10 @@
 		document.getElementById("setup-guide-enable-title").innerHTML = _("Guide")+":";
 		document.getElementById("setup-guide-enable-label").innerHTML = _("Toggle guide");
 		document.getElementById("setup-guide-enable").title = _("Toggle guide");
-		document.getElementById("setup-downloadImage").innerHTML = "<b>"+_("Download whiteboard image")+"</b>";
-		document.getElementById("setup-downloadLayers").innerHTML = "<b>"+_("Download layers")+"</b>";
-		document.getElementById("setup-downloadLayers-interval-title").innerHTML = _("Interval (in msecs)")+": ";
 		document.getElementById("setup-execute-time-title").innerHTML = _("Stop execution after")+" ";
 		document.getElementById("setup-execute-time").title = _("Number of seconds to run");
 		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");
+		document.getElementById("whiteboard-tabs-download-button").title = _("Download as an image");
 	}
 
 	/**

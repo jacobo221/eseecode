@@ -135,6 +135,50 @@
 		background-color: inherit;
 		color: #123456;
 	}
+	.tab-button {
+		height: 20px;
+		display: inline-block;
+		padding: 0px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #456789;
+		color: #FFFFFF;
+		text-align: center;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		text-decoration: none;
+		cursor: default;
+	}
+	.tab-button:hover {
+		background-color: #789ABC;
+		color: #FFFFFF;
+	}
+	.tab-button-disabled {
+		height: 20px;
+		display: inline-block;
+		padding: 0px 3px 0px 3px;
+		border: 1px solid #FFFFFF;
+		background-color: #BBBBBB;
+		color: #666666;
+		text-align: center;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		text-decoration: none;
+		cursor: default;
+	}
+	.tab-buttons {
+		text-align: center;
+		padding: 0px 20px 0px 20px;
+	}
+	.text-disabled {
+		color: #666666;
+	}
+	.text-disabled input:hover {
+		box-shadow: none;
+	}
 	span.tab-title {
 		float: left;
 		color: #FFFFFF;
@@ -225,7 +269,7 @@
 		border-bottom-left-radius: 10px;
 	}
 	#dialog-debug-command-form {
-		visibility: hidden;
+		display: none;
 	}
 	#dialog-debug-command-input {
 		height: 17px;
@@ -349,6 +393,10 @@
 		width: 100%;
 		text-align: center;
 	}
+	#setup-downloadLayers-title {
+		font-weight: bold;
+		text-decoration: underline;
+	}
 	#title {
 	}
 	#title-logo {
@@ -375,7 +423,4 @@
 	#whiteboard div {
 		position: absolute;
 		border-radius: 10px;
-	}
-	#whiteboard-tabs {
-		visibility: hidden;
 	}

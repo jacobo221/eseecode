@@ -58,8 +58,8 @@
 			var margin = 15;
 			var param1, param2;
 			if (param) {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			} else {
 				param1 = (height-margin*2)/3;
 				param2 = 50;
@@ -139,8 +139,8 @@
 			if (!param) {
 				return;
 			}
-			var param1 = param[0];
-			var param2 = param[1];
+			var param1 = parseInt(param[0]);
+			var param2 = parseInt(param[1]);
 			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
@@ -277,7 +277,7 @@
 		"forward": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 50;
 			}
@@ -347,8 +347,8 @@
 			if (!param) {
 				return;
 			}
-			var param1 = param[0];
-			var param2 = param[1];
+			var param1 = parseInt(param[0]);
+			var param2 = parseInt(param[1]);
 			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
@@ -418,8 +418,8 @@
 		"hide": function(ctx, width, height, param) {
 			var margin = 15;
 			ctx.beginPath()
-      			ctx.strokeStyle = '#000000';
-        		ctx.setLineDash([5]);
+  			ctx.strokeStyle = '#000000';
+    		ctx.setLineDash([5]);
 			ctx.moveTo(width/4,margin);
 			ctx.lineTo(width/4,height-margin);
 			ctx.lineTo(3*width/4,height/2);
@@ -498,10 +498,10 @@
 			var literals = true;
 			var param1, param2, param3, param4;
 			if (param && param.length) {
-				param1 = param[0];
-				param2 = param[1];
-				param3 = param[2];
-				param4 = param[3];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
+				param3 = parseInt(param[2]);
+				param4 = parseInt(param[3]);
 				if (!$e_isNumber(param1) || !$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
 					literals = false;
 				}
@@ -533,8 +533,8 @@
 		"move": function(ctx, width, height, param) {
 			var param1, param2;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			}
 			var margin = 15;
 			if ($e_isNumber(param1) && $e_isNumber(param2)) {
@@ -569,7 +569,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -599,7 +599,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -629,7 +629,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -659,7 +659,7 @@
 			var margin = 15;
 			var param1;
 			if (param != null && param != undefined && param != "") {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -706,7 +706,7 @@
 		"pull": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param != null && param != undefined && param != "") {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 1;
 			}
@@ -737,7 +737,7 @@
 		"push": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param != null && param != undefined && param != "") {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 1;
 			}
@@ -766,12 +766,13 @@
 			ctx.closePath();
 		},
 		"repeat": function(ctx, width, height, param) {
-			param = param[0].toString();
+			param = parseInt(param[0]);
 			var margin = 15;
 			if (!$e_isNumber(param)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
+				param = "N";
 			}
 			var lineWidth = 3
 			ctx.lineWidth = lineWidth;
@@ -789,15 +790,15 @@
 			ctx.lineTo(width/2+margin/2-3,margin*1.5);
 			ctx.lineTo(width/2-3,margin*2);
 			ctx.fill();
-			ctx.font = "bold "+(height-(margin+lineWidth))/(param.length*1.5)+"px Verdana";
-      			ctx.fillStyle = '#000000';
+			ctx.font = "bold "+(height-(margin+lineWidth))/(param.toString().length*1.5)+"px Verdana";
+      		ctx.fillStyle = '#000000';
 			ctx.fillText(param,margin+lineWidth,height-(margin+lineWidth));
 		},
 		"rotateLeft": function(ctx, width, height, param) {
 			var margin = 15;
 			var param1;
 			if (param) {
-				param1 = param[0];
+				param1 = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -832,7 +833,7 @@
 			var margin = 30;
 			var param1;
 			if (param) {
-				param1 = -param[0];
+				param1 = -parseInt(param[0]);
 			}
 			if (!$e_isNumber(param1)) {
 				ctx.font = 12+"px Verdana";
@@ -868,8 +869,8 @@
 			var param1;
 			var param2;
 			if (param) {
-				param1 = param[0];
-				param2 = param[1];
+				param1 = parseInt(param[0]);
+				param2 = parseInt(param[1]);
 			} else {
 				param1 = 1;
 				param2 = 1;
@@ -941,7 +942,7 @@
 		"setSize": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			}
 			if (!$e_isNumber(param)) {
 				ctx.font = 12+"px Verdana";
@@ -1024,7 +1025,7 @@
 		"show": function(ctx, width, height, param) {
 			var margin = 15;
 			ctx.beginPath()
-      			ctx.fillStyle = '#000000';
+      		ctx.fillStyle = '#000000';
 			ctx.moveTo(width/4,margin);
 			ctx.lineTo(width/4,height-margin);
 			ctx.lineTo(3*width/4,height/2);
@@ -1054,7 +1055,7 @@
 		"turnLeft": function(ctx, width, height, param) {
 			var margin = 15;
 			if (param) {
-				param = param[0];
+				param = parseInt(param[0]);
 			} else {
 				param = 275;
 			}
@@ -1176,6 +1177,10 @@
 				if (param == undefined || param == "") {
 					fontSize = 20;
 					text = _("New");
+				} else if (param.charAt(0) === '"' && param.charAt(param.length-1) === '"') {
+					param = param.substring(1,param.length-1);
+					fontSize = 16;
+					text = param;
 				} else {
 					fontSize = 12;
 					text = _("variable");
@@ -1347,7 +1352,7 @@
 			if (fontSize > maxFontSize) {
 				fontSize = maxFontSize;
 			};
-			if (param.charAt(0) === '"' && param.charAt(param-1) === '"') {
+			if (param.charAt(0) === '"' && param.charAt(param.length-1) === '"') {
 				param = param.substring(1,param.length-1);
 			}
 			var margin = 15
@@ -1365,9 +1370,9 @@
 			var param1, param2, param3, param4;
 			if (param && param.length) {
 				param1 = param[0];
-				param2 = param[1];
-				param3 = param[2];
-				param4 = param[3];
+				param2 = parseInt(param[1]);
+				param3 = parseInt(param[2]);
+				param4 = parseInt(param[3]);
 				if (!$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
 					literals = false;
 				}

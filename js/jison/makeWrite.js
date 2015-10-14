@@ -10,18 +10,20 @@
 				str += ";";
 			}
 			str += "$e_eseeCodeInjection("+lineNumber+",(function(){\
-				for (var watch in $_eseecode.session.breakpoints["+lineNumber+"]) {\
-					try {\
-						$_eseecode.session.breakpoints["+lineNumber+"][watch] = eval(watch);\
-					} catch(e) {}\
+				if ($_eseecode.session.breakpoints["+lineNumber+"]) {\
+					for (var watch in $_eseecode.session.breakpoints["+lineNumber+"].watches) {\
+						try {\
+							$_eseecode.session.breakpoints["+lineNumber+"].watches[watch] = eval(watch);\
+						} catch(e) {}\
+					}\
 				}\
 				$_eseecode.execution.watchpointsChanged = [];\
 				for (var watch in $_eseecode.session.watchpoints) {\
 					try {\
 						var newValue;\
 						newValue = eval(watch);\
-						if (newValue !== $_eseecode.session.watchpoints[watch]) {\
-							$_eseecode.session.watchpoints[watch] = newValue;\
+						if (newValue !== $_eseecode.session.watchpoints[watch].value) {\
+							$_eseecode.session.watchpoints[watch].value = newValue;\
 							$_eseecode.execution.watchpointsChanged.push(watch);\
 						}\
 					} catch(e) {}\
