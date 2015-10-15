@@ -83,7 +83,7 @@
 	 * @example $e_isLayer(5)
 	 */
 	function $e_isLayer(value) {
-		return $_eseecode.canvasArray[id] !== undefined;
+		return $_eseecode.canvasArray[value] !== undefined;
 	}
 
 	/**
@@ -93,7 +93,7 @@
 	 * @example $e_isWindow(5)
 	 */
 	function $e_isWindow(value) {
-		return $_eseecode.windowsArray[id] !== undefined;
+		return $_eseecode.windowsArray[value] !== undefined;
 	}
 
 	/**
