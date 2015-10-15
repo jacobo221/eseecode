@@ -113,8 +113,8 @@
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
 		if (div.offsetLeft > 0) { // Make sure the browser is compatible with offsetLeftTop
-			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft;
-			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop;
+			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft + document.getElementById("dialog-blocks").scrollLeft;
+			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop + document.getElementById("dialog-blocks").scrollTop;
 		}
 		// Copy parameters
 		for (var i=1; div.getAttribute("param"+i) !== null; i++) {
@@ -577,7 +577,7 @@
 			}
 			if (parameter.type == "number") {
 				if (defaultValue !== "" && defaultValue !== undefined && defaultValue !== null) {
-					defaultValue = parseInt($e_parsePredefinedConstants(defaultValue));
+					defaultValue = parseFloat($e_parsePredefinedConstants(defaultValue));
 				} else {
 					defaultValue = "";
 				}
@@ -785,7 +785,7 @@
 					updateIcon();
 				}, false);
 				element.appendChild(input);
-			} else if (parameter.type === "number") {
+			} else if (parameter.type === "number" || parameter.type === "layer") {
 				element = document.createElement("div");
 				element.id = parameterInputId+"Block";
 				if (supportedInputs["range"]) {
@@ -811,12 +811,12 @@
 					elementMinus.style.width = "50px";
 					elementMinus.setAttribute("valueEscalation", valueEscalation);
 					elementMinus.addEventListener("click", function() {
-						var valueEscalation = parseInt(this.getAttribute("valueEscalation"));
+						var valueEscalation = parseFloat(this.getAttribute("valueEscalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
-						if ($e_isNumber(elem.value)) {
-							val = parseInt(elem.value);
+						if ($e_isNumber(elem.value,true)) {
+							val = parseFloat(elem.value);
 						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min")
 						} else if (elem.getAttribute("max")) {
@@ -826,10 +826,10 @@
 						}
 						var stepValue = 1;
 						if (elem.step !== undefined) {
-							stepValue = parseInt(elem.step);
+							stepValue = parseFloat(elem.step);
 						}
-						elem.value = parseInt(val) - stepValue;
-						if (elem.getAttribute("min") && parseInt(elem.value) < elem.getAttribute("min")) {
+						elem.value = (parseFloat(val)*valueEscalation - stepValue*valueEscalation)/valueEscalation; // This calculation (using valueEscalation) avoids javascript's float imprecision with calculations
+						if (elem.getAttribute("min") && parseFloat(elem.value) < elem.getAttribute("min")) {
 							elem.value = elem.getAttribute("min");
 						}
 						elem.dispatchEvent(new Event('change'));
@@ -848,8 +848,8 @@
 						elementInput.setAttribute("valueEscalation", valueEscalation);
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-							document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseInt(this.getAttribute("valueEscalation"));
-							document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
+							document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseFloat(this.getAttribute("valueEscalation"));
+							document.getElementById(parameterInputId).value = this.value/parseFloat(this.getAttribute("valueEscalation"));
 							updateIcon();
 						}, false);
 						var elementText = document.createElement("span");
@@ -866,19 +866,19 @@
 						elementInput.id = parameterInputId+"VisualInput";
 						elementInput.setAttribute("type", "number");
 						if (defaultValue !== undefined) {
-							elementInput.value = defaultValue*valueEscalation;
+							elementInput.value = defaultValue;
 						}
 						if (minValue !== undefined) {
-							elementInput.min = minValue*valueEscalation;
+							elementInput.min = minValue;
 						}
 						if (maxValue !== undefined) {
-							elementInput.max = maxValue*valueEscalation;
+							elementInput.max = maxValue;
 						}
-						elementInput.step = stepValue*valueEscalation;
 						elementInput.setAttribute("valueEscalation", valueEscalation);
+						elementInput.step = stepValue;
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-							document.getElementById(parameterInputId).value = this.value/parseInt(this.getAttribute("valueEscalation"));
+							document.getElementById(parameterInputId).value = this.value;
 							updateIcon();
 						}, false);
 						element.appendChild(elementInput);
@@ -889,12 +889,12 @@
 					elementPlus.style.width = "50px";
 					elementPlus.setAttribute("valueEscalation", valueEscalation);
 					elementPlus.addEventListener("click", function() {
-						var valueEscalation = parseInt(this.getAttribute("valueEscalation"));
+						var valueEscalation = parseFloat(this.getAttribute("valueEscalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
-						if ($e_isNumber(elem.value)) {
-							val = parseInt(elem.value);
+						if ($e_isNumber(elem.value,true)) {
+							val = parseFloat(elem.value);
 						} else if (elem.getAttribute("min")) {
 							val = elem.getAttribute("min");
 						} else if (elem.getAttribute("max")) {
@@ -904,10 +904,10 @@
 						}
 						var stepValue = 1;
 						if (elem.step !== undefined) {
-							stepValue = parseInt(elem.step);
+							stepValue = parseFloat(elem.step);
 						}
-						elem.value = parseInt(val) + stepValue;
-						if (elem.getAttribute("max") && parseInt(elem.value) > elem.getAttribute("max")) {
+						elem.value = (parseFloat(val)*valueEscalation + stepValue*valueEscalation)/valueEscalation; // This calculation (using valueEscalation) avoids javascript's float imprecision with calculations
+						if (elem.getAttribute("max") && parseFloat(elem.value) > elem.getAttribute("max")) {
 							elem.value = elem.getAttribute("max");
 						}
 						elem.dispatchEvent(new Event('change'));

@@ -65,10 +65,15 @@
 	 * Returns if a value is a number or not
 	 * @private
 	 * @param {*} value Value to test
+	 * @param {Boolean} [parseString=false] If true, will parse string values to see if it contains a number
 	 * @example $e_isNumber(5)
 	 */
-	function $e_isNumber(value) {
-		return !isNaN(parseFloat(value)) && Number.isFinite(value);
+	function $e_isNumber(value, parseString) {
+		if (parseString === true) {
+			return !isNaN(parseFloat(value)) && isFinite(value);	
+		} else {
+			return !isNaN(parseFloat(value)) && Number.isFinite(value);
+		}
 	}
 
 	/**

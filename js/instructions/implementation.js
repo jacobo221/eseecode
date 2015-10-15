@@ -1440,7 +1440,7 @@
 	 * Animate layers by displaying them one at a time
 	 * @since 2.1
 	 * @public
-	 * @param {Number} delay
+	 * @param {Number} [delay=0.5]
 	 * @example animateLayers(0.1)
 	 */
 	function animateLayers(delay) {
