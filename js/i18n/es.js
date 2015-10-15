@@ -394,7 +394,6 @@ $_eseecode.i18n.available.es = {
 	"should be a %s but instead recieved this %s:": "debería ser un %s pero en su lugar recibió un %s:",
 	"Invalid parameter in %s": "Parámetro inválido en %s",
 	"Invalid parameters in %s": "Parámetro inválido en %s",
-	"number": "numero",
 	"text": "text",
 	"layer": "capa",
 	"window": "finestra",
