@@ -113,8 +113,8 @@
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
 		if (div.offsetLeft > 0) { // Make sure the browser is compatible with offsetLeftTop
-			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft + document.getElementById("dialog-blocks").scrollLeft;
-			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop + document.getElementById("dialog-blocks").scrollTop;
+			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft + div.parentNode.scrollLeft;
+			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop + div.parentNode.scrollTop;
 		}
 		// Copy parameters
 		for (var i=1; div.getAttribute("param"+i) !== null; i++) {

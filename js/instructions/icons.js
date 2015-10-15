@@ -64,20 +64,20 @@
 				param1 = (height-margin*2)/3;
 				param2 = 50;
 			}
-			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
+			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
       				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
 			var maxparam2 = 360;
-			if ($e_isNumber(param2) && param2 < 0) {
+			if ($e_isNumber(param2,true) && param2 < 0) {
 				param2 = 360 - param;
 			}
-			if (!$e_isNumber(param1) || param1 > (height-margin*2)/2) {
+			if (!$e_isNumber(param1,true) || param1 > (height-margin*2)/2) {
 				param1 = (height-margin*2)/2;
 			}
-			if (!$e_isNumber(param2) || param2 > maxparam2) {
+			if (!$e_isNumber(param2,true) || param2 > maxparam2) {
 				param2 = maxparam2;
 			}
 			var radius = (height-margin*2)/2*(param1/maxparam1);
@@ -141,18 +141,18 @@
 			}
 			var param1 = parseInt(param[0]);
 			var param2 = parseInt(param[1]);
-			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
+			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				param1 = canvasSize/2;
 			} else {
 				param1 = margin+parseInt(param1)/canvasSize*(width-(2*margin));
 			}
-			if (!$e_isNumber(param2)) {
+			if (!$e_isNumber(param2,true)) {
 				param2 = canvasSize/2;
 			} else {
 				param2 = margin+parseInt(param2)/canvasSize*(height-(2*margin));
@@ -281,18 +281,18 @@
 			} else {
 				param = 50;
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam = 250;
 			var backwards = false;
-			if ($e_isNumber(param) && param < 0) {
+			if ($e_isNumber(param,true) && param < 0) {
 				backwards = true;
 				param = -param;
 			}
-			if (!$e_isNumber(param) || param > maxparam*0.75) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			} 
 			var lineHeight = (height-margin*2)/2*(1-param/maxparam);
@@ -349,16 +349,16 @@
 			}
 			var param1 = parseInt(param[0]);
 			var param2 = parseInt(param[1]);
-			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
+			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				param1 = 0;
 			}
-			if (!$e_isNumber(param2)) {
+			if (!$e_isNumber(param2,true)) {
 				param2 = canvasSize/2+$_eseecode.coordinates.y;
 			}
 			var coords = $e_user2systemCoords({x: parseInt(param1), y: parseInt(param2)});
@@ -502,7 +502,7 @@
 				param2 = parseInt(param[1]);
 				param3 = parseInt(param[2]);
 				param4 = parseInt(param[3]);
-				if (!$e_isNumber(param1) || !$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
+				if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true) || !$e_isNumber(param3,true) || !$e_isNumber(param4,true)) {
 					literals = false;
 				}
 			}
@@ -537,17 +537,17 @@
 				param2 = parseInt(param[1]);
 			}
 			var margin = 15;
-			if ($e_isNumber(param1) && $e_isNumber(param2)) {
+			if ($e_isNumber(param1,true) && $e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (!$e_isNumber(param1) || param1 > maxparam1*0.75) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			var maxparam2 = 100;
-			if (!$e_isNumber(param2) || param2 > maxparam2*0.75) {
+			if (!$e_isNumber(param2,true) || param2 > maxparam2*0.75) {
 				param2 = maxparam2*0.75;
 			}
 			ctx.fillStyle = "#000000";
@@ -571,13 +571,13 @@
 			if (param != null && param != undefined && param != "") {
 				param1 = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (!$e_isNumber(param1) || param1 > maxparam1*0.75) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			ctx.fillStyle = "#000000";
@@ -601,13 +601,13 @@
 			if (param != null && param != undefined && param != "") {
 				param1 = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (!$e_isNumber(param1) || param1 > maxparam1*0.75) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			ctx.fillStyle = "#000000";
@@ -631,13 +631,13 @@
 			if (param != null && param != undefined && param != "") {
 				param1 = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (!$e_isNumber(param1) || param1 > maxparam1*0.75) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			ctx.fillStyle = "#000000";
@@ -661,13 +661,13 @@
 			if (param != null && param != undefined && param != "") {
 				param1 = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
-			if (!$e_isNumber(param1) || param1 > maxparam1*0.75) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1*0.75) {
 				param1 = maxparam1*0.75;
 			}
 			ctx.fillStyle = "#000000";
@@ -710,13 +710,13 @@
 			} else {
 				param = 1;
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam = 6;
-			if (!$e_isNumber(param) || param > maxparam*0.75) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			}
 			ctx.fillStyle = "#00FF00";
@@ -741,13 +741,13 @@
 			} else {
 				param = 1;
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam = 6;
-			if (!$e_isNumber(param) || param > maxparam*0.75) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			}
 			ctx.fillStyle = "#FFFFFF";
@@ -768,7 +768,7 @@
 		"repeat": function(ctx, width, height, param) {
 			param = parseInt(param[0]);
 			var margin = 15;
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
@@ -800,13 +800,13 @@
 			if (param) {
 				param1 = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 360;
-			if (!$e_isNumber(param1) || param1 > maxparam1) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1) {
 				param1 = maxparam1;
 			}
 			var lineWidth = height/20;
@@ -835,13 +835,13 @@
 			if (param) {
 				param1 = -parseInt(param[0]);
 			}
-			if (!$e_isNumber(param1)) {
+			if (!$e_isNumber(param1,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 360;
-			if (!$e_isNumber(param1) || param1*(-1) > maxparam1) {
+			if (!$e_isNumber(param1,true) || param1*(-1) > maxparam1) {
 				param1 = maxparam1*(-1);
 			}
 			var lineWidth = height/20;
@@ -875,17 +875,17 @@
 				param1 = 1;
 				param2 = 1;
 			}
-			if (!$e_isNumber(param1) || !$e_isNumber(param2)) {
+			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 2;
-			if (!$e_isNumber(param1) || param1 > maxparam1) {
+			if (!$e_isNumber(param1,true) || param1 > maxparam1) {
 				param1 = maxparam1;
 			}
 			var maxparam2 = 2;
-			if (!$e_isNumber(param2) || param2 > maxparam2) {
+			if (!$e_isNumber(param2,true) || param2 > maxparam2) {
 				param2 = maxparam2;
 			}
 			ctx.beginPath();
@@ -944,13 +944,13 @@
 			if (param) {
 				param = parseInt(param[0]);
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam = 20;
-			if (!$e_isNumber(param) || param > maxparam*0.85) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
 			var squareWidth = (width-margin*2)*(param/maxparam);
@@ -1010,7 +1010,7 @@
 			if (param) {
 				param = param[0];
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
@@ -1059,7 +1059,7 @@
 			} else {
 				param = 275;
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
@@ -1068,7 +1068,7 @@
 				return;
 			}
 			var maxparam = 360;
-			if (!$e_isNumber(param) || param > maxparam*0.85) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
 			var startAngle = (-90-param)*Math.PI/180;
@@ -1122,7 +1122,7 @@
 			} else {
 				param = 90;
 			}
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				ctx.font = 12+"px Verdana";
 				ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
@@ -1131,10 +1131,10 @@
 				return;
 			}
 			var maxparam = 360;
-			if ($e_isNumber(param) && param < 0) {
+			if ($e_isNumber(param,true) && param < 0) {
 				param = 360 - param;
 			}
-			if (!$e_isNumber(param) || param > maxparam*0.85) {
+			if (!$e_isNumber(param,true) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
 			var startAngle = -90*Math.PI/180;
@@ -1171,7 +1171,7 @@
   			ctx.strokeStyle = '#FFFFFF';
 			ctx.rect(margin,margin,width-margin*2,height-margin*2);
 			ctx.stroke();
-			if (!$e_isNumber(param)) {
+			if (!$e_isNumber(param,true)) {
 				var fontSize;
 				var text;
 				if (param == undefined || param == "") {
@@ -1372,8 +1372,15 @@
 				param1 = param[0];
 				param2 = parseInt(param[1]);
 				param3 = parseInt(param[2]);
-				param4 = parseInt(param[3]);
-				if (!$e_isNumber(param2) || !$e_isNumber(param3) || !$e_isNumber(param4)) {
+				if (param[3] == undefined || param[3] == "" || param[3] == "undefined") {
+					param4 = 0;
+				} else if (!$e_isNumber(param[3],true)) {
+					param4 = param[3];
+					literals = false;
+				} else {
+					param4 = parseInt(param[3]);
+				}
+				if (!$e_isNumber(param2,true) || !$e_isNumber(param3,true)) {
 					literals = false;
 				}
 				if (param1.charAt(0) === '"' && param1.charAt(param1-1) === '"') {

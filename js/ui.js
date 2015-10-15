@@ -1536,6 +1536,8 @@
 		if (!$e_codeIsEmpty()) {
 			$e_msgBox(_("Do you really want to start over?"), {acceptAction:$e_resetUIForced,cancelAction:$e_msgBoxClose});
 			return false;
+		} else {
+			$e_resetUIForced();
 		}
 	}
 
