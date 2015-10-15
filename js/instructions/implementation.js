@@ -733,7 +733,7 @@
 	function getRandomNumber(upperbound) {
 		$e_parseParameterTypes("getRandomNumber", arguments);
 		if (upperbound < 0) {
-			throw new $e_codeError("getRandomNumber","Upperbound cannot be lower than 0, recieved: "+upperbound);
+			throw new $e_codeError("getRandomNumber",_("Upperbound cannot be lower than 0, received:")+" "+upperbound);
 		}
 		if (upperbound === undefined) {
 			upperbound = Number.MAX_VALUE;
@@ -1143,10 +1143,10 @@
 	function image(src, posx, posy, centered, width, height) {
 		$e_parseParameterTypes("image", arguments);
 		if (width < 0) {
-			throw new $e_codeError("image","Width cannot be lower than 0, recieved: "+width);
+			throw new $e_codeError("image",_("Width cannot be lower than 0, received:")+" "+width);
 		}
 		if (height < 0) {
-			throw new $e_codeError("image","Height cannot be lower than 0, recieved: "+height);
+			throw new $e_codeError("image",_("Height cannot be lower than 0, received:")+" "+height);
 		}
 		var img = new Image();
 		var canvas = $_eseecode.currentCanvas;
@@ -1252,32 +1252,28 @@
 
 	/**
 	 * Sets the layer transparency
-	 * @since 1.0
+	 * @since 2.2
 	 * @public
-	 * @param {Number} index Transparency index in the range [0,1]
+	 * @param {Number} value Transparency value in the range [0,1]
+	 * @param {Number} [id] Id of the layer to affect
 	 * @throws codeError
-	 * @example setInvisible(0.5)
+	 * @example transparency(0.5)
 	 */
-	function setInvisible(index) {
-		$e_parseParameterTypes("setInvisible", arguments);
-		if (index < 0) {
-			throw new $e_codeError("setinvisible","Index cannot be lower than 0, recieved: "+index);
+	function transparency(value, id) {
+		$e_parseParameterTypes("transparency", arguments);
+		if (value < 0) {
+			throw new $e_codeError("transparency",_("Value cannot be lower than 0, received:")+" "+value);
 		}
-		if (index > 1) {
-			throw new $e_codeError("setinvisible","Index cannot be higher than 1, recieved: "+index);
+		if (value > 1) {
+			throw new $e_codeError("transparency",_("Value cannot be higher than 1, received:")+" "+value);
 		}
-		$_eseecode.currentCanvas.style.alpha = index;
-		$_eseecode.currentCanvas.context.globalAlpha = index;
-	}
-
-	/**
-	 * Unsets the layer transparency, back to opaque
-	 * @since 1.0
-	 * @public
-	 * @example unsetInvisible()
-	 */
-	function unsetInvisible() {
-		setInvisible(1);
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
+		layer.style.alpha = value;
+		layer.context.globalAlpha = value;
 	}
 
 	/**
@@ -1293,7 +1289,7 @@
 	function push(levels, id) {
 		$e_parseParameterTypes("push", arguments);
 		if (levels < 0) {
-			throw new $e_codeError("push","levels cannot be lower than 0, recieved: "+levels);
+			throw new $e_codeError("push",_("Levels cannot be lower than 0, received:")+" "+levels);
 		}
 		if (typeof levels === "undefined") {
 			levels = 1;
@@ -1346,7 +1342,7 @@
 	function pull(levels, id) {
 		$e_parseParameterTypes("pull", arguments);
 		if (levels < 0) {
-			throw new $e_codeError("pull","levels cannot be lower than 0, recieved: "+levels);
+			throw new $e_codeError("pull",_("Levels cannot be lower than 0, received:")+" "+levels);
 		}
 		if (typeof levels === "undefined") {
 			levels = 1;
@@ -1509,7 +1505,7 @@
 	function snapshot(id) {
 		$e_parseParameterTypes("snapshot", arguments);
 		if (id < 0) {
-			throw new $e_codeError("snapshot","ID cannot be lower than 0, recieved: "+id);
+			throw new $e_codeError("snapshot","ID cannot be lower than 0, received: "+id);
 		}
 		var currentCanvas = $_eseecode.currentCanvas;
 		var canvas = $e_switchCanvas(id);

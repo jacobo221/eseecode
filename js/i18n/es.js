@@ -230,7 +230,7 @@ $_eseecode.i18n.available.es = {
 	"Sets the drawing size to thick": "Establece el tamaño para dibujar a grueso",
 	"Sets the drawing size to thicker": "Establece el tamaño para dibujar a ",
 	"Sets the drawing size to very thick": "Establece el tamaño para dibujar a muy grueso",
-	"Sets the drawing transparency value": "Establece el valor de transparencia para dibujar",
+	"Sets the transparency of the layer": "Establece el valor de transparencia de la capa",
 	"Sets the font for future text": "Establece la fuente para futuro texto",
 	"Sets the italic property for future text": "Establece la propiedad itálica para futuro texto",
 	"Sets the value in the input box": "Establece el valor en un cuadro de entrada",
@@ -299,7 +299,7 @@ $_eseecode.i18n.available.es = {
 	"Where should the line end? Set the X coordinate": "¿Dónde debería acabar la línea? Introduce la coordenada X",
 	"Where should the line end? Set the Y coordinate": "¿Dónde debería acabar la línea? Introduce la coordenada Y",
 	"Which size in pixels do you want to set?": "¿Qué medida en píxeles quieres?",
-	"From 0 (invisible] to 1 (opaque), how invisible do you want to draw?": "De 0 (invisible) a 1 (opaco), ¿como de transparente quieres dibujar?",
+	"From 0 (invisible) to 1 (opaque), how invisible do you want to draw?": "De 0 (invisible) a 1 (opaco), ¿como de transparente quieres dibujar?",
 	"Where do you want to show it? Set the X coordinate": "¿Dónde quieres mostrarlo? Introduce la coordenada X",
 	"Where do you want to show it? Set the Y coordinate": "¿Dónde quieres mostrarlo? Introduce la coordenada Y",
 	"Which text do you want to write?": "¿Qué texto quieres escribir?",
@@ -397,5 +397,12 @@ $_eseecode.i18n.available.es = {
 	"text": "text",
 	"layer": "capa",
 	"window": "finestra",
-	"bool": "booleà"
+	"bool": "booleà",
+	"Levels cannot be lower than 0, recieved:": "Niveles no puede ser inferior a 0, se ha recibido:",
+	"Value cannot be lower than 0, recieved:": "Valor no puede ser inferior a 0, se ha recibido:",
+	"Value cannot be higher than 1, recieved:": "Valor no puede ser superior a 1, se ha recibido:",
+	"Height cannot be lower than 0, received:": "Altura no puede ser inferior a 0, se ha recibido:",
+	"Width cannot be lower than 0, received:": "Anchura no puede ser inferior a 0, se ha recibido:",
+	"Upperbound cannot be lower than 0, received:": "Limitesuperior no puede ser inferior a 0, se ha recibido:",
+	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "¿De que capa quieres modificar la transparencia?\n(Deja en blanco para afectar la capa actual)"
 }

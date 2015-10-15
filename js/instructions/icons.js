@@ -904,6 +904,9 @@
 			if (param) {
 				param = param[0];
 			}
+			if (param === undefined || param === "undefined" || param === "") {
+				param = "true";
+			}
 			if (param === "true" || param === "false") {
 				param = (param === "true");
 			}
@@ -992,6 +995,9 @@
 			if (param) {
 				param = param[0];
 			}
+			if (param === undefined || param === "undefined" || param === "") {
+				param = "true";
+			}
 			if (param === "true" || param === "false") {
 				param = (param === "true");
 			}
@@ -1004,23 +1010,6 @@
 			ctx.font = ((param||param===undefined)?"italic ":"")+(height-margin*2)+"px Verdana";
       			ctx.fillStyle = (param||param===undefined)?'#000000':'#AAAAAA';
 			ctx.fillText("I",margin,height-margin);
-		},
-		"setInvisible": function(ctx, width, height, param) {
-			var margin = 15;
-			if (param) {
-				param = param[0];
-			}
-			if (!$e_isNumber(param,true)) {
-				ctx.font = 12+"px Verdana";
-				ctx.fillStyle = '#000000';
-				ctx.fillText(_("variable"),margin,height);
-				param = 0.5;
-			}
-			var grd=ctx.createRadialGradient(width/2,height/2,1,width/2,height/2,(height-margin*2)/1.5);
-			grd.addColorStop(0,"rgba(0, 256, 0, "+param+")");
-			grd.addColorStop(1,"#FFFF00");
-			ctx.fillStyle=grd;
-			ctx.fillRect(margin,margin,width-margin*2,height-margin*2);
 		},
 		"show": function(ctx, width, height, param) {
 			var margin = 15;
@@ -1051,6 +1040,40 @@
 			ctx.moveTo(margin*1.5,height/2);
 			ctx.lineTo(width-margin*1.5,height/2);
 			ctx.stroke();
+		},
+		"transparency": function(ctx, width, height, param) {
+			var margin = 15;
+			if (param) {
+				param = param[0];
+			}
+			if (!$e_isNumber(param,true)) {
+				ctx.font = 12+"px Verdana";
+				ctx.fillStyle = '#000000';
+				ctx.fillText(_("variable"),margin,height);
+				param = 0.5;
+			}
+			/*
+			var grd=ctx.createRadialGradient(width/2,height/2,1,width/2,height/2,(height-margin*2)/1.5);
+			grd.addColorStop(0,"rgba(0, 256, 256, "+param+")");
+			grd.addColorStop(1,"#FFFF00");
+			ctx.fillStyle=grd;
+			ctx.fillRect(margin,margin,width-margin*2,height-margin*2);
+			*/
+			ctx.fillStyle = "#FF00FF";
+			ctx.beginPath();
+			ctx.moveTo(margin*1.2,margin*1.2);
+			ctx.lineTo(width-margin*1.2,margin*1.2);
+			ctx.lineTo(width-margin*1.2,height-margin*1.2);
+			ctx.lineTo(margin*1.2,height-margin*1.2);
+			ctx.closePath();
+			ctx.fill();
+			ctx.fillStyle = "rgba(0, 256, 256, "+param+")";
+			ctx.beginPath();
+			var startAngle = 0;
+			var endAngle = 2*Math.PI;
+			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
+			ctx.closePath();
+			ctx.fill();
 		},
 		"turnLeft": function(ctx, width, height, param) {
 			var margin = 15;
@@ -1278,14 +1301,6 @@
 			ctx.moveTo(width/2-squareWidth/2*1.2,height/2+squareHeight/2*1.2);
 			ctx.lineTo(width/2+squareWidth/2*1.2,height/2-squareHeight/2*1.2);
 			ctx.stroke();
-		},
-		"unsetInvisible": function(ctx, width, height, param) {
-			var margin = 15;
-			var grd=ctx.createRadialGradient(width/2,height/2,1,width/2,height/2,(height-margin*2)/1.5);
-			grd.addColorStop(0,"#FFFF00");
-			grd.addColorStop(1,"#00FF00");
-			ctx.fillStyle=grd;
-			ctx.fillRect(margin,margin,width-margin*2,height-margin*2);
 		},
 		"var" : function(ctx, width, height, param) {
 			if (param) {

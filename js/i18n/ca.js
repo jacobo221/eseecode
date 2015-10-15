@@ -230,7 +230,7 @@ $_eseecode.i18n.available.ca = {
 	"Sets the drawing size to thick": "Estableix la mida per dibuixar a gruixuda",
 	"Sets the drawing size to thicker": "Estableix la mida per dibuixar a més gruixuda",
 	"Sets the drawing size to very thick": "Estableix la mida per dibuixar a molt gruixuda",
-	"Sets the drawing transparency value": "Estableix el valor de transparència per dibuixar",
+	"Sets the transparency of the layer": "Estableix el valor de transparència de la capa",
 	"Sets the font for future text": "Estableix la font per a text futur",
 	"Sets the italic property for future text": "Estableix la propietat cursiva per a text futur",
 	"Sets the value in the input box": "Estableix el valor en un quadre d'entrada",
@@ -299,7 +299,7 @@ $_eseecode.i18n.available.ca = {
 	"Where should the line end? Set the X coordinate": "On hauria d'acabar la línia? Introdueix la coordenada X",
 	"Where should the line end? Set the Y coordinate": "On hauria d'acabar la línia? Introdueix la coordenada Y",
 	"Which size in pixels do you want to set?": "Quina mida en píxels vols?",
-	"From 0 (invisible] to 1 (opaque), how invisible do you want to draw?": "De 0 (invisible) a 1 (opac), com de transparent vols dibuixar?",
+	"From 0 (invisible) to 1 (opaque), how invisible do you want to draw?": "De 0 (invisible) a 1 (opac), com de transparent vols dibuixar?",
 	"Where do you want to show it? Set the X coordinate": "On vols mostrar-lo? Introdueix la coordenada X",
 	"Where do you want to show it? Set the Y coordinate": "On vols mostrar-lo? Introdueix la coordenada Y",
 	"Which text do you want to write?": "Quin text vols escriure?",
@@ -397,5 +397,12 @@ $_eseecode.i18n.available.ca = {
 	"text": "texto",
 	"layer": "capa",
 	"window": "ventana",
-	"bool": "booleano"
+	"bool": "booleano",
+	"Levels cannot be lower than 0, recieved:": "Nivells no pot ser inferior a 0, s'ha rebut:",
+	"Value cannot be lower than 0, recieved:": "Valor no pot ser inferior a 0, s'ha rebut:",
+	"Value cannot be higher than 1, recieved:": "Valor no pot ser superior a 1, s'ha rebut:",
+	"Height cannot be lower than 0, received:": "Alçada no pot ser inferior a 0, s'ha rebut:",
+	"Width cannot be lower than 0, received:": "Amplada no pot ser inferior a 0, s'ha rebut:",
+	"Upperbound cannot be lower than 0, received:": "Limitsuperior no pot ser inferior a 0, s'ha rebut:",
+	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "De quina capa vols modificar la transparència?\n(Deixa en blanc per afectar a la capa actual)"
 }
