@@ -11,6 +11,7 @@
  *   Hide undo/redo buttons when the action isn't possible
  *   Moved download layers/canvas to whiteboard tabs space
  *   Drag blocks relative to original mouse position in the block, not centered
+ *   Migrated setInvisible/unsetInvisible() to transparency(). Thanks to Jordi Losantos for his suggestion
  *   Added a few new parameters to existing instructions
  *   Added tips, initial, minValue, etc to all parameters in instructions
  *   Added constants E and Phi, renamed pi to Pi
