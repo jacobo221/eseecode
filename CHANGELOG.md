@@ -1,8 +1,3 @@
-## 2.3 (ongoing work)
-
- *Milestone: Ease animation programming*
- * 
-
 ## 2.2 (2015-10-14)
 
  *Milestone reached: Easily understandable runtime errors*
