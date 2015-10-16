@@ -15,14 +15,13 @@
 <p><canvas id="icon" style="width:68px;height:68px;"></canvas></p>
 <p><b><a href="" onclick="downloadIcon(this)">Download</a></b></p>
 <script type="text/javascript">
-var defaultBlockSize = 68;
 var $_eseecode = {
 	instructions: {
 		icons: null
 	},
 	whiteboard: {
-		offsetWidth: defaultBlockSize,
-		offsetHeight: defaultBlockSize
+		offsetWidth: 400,
+		offsetHeight: 400
 	}
 }
 </script>
@@ -48,6 +47,8 @@ function createIcon() {
 	var showBorder = document.getElementById('showBorder').value;
 	var width = parseInt(document.getElementById('width').value);
 	var height = parseInt(document.getElementById('height').value);
+	var widthOriginal = width;
+	var heightOriginal = height;
 	var canvas = document.getElementById('icon');
 	var borderSize;
     var borderRadius;
@@ -70,9 +71,7 @@ function createIcon() {
 		borderColor = "#AAAAAA";
     }
 	canvas.style.width = width+"px";
-	$_eseecode.whiteboard.offsetWidth = width;
 	canvas.style.height = height+"px";
-	$_eseecode.whiteboard.offsetHeight = height;
 	canvas.width = width;
 	canvas.height = height;
 	var ctx = canvas.getContext("2d");
@@ -165,7 +164,7 @@ function createIcon() {
     }
 	if (showTitle != "no") {
 		ctx.fillStyle = $e_readableText(color);
-		var fontSize = 10*(Math.min(width,height)/defaultBlockSize);
+		var fontSize = 10*(Math.min(width,height)/Math.min(widthOriginal,heightOriginal));
 		ctx.font = "bold "+fontSize+"px Arial";
 		ctx.fillText(instr,0+borderSize,fontSize-1+borderSize);
 	}

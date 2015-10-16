@@ -148,12 +148,12 @@
 			}
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
 			if (!$e_isNumber(param1,true)) {
-				param1 = canvasSize/2;
+				param1 = width/2;
 			} else {
 				param1 = margin+parseInt(param1)/canvasSize*(width-(2*margin));
 			}
 			if (!$e_isNumber(param2,true)) {
-				param2 = canvasSize/2;
+				param2 = height/2;
 			} else {
 				param2 = margin+parseInt(param2)/canvasSize*(height-(2*margin));
 			}
