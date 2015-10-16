@@ -72,7 +72,7 @@
 		var inputType = "";
 		if ($_eseecode.canvasArray["bottom"].layerOver) {
 			msgClass = "tab-button";
-			linkSrc = ["$e_downloadLayersFromUI(true)", "$e_downloadLayersFromUI(false)"];
+			linkSrc = ["$e_downloadLayersFromUI(false)", "$e_downloadLayersFromUI(true)"];
 			textStyle = "";
 			inputType = "";
 		} else {
@@ -101,7 +101,7 @@
 			}
 		}
 		var columns = document.getElementById("setup-downloadLayers-columns").value
-		if (columns < 1 || !$e_isNumber(columns)) {
+		if (columns < 1 || !$e_isNumber(columns,true)) {
 			columns = 1;
 		}
 		var imageBinary;
@@ -109,7 +109,7 @@
 			var encoder = new GIFEncoder();
 			encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
 			var interval = document.getElementById("setup-downloadLayers-interval").value;
-			if (!$e_isNumber(interval)) {
+			if (!$e_isNumber(interva,true)) {
 				interval = 500;
 			}
 			encoder.setDelay(interval); //go to next frame every n milliseconds 
@@ -362,7 +362,7 @@
 			if (urlParts !== null) {
 				// Check that the level exists
 				var newLevel = urlParts[2].toLowerCase();
-				if ($e_isNumber(newLevel) && $_eseecode.modes.console[newLevel]) {
+				if ($e_isNumber(newLevel,true) && $_eseecode.modes.console[newLevel]) {
 					id = newLevel;
 				} else {
 					for (var i=1; i<$_eseecode.modes.console.length; i++) {
@@ -2113,7 +2113,7 @@
 					$_eseecode.instructions.custom[$_eseecode.instructions.custom.length-1] = newInstructionId;
 				}
 				var j = 0;
-				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j]) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
+				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j],true) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
                     // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
 			        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
 			        j++;

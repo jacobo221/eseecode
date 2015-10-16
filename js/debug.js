@@ -179,7 +179,7 @@
 			}
 		}
 		if (line) {
-			if ($e_isNumber($_eseecode.session.breakpointHandler)) {
+			if ($e_isNumber($_eseecode.session.breakpointHandler,true)) {
 				$e_updateBreakpoint($_eseecode.session.breakpointHandler,line)
 			} else {
 				$e_addBreakpoint(line);
