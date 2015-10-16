@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<h1>Test instruction icons</h1>
+<p>Instruction: <select id="instructions"></select></p>
+<p>Parameters: <input id="param1" type="text" value="" style="width:80px" /> <input id="param2" type="text" value="" style="width:80px" /></p>
+<p>Size: <input id="width" type="number" value="68" style="width:50px" />x<input id="height" type="number" value="68" style="width:50px" /></p>
+<p>Show title: <select id="showTitle"><option value="yes">Yes</option><option value="no">No</option></select></p>
+<p>Show flat background: <select id="showFlatBg"><option value="yes">Yes</option><option value="no" selected="selected">No</option></select></p>
+<p>Type of corners: <select id="showCorners"><option value="no">Sharp</option><option value="dialog" selected="selected">Dialog</option><option value="console">Console</option><option value="floating">Floating</option></select></p>
+<p>Show border: <select id="showBorder"><option value="yes" selected="selected">Yes</option><option value="no">No</option></select></p>
+<p><input type="button" onclick="createIcon()" value="CREATE" /></p>
+<p><canvas id="icon" style="width:68px;height:68px;"></canvas></p>
+<p><b><a href="" onclick="downloadIcon(this)">Download</a></b></p>
+<script type="text/javascript">
+var defaultBlockSize = 68;
+var $_eseecode = {
+	instructions: {
+		icons: null
+	},
+	whiteboard: {
+		offsetWidth: defaultBlockSize,
+		offsetHeight: defaultBlockSize
+	}
+}
+</script>
+<script type="text/javascript" src="../js/instructions/categories.js"></script>
+<script type="text/javascript" src="../js/instructions/icons.js"></script>
+<script type="text/javascript" src="../js/instructions/set.js"></script>
+<script type="text/javascript" src="../js/ui.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript">
+var icons = $_eseecode.instructions.icons;
+var select = document.getElementById('instructions');
+for (key in icons) {
+	var option = document.createElement("option");
+	option.text = key;
+	option.id = key;
+	select.add(option);
+}
+function createIcon() {
+	var instr = document.getElementById('instructions').value;
+	var showTitle = document.getElementById('showTitle').value;
+	var showFlatBg = document.getElementById('showFlatBg').value;
+	var showCorners = document.getElementById('showCorners').value;
+	var showBorder = document.getElementById('showBorder').value;
+	var width = parseInt(document.getElementById('width').value);
+	var height = parseInt(document.getElementById('height').value);
+	var canvas = document.getElementById('icon');
+	var borderSize;
+    var borderRadius;
+	var borderColor;
+    if (showCorners == "dialog") {
+    	borderSize = 1;
+    	borderRadius = 5;
+		borderColor = "#AAAAAA";
+    } else if (showCorners == "console") {
+    	borderSize = 1;
+    	borderRadius = 10;
+		borderColor = "#AAAAAA";
+    } else if (showCorners == "floating") {
+    	borderSize = 3;
+    	borderRadius = 10;
+		borderColor = "#555555";
+    } else { // sharp
+    	borderSize = 1;
+    	borderRadius = 0;
+		borderColor = "#AAAAAA";
+    }
+	canvas.style.width = width+"px";
+	$_eseecode.whiteboard.offsetWidth = width;
+	canvas.style.height = height+"px";
+	$_eseecode.whiteboard.offsetHeight = height;
+	canvas.width = width;
+	canvas.height = height;
+	var ctx = canvas.getContext("2d");
+	var instrId = $e_getInstructionSetIdFromName(instr);
+	var instrObj = $_eseecode.instructions.set[instrId];
+	var color = "transparent";
+	for (var i=0; i<$_eseecode.instructions.categories.length; i++) {
+        if (instrObj.category == $_eseecode.instructions.categories[i].name) {
+            color = $_eseecode.instructions.categories[i].color;
+            break;
+        }
+    }
+    if (showCorners != "no") {
+    	ctx.save();
+	    ctx.beginPath();
+	 	ctx.arc(borderRadius,borderRadius,borderRadius,-Math.PI,-Math.PI/2);
+	 	ctx.moveTo(borderRadius, 0);
+	 	ctx.lineTo(width-borderRadius,0);
+	 	ctx.arc(width-borderRadius,borderRadius,borderRadius,-Math.PI/2,0);
+	 	ctx.lineTo(width,borderRadius);
+	 	ctx.lineTo(width,height-borderRadius);
+	 	ctx.arc(width-borderRadius,height-borderRadius,borderRadius,0,Math.PI/2);
+	 	ctx.lineTo(width-borderRadius,height);
+	 	ctx.lineTo(borderRadius,height);
+	 	ctx.arc(borderRadius,height-borderRadius,borderRadius,Math.PI/2,Math.PI);
+	 	ctx.lineTo(0,height-borderRadius);
+	 	ctx.lineTo(0,borderRadius);
+	    ctx.clip();
+    }
+	ctx.fillStyle = color;
+	ctx.fillRect(0,0,width,height);
+    if (showFlatBg != "yes") {
+		var gradient = ctx.createRadialGradient(width/2,height/2,height*1.5,width/3,height/3,height/4);
+		gradient.addColorStop(0.0,'rgba(0,0,0,1)');
+		gradient.addColorStop(1.0,'rgba(0,0,0,0)');
+		ctx.fillStyle = gradient;
+		ctx.beginPath();
+		ctx.arc(width/2,height/2,height,2*Math.PI,0,false);
+		ctx.closePath();
+		ctx.fill();
+    }
+	var params = new Array();
+	if (document.getElementById('param1').value.length > 0) {
+		params[0] = document.getElementById('param1').value;
+	}
+	if (document.getElementById('param2').value.length > 0) {
+		params[1] = document.getElementById('param2').value;
+	}
+	icons[instr](ctx, document.getElementById('width').value, document.getElementById('height').value, params);
+    if (showBorder != "no") {
+    	var widthWrapper = width+borderSize*2;
+    	var heightWrapper = height+borderSize*2;
+    	var canvasWrapper = document.createElement("canvas");
+		canvasWrapper.width = widthWrapper;
+		canvasWrapper.height = heightWrapper;
+		var ctxWrapper = canvasWrapper.getContext("2d");
+    	if (showCorners != "no") {
+	    	ctxWrapper.save();
+		    ctxWrapper.beginPath();
+		 	ctxWrapper.arc(borderRadius,borderRadius,borderRadius,-Math.PI,-Math.PI/2);
+		 	ctxWrapper.moveTo(borderRadius, 0);
+		 	ctxWrapper.lineTo(widthWrapper-borderRadius,0);
+		 	ctxWrapper.arc(widthWrapper-borderRadius,borderRadius,borderRadius,-Math.PI/2,0);
+		 	ctxWrapper.lineTo(widthWrapper,borderRadius);
+		 	ctxWrapper.lineTo(widthWrapper,heightWrapper-borderRadius);
+		 	ctxWrapper.arc(widthWrapper-borderRadius,heightWrapper-borderRadius,borderRadius,0,Math.PI/2);
+		 	ctxWrapper.lineTo(widthWrapper-borderRadius,heightWrapper);
+		 	ctxWrapper.lineTo(borderRadius,heightWrapper);
+		 	ctxWrapper.arc(borderRadius,heightWrapper-borderRadius,borderRadius,Math.PI/2,Math.PI);
+		 	ctxWrapper.lineTo(0,heightWrapper-borderRadius);
+		 	ctxWrapper.lineTo(0,borderRadius);
+		    ctxWrapper.clip();
+    	}
+	    ctxWrapper.beginPath();
+	 	ctxWrapper.moveTo(0, 0);
+	 	ctxWrapper.lineTo(widthWrapper,0);
+	 	ctxWrapper.lineTo(widthWrapper,heightWrapper);
+	 	ctxWrapper.lineTo(0,heightWrapper);
+	    ctxWrapper.closePath();
+	 	ctxWrapper.fillStyle = borderColor;
+	 	ctxWrapper.fill();
+	 	ctxWrapper.drawImage(canvas,borderSize,borderSize);
+	 	width = widthWrapper;
+	 	height = heightWrapper;
+	 	canvas.width = widthWrapper;
+	 	canvas.height = heightWrapper;
+	 	canvas.style.width = widthWrapper+"px";
+	 	canvas.style.height = heightWrapper+"px";
+	 	ctx.drawImage(canvasWrapper,0,0);
+    }
+	if (showTitle != "no") {
+		ctx.fillStyle = $e_readableText(color);
+		var fontSize = 10*(Math.min(width,height)/defaultBlockSize);
+		ctx.font = "bold "+fontSize+"px Arial";
+		ctx.fillText(instr,0+borderSize,fontSize-1+borderSize);
+	}
+}
+function downloadIcon(link) {
+	var canvas = document.getElementById('icon');
+	link.href = canvas.toDataURL();
+	var d = new Date();
+	link.download = "icon-"+d.getTime()+".png";
+}
+function _(text, params) {
+	return text;
+}
+</script>
+</body>
+</html>
+
