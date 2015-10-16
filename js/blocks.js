@@ -42,14 +42,11 @@
 		$_eseecode.session.floatingBlock.fromDiv = null;
 		$_eseecode.session.floatingBlock.mouse.x = undefined;
 		$_eseecode.session.floatingBlock.mouse.y = undefined;
-		if (!$e_isTouchDevice()) {
-			document.body.removeEventListener("mouseup", $e_unclickBlock, false);
-			document.body.removeEventListener("mousemove", $e_moveBlock, false);
-		} else {
-			document.body.removeEventListener("touchend", $e_unclickBlock, false);
-			document.body.removeEventListener("touchmove", $e_moveBlock, false);
-			document.body.removeEventListener("touchcancel", $e_cancelFloatingBlock, false);
-		}
+		document.body.removeEventListener("mouseup", $e_unclickBlock, false);
+		document.body.removeEventListener("mousemove", $e_moveBlock, false);
+		document.body.removeEventListener("touchend", $e_unclickBlock, false);
+		document.body.removeEventListener("touchmove", $e_moveBlock, false);
+		document.body.removeEventListener("touchcancel", $e_cancelFloatingBlock, false);
 		if (event) { // Only do this if it was tiggered by an event
 			$_eseecode.session.blocksUndo.pop(); // Sice the edition was cancelled, pop the half-written undo element
 		}
@@ -133,23 +130,15 @@
 		}
 		$e_paintBlock($_eseecode.session.floatingBlock.div);
 		$e_moveBlock();
-		var handler;
-		if (!$e_isTouchDevice()) {
-			handler = "click";
-		} else {
-			handler = "touchstart";
-		}
-		$_eseecode.session.floatingBlock.div.removeEventListener(handler, $e_clickBlock, false);
+		$_eseecode.session.floatingBlock.div.removeEventListener("click", $e_clickBlock, false);
+		$_eseecode.session.floatingBlock.div.removeEventListener("touchstart", $e_clickBlock, false);
 		if (level != "level1") {
 			// firefox is unable to use the mouse event handler if it is called from HTML handlers, so here we go
-			if (!$e_isTouchDevice()) {
-				document.body.addEventListener("mouseup", $e_unclickBlock, false);
-				document.body.addEventListener("mousemove", $e_moveBlock, false);
-			} else {
-				document.body.addEventListener("touchend", $e_unclickBlock, false);
-				document.body.addEventListener("touchmove", $e_moveBlock, false);
-				document.body.addEventListener("touchcancel", $e_cancelFloatingBlock, false);
-			}
+			document.body.addEventListener("mouseup", $e_unclickBlock, false);
+			document.body.addEventListener("mousemove", $e_moveBlock, false);
+			document.body.addEventListener("touchend", $e_unclickBlock, false);
+			document.body.addEventListener("touchmove", $e_moveBlock, false);
+			document.body.addEventListener("touchcancel", $e_cancelFloatingBlock, false);
 		} else { // In level1 we stick the block immediately
 			$e_unclickBlock();
 		}
@@ -184,13 +173,8 @@
 					$e_smoothScroll(consoleDiv, consoleDiv.scrollHeight);
 				}, 100); // Scroll down to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
 			} else {
-				var handler;
-				if (!$e_isTouchDevice()) {
-					handler = "mousedown";
-				} else {
-					handler = "touchstart";
-				}
-				$e_recursiveAddEventListener(div,handler,$e_clickBlock);
+				$e_recursiveAddEventListener(div,"mousedown",$e_clickBlock);
+				$e_recursiveAddEventListener(div,"touchstart",$e_clickBlock);
 				// The block was dropped in the code so we must add it
 				// Detect where in the code we must insert the div
 				var blockHeight = $e_blockSize(level, div).height;
@@ -360,7 +344,7 @@
 		} else if (pos.y > consoleDiv.offsetTop+consoleDiv.clientHeight) {
 			consoleDiv.scrollTop += 2;
 		}
-		if ($e_isTouchDevice() && event) { // default action in touch devices is scroll
+		if (event) {
 			if (event.preventDefault) {
 				event.preventDefault();
 			} else {
@@ -1187,30 +1171,15 @@
 			return;
 		}
 		if (dialog) {
-			var handler;
-			if (!$e_isTouchDevice()) {
-				handler = "mousedown";
-			} else {
-				handler = "touchstart";
-			}
-			div.addEventListener(handler, $e_clickBlock, false);
+			div.addEventListener("mousedown", $e_clickBlock, false);
+			div.addEventListener("touchstart", $e_clickBlock, false);
 		} else {
 			if (level == "level1") {
-				var handler;
-				if (!$e_isTouchDevice()) {
-					handler = "mousedown";
-				} else {
-					handler = "touchstart";
-				}
-				div.removeEventListener(handler, $e_clickBlock, false);
+				div.removeEventListener("mousedown", $e_clickBlock, false);
+				div.removeEventListener("touchstart", $e_clickBlock, false);
 			} else if (level == "level2" || level == "level3") {
-				var handler;
-				if (!$e_isTouchDevice()) {
-					handler = "mousedown";
-				} else {
-					handler = "touchstart";
-				}
-				div.addEventListener(handler, $e_clickBlock, false);
+				div.addEventListener("mousedown", $e_clickBlock, false);
+				div.addEventListener("touchstart", $e_clickBlock, false);
 			}
 		}
 	}

@@ -13,17 +13,15 @@
 		if (!event) { // firefox doesn't know window.event
 			return pos;
 		}
-		if (!$e_isTouchDevice()) {
+		if (event.type == "touchend") {
+			pos.x = event.changedTouches[0].pageX;
+			pos.y = event.changedTouches[0].pageY;
+		} else if (event.type.indexOf("touch") == 0) {
+			pos.x = event.touches[0].pageX;
+			pos.y = event.touches[0].pageY;
+		} else {
 			pos.x = event.pageX;
 			pos.y = event.pageY;
-		} else {
-			if (event.type == "touchend") {
-				pos.x = event.changedTouches[0].pageX;
-				pos.y = event.changedTouches[0].pageY;
-			} else {
-				pos.x = event.touches[0].pageX;
-				pos.y = event.touches[0].pageY;
-			}
 		}
 		return pos;
 	}
@@ -69,11 +67,11 @@
 	 * @example $e_isNumber(5)
 	 */
 	function $e_isNumber(value, parseString) {
-		if (parseString === true) {
-			return !isNaN(parseFloat(value)) && isFinite(value);	
-		} else {
-			return !isNaN(parseFloat(value)) && Number.isFinite(value);
+		if (parseString !== true && typeof value == "string") { // It would be easier to do Number.isFinite() but IE11 doesn't support it
+			return false;
 		}
+		return !isNaN(parseFloat(value)) && isFinite(value);
+		
 	}
 
 	/**

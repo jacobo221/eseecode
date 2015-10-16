@@ -498,15 +498,6 @@ Any part of the image left outside the whiteboard will be lost</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#setInvisible">setInvisible</a></b>(index)
-								</div>
-								<div class="description">Sets the layer transparency</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#setItalic">setItalic</a></b>(italic)
 								</div>
 								<div class="description">Sets the italic property in future text writes in the currently active layer</div>
@@ -546,6 +537,15 @@ Any part of the image left outside the whiteboard will be lost</div>
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#stop">stop</a></b>()
 								</div>
 								<div class="description">Stops the execution of any future code</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#transparency">transparency</a></b>(value, id)
+								</div>
+								<div class="description">Sets the layer transparency</div>
 							</td>
 						</tr>
 					
@@ -610,15 +610,6 @@ The original angle is the guide looking horizontally to the right</div>
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#unsetFont">unsetFont</a></b>()
 								</div>
 								<div class="description">Resets the font to use in future text writes in the currently active layer</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#unsetInvisible">unsetInvisible</a></b>()
-								</div>
-								<div class="description">Unsets the layer transparency, back to opaque</div>
 							</td>
 						</tr>
 					
@@ -1044,7 +1035,7 @@ It will run a code on every specified time until the code returns false or an am
 							
 								<dt>
 									<span class="light fixedFont">{Number}</span> <b>delay</b>
-									
+									<i>Optional, Default: 0.5</i>
 								</dt>
 								<dd></dd>
 							
@@ -3712,65 +3703,6 @@ Any part of the image left outside the whiteboard will be lost
 
 					<hr />
 				
-					<a name="setInvisible"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>setInvisible</b>(index)
-					
-					</div>
-					<div class="description">
-						Sets the layer transparency
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">setInvisible(0.5)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>index</b>
-									
-								</dt>
-								<dd>Transparency index in the range [0,1]</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Throws:</dt>
-							
-								<dt>
-									 <b></b>
-								</dt>
-								<dd>codeError</dd>
-							
-							</dl>
-						
-						
-						
-						
-
-					<hr />
-				
 					<a name="setItalic"> </a>
 					<div class="fixedFont">
 					
@@ -4015,6 +3947,71 @@ Any part of the image left outside the whiteboard will be lost
 							</dl>
 							</dl>
 						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="transparency"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>transparency</b>(value, id)
+					
+					</div>
+					<div class="description">
+						Sets the layer transparency
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">transparency(0.5)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>value</b>
+									
+								</dt>
+								<dd>Transparency value in the range [0,1]</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Id of the layer to affect</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.2</dd>
+							</dl>
+							</dl>
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Throws:</dt>
+							
+								<dt>
+									 <b></b>
+								</dt>
+								<dd>codeError</dd>
+							
+							</dl>
 						
 						
 						
@@ -4314,44 +4311,6 @@ The original angle is the guide looking horizontally to the right
 					
 					
 					<pre class="code">unsetFont()</pre>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="unsetInvisible"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>unsetInvisible</b>()
-					
-					</div>
-					<div class="description">
-						Unsets the layer transparency, back to opaque
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">unsetInvisible()</pre>
 					
 					
 					
