@@ -1260,6 +1260,7 @@
 	 * @example transparency(0.5)
 	 */
 	function transparency(value, id) {
+		var layer = $_eseecode.currentCanvas;
 		$e_parseParameterTypes("transparency", arguments);
 		if (value < 0) {
 			throw new $e_codeError("transparency",_("Value cannot be lower than 0, received:")+" "+value);
@@ -1267,12 +1268,9 @@
 		if (value > 1) {
 			throw new $e_codeError("transparency",_("Value cannot be higher than 1, received:")+" "+value);
 		}
-		if (id === undefined) {
-			layer = $_eseecode.currentCanvas;
-		} else {
+		if (id !== undefined) {
 			layer = $_eseecode.canvasArray[id];
 		}
-		layer.style.alpha = value;
 		layer.context.globalAlpha = value;
 	}
 
