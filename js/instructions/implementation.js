@@ -1375,7 +1375,7 @@
 			oldLayerOver.layerUnder = oldLayerUnder;
 			levels--;
 		}
-		if (!layer.layerOver == layer) {
+		if (!layer.layerOver) {
 			$_eseecode.canvasArray["top"] = layer;
 		}
 	}
