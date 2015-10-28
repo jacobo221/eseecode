@@ -337,15 +337,20 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} id Layer id
+	 * @param {Boolean} [hide=true] Whether to hide the layer or not
 	 * @example hide(2)
 	 */
-	function hide(id) {
+	function hide(id, hide) {
 		$e_parseParameterTypes("hide", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
 		}
-		canvas.div.style.display = "none";
+		if (hide === false) {
+			show(id);
+		} else {
+			canvas.div.style.display = "none";
+		}
 	}
 
 	/**
@@ -405,15 +410,20 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [id] Layer id
+	 * @param {Boolean} [show=true] Whether to show the layer or not
 	 * @example show(2)
 	 */
-	function show(id) {
+	function show(id, show) {
 		$e_parseParameterTypes("show", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
 			canvas = $_eseecode.canvasArray[id];
 		}
-		canvas.div.style.display = "inline";
+		if (show === false) {
+			hide(id);
+		} else {
+			canvas.div.style.display = "inline";
+		}
 	}
 
 	/**
@@ -971,18 +981,6 @@
 	}
 
 	/**
-	 * Moves the guide backwards
-	 * @since 1.0
-	 * @public
-	 * @param {Number} pixels Amount of pixels to move backwards
-	 * @example back(50)
-	 */
-	function back(pixels) {
-		$e_parseParameterTypes("back", arguments);
-		forward(-pixels);
-	}
-
-	/**
 	 * Draws an arc
 	 * @since 1.0
 	 * @public
@@ -1439,28 +1437,29 @@
 	 */
 	function animateLayers(delay) {
 		$e_parseParameterTypes("animateLayers", arguments);
-		var numLayers = $_eseecode.canvasArray.length;
 		if (delay === undefined) {
 			delay = 0.5;
 		}
-		for (var i=1; i<numLayers; i++) {
-			hide(i);
+		var layer = $_eseecode.canvasArray["bottom"];
+		while (layer) {
+			hide(layer.name);
+			layer = layer.layerOver;
 		}
 		animate("(function(){\
-			var layer = 1;\
-			for (var i=1; i<"+numLayers+"; i++) {\
-				if ($_eseecode.canvasArray[i].div.style.display != \"none\") {\
-					layer = i+1;\
+			var layer = $_eseecode.canvasArray['bottom'];\
+			var visibleLayer = layer.name;\
+			while (layer) {\
+				if (layer.div.style.display != \"none\") { // Find currently displaying layer\
+					visibleLayer = layer.name;\
 				}\
+				hide(layer.name);\
+				layer = layer.layerOver;\
 			}\
-			for (var i=1; i<"+numLayers+"; i++) {\
-				hide(i);\
+			visibleLayer = visibleLayer.layerOver;\
+			if (!visibleLayer) {\
+				visibleLayer = $_eseecode.canvasArray['bottom'];\
 			}\
-			layer %= "+numLayers+";\
-			if (layer < 1) {\
-				layer = 1;\
-			}\
-			show(layer);\
+			show(visibleLayer.name);\
 			})()", delay);
 	}
 

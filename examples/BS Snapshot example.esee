@@ -15,7 +15,7 @@ function binaryDraw(lvalue, rvalue) {
 		return lvalue
 	}
 	var minvalue = (lvalue + rvalue) / 2
-	//are this necessary?
+	//are these necessary?
 	clean()
 	turnReset()
 	goToCenter()

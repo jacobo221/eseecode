@@ -401,5 +401,7 @@ $_eseecode.i18n.available.ca = {
 	"Height cannot be lower than 0, received:": "Alçada no pot ser inferior a 0, s'ha rebut:",
 	"Width cannot be lower than 0, received:": "Amplada no pot ser inferior a 0, s'ha rebut:",
 	"Upperbound cannot be lower than 0, received:": "Limitsuperior no pot ser inferior a 0, s'ha rebut:",
-	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "De quina capa vols modificar la transparència?\n(Deixa en blanc per afectar a la capa actual)"
+	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "De quina capa vols modificar la transparència?\n(Deixa en blanc per afectar a la capa actual)",
+	"Whether to show the layer or not": "Mostrar la capa o no",
+	"Whether to hide the layer or not": "Amagar la capa o no"
 }

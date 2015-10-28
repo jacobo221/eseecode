@@ -109,7 +109,7 @@
 			var encoder = new GIFEncoder();
 			encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
 			var interval = document.getElementById("setup-downloadLayers-interval").value;
-			if (!$e_isNumber(interva,true)) {
+			if (!$e_isNumber(interval,true)) {
 				interval = 500;
 			}
 			encoder.setDelay(interval); //go to next frame every n milliseconds 

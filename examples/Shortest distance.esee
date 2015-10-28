@@ -4,7 +4,7 @@ function drawPoints() {
 	repeat (n) {
 		goTo(points[i].x, points[i].y)
 		beginShape()
-		arc(2, 360, 0, 0)
+		arc(2, 360, false, false)
 		endShape()
 		i++
 	}
@@ -44,11 +44,11 @@ for (var i = 0; i < points.length; ++i) {
 setColor('red')
 goTo(points[posi].x, points[posi].y)
 beginShape()
-arc(2, 360, 0, 0)
+arc(2, 360, false, false)
 endShape()
 goTo(points[posj].x, points[posj].y)
 beginShape()
-arc(2, 360, 0, 0)
+arc(2, 360, false, false)
 endShape()
 goTo(points[posi].x, points[posi].y)
 line(points[posj].x, points[posj].y)

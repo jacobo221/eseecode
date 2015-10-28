@@ -4,7 +4,7 @@ function drawPoints() {
 	repeat (n) {
 		goTo(points[i].x, points[i].y)
 		beginShape()
-		arc(2, 360, 0, 0)
+		arc(2, 360, false, false)
 		endShape()
 		i++
 	}
@@ -92,11 +92,11 @@ closestPair(0, n)
 setColor('red')
 goTo(bestPair.p1.x, bestPair.p1.y)
 beginShape()
-arc(2, 360, 0, 0)
+arc(2, 360, false, false)
 endShape()
 goTo(bestPair.p2.x, bestPair.p2.y)
 beginShape()
-arc(2, 360, 0, 0)
+arc(2, 360, false, false)
 endShape()
 goTo(bestPair.p1.x, bestPair.p1.y)
 line(bestPair.p2.x, bestPair.p2.y)

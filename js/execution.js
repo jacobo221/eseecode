@@ -142,7 +142,7 @@
 		}
 		$_eseecode.execution.programCounter = 0;
 		$_eseecode.execution.breakpointCounter = 0;
-		for (key in $_eseecode.session.breakpoints) {
+		for (var key in $_eseecode.session.breakpoints) {
 			$_eseecode.session.breakpoints[key].count = 0;
 		}
 		$e_executionTraceReset("randomColor");

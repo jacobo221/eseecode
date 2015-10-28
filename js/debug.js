@@ -600,7 +600,7 @@
 		ace.edit("console-write").session.clearBreakpoints();
 		for (var breakpoint in $_eseecode.session.breakpoints) {
 			var consoleDiv = document.getElementById("console-blocks");
-			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,breakpoint,1).element;
 			if (div && div.id != "console-blocks-tip") {
 				div.style.boxShadow = "";
 			}

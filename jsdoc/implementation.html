@@ -44,15 +44,6 @@ It will run a code on every specified time until the code returns false or an am
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#back">back</a></b>(pixels)
-								</div>
-								<div class="description">Moves the guide backwards</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#beginShape">beginShape</a></b>()
 								</div>
 								<div class="description">Defines the beginning of a shape definition</div>
@@ -335,7 +326,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#hide">hide</a></b>(id)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#hide">hide</a></b>(id, hide)
 								</div>
 								<div class="description">Hides a layer</div>
 							</td>
@@ -516,7 +507,7 @@ Any part of the image left outside the whiteboard will be lost</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#show">show</a></b>(id)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#show">show</a></b>(id, show)
 								</div>
 								<div class="description">Shows a layer</div>
 							</td>
@@ -1105,55 +1096,6 @@ It will run a code on every specified time until the code returns false or an am
 									<i>Optional, Default: false</i>
 								</dt>
 								<dd>Move clockwise or counterclockwise</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="back"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>back</b>(pixels)
-					
-					</div>
-					<div class="description">
-						Moves the guide backwards
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">back(50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
-									
-								</dt>
-								<dd>Amount of pixels to move backwards</dd>
 							
 							</dl>
 						
@@ -2738,7 +2680,7 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="fixedFont">
 					
 					
-					<b>hide</b>(id)
+					<b>hide</b>(id, hide)
 					
 					</div>
 					<div class="description">
@@ -2765,6 +2707,12 @@ Angle 0 is when the guide is looking horizontally right
 									
 								</dt>
 								<dd>Layer id</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>hide</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to hide the layer or not</dd>
 							
 							</dl>
 						
@@ -3805,7 +3753,7 @@ Any part of the image left outside the whiteboard will be lost
 					<div class="fixedFont">
 					
 					
-					<b>show</b>(id)
+					<b>show</b>(id, show)
 					
 					</div>
 					<div class="description">
@@ -3832,6 +3780,12 @@ Any part of the image left outside the whiteboard will be lost
 									<i>Optional</i>
 								</dt>
 								<dd>Layer id</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>show</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to show the layer or not</dd>
 							
 							</dl>
 						

@@ -10,7 +10,10 @@
 	 */
 	function $e_getCanvas(id) {
 		if (typeof id === "undefined") {
-			id = $_eseecode.canvasArray.length;
+			id = 0;
+			while ($_eseecode.canvasArray[id]) {
+				id++;
+			}
 		}
 		if (!$_eseecode.canvasArray[id]) {
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;

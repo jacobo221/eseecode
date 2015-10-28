@@ -1,6 +1,6 @@
 function fibonacci(a, b, limit) {
   if (limit != 0) {
-    arc(b, 90, 1);
+    arc(b, 90, true);
     fibonacci(b, a+b, limit-1);
   }
 }
