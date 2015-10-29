@@ -1196,23 +1196,13 @@
 			tempCtx.scale(scaleX, scaleY);
 			tempCtx.drawImage(img, 0, 0, width*scaleX, height*scaleY);
 			tempCtx.restore();
-			
-			var tempCanvas2 = document.createElement("canvas");
-			tempCanvas2.width = Math.max(width, height)*4;
-			tempCanvas2.height = Math.max(width, height)*4;
-			var tempCtx = tempCanvas2.getContext("2d");
-			tempCtx.translate(width/2, height/2);
-			tempCtx.rotate(rotation*Math.PI/180);
-			tempCtx.drawImage(tempCanvas, 0, 0);
-			tempCtx.translate(-tempCanvas2.width/2, -tempCanvas2.height/2);
-			/*
+			canvas.context.translate(systemPos.x, systemPos.y);
+			canvas.context.rotate(rotation*Math.PI/180);
 			if (centered) {
-				canvas.context.drawImage(tempCanvas2, systemPos.x-width/2, systemPos.y-height/2);
+				canvas.context.drawImage(tempCanvas, -width/2, -height/2);
 			} else {
-				canvas.context.drawImage(tempCanvas2, systemPos.x, systemPos.y);
+				canvas.context.drawImage(tempCanvas, 0, 0);
 			}
-			*/
-			canvas.context.drawImage(tempCanvas2, 20, 20)
 		}
 		if (src) {
 			img.src = src;

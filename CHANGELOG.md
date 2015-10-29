@@ -2,6 +2,7 @@
 
  *Milestone reached: Easily understandable runtime errors*
  *   Detect runtime call errors and show easily understandable explanations of such errors
+ *   Merged flip-, scale, move-, rotate- into image()
  *   Allow breakpoints and stepping to work together in debug
  *   API_uploadCode() allows to immediately run the code: Regarding preload it defined whether the code should be preloaded in the whiteboard or run when the user clicks run
  *   Breakpoints in debug now count how many times the app has gone through them (most useful when the breakpoint exists but is disabled)

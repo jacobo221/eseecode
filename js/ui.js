@@ -38,15 +38,26 @@
 	function $e_downloadLayersFromUI(grid) {
 		// Create one layer GIF to measure how long it takes
 		var start = new Date().getTime();
-		var encoder = new GIFEncoder();
-		encoder.setRepeat(0);
-		encoder.setDelay(0.1);
-		encoder.start();
-		encoder.addFrame($_eseecode.canvasArray["grid"].canvas.getContext("2d"));
-		encoder.finish();
+		var estimatedTime;
+		if (!grid) {
+			var encoder = new GIFEncoder();
+			encoder.setRepeat(0);
+			encoder.setDelay(0.1);
+			encoder.start();
+			encoder.addFrame($_eseecode.canvasArray["grid"].canvas.getContext("2d"));
+			encoder.finish();
+		} else {
+			var canvasSize = $_eseecode.whiteboard.offsetWidth;
+			var tempCanvas = document.createElement("canvas");
+			tempCanvas.width = canvasSize;
+			tempCanvas.height = canvasSize;
+			var tempCtx = tempCanvas.getContext("2d");
+			tempCtx.drawImage($_eseecode.currentCanvas.canvas,0,0,canvasSize,canvasSize);
+			var dumb = tempCanvas.toDataURL();
+		}
 		var finish = new Date().getTime();
 		var secondsPerLayer = (finish - start) / 1000;
-		var estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
+		estimatedTime = Math.ceil(secondsPerLayer*$_eseecode.canvasArray.length);
 		if (estimatedTime >= 3) {
 			$e_msgBox(_("It is estimated that it will take %s seconds to generate the file to download. Do you wish to proceed?\n\nIf you want to proceed %sclick here%s and please be patient and don't switch away from the application.",[estimatedTime,"<a id=\"downloadLayers-link\" onclick=\"$e_downloadLayers("+grid+")\" href=\"\">","</a>"]), {noSubmit:true,cancelAction:$e_msgBoxClose});
 		} else {
