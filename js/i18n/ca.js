@@ -127,7 +127,7 @@ $_eseecode.i18n.available.ca = {
 	"Deletes a button in a window": "Elimina un botó a una finestra",
 	"Deletes an image in a window": "Elimina una imatge a una finestra",
 	"Deletes an input box in a window": "Elimina un quadre d'entrada a una imatge",
-	"Deletes a window": "Elimina una finestra",
+	"Deletes all elements in a window": "Elimina tots els elements d'una finestra",
 	"Deletes text in a window": "Elimina text d'una finestra",
 	"destinationx": "destíx",
 	"destinationy": "destíy",
@@ -403,5 +403,8 @@ $_eseecode.i18n.available.ca = {
 	"Upperbound cannot be lower than 0, received:": "Limitsuperior no pot ser inferior a 0, s'ha rebut:",
 	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "De quina capa vols modificar la transparència?\n(Deixa en blanc per afectar a la capa actual)",
 	"Whether to show the layer or not": "Mostrar la capa o no",
-	"Whether to hide the layer or not": "Amagar la capa o no"
+	"Whether to hide the layer or not": "Amagar la capa o no",
+	"Degrees to rotate the image": "Graus que rotar la imatge",
+	"Flip the image horizontally": "Dona la volta a la imatge horitzontalment",
+	"Flip the image vertically": "Dona la volta a la imatge verticalment"
 }

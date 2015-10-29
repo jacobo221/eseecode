@@ -127,7 +127,7 @@ $_eseecode.i18n.available.es = {
 	"Deletes a button in a window": "Elimina un botón en una ventana",
 	"Deletes an image in a window": "Elimina una imagen en una ventana",
 	"Deletes an input box in a window": "Elimina un cuadro de entrada en una ventana",
-	"Deletes a window": "Elimina una ventana",
+	"Deletes all elements in a window": "Elimina todos los elementos de una ventana",
 	"Deletes text in a window": "Elimina texto en una ventana",
 	"destinationx": "destinox",
 	"destinationy": "destinoy",
@@ -403,5 +403,8 @@ $_eseecode.i18n.available.es = {
 	"Upperbound cannot be lower than 0, received:": "Limitesuperior no puede ser inferior a 0, se ha recibido:",
 	"To which layer do you want to change its transparency?\n(Leave blank to affect the current layer)": "¿De que capa quieres modificar la transparencia?\n(Deja en blanco para afectar la capa actual)",
 	"Whether to show the layer or not": "Mostrar la capa o no",
-	"Whether to hide the layer or not": "Ocultar la capa o no"
+	"Whether to hide the layer or not": "Ocultar la capa o no",
+	"Degrees to rotate the image": "Grados que rotar la imágen",
+	"Flip the image horizontally": "Da la vuelta a la imágen horizontalmente",
+	"Flip the image vertically": "Da la vuelta a la imágen verticalmente"
 }

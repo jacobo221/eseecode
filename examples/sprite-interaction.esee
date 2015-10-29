@@ -1,11 +1,11 @@
-windowTextCreate(1, "t1", "Color:", 25, 75, undefined, true)
-windowInputCreate(1, "i1", 70, 75, 90, 15, "color")
+windowTextCreate(0, "t1", "Color:", 25, 75, undefined, true)
+windowInputCreate(0, "i1", 70, 75, 90, 15, "color")
 windowInputSet("i1", "#FF0000")
-windowTextCreate(1, "t2", "Repeticions:", 10, 100, undefined, true)
-windowInputCreate(1, "i2", 100, 100, 60, 15, "number")
+windowTextCreate(0, "t2", "Repeticions:", 10, 100, undefined, true)
+windowInputCreate(0, "i2", 100, 100, 60, 15, "number")
 windowInputSet("i2", "1800")
-windowButtonCreate(1, "b1", "Executa", 100, 125, "draw()")
-windowButtonCreate(1, "b2", "Gira", 170, 90, "turnRight(15)")
+windowButtonCreate(0, "b1", "Executa", 100, 125, "draw()")
+windowButtonCreate(0, "b2", "Gira", 170, 90, "turnRight(15)")
 function draw() {
 	goToCenter();
 	setColor(windowInputGet("i1"));

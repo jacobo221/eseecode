@@ -321,15 +321,16 @@
 	}
 
 	/**
-	 * Removes a window and all of its child elements
-	 * @since 1.0
+	 * Removes all elements in a window
+	 * @since 2.2
 	 * @public
 	 * @param {Number} id Window id
-	 * @example windowRemove(2)
+	 * @example windowClean(2)
 	 */
-	function windowRemove(id) {
-		$e_parseParameterTypes("windowRemove", arguments);
+	function windowClean(id) {
+		$e_parseParameterTypes("windowClean", arguments);
 		$_eseecode.ui.dialogWindow.removeChild($_eseecode.windowsArray[id]);
+		$e_getOrCreateWindow(id);
 	}
 
 	/**
@@ -515,7 +516,7 @@
 	 * @param {Number} right Pixels to move to the right
 	 * @param {Number} down Pixels to move down
 	 * @example move(20,50)
-	 */
+	 *
 	function move(right, down) {
 		$e_parseParameterTypes("move", arguments);
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
@@ -528,6 +529,7 @@
 		clean();
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
+	*/
 
 	/**
 	 * Moves the current layer horizontally
@@ -536,11 +538,12 @@
 	 * @public
 	 * @param {Number} pixels Pixels to move to the right
 	 * @example moveRight(20,50)
-	 */
+	 *
 	function moveRight(pixels) {
 		$e_parseParameterTypes("moveRight", arguments);
 		move(pixels, 0);
 	}
+	*/
 
 	/**
 	 * Moves the current layer horizontally
@@ -549,11 +552,12 @@
 	 * @public
 	 * @param {Number} pixels Pixels to move to the left
 	 * @example moveLeft(20,50)
-	 */
+	 *
 	function moveLeft(pixels) {
 		$e_parseParameterTypes("moveLeft", arguments);
 		moveRight(-pixels);
 	}
+	*/
 
 	/**
 	 * Moves the current layer vertically
@@ -562,11 +566,12 @@
 	 * @public
 	 * @param {Number} pixels Pixels to move down
 	 * @example moveDown(20,50)
-	 */
+	 *
 	function moveDown(pixels) {
 		$e_parseParameterTypes("moveDown", arguments);
 		move(0, pixels);
 	}
+	*/
 
 	/**
 	 * Moves the current layer vertically
@@ -575,11 +580,12 @@
 	 * @public
 	 * @param {Number} pixels Pixels to move up
 	 * @example moveUp(20,50)
-	 */
+	 *
 	function moveUp(pixels) {
 		$e_parseParameterTypes("moveUp", arguments);
 		moveDown(-pixels);
 	}
+	*/
 
 	/**
 	 * Rotates the current layer right
@@ -589,7 +595,7 @@
 	 * @param {Number} degrees Amount of degrees to rotate
 	 * @param {Number} [axis=0] 0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner
 	 * @example rotateRight(90)
-	 */
+	 *
 	function rotateRight(degrees, axis) {
 		$e_parseParameterTypes("rotateRight", arguments);
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
@@ -622,6 +628,7 @@
 		clean();
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
+	*/
 
 	/**
 	 * Rotates the current layer left
@@ -631,11 +638,12 @@
 	 * @param {Number} degrees Amount of degrees to rotate
 	 * @param {Number} [axis=0] 0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner
 	 * @example rotateRight(90)
-	 */
+	 *
 	function rotateLeft(degrees, axis) {
 		$e_parseParameterTypes("rotateLeft", arguments);
 		rotateRight(-degrees, axis);
 	}
+	*/
 
 	/**
 	 * Scales the current layer
@@ -646,7 +654,7 @@
 	 * @param {Number} vertical Vertical proportion
 	 * @param {Number} [axis=0] 0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner
 	 * @example scale(2,2)
-	 */
+	 *
 	function scale(horizontal, vertical, axis) {
 		$e_parseParameterTypes("scale", arguments);
 		var color = $_eseecode.currentCanvas.style.color;
@@ -684,6 +692,7 @@
 		setColor(color);
 		setSize(size);
 	}
+	*/
 
 	/**
 	 * Flips the current layer horizontally
@@ -691,10 +700,11 @@
 	 * @since 1.0
 	 * @public
 	 * @example flipHorizontally()
-	 */
+	 *
 	function flipHorizontally() {
 		scale(-1, 1);
 	}
+	*/
 
 	/**
 	 * Flips the current layer vertically
@@ -702,10 +712,11 @@
 	 * @since 1.0
 	 * @public
 	 * @example flipVertically()
-	 */
+	 *
 	function flipVertically() {
 		scale(1, -1);
 	}
+	*/
 
 	/**
 	 * Returns a random color
@@ -1135,10 +1146,13 @@
 	 * @param {Boolean} [centered] Whether or not the image should be centered in the given position
 	 * @param {Number} [width] Image width
 	 * @param {Number} [height] Image height
+	 * @param {Number} [rotation] Degrees to rotate the image
+	 * @param {Boolean} [flipX] Flip the image horizontally
+	 * @param {Boolean} [flipY] Flip the image vertically
 	 * @throws codeError
 	 * @example image(getLayerImage(3), 50, 50, true, 200, 150)
 	 */
-	function image(src, posx, posy, centered, width, height) {
+	function image(src, posx, posy, centered, width, height, rotation, flipX, flipY) {
 		$e_parseParameterTypes("image", arguments);
 		if (width < 0) {
 			throw new $e_codeError("image",_("Width cannot be lower than 0, received:")+" "+width);
@@ -1152,15 +1166,49 @@
 		// We need to save the current canvas in a variable otherwise it will load the image in whatever the currentCanvas is when the image is loaded
 		img.onload = function() {
 			if (width === undefined) {
-				width = this.width;
+				if (height === undefined) {
+					width = this.width;
+				} else {
+					width = this.width*(height/this.height);
+				}
 			}
 			if (height === undefined) {
-				height = this.height;
+				if (width === undefined) {
+					height = this.height;
+				} else {
+					height = this.height*(width/this.width);
+				}
 			}
+			var canvasSize = $_eseecode.whiteboard.offsetWidth;
+			var tempCanvas = document.createElement("canvas");
+			tempCanvas.width = width;
+			tempCanvas.height = height;
+			var tempCtx = tempCanvas.getContext("2d");
+			var scaleX = 1;
+			var scaleY = 1;
+			if (flipX) {
+				scaleX = -1;
+			}
+			if (flipY) {
+				scaleY = -1;
+			}
+			tempCtx.save();
+			tempCtx.scale(scaleX, scaleY);
+			tempCtx.drawImage(img, 0, 0, width*scaleX, height*scaleY);
+			tempCtx.restore();
+			
+			var tempCanvas2 = document.createElement("canvas");
+			tempCanvas2.width = Math.max(width, height)*2;
+			tempCanvas2.height = Math.max(width, height)*2;
+			var tempCtx = tempCanvas2.getContext("2d");
+			tempCtx.translate(width/2, height/2);
+			tempCtx.rotate(rotation*Math.PI/180);
+			tempCtx.translate(-tempCanvas2.width/2, -tempCanvas2.height/2);
+			tempCtx.drawImage(tempCanvas, 0, 0);
 			if (centered) {
-				canvas.context.drawImage(img, systemPos.x-width/2, systemPos.y-height/2, width, height);
+				canvas.context.drawImage(tempCanvas2, systemPos.x-width/2, systemPos.y-height/2);
 			} else {
-				canvas.context.drawImage(img, systemPos.x, systemPos.y, width, height);
+				canvas.context.drawImage(tempCanvas2, systemPos.x+tempCanvas2.width/2, systemPos.y+tempCanvas2.height/2);
 			}
 		}
 		if (src) {
@@ -1407,6 +1455,7 @@
 	 * @example animate(0.25, "stepForward()")
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
+		console.log(count+","+timeoutHandlersIndex)
 		$e_parseParameterTypes("animate", arguments);
 		var returnValue;
 		try {
@@ -1449,8 +1498,8 @@
 			var layer = $_eseecode.canvasArray['bottom'];\
 			var visibleLayer = layer.name;\
 			while (layer) {\
-				if (layer.div.style.display != \"none\") { // Find currently displaying layer\
-					visibleLayer = layer.name;\
+				if (layer.div.style.display != \"none\") { /* Find currently displaying layer */\
+					visibleLayer = layer;\
 				}\
 				hide(layer.name);\
 				layer = layer.layerOver;\

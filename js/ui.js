@@ -2365,6 +2365,7 @@
 		$_eseecode.currentWindow = undefined;
 		delete $_eseecode.windowsArray;
 		$_eseecode.windowsArray = [];
+		$e_getOrCreateWindow(0);
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		if (!noPrecode && !$_eseecode.execution.precode.standby) {
 			$e_execute("disabled", null, true);

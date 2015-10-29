@@ -33,7 +33,7 @@ function tryLetter() {
 			show(layer)
 			var letters
 			if (!(letters = windowTextGet("t3"))) {
-				windowTextCreate(1, "t3", "Failed letters: " + letter, 20, 150, undefined, true)
+				windowTextCreate(0, "t3", "Failed letters: " + letter, 20, 150, undefined, true)
 			} else {
 					windowTextEdit("t3", letters + " " + letter)
 			}
@@ -52,7 +52,8 @@ function restart() {
 	rights = 0
 	windowTextRemove("t3")
 	repeat (9) {
-		clean(repeatCount + 1)
+		use(repeatCount)
+		clean()
 	}
 	use(1)
 	goTo(50, 350)
@@ -99,7 +100,7 @@ function restart() {
 	turnReset()
 	goTo(250, 95)
 	setColor("#FFA500")
-	arc(5, 360, 0, false)
+	arc(5, 360, false, false)
 	hide()
 	use(6)
 	turnReset()
@@ -141,11 +142,12 @@ function restart() {
 var word = "word"
 var fails = 0
 var rights = 0
-windowTextCreate(1, "t1", "Secret:", 20, 75, undefined, true)
-windowInputCreate(1, "secret", 70, 75, 70, 15, "text")
-windowButtonCreate(1, "b1", "Apply", 150, 75, "changeWord()")
-windowTextCreate(1, "t2", "Try letter:", 20, 100, undefined, true)
-windowInputCreate(1, "letter", 120, 100, 20, 15, "text")
-windowButtonCreate(1, "b2", "Try", 150, 100, "tryLetter()")
+changeAxis(0, 0, 1, 1)
+windowTextCreate(0, "t1", "Secret:", 20, 75, undefined, true)
+windowInputCreate(0, "secret", 70, 75, 70, 15, "text")
+windowButtonCreate(0, "b1", "Apply", 150, 75, "changeWord()")
+windowTextCreate(0, "t2", "Try letter:", 20, 100, undefined, true)
+windowInputCreate(0, "letter", 120, 100, 20, 15, "text")
+windowButtonCreate(0, "b2", "Try", 150, 100, "tryLetter()")
 restart()
 
