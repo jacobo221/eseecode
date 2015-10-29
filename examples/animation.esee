@@ -5,6 +5,7 @@ function hideAll() {
 }
 
 function up() {
+	unanimate()
 	if (getLayerVisibility(5)) {
 		hideAll()
 		show(6)
@@ -15,6 +16,7 @@ function up() {
 }
 
 function down() {
+	unanimate()
 	if (getLayerVisibility(7)) {
 		hideAll()
 		show(8)
@@ -25,6 +27,7 @@ function down() {
 }
 
 function right() {
+	unanimate()
 	if (getLayerVisibility(1)) {
 		hideAll()
 		show(2)
@@ -35,6 +38,7 @@ function right() {
 }
 
 function left() {
+	unanimate()
 	if (getLayerVisibility(3)) {
 		hideAll()
 		show(4)
@@ -44,7 +48,7 @@ function left() {
 	}
 }
 
-changeAxis(0,0,1,1);
+changeAxis(0, 0, 1, 1)
 goTo(200, 100)
 beginShape()
 setColor("#FF6600")
@@ -117,12 +121,10 @@ turnRight(45)
 forward(40)
 hide()
 use()
-image(getLayerImage(1), 0, 0)
-flipHorizontally()
+image(getLayerImage(1), 0, 0, false, undefined, undefined, 0, true)
 hide()
 use()
-image(getLayerImage(2), 0, 0)
-flipHorizontally()
+image(getLayerImage(2), 0, 0, false, undefined, undefined, 0, true)
 hide()
 use()
 goTo(200, 275)
@@ -175,7 +177,7 @@ turnLeft(15)
 forward(50)
 hide()
 use()
-image(getLayerImage(5), 0, 0)
+image(getLayerImage(5), 0, 0, false, undefined, undefined, 0, true)
 goTo(200, 100)
 beginShape()
 arc(2, 360)
@@ -190,7 +192,7 @@ arc(4, 360)
 endShape()
 hide()
 use()
-image(getLayerImage(6), 0, 0)
+image(getLayerImage(6), 0, 0, false, undefined, undefined, 0, true)
 goTo(200, 100)
 beginShape()
 arc(2, 360)

@@ -1440,12 +1440,12 @@
 	 * @since 2.0
 	 * @public
 	 * @param {String} command Code to run on every 
-	 * @param {Number} seconds Seconds between each code run
+	 * @param {Number} [seconds=0.5] Seconds between each code run
 	 * @param {Number} [count] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
-	 * @return {Number} Animation handler
+	 * @return {Number} Animation handler or false if the animation stopped
 	 * @throws Code execution exception
-	 * @example animate(0.25, "stepForward()")
+	 * @example animate("stepForward()", 0.25)
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
 		$e_parseParameterTypes("animate", arguments);
@@ -1454,9 +1454,17 @@
 			returnValue = eval(command);
 		} catch(event) {
 			// TODO: delays should reset timeout timestamp to avoid infinite loops but don't stop the animation with general timeout
-			if (event !== "executionTimeout") {
+			if (event === "executionTimeout") {
+				if (timeoutHandlersIndex !== undefined) {
+					unanimate(timeoutHandlersIndex);
+				}
+				return false;
+			} else {
 				throw event;
 			}
+		}
+		if (seconds === undefined) {
+			seconds = 0.5;
 		}
 		if (timeoutHandlersIndex === undefined) {
 			timeoutHandlersIndex = $_eseecode.session.timeoutHandlers.length;
@@ -1513,8 +1521,15 @@
 	 */
 	function unanimate(timeoutHandlersIndex) {
 		$e_parseParameterTypes("unanimate", arguments);
-		clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
-		delete $_eseecode.session.timeoutHandlers[timeoutHandlersIndex];
+		if (timeoutHandlersIndex === undefined) {
+			for (var key in $_eseecode.session.timeoutHandlers) {
+				clearTimeout($_eseecode.session.timeoutHandlers[key]);
+				delete $_eseecode.session.timeoutHandlers[key];
+			}
+		} else {
+			clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
+			delete $_eseecode.session.timeoutHandlers[timeoutHandlersIndex];
+		}
 	}
 
 	/**
