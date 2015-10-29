@@ -1198,18 +1198,21 @@
 			tempCtx.restore();
 			
 			var tempCanvas2 = document.createElement("canvas");
-			tempCanvas2.width = Math.max(width, height)*2;
-			tempCanvas2.height = Math.max(width, height)*2;
+			tempCanvas2.width = Math.max(width, height)*4;
+			tempCanvas2.height = Math.max(width, height)*4;
 			var tempCtx = tempCanvas2.getContext("2d");
 			tempCtx.translate(width/2, height/2);
 			tempCtx.rotate(rotation*Math.PI/180);
-			tempCtx.translate(-tempCanvas2.width/2, -tempCanvas2.height/2);
 			tempCtx.drawImage(tempCanvas, 0, 0);
+			tempCtx.translate(-tempCanvas2.width/2, -tempCanvas2.height/2);
+			/*
 			if (centered) {
 				canvas.context.drawImage(tempCanvas2, systemPos.x-width/2, systemPos.y-height/2);
 			} else {
-				canvas.context.drawImage(tempCanvas2, systemPos.x+tempCanvas2.width/2, systemPos.y+tempCanvas2.height/2);
+				canvas.context.drawImage(tempCanvas2, systemPos.x, systemPos.y);
 			}
+			*/
+			canvas.context.drawImage(tempCanvas2, 20, 20)
 		}
 		if (src) {
 			img.src = src;
@@ -1550,19 +1553,18 @@
 	 */
 	function snapshot(id) {
 		$e_parseParameterTypes("snapshot", arguments);
-		if (id < 0) {
-			throw new $e_codeError("snapshot","ID cannot be lower than 0, received: "+id);
-		}
 		var currentCanvas = $_eseecode.currentCanvas;
 		var canvas = $e_switchCanvas(id);
 		var imageClone = getLayerImage(currentCanvas.name);
 		var img = new Image();
-		img.src = imageClone;
-		canvas.context.drawImage(img, 0, 0);
+		img.onload = function() {
+			canvas.context.drawImage(img, 0, 0);
+		}
 		canvas.guide = $e_clone(currentCanvas.guide);
 		canvas.style = $e_clone(currentCanvas.style);
 		canvas.shaping = $e_clone(currentCanvas.shaping);
 		$e_switchCanvas(currentCanvas.name);
+		img.src = imageClone;
 		return canvas.name;
 	}
 

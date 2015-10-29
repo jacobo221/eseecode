@@ -80,26 +80,6 @@ It will run a code on every specified time until the code returns false or an am
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#flipHorizontally">flipHorizontally</a></b>()
-								</div>
-								<div class="description">Flips the current layer horizontally
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#flipVertically">flipVertically</a></b>()
-								</div>
-								<div class="description">Flips the current layer vertically
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#forward">forward</a></b>(pixels)
 								</div>
 								<div class="description">Moves the guide forward</div>
@@ -335,7 +315,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#image">image</a></b>(src, posx, posy, centered, width, height)
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#image">image</a></b>(src, posx, posy, centered, width, height, rotation, flipX, flipY)
 								</div>
 								<div class="description">Puts an image in the specified position of the whiteboard</div>
 							</td>
@@ -362,56 +342,6 @@ Angle 0 is when the guide is looking horizontally right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#move">move</a></b>(right, down)
-								</div>
-								<div class="description">Moves the current layer
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#moveDown">moveDown</a></b>(pixels)
-								</div>
-								<div class="description">Moves the current layer vertically
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#moveLeft">moveLeft</a></b>(pixels)
-								</div>
-								<div class="description">Moves the current layer horizontally
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#moveRight">moveRight</a></b>(pixels)
-								</div>
-								<div class="description">Moves the current layer horizontally
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#moveUp">moveUp</a></b>(pixels)
-								</div>
-								<div class="description">Moves the current layer vertically
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#pull">pull</a></b>(levels, id)
 								</div>
 								<div class="description">Pulls a layer up in the layers order
@@ -426,36 +356,6 @@ Upper layers overlap lower layers</div>
 								</div>
 								<div class="description">Pushes a layer down in the layers order
 Upper layers overlap lower layers</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#rotateLeft">rotateLeft</a></b>(degrees, axis)
-								</div>
-								<div class="description">Rotates the current layer left
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#rotateRight">rotateRight</a></b>(degrees, axis)
-								</div>
-								<div class="description">Rotates the current layer right
-Any part of the image left outside the whiteboard will be lost</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#scale">scale</a></b>(horizontal, vertical, axis)
-								</div>
-								<div class="description">Scales the current layer
-Any part of the image left outside the whiteboard will be lost</div>
 							</td>
 						</tr>
 					
@@ -679,6 +579,15 @@ The original angle is the guide looking horizontally to the right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowClean">windowClean</a></b>(id)
+								</div>
+								<div class="description">Removes all elements in a window</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowHide">windowHide</a></b>(id)
 								</div>
 								<div class="description">Hides the current window</div>
@@ -790,15 +699,6 @@ The original angle is the guide looking horizontally to the right</div>
 								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowInputShow">windowInputShow</a></b>(id)
 								</div>
 								<div class="description">Shows a window input box if it was hidden</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#windowRemove">windowRemove</a></b>(id)
-								</div>
-								<div class="description">Removes a window and all of its child elements</div>
 							</td>
 						</tr>
 					
@@ -1287,84 +1187,6 @@ It will run a code on every specified time until the code returns false or an am
 					
 					
 					<pre class="code">endShape()</pre>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="flipHorizontally"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>flipHorizontally</b>()
-					
-					</div>
-					<div class="description">
-						Flips the current layer horizontally
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">flipHorizontally()</pre>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="flipVertically"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>flipVertically</b>()
-					
-					</div>
-					<div class="description">
-						Flips the current layer vertically
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">flipVertically()</pre>
 					
 					
 					
@@ -2735,7 +2557,7 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="fixedFont">
 					
 					
-					<b>image</b>(src, posx, posy, centered, width, height)
+					<b>image</b>(src, posx, posy, centered, width, height, rotation, flipX, flipY)
 					
 					</div>
 					<div class="description">
@@ -2792,6 +2614,24 @@ Angle 0 is when the guide is looking horizontally right
 									<i>Optional</i>
 								</dt>
 								<dd>Image height</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>rotation</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Degrees to rotate the image</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>flipX</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Flip the image horizontally</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>flipY</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Flip the image vertically</dd>
 							
 							</dl>
 						
@@ -2942,262 +2782,6 @@ Angle 0 is when the guide is looking horizontally right
 
 					<hr />
 				
-					<a name="move"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>move</b>(right, down)
-					
-					</div>
-					<div class="description">
-						Moves the current layer
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">move(20,50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>right</b>
-									
-								</dt>
-								<dd>Pixels to move to the right</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>down</b>
-									
-								</dt>
-								<dd>Pixels to move down</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="moveDown"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>moveDown</b>(pixels)
-					
-					</div>
-					<div class="description">
-						Moves the current layer vertically
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">moveDown(20,50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
-									
-								</dt>
-								<dd>Pixels to move down</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="moveLeft"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>moveLeft</b>(pixels)
-					
-					</div>
-					<div class="description">
-						Moves the current layer horizontally
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">moveLeft(20,50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
-									
-								</dt>
-								<dd>Pixels to move to the left</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="moveRight"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>moveRight</b>(pixels)
-					
-					</div>
-					<div class="description">
-						Moves the current layer horizontally
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">moveRight(20,50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
-									
-								</dt>
-								<dd>Pixels to move to the right</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="moveUp"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>moveUp</b>(pixels)
-					
-					</div>
-					<div class="description">
-						Moves the current layer vertically
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">moveUp(20,50)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
-									
-								</dt>
-								<dd>Pixels to move up</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
 					<a name="pull"> </a>
 					<div class="fixedFont">
 					
@@ -3323,180 +2907,6 @@ Upper layers overlap lower layers
 								<dd>codeError</dd>
 							
 							</dl>
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="rotateLeft"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>rotateLeft</b>(degrees, axis)
-					
-					</div>
-					<div class="description">
-						Rotates the current layer left
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">rotateRight(90)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>degrees</b>
-									
-								</dt>
-								<dd>Amount of degrees to rotate</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>axis</b>
-									<i>Optional, Default: 0</i>
-								</dt>
-								<dd>0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="rotateRight"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>rotateRight</b>(degrees, axis)
-					
-					</div>
-					<div class="description">
-						Rotates the current layer right
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">rotateRight(90)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>degrees</b>
-									
-								</dt>
-								<dd>Amount of degrees to rotate</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>axis</b>
-									<i>Optional, Default: 0</i>
-								</dt>
-								<dd>0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="scale"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>scale</b>(horizontal, vertical, axis)
-					
-					</div>
-					<div class="description">
-						Scales the current layer
-Any part of the image left outside the whiteboard will be lost
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">scale(2,2)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>horizontal</b>
-									
-								</dt>
-								<dd>Horizontal proportion</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>vertical</b>
-									
-								</dt>
-								<dd>Vertical proportion</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>axis</b>
-									<i>Optional, Default: 0</i>
-								</dt>
-								<dd>0 = center, 1 = upper-left corner, 2 = upper-right corner, 3 = lower-right corner, 4= lower-left corner</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
 						
 						
 						
@@ -4739,6 +4149,55 @@ The original angle is the guide looking horizontally to the right
 
 					<hr />
 				
+					<a name="windowClean"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>windowClean</b>(id)
+					
+					</div>
+					<div class="description">
+						Removes all elements in a window
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">windowClean(2)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>id</b>
+									
+								</dt>
+								<dd>Window id</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="windowHide"> </a>
 					<div class="fixedFont">
 					
@@ -5539,55 +4998,6 @@ The original angle is the guide looking horizontally to the right
 									
 								</dt>
 								<dd>Input box id</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="windowRemove"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>windowRemove</b>(id)
-					
-					</div>
-					<div class="description">
-						Removes a window and all of its child elements
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">windowRemove(2)</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Number}</span> <b>id</b>
-									
-								</dt>
-								<dd>Window id</dd>
 							
 							</dl>
 						
