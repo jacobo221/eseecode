@@ -1448,7 +1448,6 @@
 	 * @example animate(0.25, "stepForward()")
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
-		console.log(count+","+timeoutHandlersIndex)
 		$e_parseParameterTypes("animate", arguments);
 		var returnValue;
 		try {
