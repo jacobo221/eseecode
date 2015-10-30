@@ -1275,8 +1275,9 @@
 				ctx.strokeStyle = colorNormal;
 			}
 			ctx.beginPath();
-			ctx.moveTo(i,0);
-			ctx.lineTo(i,canvasSize);
+			// We use half-pixels to be able to draw 1px wide lines
+			ctx.moveTo(i-0.5,0-0.5);
+			ctx.lineTo(i-0.5,canvasSize-0.5);
 			ctx.closePath();
 			ctx.stroke();
 		}
@@ -1289,8 +1290,9 @@
 				ctx.strokeStyle = colorNormal;
 			}
 			ctx.beginPath();
-			ctx.moveTo(0,i);
-			ctx.lineTo(canvasSize,i);
+			// We use half-pixels to be able to draw 1px wide lines
+			ctx.moveTo(0-0.5,i-0.5);
+			ctx.lineTo(canvasSize-0.5,i-0.5);
 			ctx.closePath();
 			ctx.stroke();
 		}

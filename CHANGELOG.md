@@ -22,6 +22,7 @@
  *   Fix: getRandomColor() was giving sometimes invalid color codes
  *   Fix: Remove extra space in single line comments
  *   Fix: line() was missing minValue/maxValue definition
+ *   Fix: setSize(1) made lines 2px wide
 
 ## 2.1 (2015-10-06)
 

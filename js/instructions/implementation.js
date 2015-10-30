@@ -1032,7 +1032,12 @@
 			radius = $_eseecode.currentCanvas.context.lineWidth/2;
 			
 		}
-		$_eseecode.currentCanvas.context.arc(posx,posy,radius,startradians,endradians,counterclockwise);
+		var shiftPixels = 0;
+		if ($_eseecode.currentCanvas.context.lineWidth == 1) {
+			// We use half-pixels because otherwise setSize(1) draws lines 2px wide
+			shiftPixels = -0.5;
+		}
+		$_eseecode.currentCanvas.context.arc(posx+shiftPixels,posy+shiftPixels,radius,startradians,endradians,counterclockwise);
 		$_eseecode.currentCanvas.context.stroke();
 		if (oldLineWidth !== undefined) {
 			$_eseecode.currentCanvas.context.lineWidth = oldLineWidth;

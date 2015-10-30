@@ -347,11 +347,17 @@
 	 * @example $e_systemLineAt({x: 200, y: 200}, {x: 50, y: 50})
 	 */
 	function $e_systemLineAt(origin, destination) {
-		if (!$_eseecode.currentCanvas.shaping) {
-			$_eseecode.currentCanvas.context.beginPath();
-			$_eseecode.currentCanvas.context.moveTo(origin.x,origin.y); // shape should use forward() or line()
+		var shiftPixels = 0;
+		if ($_eseecode.currentCanvas.context.lineWidth == 1) {
+			// We use half-pixels because otherwise setSize(1) draws lines 2px wide
+			shiftPixels = 0.5;
 		}
-		$_eseecode.currentCanvas.context.lineTo(destination.x,destination.y);
+		if (!$_eseecode.currentCanvas.shaping) {
+			// shape should use forward() or line()
+			$_eseecode.currentCanvas.context.beginPath();
+			$_eseecode.currentCanvas.context.moveTo(origin.x+shiftPixels,origin.y+shiftPixels);
+		}
+		$_eseecode.currentCanvas.context.lineTo(destination.x+shiftPixels,destination.y+shiftPixels);
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.closePath();
 		}
