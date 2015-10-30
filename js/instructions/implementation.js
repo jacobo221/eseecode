@@ -1025,8 +1025,18 @@
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.beginPath();
 		}
+		var oldLineWidth;
+		if ($_eseecode.currentCanvas.context.lineWidth > radius*2) { // if lineWidth is larger than radius*2 the line is drawn with negative color
+			oldLineWidth = $_eseecode.currentCanvas.context.lineWidth;
+			$_eseecode.currentCanvas.context.lineWidth = radius + oldLineWidth/2;
+			radius = $_eseecode.currentCanvas.context.lineWidth/2;
+			
+		}
 		$_eseecode.currentCanvas.context.arc(posx,posy,radius,startradians,endradians,counterclockwise);
 		$_eseecode.currentCanvas.context.stroke();
+		if (oldLineWidth !== undefined) {
+			$_eseecode.currentCanvas.context.lineWidth = oldLineWidth;
+		}
 		if (!$_eseecode.currentCanvas.shaping) {
 			$_eseecode.currentCanvas.context.closePath();
 		}
