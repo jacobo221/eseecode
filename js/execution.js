@@ -273,7 +273,7 @@
 						}
 						return;
 					}
-					$e_resetWriteConsole(code);
+					$e_resetWriteConsole(code, false);
 				}
 			}
 			$e_resetCanvas(true);

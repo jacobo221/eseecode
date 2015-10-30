@@ -2413,12 +2413,14 @@
 	 * Initializes/Resets the write console window
 	 * @private
 	 * @param {!HTMLElement} dialog Console div element
+	 * @param {Boolean} [resetCursor=true] Reset the cursor position to the beginning
 	 * @example $e_resetWriteConsole(document.getElementById("console-write"))
 	 */
-	function $e_resetWriteConsole(code) {
+	function $e_resetWriteConsole(code, resetCursor) {
 		if (!code) {
 			code = "";
 		}
+		var cursorPosition = ace.edit("console-write").getCursorPosition();
 		document.getElementById('console-write').style.fontSize = $_eseecode.setup.blockHeight.level3+"px";
 		var editor = ace.edit("console-write");
 		ace.require("ace/ext/language_tools");
@@ -2436,7 +2438,11 @@
 			editor.session.off("change",$e_writeChanged);
 			editor.setValue(code);
 		}
-		editor.gotoLine(0,0);
+		if (resetCursor !== false) {
+			editor.gotoLine(0,0);
+		} else {
+			editor.gotoLine(cursorPosition.row+1, cursorPosition.column);
+		}
 		editor.session.on("change",$e_writeChanged);
 		ace.edit("console-write").session.setUseWrapMode(false);
 	}

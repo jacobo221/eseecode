@@ -16,6 +16,7 @@
  *   Added a few new parameters to existing instructions
  *   Added tips, initial, minValue, etc to all parameters in instructions
  *   Added constants E and Phi, renamed pi to Pi
+ *   Keep Code cursor position when executing
  *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
  *   Fix: visibility issue in iPads
  *   Fix: getRandomColor() was giving sometimes invalid color codes
