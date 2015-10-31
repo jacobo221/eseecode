@@ -1,4 +1,4 @@
-## 2.2 (2015-10-14)
+## 2.2 (2015-10-31)
 
  *Milestone reached: Easily understandable runtime errors*
  *   Detect runtime call errors and show easily understandable explanations of such errors
@@ -17,7 +17,10 @@
  *   Added tips, initial, minValue, etc to all parameters in instructions
  *   Added constants E and Phi, renamed pi to Pi
  *   Keep Code cursor position when executing
+ *   Now optional parameters are unset by default, neverming the "initial" key defined in the instructionSet
  *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
+ *   Support for size 1px lines
+ *   Fix: Several fixes in Build mode when optional parameters are unset
  *   Fix: visibility issue in iPads
  *   Fix: getRandomColor() was giving sometimes invalid color codes
  *   Fix: Remove extra space in single line comments

@@ -683,17 +683,29 @@
 		} else {
 			iconDiv.style.display = "none";
 		}
-		var updateIcon = function() {		
-			iconDiv.innerHTML = "";	
-			for (var i=0; i<parametersCount; i++) {
-				iconDiv.setAttribute("param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
-				$e_paintBlock(iconDiv, false, false);
-			}
-		}
 		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
 		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
 		var parameters = instruction.parameters;
 		var parametersCount = document.getElementById("setupBlockCount").value;
+		var updateIcon = function() {
+			// First we search which is the last parameter with value, so we use "undefined" with all unset
+			// parameters up to it and don't set the parameters at all after it
+			var lastParameterWithValue = -1;
+			for (var i=parametersCount-1; i>=0 && lastParameterWithValue<0; i--) {
+				if (document.getElementById("setupBlock"+(i+1)).value !== "") {
+					lastParameterWithValue = i;
+				}
+			}
+			iconDiv.innerHTML = "";	
+			for (var i=0; i<parametersCount; i++) {
+				if (i <= lastParameterWithValue) {
+					iconDiv.setAttribute("param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
+				} else {
+					iconDiv.removeAttribute("param"+(i+1));
+				}
+			}
+			$e_paintBlock(iconDiv, false, false);
+		}
 		var supportedInputs = { range: false, number: false, color: false };
 		var testDiv = document.createElement("input");
 		for (var key in supportedInputs) {
@@ -728,11 +740,13 @@
 				var input = document.createElement("input");
 				input.id = parameterInputId+"VisualInput";
 				input.type = "text";
-				if (defaultValue !== undefined) {
+				if (defaultValue !== undefined && defaultValue !== "") {
 					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
 						defaultValue = defaultValue.substring(1,defaultValue.length-1);
 					}
 					input.value = defaultValue;
+				} else if (parameter.initial !== undefined) {
+					input.value = parameter.initial;
 				}
 				var changeFunction = function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -756,12 +770,14 @@
 						input.innerHTML += "<option value='"+j+"'>"+fonts[j]+"</option>";
 					}
 				}
-				if (defaultValue !== undefined) {
+				if (defaultValue !== undefined && defaultValue !== "") {
 					for (var j = 0; j < fonts.length; j++) {
 						if ('"'+fonts[j]+'"' === defaultValue) {
 							input.value = j;
 						}
 					}
+				} else if (parameter.initial !== undefined) {
+					input.value = parameter.initial;
 				}
 				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -824,8 +840,10 @@
 						elementInput.id = parameterInputId+"VisualInput";
 						elementInput.setAttribute("type", "range");
 						elementInput.step = stepValue*valueEscalation;
-						if (defaultValue !== undefined) {
+						if (defaultValue !== undefined && defaultValue !== "") {
 							elementInput.value = defaultValue*valueEscalation;
+						} else if (parameter.initial !== undefined) {
+							input.value = parameter.initial*valueEscalation;
 						}
 						elementInput.min = minValue*valueEscalation;
 						elementInput.max = maxValue*valueEscalation;
@@ -849,8 +867,10 @@
 						var elementInput = document.createElement("input");
 						elementInput.id = parameterInputId+"VisualInput";
 						elementInput.setAttribute("type", "number");
-						if (defaultValue !== undefined) {
+					if (defaultValue !== undefined && defaultValue !== "") {
 							elementInput.value = defaultValue;
+						} else if (parameter.initial !== undefined) {
+							input.value = parameter.initial;
 						}
 						if (minValue !== undefined) {
 							elementInput.min = minValue;
@@ -903,8 +923,10 @@
 						element.appendChild(elementSpace);
 						var elementSpan = document.createElement("span");
 						elementSpan.id = parameterInputId+"VisualSpan";
-						if (defaultValue !== undefined) {
+						if (defaultValue !== undefined && defaultValue !== "") {
 							elementSpan.innerHTML = defaultValue;
+						} else if (parameter.initial !== undefined) {
+							input.value = parameter.initial;
 						}
 						element.appendChild(elementSpan);
 					}
@@ -916,10 +938,14 @@
 				var input = document.createElement("select");
 				input.id = parameterInputId+"VisualInput";
 				input.innerHTML = "<option value='true'>"+_("true")+"</option><option value='false'>"+_("false")+"</option>";
-				if (defaultValue === "false") {
-					input.value = "false";
-				} else {
-					input.value = "true";
+				if (defaultValue !== undefined && defaultValue !== "") {
+					if (defaultValue === "false") {
+						input.value = "false";
+					} else if (defaultValue === "true") {
+						input.value = "true";
+					}
+				} else if (parameter.initial !== undefined) {
+					input.value = parameter.initial.toString();
 				}
 				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -940,12 +966,14 @@
 					input.className = "color";
 					jscolor.color(input, {});
 				}
-				if (defaultValue !== undefined) {
+				if (defaultValue !== undefined && defaultValue !== "") {
 					var value = defaultValue;
 					if (value.charAt(0) == '"') {
 						value = value.substring(1,value.length-1);
 					}
 					input.value = value;
+				} else if (parameter.initial !== undefined) {
+					input.value = parameter.initial;
 				}
 				input.addEventListener("change", function() {
 					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -978,6 +1006,7 @@
 				element.id = parameterInputId+"Toggle";
 				var input = document.createElement("input");
 				input.type = "checkbox";
+				input.id = parameterInputId+"ToggleInput"
 				var span = document.createElement("span");
 				span.innerHTML = _("Leave without value");
 				element.appendChild(input);
@@ -1076,16 +1105,23 @@
 				}
 			}
 		}
+		// First we search which is the last parameter with value, so we use "undefined" with all unset
+		// parameters up to it and don't set the parameters at all after it
+		var lastParameterWithValue = -1;
+		for (var i=parametersCount-1; i>=0 && lastParameterWithValue<0; i--) {
+			if (document.getElementById("setupBlock"+(i+1)).value !== "") {
+				lastParameterWithValue = i;
+			}
+		}
 		for (var i=0; i<parametersCount; i++) {
 			var value = document.getElementById("setupBlock"+paramNumber).value;
-			if (document.getElementById("setupBlock"+paramNumber+"Toggle") && document.getElementById("setupBlock"+paramNumber+"Toggle").checked) {
-				value = "";
-			}
 			var defaultValue = document.getElementById("setupBlock"+paramNumber+"Default").value;
-			if (value !== defaultValue) {
-				div.setAttribute("param"+paramNumber, value);
-				setupChanges.push(["param"+paramNumber, defaultValue, value]);
+			if (i <= lastParameterWithValue) {
+				div.setAttribute("param"+(i+1), value);
+			} else {
+				div.removeAttribute("param"+(i+1));
 			}
+			setupChanges.push(["param"+paramNumber, defaultValue, value]);
 			paramNumber++;
 		}
 		if (setupChanges.length > 0) {
@@ -1349,7 +1385,11 @@
 			}
 			for (var i=0; i<undo.parameters.length; i++) {
 				var parameter = undo.parameters[i];
-				div.setAttribute(parameter[0],parameter[newParm]);
+				if (parameter[newParm] !== "") {
+					div.setAttribute(parameter[0],parameter[newParm]);
+				} else {
+					div.removeAttribute(parameter[0]);
+				}
 			}
 			$e_paintBlock(div);
 		} else {
