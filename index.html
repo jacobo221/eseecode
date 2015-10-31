@@ -68,24 +68,31 @@
 				<div id="dialog-tabs-setup" class="tab" onclick="$e_switchDialogMode('setup')"><canvas width="15" height="15"></canvas></div>
 				<div id="dialog-tabs-debug" class="tab" onclick="$e_switchDialogMode('debug')"></div>
 				<div id="dialog-tabs-window" class="tab" onclick="$e_switchDialogMode('window')"></div>
+				<div id="dialog-tabs-io" class="tab" onclick="$e_switchDialogMode('io')"></div>
 				<div id="dialog-tabs-pieces" class="tab" onclick="$e_switchDialogMode($_eseecode.modes.console[0])"></div>
 			</div>
 			<div id="dialog-body" class="programbody">
 				<div id="dialog-blocks" class="program"></div>
 				<div id="dialog-write" class="program"></div>
 				<div id="dialog-window" class="program"></div>
+				<div id="dialog-io" class="program">
+					<div id="dialog-io-input-title" class="dialog-title"></div>
+					<textarea id="dialog-io-input"></textarea>
+					<div id="dialog-io-output-title" class="dialog-title"></div>
+					<textarea id="dialog-io-output"></textarea>
+				</div>
 				<div id="dialog-debug" class="program">
-					<div id="dialog-debug-layers-title"></div>
+					<div id="dialog-debug-layers-title" class="dialog-title"></div>
 					<div id="dialog-debug-layers-help">?</div>
 					<div id="dialog-debug-layers"></div>
 					<div class="separator"></div>
-					<div id="dialog-debug-analyzer-title"></div>
+					<div id="dialog-debug-analyzer-title" class="dialog-title"></div>
 					<div id="dialog-debug-analyzer-help">?</div>
 					<div id="dialog-debug-analyzer-toolbar"></div>
 					<div id="dialog-debug-analyzer-breakpoints" class="dialog-debug-analyzer-breakpoint-block"></div>
 					<div id="dialog-debug-analyzer-watches" class="dialog-debug-analyzer-breakpoint-block"></div>
 					<div class="separator"></div>
-					<div id="dialog-debug-execute-stats-title"></div>
+					<div id="dialog-debug-execute-stats-title" class="dialog-title"></div>
 					<div id="dialog-debug-execute-stats-help">?</div>
 					<div id="dialog-debug-execute-stats"></div>
 					<div id="dialog-debug-execute-step-buttons">

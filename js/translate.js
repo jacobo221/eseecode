@@ -110,6 +110,7 @@
 		document.getElementById("dialog-tabs-setup").title = _("Setup");
 		document.getElementById("dialog-tabs-debug").innerHTML = _("Debug");
 		document.getElementById("dialog-tabs-window").innerHTML = _("Window");
+		document.getElementById("dialog-tabs-io").innerHTML = _("I/O");
 		document.getElementById("dialog-tabs-pieces").innerHTML = _("Pieces");
 		document.getElementById("dialog-blocks").title = _("Blocks available");
 		document.getElementById("dialog-write").title = _("Instructions available");
@@ -129,6 +130,8 @@
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
 		document.getElementById("dialog-setup").title = _("Setup dialog");
+		document.getElementById("dialog-io-input-title").innerHTML = _("Input");
+		document.getElementById("dialog-io-output-title").innerHTML = _("Output");
 		document.getElementById("setup-grid-enable").title = _("Toggle grid");
 		document.getElementById("setup-grid-step-title").innerHTML = _("Grid")+": ";
 		document.getElementById("setup-grid-step").title = _("Grid inter-line space");

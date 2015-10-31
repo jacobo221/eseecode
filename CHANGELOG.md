@@ -1,3 +1,8 @@
+## 2.3 (ongoing work)
+
+ *Milestone: Easy input/output methods*
+ *   New input and output instructions and panels
+
 ## 2.2 (2015-10-31)
 
  *Milestone reached: Easily understandable runtime errors*

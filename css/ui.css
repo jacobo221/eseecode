@@ -27,6 +27,14 @@
 		float: right;
 		font-size: smaller;
 	}
+	.dialog-title  {
+		padding: 3px 0px 3px 0px;
+		border-bottom: 1px solid #000000;
+		text-align: center;
+		font-weight: bold;
+		background-color: #CCCCCC;
+		color: inherit;
+	}
 	.helpNote {
 		color: #AAAAAA;
 		font-style: italic;
@@ -296,13 +304,10 @@
 	#dialog-debug-layers-title {
 		position: relative;
 	}
-	#dialog-debug-layers-title, #dialog-debug-analyzer-title, #dialog-debug-execute-stats-title  {
-		padding: 3px 0px 3px 0px;
-		border-bottom: 1px solid #000000;
-		text-align: center;
-		font-weight: bold;
-		background-color: #CCCCCC;
-		color: inherit;
+	#dialog-io textarea {
+		width: 230px;
+		min-height: 150px;
+		resize: vertical;
 	}
 	#dialog-debug input[type="number"] {
 		width: 40px;

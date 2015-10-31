@@ -15,7 +15,7 @@
 				link: undefined
 			},
 			version: {
-				text: "2.2",
+				text: "2.3-dev",
 				link: "CHANGELOG.md"
 			},
 			logo: {
@@ -133,6 +133,7 @@
 				{id: "level2", name: "Drag", div: "blocks", element: null, tab: null},
 				{id: "level3", name: "Build", div: "blocks", element: null, tab: null},
 				{id: "level4", name: "Code", div: "write", element: null, tab: null},
+				{id: "io", name: "I/O", div: "io", element: null, tab: null},
 				{id: "window", name: "Window", div: "window", element: null, tab: null},
 				{id: "debug", name: "Debug", div: "debug", element: null, tab: null},
 				{id: "setup", name: "Setup", div: "setup", element: null, tab: null}

@@ -522,8 +522,7 @@
 		}
 		if (id == "setup") {
 			$e_resizeConsole(true);
-		}
-		if (id == "window") {
+		} else if (id == "window") {
 			document.getElementById("dialog-tabs-window").style.display = "block";
 		}
 		if (!$e_isNumber(id)) {
@@ -1122,7 +1121,6 @@
 	 * @example $e_initSetup()
 	 */
 	function $e_initSetup() {
-		var debugDiv = document.getElementById("dialog-setup");
 		document.getElementById("dialog-debug-execute-step").value = $_eseecode.execution.step;
 		if ($_eseecode.execution.stepped) {
 			document.getElementById("dialog-debug-execute-stepped").checked = true;

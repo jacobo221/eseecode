@@ -406,5 +406,16 @@ $_eseecode.i18n.available.es = {
 	"Whether to hide the layer or not": "Ocultar la capa o no",
 	"Degrees to rotate the image": "Grados que rotar la imágen",
 	"Flip the image horizontally": "Da la vuelta a la imágen horizontalmente",
-	"Flip the image vertically": "Da la vuelta a la imágen verticalmente"
+	"Flip the image vertically": "Da la vuelta a la imágen verticalmente",
+	"flipX": "giroX",
+	"flipY": "giroY",
+	"layerId": "idCapa",
+	"centered": "centrado",
+	"rotation": "rotación",
+	"source": "origen",
+	"xScale": "escalaX",
+	"yScale": "escalaY",
+	"I/O": "E/S",
+	"Input": "Entrada",
+	"Output": "Salida"
 }
