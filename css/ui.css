@@ -27,6 +27,13 @@
 		float: right;
 		font-size: smaller;
 	}
+	.dialog-help {
+		float: right;
+		font-weight: bold;
+		width: 10px;
+		margin: 0px 0px 0px 0px;
+		cursor: help;
+	}
 	.dialog-title  {
 		padding: 3px 0px 3px 0px;
 		border-bottom: 1px solid #000000;
@@ -293,13 +300,6 @@
 	#dialog-debug-layers, #dialog-debug-analyzer, #dialog-debug-execute-stats {
 		width: auto;
 		overflow-x: hidden;
-	}
-	#dialog-debug-layers-help, #dialog-debug-analyzer-help, #dialog-debug-execute-stats-help {
-		float: right;
-		font-weight: bold;
-		width: 10px;
-		margin: 0px 0px 0px 0px;
-		cursor: help;
 	}
 	#dialog-debug-layers-title {
 		position: relative;
