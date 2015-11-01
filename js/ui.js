@@ -1570,7 +1570,8 @@
 		// Hide filemenu if asked to do so (to integrate with other platforms)
 		var urlParts = window.location.href.match(/(\?|&)filemenu=([^&#]+)/);
 		if (urlParts !== null) {
-			if (urlParts[2] == "false" || urlParts[2] == "0" || urlParts[2] == "no" || urlParts[2] == "none") {
+			var filemenuSetting = urlParts[2].toLowerCase();
+			if (filemenuSetting == "false" || filemenuSetting == "0" || filemenuSetting == "no" || filemenuSetting == "none") {
 				document.getElementById("filemenu").style.display = "none";
 			}
 		}
@@ -1590,12 +1591,26 @@
 		}
 		$e_resizeConsole(true);
 		$e_initConsole();
+		$e_resetCanvas();
 		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
 		if (urlParts !== null) {
-			var grid = $_eseecode.coordinates.predefined[urlParts[2]];
-			$e_changeAxisCoordinates(grid.position, grid.scale);
+			var axisSetting = urlParts[2].toLowerCase();
+			var grid = undefined;
+			if ($e_isNumber(axisSetting,true) && $_eseecode.coordinates.predefined[axisSetting]) {
+				grid = $_eseecode.coordinates.predefined[axisSetting];
+			} else {
+				axisSetting = decodeURIComponent(axisSetting);
+				for (var i=0; i<$_eseecode.coordinates.predefined.length; i++) {
+					if (axisSetting == $_eseecode.coordinates.predefined[i].name.toLowerCase()) {
+						grid = $_eseecode.coordinates.predefined[i];
+						break;
+					}
+				}
+			}
+			if (grid) {
+				$e_changeAxisCoordinates(grid.position, grid.scale);
+			}
 		}
-		$e_resetCanvas();
 		$e_resetDebug();
 		$e_resetUndo();
 		$e_refreshUndoUI();
@@ -2042,7 +2057,6 @@
 			var bracketsStatus = null; // null indicates we haven't started yet
 			var bracketsExist = false;
 			for (i=0; i<parameters.length; i++) {
-				console.log(i)
 				if (!bracketsStatus && !instruction.parameters[i].noBrackets) {
 					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
@@ -2111,7 +2125,7 @@
 		var clearNext = false;
 		if (urlParts !== null) {
         	// Check that there is an explicit instruction set
-            var instructions = urlParts[2].split(";");
+            var instructions = decodeURIComponent(urlParts[2]).split(";");
             for (var i=0;i<instructions.length;i++) {	
                 codeId = instructions[i];
                 if (codeId == "blank") {
@@ -2135,7 +2149,7 @@
 					$_eseecode.instructions.custom[$_eseecode.instructions.custom.length-1] = newInstructionId;
 				}
 				var j = 0;
-				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j],true) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
+				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j],true) || $e_isBoolean(instructions[i+1+j],true) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
                     // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
 			        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
 			        j++;

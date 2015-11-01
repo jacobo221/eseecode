@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title>Creating eSeeCode Exercise</title>
+    </head>
+    <body onload="eseecodeWizard('block')">
+        <div id="block">
+            <textarea id="description" style="width:400px;height:150px">This is
+                a test
+            </textarea>
+        </div>
+        <input type="button" onclick="loadExercise('block')" value="Load embedded exercise" />
+        <script type="text/javascript">
+            function eseecodeWizard(divId) {
+                var setupItems = [
+                    { id: "lang", title: "Language", options: ["ca", "en", "es"] },
+                    { id: "view", title: "Initial view", options: ["Touch", "Drag", "Build", "Code"] },
+                    { id: "filemenu", title: "Display file menu?", options: ["Yes", "No"] },
+                    { id: "axis", title: "Axis", options: ["Computer console", "Mathematical simple", "Mathematical centered"] }
+                ];
+                var assistant = document.createElement("div");
+                for (key in setupItems) {
+                    var options = setupItems[key].options;
+                    var div = document.createElement("div");
+                    var title = document.createElement("span");
+                    title.innerHTML = setupItems[key].title+": ";
+                    div.appendChild(title);
+                    var select = document.createElement("select");
+                    select.id = setupItems[key].id;
+                    var selectOptions = "<option>undefined</option>";
+                    for (var i=0; i< options.length; i++) {
+                        selectOptions += "<option>"+options[i]+"</option>";
+                    }
+                    select.innerHTML = selectOptions;
+                    select.addEventListener("change", generateExercise);
+                    div.appendChild(select);
+                    assistant.appendChild(div);
+                }
+                
+                var setupCodeareas = [
+                    { id: "instructions", title: "Instructions to show (leave blank to use default): " },
+                    { id: "preload", title: "Code to preload (hidden to the user): ", toggle: "Run immediately?", toggleDefault: true },
+                    { id: "load", title: "Code to load (displayed to the user): ", toggle: "Run immediately?", toggleDefault: false },
+                ];
+                for (key in setupCodeareas) {
+                    var div = document.createElement("div");
+                    var title = document.createElement("div");
+                    title.innerHTML = setupCodeareas[key].title;
+                    div.appendChild(title);
+                    var textarea = document.createElement("textarea");
+                    textarea.id = setupCodeareas[key].id;
+                    textarea.addEventListener("change", generateExercise);
+                    div.appendChild(textarea);
+                    assistant.appendChild(div);
+                    if (setupCodeareas[key].toggle) {
+                        var div = document.createElement("div");
+                        var input = document.createElement("input");
+                        input.type = "checkbox";
+                        input.id = setupCodeareas[key].id+"Toggle";
+                        input.checked = setupCodeareas[key].toggleDefault;
+                        div.appendChild(input);
+                        title = document.createElement("span");
+                        title.innerHTML = setupCodeareas[key].toggle;
+                        div.appendChild(title);
+                        assistant.appendChild(div);
+                    }
+                }
+                var blockDiv = document.getElementById(divId);
+                blockDiv.parentNode.insertBefore(assistant, blockDiv);
+            }
+            
+            function generateExercise(event) {
+                var params = ["lang", "view", "filemenu", "axis", "instructions"];
+                var paramsText = "";
+                for (var i=0; i<params.length; i++) {
+                    var paramValue = document.getElementById(params[i]).value;
+                    if (paramValue != "undefined" && paramValue.toString().length > 0) {
+                        paramsText += "\n"+params[i]+"="+encodeURIComponent(paramValue);
+                    }
+                }
+                var descrValue = document.getElementById("description").value;
+                var setupStartPosition = descrValue.indexOf("\n<!-- ESEECODE ASSISTANT CONFIGURATION BEGIN");
+                if (setupStartPosition >= 0) {
+                    descrValue = descrValue.substring(0,setupStartPosition);
+                }
+                descrValue += "\n<!-- ESEECODE ASSISTANT CONFIGURATION BEGIN"+paramsText;
+                var codeareas = ["preload", "load"];
+                for (var i=0; i<codeareas.length; i++) {
+                    var codeareaValue = document.getElementById(codeareas[i]).value;
+                    if (codeareaValue.toString().length > 0) {
+                        descrValue += "\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i]+" BEGIN\n";
+                        if (document.getElementById(codeareas[i]+"Toggle")) {
+                            var run = document.getElementById(codeareas[i]+"Toggle").checked;
+                            descrValue += "//RUN:"+run+"\n";
+                        }
+                        descrValue += codeareaValue;
+                        descrValue += "\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i]+" END";
+                    }
+                }
+                descrValue += "\nESEECODE ASSISTANT CONFIGURATION END -->";
+                document.getElementById("description").value = descrValue;
+            }
+            
+            function loadExercise(divId) {
+                var descrValue = document.getElementById("description").value;
+                var setupStartPosition = descrValue.indexOf("\n<!-- ESEECODE ASSISTANT CONFIGURATION BEGIN");
+                var setupEndPosition = descrValue.indexOf("\nESEECODE ASSISTANT CONFIGURATION");
+                descrValue = descrValue.substring(setupStartPosition+1, setupEndPosition);
+                descrValue = descrValue.split("\n");
+                var loadParameters = "?";
+                for (var i=1; i<descrValue.length; i++) {
+                    loadParameters += descrValue[i]+"&";
+                }
+                loadParameters = loadParameters.substring(0,loadParameters.length-1); //Remove trailing "&"
+                var embed = document.getElementById("embed");
+                if (!embed) {
+                    embed = document.createElement("div");
+                    embed.id = "embed";
+                    document.getElementById(divId).parentNode.appendChild(embed);
+                }
+                embed.innerHTML = '<iframe height="500" style="height:500px;border:none" id="eseecode-frame" src="../'+loadParameters+'" width="1150"></iframe>';
+                document.getElementById("eseecode-frame").addEventListener("load",function() {
+                    var descrValue = document.getElementById("description").value;
+                    var codeareas = [
+                        { id: "preload", func: this.contentWindow.API_uploadPrecode },
+                        { id: "load", func: this.contentWindow.API_uploadCode }
+                    ];
+                    for (var i=0; i<codeareas.length; i++) {
+                        var setupStartPosition = descrValue.indexOf("\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i].id+" BEGIN");
+                        if (setupStartPosition >= 0) {
+                            var setupEndPosition = descrValue.indexOf("\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i].id+" END");
+                            var code = descrValue.substring(setupStartPosition+1, setupEndPosition);
+                            code = code.substring(code.indexOf("\n")+1);
+                            var run = undefined;
+                            if (code.indexOf("//RUN:") == 0) {
+                                run = (code.substring("//RUN:".length,code.indexOf("\n"))=="true")?true:false;
+                                code = code.substring(code.indexOf("\n"));
+                            }
+                            codeareas[i].func(code, run);
+                        }
+                    }
+                })
+            }
+        </script>
+    </body>
+</html>

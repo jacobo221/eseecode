@@ -23,45 +23,27 @@
 	 * Loads code into the console
 	 * @public
 	 * @param {String} code Code to upload
-	 * @param {Boolean} [noRun] If true, it doesn't run the code yet. Also, if preload is true, only runs the precode when user presses run
-	 * @param {Boolean} [preload] If true, stores it to be run before every execution of user code. By default it runs immediately after
-	 * @example API_uploadCode("repeat(4){forward(100)}",false)
+	 * @param {Boolean} [run=false] If true, it runs the code immediately
+	 * @example API_uploadCode("repeat(4){forward(100)}",true)
 	 */
-	function API_uploadCode(code,noRun,preload) {
-		if (!code) {
-			return;
+	function API_uploadCode(code, run) {
+		if (run === undefined) {
+			run = false;
 		}
-		if (!$e_resetUI(true)) {
-			return;
+		$e_uploadCode(code, run, false);
+	}
+
+	/**
+	 * Loads precode into the console
+	 * @public
+	 * @param {String} code Code to set as precode
+	 * @param {Boolean} [run=true] If false, it doesn't run the code immediately, only when the user executes user code
+	 * @example API_uploadPreode("repeat(4){forward(100)}")
+	 */
+	function API_uploadPrecode(code, run) {
+		if (run === undefined) {
+			run = true;
 		}
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
-		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
-		var program;
-		// Always start by trying to load the code into the current level
-		var switchToMode;
-		if (eseecodeLanguage) {
-			try {
-				program = eseecodeLanguage.parse(code);
-			} catch (exception) {
-				$e_msgBox(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors",[level])+":\n\n"+exception.name + ":  " + exception.message);
-			}
-		} else {
-			$e_msgBox(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode",[level]));
-		}
-		if (preload === true) {
-			$_eseecode.execution.precode.code = code;
-			$_eseecode.execution.precode.standby = noRun;
-		} else {
-				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
-		        if (mode == "blocks") {
-			        program.makeBlocks(level,document.getElementById("console-blocks"));
-		        } else if (mode == "write") {
-			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
-		        }
-		        $e_resetCanvas();
-		}
-		if (!noRun) {
-			$e_execute();
-		}
+		$e_uploadCode(code, run, true);
 	}
 

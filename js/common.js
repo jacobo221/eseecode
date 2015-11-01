@@ -53,10 +53,16 @@
 	 * Returns if a value is a boolean or not
 	 * @private
 	 * @param {*} value Value to test
+	 * @param {Boolean} [parseString=false] If true, will parse string values to see if it contains a boolean
 	 * @example $e_isBoolean(true)
 	 */
-	function $e_isBoolean(value) {
-		return (typeof value).toLowerCase() === "boolean";
+	function $e_isBoolean(value, parseString) {
+		if ((typeof value).toLowerCase() === "boolean") { // It would be easier to do Number.isFinite() but IE11 doesn't support it
+			return true;
+		} else if (parseString === true && (value == "true" || value == "false")) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
  *Milestone: Easy input/output methods*
  *   New input and output instructions and panels
+ *   Embedding setup Wizard example added
 
 ## 2.2 (2015-10-31)
 
