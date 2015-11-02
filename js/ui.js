@@ -1240,6 +1240,26 @@
 	}
 
 	/**
+	 * Initializes/Resets the input/output textArea
+	 * @private
+	 * @param {Boolean} [clearInput=false] Do you want to clear the input area?
+	 * @example $e_resetIO()
+	 */
+	function $e_resetIO(clearInput) {
+		if (clearInput === undefined) {
+			clearInput = false;
+		}
+		var textarea = document.getElementById("dialog-io-output");
+		textarea.value = "";
+		$_eseecode.execution.inputPosition = 0;
+		textarea = document.getElementById("dialog-io-input");
+        if (clearInput) {
+			textarea.value = "";
+		}
+		$_eseecode.execution.inputRaw = textarea.value;
+	}
+
+	/**
 	 * Draws a grid
 	 * @private
 	 * @param {Object} context Context object where to draw the grid
@@ -1592,6 +1612,7 @@
 		$e_resizeConsole(true);
 		$e_initConsole();
 		$e_resetCanvas();
+		$e_resetIO(true);
 		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
 		if (urlParts !== null) {
 			var axisSetting = urlParts[2].toLowerCase();
@@ -2360,6 +2381,7 @@
 	 */
 	function $e_resetCanvasFromUI() {
 		$e_resetCanvas();
+		$e_resetIO();
 		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
 		$e_endExecution();
 		$e_initProgramCounter();

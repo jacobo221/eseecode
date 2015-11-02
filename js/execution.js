@@ -277,6 +277,7 @@
 				}
 			}
 			$e_resetCanvas(true);
+			$e_resetIO();
 			$e_resetBreakpointWatches();
 			$e_resetWatchpoints();
 		}

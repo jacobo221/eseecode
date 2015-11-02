@@ -1888,3 +1888,85 @@
 	function stop() {
 		$_eseecode.execution.programCounterLimit = true;
 	}
+
+	/**
+	 * Writes in the output area
+	 * @since 2.0
+	 * @public
+	 * @param {String} [text=""] Static text that will be shown in the output section
+	 * @param {Boolean} [newline=true] Whether or not there should be a carriage return
+	 * @example output("Hello")
+	 */
+	function output(text, newline) {
+		$e_parseParameterTypes("output", arguments);
+		if (text === undefined) {
+			text = "";
+		}
+		if (newline === undefined) {
+			newline = true;
+		}
+		var textarea = document.getElementById("dialog-io-output");
+		textarea.value += text;
+		if (newline) {
+			textarea.value += "\n";
+		}
+		$e_switchDialogMode("io");
+	}
+
+	 /**
+	 * Reads from the input area
+	 * @since 2.0
+	 * @public
+	 * @param {String} [type="guess"] How to read the input. Possible values: "char", "word", "number", "line", "guess"
+	 * @throws codeError
+	 * @example input("line")
+	 */
+	function input(type) {
+		$e_parseParameterTypes("input", arguments);
+		if ($_eseecode.execution.inputPosition >= $_eseecode.execution.inputRaw.length) {
+			return undefined;
+		}
+		if (type === undefined) {
+			type = "guess";
+		}
+		var result;
+		if (type == "char") {
+			result = $_eseecode.execution.inputRaw[$_eseecode.execution.inputPosition];
+			$_eseecode.execution.inputPosition++;
+		} else if (type=="word" || type=="number" || type=="guess") {
+			var firstLetter = $_eseecode.execution.inputPosition;
+			while ((firstLetter < $_eseecode.execution.inputRaw.length) && ($_eseecode.execution.inputRaw[firstLetter] == " " || $_eseecode.execution.inputRaw[firstLetter] == "\t" || $_eseecode.execution.inputRaw[firstLetter] == "\n")) {
+				firstLetter++;
+			}
+			if (firstLetter >= $_eseecode.execution.inputRaw.length) {
+				return undefined;
+			}
+			var firstWhiteSpace = firstLetter;
+			while ((firstWhiteSpace < $_eseecode.execution.inputRaw.length) && ($_eseecode.execution.inputRaw[firstWhiteSpace] != " " && $_eseecode.execution.inputRaw[firstWhiteSpace] != "\t" && $_eseecode.execution.inputRaw[firstWhiteSpace] != "\n")) {
+				firstWhiteSpace++;
+			}
+			var wordAsString = $_eseecode.execution.inputRaw.substring(firstLetter,firstWhiteSpace);
+			if (type == "word") {
+				result = wordAsString;
+			} else {
+				var wordAsNumber = parseInt(wordAsString);
+				if (isNaN(wordAsNumber)) {
+					result = wordAsString;
+					if (type == "number") {
+						throw new $e_codeError("input",_("Could not read a number, instead read:")+" "+wordAsString);
+					}
+				} else {
+					result = wordAsNumber;
+				}
+			}
+			$_eseecode.execution.inputPosition = firstWhiteSpace;
+		} else if (type == "line") {
+			var endOfLine = $_eseecode.execution.inputPosition;
+			while (endOfLine < $_eseecode.execution.inputRaw.length && $_eseecode.execution.inputRaw[endOfLine] != "\n") {
+				endOfLine++;
+			}
+			result = $_eseecode.execution.inputRaw.substring($_eseecode.execution.inputPosition,endOfLine);
+			$_eseecode.execution.inputPosition = endOfLine+1;
+		}
+		return result;
+	}
