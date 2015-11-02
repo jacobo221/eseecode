@@ -417,5 +417,7 @@ $_eseecode.i18n.available.ca = {
 	"yScale": "escalaY",
 	"I/O": "E/S",
 	"Input": "Entrada",
-	"Output": "Sortida"
+	"Output": "Sortida",
+	"Could not read a number. Instead read:": "No s'ha pogut llegir un nombre. En el seu lloc s'ha llegit:",
+	"doesn't have a valid value:": "no tiene un valor válido:"
 }
