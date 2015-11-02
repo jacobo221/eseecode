@@ -47,3 +47,26 @@
 		$e_uploadCode(code, run, true);
 	}
 
+	/**
+	 * Sets the input in I/O
+	 * @public
+	 * @param {String} text Input to use
+	 * @example API_setInput("1 1 2 3 5 8")
+	 */
+	function API_setInput(text) {
+		if (text === undefined) {
+			text = "";
+		}
+		$_eseecode.execution.inputRaw = text;
+	}
+
+	/**
+	 * Gets the output from I/O
+	 * @public
+	 * @return {String} Output in the I/O
+	 * @example API_getOuput("1 1 2 3 5 8")
+	 */
+	function API_getOuput() {
+		return document.getElementById("dialog-io-output").value;
+	}
+
