@@ -49,6 +49,7 @@
 
 	/**
 	 * Sets the input in I/O
+	 * @since 2.3
 	 * @public
 	 * @param {String} text Input to use
 	 * @example API_setInput("1 1 2 3 5 8")
@@ -62,6 +63,7 @@
 
 	/**
 	 * Gets the output from I/O
+	 * @since 2.3
 	 * @public
 	 * @return {String} Output in the I/O
 	 * @example API_getOuput("1 1 2 3 5 8")

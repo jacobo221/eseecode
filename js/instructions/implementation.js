@@ -1891,7 +1891,7 @@
 
 	/**
 	 * Writes in the output area
-	 * @since 2.0
+	 * @since 2.3
 	 * @public
 	 * @param {String} [text=""] Static text that will be shown in the output section
 	 * @param {Boolean} [newline=true] Whether or not there should be a carriage return
@@ -1915,7 +1915,7 @@
 
 	 /**
 	 * Reads from the input area
-	 * @since 2.0
+	 * @since 2.3
 	 * @public
 	 * @param {String} [type="guess"] How to read the input. Possible values: "char", "word", "number", "line", "guess"
 	 * @throws codeError
