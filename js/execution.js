@@ -450,6 +450,9 @@
 			 (parameter.type == "window" && !$e_isWindow(value))) {
 				msgParam = _("should be a %s but instead recieved this %s:",[parameter.type,$e_analyzeVariable(value).type])+" "+value+"\n";
 				invalidParameter = true;
+			} else if (parameter.validate && !parameter.validate(value)) {
+				msgParam = _("doesn't have a valid value:")+" "+value+"\n";
+				invalidParameter = true;
 			}
 			if (invalidParameter) {
 				msg += _("The %s parameter (%s)",[$e_ordinal(i+1),parameter.name])+" "+msgParam;

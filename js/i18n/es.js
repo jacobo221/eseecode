@@ -417,5 +417,7 @@ $_eseecode.i18n.available.es = {
 	"yScale": "escalaY",
 	"I/O": "E/S",
 	"Input": "Entrada",
-	"Output": "Salida"
+	"Output": "Salida",
+	"Could not read a number. Instead read:": "No se ha podido leer un número. En su lugar se ha leido:",
+	"doesn't have a valid value:": "no te un valor vàlid:
 }
