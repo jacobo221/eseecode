@@ -112,7 +112,8 @@
 					var instructions = decodeURIComponent(value).split(";");
 					var newInstructionId = $_eseecode.instructions.set.length;
 					for (var j=0; j<instructions.length; j++) {
-						var baseInstructionId = $e_getInstructionSetIdFromName(instructions[j]);
+						var instructionName = instructions[j].trim();
+						var baseInstructionId = $e_getInstructionSetIdFromName(instructionName);
 						if (baseInstructionId >= 0) {
 					        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
 					        $_eseecode.instructions.set[newInstructionId].show = [];
@@ -131,7 +132,7 @@
 							j += k;
 							newInstructionId++;
 						} else {
-							console.log("Error while loading instructions from URL: Instruction "+instructions[j]+" doesn't exist")
+							console.log("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
 						}
             		}
             		if (definedURL) {
