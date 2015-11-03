@@ -1302,7 +1302,7 @@
 		$_eseecode.execution.inputPosition = 0;
 		textarea = document.getElementById("dialog-io-input");
         if (clearInput) {
-			textarea.value = "";
+			textarea.value = $_eseecode.execution.inputDefault;
 		}
 		$_eseecode.execution.inputRaw = textarea.value;
 	}
