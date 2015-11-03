@@ -164,7 +164,7 @@
 		if (consequent.type === "BlockStatement") {
 			str += consequent.makeWrite(level, indent, indentChar, realCode);
 		} else {
-			str += consequent.makeWrite(level, indent + indentChar, indentChar, realCode);
+			str += consequent.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
 		}
 		if (alternate !== null) {
 			if (alternate.type !== "IfStatement") {
@@ -220,7 +220,7 @@
 		if (this.body.type === "BlockStatement") {
 			str += this.body.makeWrite(level, indent, indentChar, realCode);
 		} else {
-			str += this.body.makeWrite(level, indent + indentChar, indentChar, realCode);
+			str += this.body.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
 		}
 		str += indent + "}";
 		return str;
@@ -310,7 +310,7 @@
 		if (body.type === "BlockStatement") {
 			str += body.makeWrite(level, indent, indentChar, realCode);
 		} else {
-			str += body.makeWrite(level, indent + indentChar, indentChar, realCode);
+			str += body.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
 		}
 		str += indent + "}";
 
@@ -343,7 +343,7 @@
 		if (body.type === "BlockStatement") {
 			str += body.makeWrite(level, indent, indentChar, realCode);
 		} else {
-			str += body.makeWrite(level, indent + indentChar, indentChar, realCode);
+			str += body.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
 		}
 		str += indent;
 		str += "}";
@@ -579,6 +579,7 @@
 		var id = this.id;
 		var params = this.params;
 		var body = this.body;
+		indentChar = "\t";
 		var newIndent = indent + indentChar;
 
 		if (id !== null) {
@@ -600,7 +601,7 @@
 		str += "\n";
 
 		for (var i = 0, len = body.length; i < len; i++) {
-			str += body[i].makeWrite(level, newIndent, indentChar, realCode) + ";";
+			str += body[i].makeWrite(level, newIndent, indentChar, realCode);
 			str += "\n";
 		}
 
@@ -720,7 +721,7 @@
 	};
 
 	ast.CallExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var str = this.callee.makeWrite(level, "", "", realCode) + "(";
+		var str = this.callee.makeWrite(level, "", "", realCode)+"(";
 		var args = this.arguments;
 
 		for (var i = 0, len = args.length; i < len; i++) {
