@@ -398,8 +398,8 @@
 	 * Loads code into the console
 	 * @private
 	 * @param {String} code Code to upload
-	 * @param {Boolean} [run] If true, it runs the code immediately
-	 * @param {Boolean} [preload] If true, it stores the code to be also run before every execution of user code
+	 * @param {Boolean} [run=false] If true, it runs the code immediately
+	 * @param {Boolean} [preload=false] If true, it stores the code to be also run before every execution of user code
 	 * @example $e_uploadCode("repeat(4){forward(100)}",false)
 	 */
 	function $e_uploadCode(code,run,preload) {
@@ -414,13 +414,16 @@
 		var program;
 		// Always start by trying to load the code into the current level
 		var switchToMode;
+		var codeParseable = true;
 		if (eseecodeLanguage) {
 			try {
 				program = eseecodeLanguage.parse(code);
 			} catch (exception) {
+				codeParseable = false;
 				$e_msgBox(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors",[level])+":\n\n"+exception.name + ":  " + exception.message);
 			}
 		} else {
+			codeParseable = false;
 			$e_msgBox(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode",[level]));
 		}
 		if (preload === true) {
@@ -428,11 +431,16 @@
 			$_eseecode.execution.precode.standby = !run;
 		} else {
 				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
-		        if (mode == "blocks") {
-			        program.makeBlocks(level,document.getElementById("console-blocks"));
-		        } else if (mode == "write") {
-			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
-		        }
+				if (codeParseable) {
+			        if (mode == "blocks") {
+				        program.makeBlocks(level,document.getElementById("console-blocks"));
+			        } else if (mode == "write") {
+				        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
+			        }
+				} else {
+					$e_switchConsoleMode("code");
+					$e_resetWriteConsole(code);
+				}
 		        $e_resetCanvas();
 		}
 		if (run) {

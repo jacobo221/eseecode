@@ -398,7 +398,7 @@
 	/**
 	 * Switches the user interface to the specified view
 	 * @private
-	 * @param {Number|String} [id] Can refer to a view number or to a view name. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
+	 * @param {Number|String} [id] Can refer to a view number, a view id or to a view name. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
 	 * @example $e_switchConsoleMode(2)
 	 */
 	function $e_switchConsoleMode(id) {
@@ -408,7 +408,7 @@
 		}
 		if (!$e_isNumber(id)) {
 			for (var i=1; i<$_eseecode.modes.console.length; i++) {
-				if ($_eseecode.modes.console[i].id == id) {
+				if ($_eseecode.modes.console[i].id == id || $_eseecode.modes.console[i].name.toLocaleLowerCase() == id.toLocaleLowerCase()) {
 					id = i;
 					break;
 				}
