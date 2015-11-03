@@ -142,7 +142,7 @@
 	 */
 	function $e_switchCanvas(id) {
 		$_eseecode.currentCanvas = $e_getCanvas(id);
-		$e_resetGuide(); // switch to the apropiate guide
+		$e_drawGuide(); // switch to the apropiate guide
 		return $_eseecode.currentCanvas;
 	}
 
@@ -321,7 +321,7 @@
 	function $e_moveGuide(pos) {
 		$_eseecode.currentCanvas.guide.x = Math.round(pos.x); // Make sure the value is integer
 		$_eseecode.currentCanvas.guide.y = Math.round(pos.y); // Make sure the value is integer
-		$e_resetGuide();
+		$e_drawGuide();
 	}
 	
 	/**
@@ -336,7 +336,7 @@
 		if ($_eseecode.currentCanvas.guide.angle < 0) {
 			$_eseecode.currentCanvas.guide.angle += 360;
 		}
-		$e_resetGuide();
+		$e_drawGuide();
 	}
 	
 	/**

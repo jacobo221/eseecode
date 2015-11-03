@@ -6,7 +6,7 @@
 
 	// Main initialization
 	/**
-	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean,watchpointsChanged:Array<String>,inputRaw:String,inputPosition:Number},session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>},whiteboard:HTMLElement,coordinates:Array<{position:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,default:Boolean}>}>,ui:Array<{codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,scrollTimeout:Object,guideVisible:Boolean}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
+	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},i18n:{available:Array<{*}>,current:String},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean,watchpointsChanged:Array<String>,inputRaw:String,inputPosition:Number},session:{highlight:{lineNumber:Number,reason:String},changesInCode:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>},whiteboard:HTMLElement,coordinates:Array<{position:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,default:Boolean}>}>,ui:Array<{codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,filemenuVisible:Number}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
 	 */
 	var $_eseecode = {
 		platform: {
@@ -43,7 +43,7 @@
 		},
 		instructions: {
 			set: {},
-			custom: {},
+			custom: [],
 			categories: {},
 			icons: {}
 		},
@@ -94,7 +94,7 @@
 				x: 1,
 				y: 1
 			},
-			userSelection: undefined,
+			userSelection: 2,
 			predefined: [
 				{ name: "Computer console", position: {x: 0, y: 0}, scale: {x: 1, y: 1}, default: false },
 				{ name: "Mathematical simple", position: {x: 0, y: 400}, scale: {x: 1, y: -1 }, default: false },
@@ -105,6 +105,9 @@
 			codeFilename: "",
 			dialogWindow: null,
 			guideVisible: true,
+			gridVisible: true,
+			gridStep: 25,
+			filemenuVisible: true,
 			scrollTimeout: null,
 			tipInterval: null,
 			downloadLayersInterval: 500,

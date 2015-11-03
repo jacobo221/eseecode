@@ -33,31 +33,15 @@
 	 * Switch translation
 	 * @private
 	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new language, it takes "initial"
-	 * @param {Boolean} [force] Forces the language switch even if it is the same as the current language. If the language doens't exist it falls back to "initial"
 	 * @example $e_switchLanguage("ca")
 	 */
-	function $e_switchLanguage(lang, force) {
-		if (!lang) {
-			var urlParts = window.location.href.match(/(\?|&)lang=([^&#]+)/);
-			if (urlParts !== null) {
-				lang = urlParts[2];
-			}
-			if (!lang) {
-				lang = "initial";
-			}
-		}
-		lang = lang.toLowerCase();
-		// Only switch if necessary
-		if (lang === $_eseecode.i18n.current && !force) {
-			return;
+	function $e_switchLanguage(lang) {
+		if (lang === undefined) {
+			lang = $_eseecode.i18n.current;
 		}
 		// Check the translation is available
 		if (!$_eseecode.i18n.available[lang]) {
-			if (force) {
-				lang = "initial";
-			} else {
-				return;
-			}
+			lang = "initial";
 		}
 		$_eseecode.i18n.current = lang;
 		$e_addStaticText();

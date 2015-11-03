@@ -39,7 +39,7 @@
                 var setupCodeareas = [
                     { id: "instructions", title: "Instructions to show (leave blank to use default): " },
                     { id: "preload", title: "Code to preload (hidden to the user): ", toggle: "Run immediately?", toggleDefault: true },
-                    { id: "load", title: "Code to load (displayed to the user): ", toggle: "Run immediately?", toggleDefault: false },
+                    { id: "code", title: "Code to load (displayed to the user): ", toggle: "Run immediately?", toggleDefault: false },
                 ];
                 for (key in setupCodeareas) {
                     var div = document.createElement("div");
@@ -83,7 +83,7 @@
                     descrValue = descrValue.substring(0,setupStartPosition);
                 }
                 descrValue += "\n<!-- ESEECODE ASSISTANT CONFIGURATION BEGIN"+paramsText;
-                var codeareas = ["preload", "load"];
+                var codeareas = ["preload", "code"];
                 for (var i=0; i<codeareas.length; i++) {
                     var codeareaValue = document.getElementById(codeareas[i]).value;
                     if (codeareaValue.toString().length > 0) {
@@ -122,7 +122,7 @@
                     var descrValue = document.getElementById("description").value;
                     var codeareas = [
                         { id: "preload", func: this.contentWindow.API_uploadPrecode },
-                        { id: "load", func: this.contentWindow.API_uploadCode }
+                        { id: "code", func: this.contentWindow.API_uploadCode }
                     ];
                     for (var i=0; i<codeareas.length; i++) {
                         var setupStartPosition = descrValue.indexOf("\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i].id+" BEGIN");

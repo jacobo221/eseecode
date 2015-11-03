@@ -1055,7 +1055,7 @@
 			$_eseecode.currentCanvas.guide.y = posy+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 		}
 		$_eseecode.currentCanvas.guide.angle += degrees;
-		$e_resetGuide();
+		$e_drawGuide();
 	}
 
 	/**

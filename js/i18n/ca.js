@@ -391,8 +391,8 @@ $_eseecode.i18n.available.ca = {
 	"The %s parameter (%s)": "El paràmetre %s (%s)",
 	"has no value, but a value is required. The value recieved is:": "no te valor, però un valor és requerit. El valor rebut és:",
 	"should be a %s but instead recieved this %s:": "hauria de ser un %s però en comptes ha rebut un %s:",
-	"Invalid parameter in %s": "Paràmetre invàlid a %s",
-	"Invalid parameters in %s": "Paràmetre invàlid a %s",
+	"Invalid parameter": "Paràmetre invàlid",
+	"Invalid parameters": "Paràmetres invàlids",
 	"text": "text",
 	"layer": "capa",
 	"Levels cannot be lower than 0, recieved:": "Nivells no pot ser inferior a 0, s'ha rebut:",
@@ -418,6 +418,7 @@ $_eseecode.i18n.available.ca = {
 	"I/O": "E/S",
 	"Input": "Entrada",
 	"Output": "Sortida",
-	"Could not read a number. Instead read:": "No s'ha pogut llegir un nombre. En el seu lloc s'ha llegit:",
-	"doesn't have a valid value:": "no tiene un valor válido:"
+	"Could not read a number, instead read:": "No s'ha pogut llegir un nombre, en el seu lloc s'ha llegit:",
+	"doesn't have a valid value:": "no te un valor vàlid:",
+	"Error found during execution at line %s in %s": "Error detectat a la linia %s executant %s",
 }

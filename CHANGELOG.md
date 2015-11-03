@@ -2,7 +2,11 @@
 
  *Milestone: Easy input/output methods*
  *   New input and output instructions and panels
+ *   Added URL parameters grid, gridStep, guide and timeout
+ *   New APIs: getLayersAsAnimation, getLayersAsGrid, getWhiteboard, loadURLParams, execute, setInput, getOutput, uploadPrecode
+ *   Code cleanup regarding UI/code separation and URL parameters parsing
  *   Embedding setup Wizard example added
+ *   Fix: instructions= parameters are set even if they are defined as optionals for the instruction
 
 ## 2.2 (2015-10-31)
 

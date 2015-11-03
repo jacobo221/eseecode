@@ -1,18 +1,19 @@
 "use strict;"
+
 	/**
-	 * Links an A HTML element to the current whiteboard export drawing
+	 * Returns an image of to the current whiteboard
 	 * @private
-	 * @param {!HTMLElement} link HTML A element to add the link to
-	 * @example $e_downloadCanvas(document.body.createElement("a"))
+	 * @return {Array<*>} Set containing the 'imageBinary' and the recomended 'extension' name
+	 * @example $e_imagifyWhiteboard(document.body.createElement("a"))
 	 */
-	function $e_downloadCanvas(link) {
+	function $e_imagifyWhiteboard() {
 		var canvas = document.createElement('canvas');
 		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
 		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
 		var ctx = canvas.getContext("2d");
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
-		if (document.getElementById("setup-grid-enable").checked) {
+		if ($_eseecode.ui.gridVisible) {
 			ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0);
 		}
 		var layer = $_eseecode.canvasArray["bottom"];
@@ -20,13 +21,24 @@
 			ctx.drawImage(layer.canvas,0,0);
 			layer = layer.layerOver;
 		}
-		if (document.getElementById("setup-guide-enable").checked) {
+		if ($_eseecode.ui.guideVisible) {
 			var id = $_eseecode.currentCanvas.name;
-			$e_drawGuide(ctx, $_eseecode.canvasArray[id].guide, id);
+			$e_drawDebugGuide(ctx, $_eseecode.canvasArray[id].guide, id, undefined, undefined, true);
 		}
-		link.href = canvas.toDataURL();
+		return { imageBinary: canvas.toDataURL(), extension: "png" };
+	}
+	
+	/**
+	 * Links an A HTML element to the current whiteboard export drawing
+	 * @private
+	 * @param {!HTMLElement} link HTML A element to add the link to
+	 * @example $e_downloadWhiteboard(document.body.createElement("a"))
+	 */
+	function $e_downloadWhiteboard(link) {
+		var image = $e_imagifyWhiteboard();
+		link.href = image.imageBinary;
 		var d = new Date();
-		link.download = "canvas-"+d.getTime()+".png";
+		link.download = "canvas-"+d.getTime()+"."+image.extension;
 	}
 
 	/**
@@ -75,7 +87,7 @@
 		if ($_eseecode.session.lastChange > $_eseecode.session.lastRun) {
 			msgBoxContent += "<div style=\"text-align:center;margin-top:20px;color:#882222;\">"+_("You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.")+"</div>";
 		}
-		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadCanvas(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
+		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadWhiteboard(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
 		// If there is more than one layer offer to download animation/grid
 		var msgClass = "";
 		var linkSrc = "";
@@ -97,21 +109,25 @@
 	}
 
 	/**
-	 * Links an A HTML element to an image containing all the layers
+	 * Returns an image containing all the layers
 	 * @private
-	 * @param {Boolean} grid Set to true to download as a grid
-	 * @example $e_downloadLayers(document.body.createElement("a"))
+	 * @param {Boolean} [grid=false] Set to true to download as a grid
+	 * @param {Number} [setup] If defined, sets the interval in ms (when grid=false) or the amount of columns (when grid=true). If undefined it gets the value from the UI
+	 * @return {Array<*>} Set containing the 'imageBinary' and the recomended 'extension' name
+	 * @example $e_imagifyLayers(true, 5)
 	 */
-	function $e_downloadLayers(grid) {
-		var link = document.getElementById("downloadLayers-link");
-		if (!link) {
+	function $e_imagifyLayers(grid, setup) {
+		if (grid === undefined) {
+			grid = false;
+		}
+		if (setup === undefined) {
 			if (grid) {
-				link = document.getElementById("whiteboard-downloadLayers-grid");
+				setup = document.getElementById("setup-downloadLayers-columns").value
 			} else {
-				link = document.getElementById("whiteboard-downloadLayers-animation");
+				setup = document.getElementById("setup-downloadLayers-interval").value;
 			}
 		}
-		var columns = document.getElementById("setup-downloadLayers-columns").value
+		var columns = setup;
 		if (columns < 1 || !$e_isNumber(columns,true)) {
 			columns = 1;
 		}
@@ -119,7 +135,7 @@
 		if (!grid) {
 			var encoder = new GIFEncoder();
 			encoder.setRepeat(0); //0 -> loop forever //1+ -> loop n times then stop
-			var interval = document.getElementById("setup-downloadLayers-interval").value;
+			var interval = setup;
 			if (!$e_isNumber(interval,true)) {
 				interval = 500;
 			}
@@ -157,14 +173,14 @@
 			}
 			ctx.fillStyle="#FFFFFF";
 			ctx.fillRect(shiftX,shiftY,whiteboardWidth,whiteboardHeight);
-			if (document.getElementById("setup-grid-enable").checked) {
+			if ($_eseecode.ui.gridVisible) {
 				ctx.drawImage($_eseecode.canvasArray["grid"].canvas,shiftX,shiftY); // draw grid
 			}
 			if (layer != $_eseecode.canvasArray["grid"]) {
 				ctx.drawImage(layer.canvas,shiftX,shiftY);
 			}
-			if (document.getElementById("setup-guide-enable").checked) {
-				$e_drawGuide(ctx, layer.guide, layer.name, shiftX, shiftY);
+			if ($_eseecode.ui.guideVisible) {
+				$e_drawDebugGuide(ctx, layer.guide, layer.name, shiftX, shiftY, true);
 			}
 			if (grid) {
 				ctx.strokeStyle="#000000";
@@ -194,10 +210,29 @@
 			imageBinary = canvas.toDataURL();
 			extension = "png"
 		}
-		var data_url = imageBinary;
+		return { imageBinary: imageBinary, extension: extension };
+	}
+
+	/**
+	 * Links an A HTML element to an image containing all the layers
+	 * @private
+	 * @param {Boolean} grid Set to true to download as a grid
+	 * @example $e_downloadLayers(document.body.createElement("a"))
+	 */
+	function $e_downloadLayers(grid) {
+		var image = $e_imagifyLayers(grid);
+		var link = document.getElementById("downloadLayers-link");
+		if (!link) {
+			if (grid) {
+				link = document.getElementById("whiteboard-downloadLayers-grid");
+			} else {
+				link = document.getElementById("whiteboard-downloadLayers-animation");
+			}
+		}
+		var data_url = image.imageBinary;
 		link.href = data_url;
 		var d = new Date();
-		link.download = "layers-"+d.getTime()+"."+extension;
+		link.download = "layers-"+d.getTime()+"."+image.extension;
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -368,25 +403,6 @@
 	 */
 	function $e_switchConsoleMode(id) {
 		var oldMode = $_eseecode.modes.console[0];
-		if (!id) {
-			var urlParts = window.location.href.match(/(\?|&)view=([^&#]+)/);
-			if (urlParts !== null) {
-				// Check that the level exists
-				var newLevel = urlParts[2].toLowerCase();
-				if ($e_isNumber(newLevel,true) && $_eseecode.modes.console[newLevel]) {
-					id = newLevel;
-				} else {
-					for (var i=1; i<$_eseecode.modes.console.length; i++) {
-						var levelName = $_eseecode.modes.console[i].name.toLowerCase();
-						var levelId = $_eseecode.modes.console[i].id.toLowerCase();
-						if (levelName == newLevel || levelId == newLevel) {
-							id = i;
-							break;
-						}
-					}
-				}
-			}
-		}
 		if (!id) {
 			id = oldMode;
 		}
@@ -987,16 +1003,24 @@
 	 * @private
 	 * @example $e_toggleGuide()
 	 */
-	function $e_toggleGuide() {
+	function $e_resetGuide() {
 		var guideCanvas = $_eseecode.canvasArray["guide"];
 		if ($_eseecode.ui.guideVisible) {
-			$_eseecode.ui.guideVisible = false;
-			guideCanvas.div.style.display = "none";
-		} else {
-			$_eseecode.ui.guideVisible = true;
-			$e_resetGuide(); // Since we weren't drawing it draw it now
+			$e_drawGuide(); // Since we weren't drawing it draw it now
 			guideCanvas.div.style.display = "block";
+		} else {
+			guideCanvas.div.style.display = "none";
 		}
+	}
+	
+	/**
+	 * Toggles the visibility of the guide
+	 * @private
+	 * @example $e_toggleGuideFromUI()
+	 */
+	function $e_toggleGuideFromUI() {
+		$_eseecode.ui.guideVisible = document.getElementById("setup-guide-enable").checked;
+		$e_resetGuide();
 	}
 	
 	/**
@@ -1059,13 +1083,13 @@
 	}
 
 	/**
-	 * Resets the guide in a layer
+	 * Resets the guide icon in a layer
 	 * @private
 	 * @param {Number} [id] Layer id. If unset use the currently active layer
 	 * @param {Number} [canvas] Canvas to use. If unset use the "guide" layer
-	 * @example $e_resetGuide()
+	 * @example $e_drawGuide()
 	 */
-	function $e_resetGuide(id, canvas) {
+	function $e_drawGuide(id, canvas) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
@@ -1154,18 +1178,22 @@
 	 * @param {Number} id Id of the layer
 	 * @param {Number} [shiftX=0] Shift X coordinates by this value
 	 * @param {Number} [shiftY=0] Shift Y coordinates by this value
-	 * @example $e_drawGuide(ctx, {x: 200, y: 200}, id)
+	 * @param {Boolean} [discardOutbound=false] Discard if the guide is out of the whiteboard
+	 * @example $e_drawDebugGuide(ctx, {x: 200, y: 200}, id)
 	 */
-	function $e_drawGuide(context, pos, id, shiftX, shiftY) {
+	function $e_drawDebugGuide(context, pos, id, shiftX, shiftY, discardOutbound) {
 		if (shiftX === undefined) {
 			shiftX = 0;
 		}
 		if (shiftY === undefined) {
 			shiftY = 0;
 		}
+		if (discardOutbound === undefined) {
+			discardOutbound = false;
+		}
 		var canvasWidth = $_eseecode.whiteboard.offsetWidth;
 		var canvasHeight = $_eseecode.whiteboard.offsetHeight;
-		if (pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) {
+		if ((pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) && discardOutbound == false) {
 			var markerSize = 20;
 			var org = {x: pos.x, y: pos.y};
 			if (org.x < markerSize) {
@@ -1221,7 +1249,7 @@
 			guideCanvas.className = "canvas";
 			guideCanvas.width = canvasWidth;
 			guideCanvas.height = canvasHeight;
-			$e_resetGuide(id, guideCanvas);
+			$e_drawGuide(id, guideCanvas);
 			context.drawImage(guideCanvas, shiftX, shiftY);
 		}
 	}
@@ -1234,9 +1262,29 @@
 	function $e_resetGrid() {
 		var ctx = $_eseecode.canvasArray["grid"].context;
 		$e_clearCanvas("grid");
-		if (document.getElementById("setup-grid-enable").checked) {
+		if ($_eseecode.ui.gridVisible) {
 			$e_drawGrid(ctx);
 		}
+	}
+	
+	/**
+	 * Toggles the visibility of the grid
+	 * @private
+	 * @example $e_toggleGridFromUI()
+	 */
+	function $e_toggleGridFromUI() {
+		$_eseecode.ui.gridVisible = document.getElementById("setup-grid-enable").checked;
+		$e_resetGrid();
+	}
+	
+	/**
+	 * Toggles the visibility of the guide
+	 * @private
+	 * @example $e_updateGridStepFromUI()
+	 */
+	function $e_updateGridStepFromUI() {
+		$_eseecode.ui.gridStep = document.getElementById("setup-grid-step").value;
+		$e_resetGrid();
 	}
 
 	/**
@@ -1573,12 +1621,29 @@
 	}
 
 	/**
+	 * Initializes/Resets the filemenu UI element
+	 * @private
+	 * @example $e_resetFilemenu()
+	 */
+	function $e_resetFilemenu() {
+		if ($_eseecode.ui.filemenuVisible) {
+			document.getElementById("filemenu").style.display = "block";
+		} else {
+			document.getElementById("filemenu").style.display = "none";
+		}
+	}
+
+	/**
 	 * Initializes/Resets all UI elements
 	 * @private
 	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost
 	 * @example $e_resetUI()
 	 */
 	function $e_resetUI(notInitial) {
+		if (notInitial !== true) {
+			$e_loadURLParams();
+			$e_initializeUISetup();
+		}
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
 		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		$e_initUIElements();
@@ -1587,14 +1652,7 @@
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();
 		$e_resetWatchpoints(true);
-		// Hide filemenu if asked to do so (to integrate with other platforms)
-		var urlParts = window.location.href.match(/(\?|&)filemenu=([^&#]+)/);
-		if (urlParts !== null) {
-			var filemenuSetting = urlParts[2].toLowerCase();
-			if (filemenuSetting == "false" || filemenuSetting == "0" || filemenuSetting == "no" || filemenuSetting == "none") {
-				document.getElementById("filemenu").style.display = "none";
-			}
-		}
+		$e_resetFilemenu();
 		// init $_eseecode.modes array with div objects
 		for (var i=1;i<$_eseecode.modes.console.length;i++) {
 			var modeId = $_eseecode.modes.console[i].id;
@@ -1613,32 +1671,13 @@
 		$e_initConsole();
 		$e_resetCanvas();
 		$e_resetIO(true);
-		urlParts = window.location.href.match(/(\?|&)axis=([^&#]+)/);
-		if (urlParts !== null) {
-			var axisSetting = urlParts[2].toLowerCase();
-			var grid = undefined;
-			if ($e_isNumber(axisSetting,true) && $_eseecode.coordinates.predefined[axisSetting]) {
-				grid = $_eseecode.coordinates.predefined[axisSetting];
-			} else {
-				axisSetting = decodeURIComponent(axisSetting);
-				for (var i=0; i<$_eseecode.coordinates.predefined.length; i++) {
-					if (axisSetting == $_eseecode.coordinates.predefined[i].name.toLowerCase()) {
-						grid = $_eseecode.coordinates.predefined[i];
-						break;
-					}
-				}
-			}
-			if (grid) {
-				$e_changeAxisCoordinates(grid.position, grid.scale);
-			}
-		}
 		$e_resetDebug();
 		$e_resetUndo();
 		$e_refreshUndoUI();
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		$e_initSetup();
 		$e_resetLanguageSelect();
-		$e_switchLanguage($_eseecode.i18n.current, true);
+		$e_switchLanguage($_eseecode.i18n.current);
 		document.body.removeEventListener("keydown", $e_keyboardShortcuts, false);
 		document.body.addEventListener("keydown", $e_keyboardShortcuts, false);
 		window.removeEventListener("beforeunload", $e_windowRefresh, false);
@@ -1671,6 +1710,18 @@
 		}
 		$e_windowResizeHandler();
 		return true;
+	}
+
+	/**
+	 * Parses the parameters to initialize UI setup
+	 * @private
+	 * @example $e_initializeUISetup()
+	 */
+	function $e_initializeUISetup() {
+		document.getElementById("setup-guide-enable").checked = $_eseecode.ui.guideVisible;
+		document.getElementById("setup-grid-enable").checked = $_eseecode.ui.gridVisible;
+		document.getElementById("setup-grid-step").value = $_eseecode.ui.gridStep;
+		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
 
 	/**
@@ -2031,7 +2082,7 @@
 				var param = undefined;
 				if (div.getAttribute("param"+(i+1)) !== null) {
 					param = div.getAttribute("param"+(i+1));
-				} else if (instruction.parameters[i].initial !== undefined && instruction.parameters[i].optional !== true) {
+				} else if (instruction.parameters[i].initial !== undefined && (instruction.parameters[i].optional !== true || instruction.parameters[i].forceInitial == true)) {
 					param = instruction.parameters[i].initial;
 					if (instruction.parameters[i].type == "number") {
 						param = $e_parsePredefinedConstants(param);
@@ -2142,14 +2193,13 @@
 		var instructions = $_eseecode.instructions.set;
 		var width = $_eseecode.setup.blockWidth[level];
 		var height = $_eseecode.setup.blockHeight[level];
-		var urlParts = window.location.href.match(/(\?|&)instructions=([^&#]+)/);
 		var clearNext = false;
-		if (urlParts !== null) {
+		if ($_eseecode.instructions.custom.length > 0) {
         	// Check that there is an explicit instruction set
-            var instructions = decodeURIComponent(urlParts[2]).split(";");
-            for (var i=0;i<instructions.length;i++) {	
-                codeId = instructions[i];
-                if (codeId == "blank") {
+            for (var i=0; i<$_eseecode.instructions.custom.length; i++) {	
+                var instructionId = $_eseecode.instructions.custom[i];
+                var instructionName = $_eseecode.instructions.set[instructionId].name;
+                if (instructionName == "blank") {
                     clearNext = true;
                     continue;
                 }
@@ -2159,57 +2209,40 @@
                     div.style.clear = "left";
                 }
                 dialog.appendChild(div);
-				var newInstructionId;
-				if ($_eseecode.instructions.custom.length > 0) { // Custom instructions are already loaded in the instructionSet
-					newInstructionId = $_eseecode.instructions.custom[i];
-				} else {
-			        var instruction = $_eseecode.instructions.set[$e_getInstructionSetIdFromName(codeId)];
-			        newInstructionId = $_eseecode.instructions.set.length;
-			        $_eseecode.instructions.set[newInstructionId] = $e_clone(instruction);
-			        $_eseecode.instructions.set[newInstructionId].show = [];
-					$_eseecode.instructions.custom[$_eseecode.instructions.custom.length-1] = newInstructionId;
-				}
-				var j = 0;
-				while (i+1+j < instructions.length && ($e_isNumber(instructions[i+1+j],true) || $e_isBoolean(instructions[i+1+j],true) || decodeURIComponent(instructions[i+1+j]).charAt(0) == '"' || decodeURIComponent(instructions[i+1+j]).charAt(0) == "'")) {
-                    // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
-			        $_eseecode.instructions.set[newInstructionId].parameters[j].initial = decodeURIComponent(instructions[i+1+j]);
-			        j++;
-				}
-				i += j;
-                $e_createBlock(level,div,newInstructionId,true);
+                $e_createBlock(level,div,instructionId,true);
             }
 		} else {
-		        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
-			        var category = $_eseecode.instructions.categories[n].name;
-			        var firstInCategory = true;
-			        for (var i=0;i<$_eseecode.instructions.set.length;i++) {
-				        // Only show instructions in the current category
-				        if (category != $_eseecode.instructions.set[i].category) {
+	        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
+		        var category = $_eseecode.instructions.categories[n].name;
+		        var firstInCategory = true;
+		        for (var i=0;i<$_eseecode.instructions.set.length;i++) {
+			        // Only show instructions in the current category
+			        if (category != $_eseecode.instructions.set[i].category) {
+				        continue;
+			        }
+			        // See if this instruction is shown in this level
+			        var show = false;
+			        for (var j=0; j<$_eseecode.instructions.set[i].show.length; j++) {
+				        if ($_eseecode.instructions.set[i].show[j] == level) {
+					        show = true;
+					        break;
+				        }
+			        }
+			        if (show) {
+				        var codeId = $_eseecode.instructions.set[i].name;
+				        if (codeId == "blank") {
+					        clearNext = true;
 					        continue;
 				        }
-				        // See if this instruction is shown in this level
-				        var show = false;
-				        for (var j=0; j<$_eseecode.instructions.set[i].show.length; j++) {
-					        if ($_eseecode.instructions.set[i].show[j] == level) {
-						        show = true;
-						        break;
-					        }
+				        var div = document.createElement('div');
+				        if (firstInCategory || clearNext) {
+					        div.style.clear = "left";
+					        firstInCategory = false;
+					        clearNext = false;
 				        }
-				        if (show) {
-					        var codeId = $_eseecode.instructions.set[i].name;
-					        if (codeId == "blank") {
-						        clearNext = true;
-						        continue;
-					        }
-					        var div = document.createElement('div');
-					        if (firstInCategory || clearNext) {
-						        div.style.clear = "left";
-						        firstInCategory = false;
-						        clearNext = false;
-					        }
-					        dialog.appendChild(div);
-					        $e_createBlock(level,div,i,true);
-				        }
+				        dialog.appendChild(div);
+				        $e_createBlock(level,div,i,true);
+			        }
 				}
 			}
 		}
@@ -2577,6 +2610,7 @@
 	 * @example $e_changeAxisFromUI()
 	 */
 	function $e_changeAxisFromUI() {
+		$_eseecode.coordinates.userSelection = document.getElementById("setup-grid-coordinates").value;
 		$e_changeAxisBasedOnUISettings();
 		$e_resetCanvas();
 	}
@@ -2587,20 +2621,19 @@
 	 * @example $e_changeAxisBasedOnUISettings()
 	 */
 	function $e_changeAxisBasedOnUISettings() {
-		var element = document.getElementById("setup-grid-coordinates");
 		var gridModes = $_eseecode.coordinates.predefined;
-		var selectValue = element.value;
-		if (selectValue == gridModes.length) { // It was set as Custom
-			selectValue = 0;
+		var newUserSelection = $_eseecode.coordinates.userSelection;
+		if ($_eseecode.coordinates.userSelection == gridModes.length) { // It was set as Custom
+			newUserSelection = 0;
 			for (var i=0; i<gridModes.length; i++) {
 				if (gridModes[i].default) {
-					selectValue = i;
+					newUserSelection = i;
 					break;
 				}
 			}
 		}
-		$_eseecode.coordinates.userSelection = selectValue;
-		$e_changeAxisCoordinates(gridModes[selectValue].position, gridModes[selectValue].scale);
+		$_eseecode.coordinates.userSelection = newUserSelection;
+		$e_changeAxisCoordinates(gridModes[newUserSelection].position, gridModes[newUserSelection].scale);
 	}
 	
 	/**

@@ -369,7 +369,15 @@
 			$e_switchDialogMode("debug");
 			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
 		} else if (err.type == "codeError") {
-			$e_msgBox(_("Error found during execution at line %s:",[err.line])+"\n"+err.text);
+			var instructionId = $e_getInstructionSetIdFromName(err.name);
+			var brackets = "";
+			if (instructionId >=0) {
+				var instruction = $_eseecode.instructions.set[instructionId];
+				if (!instruction.code || instruction.code.noBrackets !== true) {
+					brackets = "()";
+				}
+			}
+			$e_msgBox(_("Error found during execution at line %s in %s",[err.line, err.name+brackets])+"\n"+err.text)+":";
 			$e_highlight(err.line,"error");
 		} else {
 			// The code didn't finish running and there is no known reason
@@ -463,17 +471,13 @@
 		if (invalidCount > 0) {
 			var header = "";
 			if (invalidCount>1) {
-				header += _("Invalid parameters in %s",[instructionName]);
+				header += _("Invalid parameters")+":";
 			} else {
-				header += _("Invalid parameter in %s",[instructionName]);
+				header += _("Invalid parameter")+":";
 			}
-			if (!instruction.code || instruction.code.noBrackets !== true) {
-				header += "()";
-			}
+			header += " ";
 			if (invalidCount > 1) {
 				header += "\n";
-			} else {
-				header += ". ";
 			}
 			throw new $e_codeError(instructionName,header+msg);
 		}

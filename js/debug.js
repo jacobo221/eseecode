@@ -666,7 +666,7 @@
 		canvas.width = canvasSize;
 		canvas.height = canvasSize;
 		var context = canvas.getContext("2d");
-		if (document.getElementById("setup-grid-enable").checked) {
+		if ($_eseecode.ui.gridVisible) {
 			context.drawImage($_eseecode.canvasArray["grid"].canvas, 0, 0);
 		}
 		var targetCanvas = $_eseecode.canvasArray[id];
@@ -679,7 +679,7 @@
 			yScale *= -1;
 		}
 		var yScale = $_eseecode.coordinates.yScale;
-		$e_drawGuide(context, targetCanvas.guide, id);
+		$e_drawDebugGuide(context, targetCanvas.guide, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);
 	}

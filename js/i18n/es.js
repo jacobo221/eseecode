@@ -391,8 +391,8 @@ $_eseecode.i18n.available.es = {
 	"The %s parameter (%s)": "El parámetro %s (%s)",
 	"has no value, but a value is required. The value recieved is:": "no tiene valor, pero un valor es requerido. El valor recibido es:",
 	"should be a %s but instead recieved this %s:": "debería ser un %s pero en su lugar recibió un %s:",
-	"Invalid parameter in %s": "Parámetro inválido en %s",
-	"Invalid parameters in %s": "Parámetro inválido en %s",
+	"Invalid parameter": "Parámetro inválido",
+	"Invalid parameters": "Parámetros inválidos",
 	"text": "texto",
 	"layer": "capa",
 	"Levels cannot be lower than 0, recieved:": "Niveles no puede ser inferior a 0, se ha recibido:",
@@ -418,6 +418,7 @@ $_eseecode.i18n.available.es = {
 	"I/O": "E/S",
 	"Input": "Entrada",
 	"Output": "Salida",
-	"Could not read a number. Instead read:": "No se ha podido leer un número. En su lugar se ha leido:",
-	"doesn't have a valid value:": "no te un valor vàlid:
+	"Could not read a number, instead read:": "No se ha podido leer un número, en su lugar se ha leido:",
+	"doesn't have a valid value:": "no tiene un valor válido",
+	"Error found during execution at line %s in %s": "Error detectado en la línea %s ejecutando %s"
 }
