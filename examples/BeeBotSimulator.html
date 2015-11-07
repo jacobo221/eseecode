@@ -1,9 +1,9 @@
 <html>
 <body>
-<iframe id="eseecode-frame" width="1000" height="500" src="../index.html?level=1&instructions=forward;75;blank;turnLeft;turnRight;blank;setColor;'black';unsetColor"></iframe>
+<iframe id="eseecode-frame" width="1000" height="500" src="../index.html?view=touch&instructions=forward;75;blank;turnLeft;turnRight;blank;setColor;'black';unsetColor"></iframe>
 <script type="text/javascript">
 function testme() {
-document.getElementById('eseecode-frame').contentWindow.uploadCode('image("http://www.tts-group.co.uk/_rmvirtual/media/tts/images/legacy/TTS/IBFARM.jpg",0,-2,380,380);use();goTo(37,37);turnRight(90);unsetColor()', true);
+document.getElementById('eseecode-frame').contentWindow.API_uploadPrecode('changeAxis(0,0,1.05,1.05);image("http://www.tts-group.co.uk/_rmvirtual/media/tts/images/legacy/TTS/IBFARM.jpg",0,-2,false,400,400);use();goTo(37,37);turnRight(90);unsetColor()', true);
 }
 window.addEventListener("load", testme);
 </script>

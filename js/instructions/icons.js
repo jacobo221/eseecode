@@ -302,21 +302,21 @@
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
 			if (!backwards) {
-				ctx.moveTo(margin,height/2-lineHeight/2);
-				ctx.lineTo(margin,height/2+lineHeight/2);
-				ctx.lineTo(margin+lineWidth,height/2+lineHeight/2);
-				ctx.lineTo(margin+lineWidth,height/2-lineHeight/2);
-				ctx.moveTo(width-margin-arrowWidth,height/2-arrowHeight/2);
-				ctx.lineTo(width-margin,height/2);
-				ctx.lineTo(width-margin-arrowWidth,height/2+arrowHeight/2);
+				ctx.moveTo(height/2-lineHeight/2, height-margin);
+				ctx.lineTo(height/2+lineHeight/2, height-margin);
+				ctx.lineTo(height/2+lineHeight/2, margin+arrowWidth);
+				ctx.lineTo(height/2-lineHeight/2, margin+arrowWidth);
+				ctx.moveTo(height/2-arrowHeight/2, margin+arrowWidth);
+				ctx.lineTo(height/2, margin);
+				ctx.lineTo(height/2+arrowHeight/2, margin+arrowWidth);
 			} else {
-				ctx.moveTo(width-margin,height/2-lineHeight/2);
-				ctx.lineTo(width-margin,height/2+lineHeight/2);
-				ctx.lineTo(width-(margin+lineWidth),height/2+lineHeight/2);
-				ctx.lineTo(width-(margin+lineWidth),height/2-lineHeight/2);
-				ctx.moveTo(margin+arrowWidth,height/2-arrowHeight/2);
-				ctx.lineTo(margin,height/2);
-				ctx.lineTo(margin+arrowWidth,height/2+arrowHeight/2);
+				ctx.moveTo(height/2-lineHeight/2, margin);
+				ctx.lineTo(height/2+lineHeight/2, margin);
+				ctx.lineTo(height/2+lineHeight/2, margin+lineWidth);
+				ctx.lineTo(height/2-lineHeight/2, margin+lineWidth);
+				ctx.moveTo(height/2-arrowHeight/2, margin+lineWidth);
+				ctx.lineTo(height/2, height-margin);
+				ctx.lineTo(height/2+arrowHeight/2, margin+lineWidth);
 			}
 			ctx.fill();
 			ctx.closePath();

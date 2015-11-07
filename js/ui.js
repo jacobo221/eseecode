@@ -1334,7 +1334,7 @@
 		ctx.lineWidth = 1;
 		var xUserStep = step/$_eseecode.coordinates.scale.x;
 		for (var i=step, text=coorUpperLeft.x+xUserStep; i<canvasSize; i+=step, text+=xUserStep) {
-			ctx.fillText(text,i,7);
+			ctx.fillText(parseInt(text),i,7);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
 			} else {
@@ -1349,7 +1349,7 @@
 		}
 		var yUserStep = step/$_eseecode.coordinates.scale.y;
 		for (var i=step, text=coorUpperLeft.y+yUserStep; i<canvasSize; i+=step, text+=yUserStep) {
-			ctx.fillText(text,0,i);
+			ctx.fillText(parseInt(text),0,i);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
 			} else {
