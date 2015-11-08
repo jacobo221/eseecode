@@ -295,7 +295,7 @@
 	 * @private
 	 * @param {String|HTMLElement} text Message to show in the message box
 	 * @param {acceptName:String,acceptAction:function(),cancel:Boolean,cancelName:String,cancelAction:function(),focus:String,noSubmit:Boolean} config Configuration parameters for the message box
-	 * @example $e_msgBox("Alert!")
+	 * @example $e_msgBox("This is a message!")
 	 */
 	function $e_msgBox(text, config) {
 		var id = 0;
@@ -1056,7 +1056,7 @@
 	 * @private
 	 * @param {Number} angle User angle
 	 * @return System value which refers to the same user angle
-	 * @example user2systemAngle(90)
+	 * @example $e_user2systemAngle(90)
 	 */
 	function $e_user2systemAngle(angle) {
 		return $e_system2userAngle(angle);

@@ -3,10 +3,10 @@
 (function(parser) {
 	var ast = parser.ast;
 
-	function realCodeAddition(realCode, lineNumber, inCondition) {
+	function realCodeAddition(realCode, lineNumber, inline) {
 		var str = "";
 		if (realCode) {
-			if (inCondition !== true) {
+			if (inline !== true) {
 				str += ";";
 			}
 			str += "$e_eseeCodeInjection("+lineNumber+",(function(){\
@@ -28,8 +28,8 @@
 						}\
 					} catch(e) {}\
 				}\
-			}()))";
-			if (inCondition !== true) {
+			}()),"+inline+")";
+			if (inline !== true) {
 				str += ";";
 			}
 		}

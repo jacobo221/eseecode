@@ -477,13 +477,11 @@
 	}
 
 	/**
-	 * Resets the debug window
+	 * Resets the layers list in debug window
 	 * @private
-	 * @example $e_resetDebug()
+	 * @example $e_resetDebugLayers()
 	 */
-	function $e_resetDebug() {
-		var debugDiv = document.getElementById("dialog-debug");
-		// Clean old debug info and create new debug info
+	function $e_resetDebugLayers() {
 		var list = $e_debugLayers();
 		var layersText = ""
 		for (var i=0;i<list.length;i++) {
@@ -508,6 +506,16 @@
 			document.getElementById("link-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_switchCanvas(id);$e_resetDebug()}})(list[i]), false);
 			document.getElementById("toggle-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_toggleCanvas(id)}})(list[i]), false);
 		}
+	}
+
+	/**
+	 * Resets the debug window
+	 * @private
+	 * @example $e_resetDebug()
+	 */
+	function $e_resetDebug() {
+		// Clean old debug info and create new debug info
+		$e_resetDebugLayers();
 		document.getElementById("dialog-debug-analyzer-toolbar").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" /><input type=\"button\" value=\"+ "+_("Watchpoint")+"\" onclick=\"$e_addWatchpoint()\" />";
 		document.getElementById("dialog-debug-analyzer-breakpoints").innerHTML = "";
 		document.getElementById("dialog-debug-analyzer-watches").innerHTML = "";

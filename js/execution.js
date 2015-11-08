@@ -32,10 +32,11 @@
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
 	 * @param {Object} variables This parameter is ignored but is necessary to be able to run an inline function uppon call to obtain the watchpoint variable values
+	 * @param {Boolean} [inline] Set to true if it is being called inline (as part of the parameters of a call or inside a condition)
 	 * @example $e_eseeCodeInjection(123)
 	 */
-	function $e_eseeCodeInjection(lineNumber, variables) {
-		$e_checkExecutionLimits(lineNumber);
+	function $e_eseeCodeInjection(lineNumber, variables, inline) {
+		$e_checkExecutionLimits(lineNumber, inline);
 		// The only case in which we need to return something is for return, since it could be with no parameters leave undefined
 		return undefined;
 	}
@@ -44,10 +45,11 @@
 	 * Check the execution control limits
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
+	 * @param {Boolean} [inline=false] Set to true if it is being called inline (as part of the parameters of a call or inside a condition)
 	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_checkExecutionLimits(31)
 	 */
-	function $e_checkExecutionLimits(lineNumber) {
+	function $e_checkExecutionLimits(lineNumber, inline) {
 		if ($_eseecode.execution.precode.running) {
 			// Precode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
@@ -67,6 +69,10 @@
 				$_eseecode.execution.breakpointCounter++;
 				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
 					$_eseecode.execution.breakpointCounterLimit++;
+					if (inline !== true) {
+						// Variable changes are detected before running the next instruction, except in inline checks
+						$e_setHighlight(lineNumber-1);
+					}
 					throw "executionWatchpointed";
 				}
 			}
@@ -314,7 +320,7 @@
 		document.getElementById("eseecode").removeChild(script);
 		// if debug is open refresh it
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
-			$e_resetDebug();
+			$e_resetDebugLayers();
 		}
 	}
 
@@ -365,7 +371,7 @@
 			$e_highlight($_eseecode.session.highlight.lineNumber);
 			$e_switchDialogMode("debug");
 		} else if (err == "executionWatchpointed") {
-			$e_highlight($_eseecode.session.highlight.lineNumber-1); // We detect it before running the next instruction, so highlight the previous instuction
+			$e_highlight($_eseecode.session.highlight.lineNumber); // We detect it before running the next instruction, so highlight the previous instruction
 			$e_switchDialogMode("debug");
 			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
 		} else if (err.type == "codeError") {
@@ -449,7 +455,7 @@
 			var msgParam = "";
 			if (value === undefined || value === null || value === "") {
 				if (!parameter.optional) {
-					msgParam = _("has no value, but a value is required. The value recieved is:")+" "+value+" ("+$e_analyzeVariable(value).type+")\n";
+					msgParam = _("has no value, but a value is required. The value received is:")+" "+value+" ("+_($e_analyzeVariable(value).type)+")\n";
 					invalidParameter = true;
 				}
 			} else if ((parameter.type == "number" && !$e_isNumber(value)) ||
@@ -457,14 +463,14 @@
 			 (parameter.type == "color" && !$e_isColor(value)) ||
 			 (parameter.type == "layer" && !$e_isLayer(value)) ||
 			 (parameter.type == "window" && !$e_isWindow(value))) {
-				msgParam = _("should be a %s but instead recieved this %s:",[parameter.type,$e_analyzeVariable(value).type])+" "+value+"\n";
+				msgParam = _("should be a %s but instead received this %s:",[_(parameter.type),_($e_analyzeVariable(value).type)])+" "+value+"\n";
 				invalidParameter = true;
 			} else if (parameter.validate && !parameter.validate(value)) {
 				msgParam = _("doesn't have a valid value:")+" "+value+"\n";
 				invalidParameter = true;
 			}
 			if (invalidParameter) {
-				msg += _("The %s parameter (%s)",[$e_ordinal(i+1),parameter.name])+" "+msgParam;
+				msg += _("The %s parameter (%s)",[$e_ordinal(i+1),_(parameter.name)])+" "+msgParam;
 				invalidCount++;
 			}
 		}

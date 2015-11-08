@@ -997,11 +997,11 @@
 	 * @public
 	 * @param {Number} radius Radius of the arc
 	 * @param {Number} degrees Amount of degrees to arc
-	 * @param {Boolean} [axis=false] false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc
+	 * @param {Boolean} [follow=false] false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc
 	 * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
 	 * @example arc(50, 270)
 	 */
-	function arc(radius, degrees, axis, counterclockwise) {
+	function arc(radius, degrees, follow, counterclockwise) {
 		$e_parseParameterTypes("arc", arguments);
 		var posx, posy;
 		var startradians, endradians;
@@ -1012,7 +1012,7 @@
 		} else {
 			move = -1;
 		}
-		if (axis) {
+		if (follow) {
 			startradians = ($_eseecode.currentCanvas.guide.angle+90*move)*Math.PI/180;	
 			posx = $_eseecode.currentCanvas.guide.x+radius*Math.cos(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
 			posy = $_eseecode.currentCanvas.guide.y+radius*Math.sin(($_eseecode.currentCanvas.guide.angle-90*move)*Math.PI/180);
@@ -1046,7 +1046,7 @@
 			$_eseecode.currentCanvas.context.closePath();
 		}
 
-		if (axis) {
+		if (follow) {
 			var COx, COy; // vector from center to origin
 			COx = $_eseecode.currentCanvas.guide.x-posx;
 			COy = $_eseecode.currentCanvas.guide.y-posy;

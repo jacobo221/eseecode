@@ -1094,8 +1094,8 @@
 			if (!$e_isNumber(param,true) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
-			var startAngle = (-90-param)*Math.PI/180;
-			var endAngle = -90*Math.PI/180;
+			var startAngle = -1*param*Math.PI/180;
+			var endAngle = Math.PI/180;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
 			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
@@ -1108,11 +1108,11 @@
 			COx = 0;
 			COy = (margin+lineWidth/2)-height/2;
 			var rotateAngle = -param*Math.PI/180;
-			var x = width/2+Math.cos(rotateAngle)*COx-Math.sin(rotateAngle)*COy;
-			var y = height/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
+			var x = width/2-Math.cos(rotateAngle)*COy+Math.sin(rotateAngle)*COx;
+			var y = height/2-Math.sin(rotateAngle)*COy-Math.cos(rotateAngle)*COx;
 			ctx.save();
 			ctx.translate(x,y);
-			ctx.rotate(-90*Math.PI/180+rotateAngle);
+			ctx.rotate(-1*Math.PI/180+rotateAngle);
 			ctx.beginPath();
 			ctx.moveTo(0-lineWidth,0);
 			ctx.lineTo(0+lineWidth,0);
@@ -1160,8 +1160,8 @@
 			if (!$e_isNumber(param,true) || param > maxparam*0.85) {
 				param = maxparam*0.85;
 			}
-			var startAngle = -90*Math.PI/180;
-			var endAngle = (param-90)*Math.PI/180;
+			var startAngle = 180*Math.PI/180;
+			var endAngle = (180+param)*Math.PI/180;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
 			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
@@ -1173,7 +1173,7 @@
 			var COx, COy; // vector from center to origin
 			COx = 0;
 			COy = (margin+lineWidth/2)-height/2;
-			var rotateAngle = param*Math.PI/180;
+			var rotateAngle = (-90+param)*Math.PI/180;
 			var x = width/2+Math.cos(rotateAngle)*COx-Math.sin(rotateAngle)*COy;
 			var y = height/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 			ctx.save();
