@@ -1096,14 +1096,20 @@
 			}
 			var startAngle = -1*param*Math.PI/180;
 			var endAngle = Math.PI/180;
+			var outerRadius = height/2-margin;
+			var innerRadius = (height/2-margin)*(param/maxparam);
+			var lineWidth = outerRadius-innerRadius;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
-			ctx.arc(width/2, height/2, (height/2-margin)*(param/maxparam), endAngle, startAngle, true);
+			ctx.arc(width/2, height/2, outerRadius, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2, innerRadius, endAngle, startAngle, true);
+			ctx.moveTo(width/2+outerRadius,height/2);
+			ctx.lineTo(width/2+outerRadius,2*height/3);
+			ctx.lineTo(width/2+innerRadius,2*height/3);
+			ctx.lineTo(width/2+innerRadius,height/2);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
-			var lineWidth = (height/2-margin-(height/2-margin)*(param/maxparam));
 			var COx, COy; // vector from center to origin
 			COx = 0;
 			COy = (margin+lineWidth/2)-height/2;
@@ -1162,14 +1168,20 @@
 			}
 			var startAngle = 180*Math.PI/180;
 			var endAngle = (180+param)*Math.PI/180;
+			var outerRadius = height/2-margin;
+			var innerRadius = (height/2-margin)*(param/maxparam);
+			var lineWidth = outerRadius-innerRadius;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.arc(width/2, height/2, height/2-margin, startAngle, endAngle, false);
-			ctx.arc(width/2, height/2, (height/2-margin)*(param/maxparam), endAngle, startAngle, true);
+			ctx.moveTo(width/2-outerRadius,height/2);
+			ctx.lineTo(width/2-outerRadius,2*height/3);
+			ctx.lineTo(width/2-innerRadius,2*height/3);
+			ctx.lineTo(width/2-innerRadius,height/2);
+			ctx.arc(width/2, height/2, outerRadius, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2, innerRadius, endAngle, startAngle, true);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
-			var lineWidth = (height/2-margin-(height/2-margin)*(param/maxparam));
 			var COx, COy; // vector from center to origin
 			COx = 0;
 			COy = (margin+lineWidth/2)-height/2;
