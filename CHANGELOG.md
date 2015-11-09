@@ -1,12 +1,17 @@
 ## 2.3 (ongoing work)
 
- *Milestone: Easy input/output methods*
+ *Milestone reached: Easy input/output methods*
  *   New input and output instructions and panels
  *   Added URL parameters grid, gridStep, guide, input and timeout
  *   New APIs: getLayersAsAnimation, getLayersAsGrid, getWhiteboard, loadURLParams, execute, setInput, getOutput, uploadPrecode, ...
  *   Code cleanup regarding UI/code separation and URL parameters parsing
  *   Embedding setup Wizard example added
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
+ *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
+ *   Fix: Translate variable types
+ *   Fix: Correcting wrong styling in inline functions
+ *   Fix: uploadCode() turns to Code view if code cannot be parsed, so code is loaded and not lost
+ *   Fix: Grid coordinates are always rounded now
  *   Fix: instructions= parameters are set even if they are defined as optionals for the instruction
  *   Fix: Axis coords were show with decimals, now just integers
 
