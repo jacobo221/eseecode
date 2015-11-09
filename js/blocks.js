@@ -76,11 +76,11 @@
 				}
 			}
 		}
-		var instructionSetId = div.getAttribute("instructionSetId");
+		var instructionSetId = div.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		while (div && instruction.dummy) {
 			div = div.parentNode;
-			instructionSetId = div.getAttribute("instructionSetId");
+			instructionSetId = div.getAttribute("data-instructionsetid");
 			instruction = $_eseecode.instructions.set[instructionSetId];
 		}
 		if (!div) {
@@ -114,8 +114,8 @@
 			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop + div.parentNode.scrollTop;
 		}
 		// Copy parameters
-		for (var i=1; div.getAttribute("param"+i) !== null; i++) {
-			$_eseecode.session.floatingBlock.div.setAttribute("param"+i,div.getAttribute("param"+i));
+		for (var i=1; div.getAttribute("data-param"+i) !== null; i++) {
+			$_eseecode.session.floatingBlock.div.setAttribute("data-param"+i,div.getAttribute("data-param"+i));
 		}
 		if (!dialog) {
 			$_eseecode.session.floatingBlock.fromDiv.style.opacity = 0.4;
@@ -284,7 +284,7 @@
 			return;
 		}
 		if (div.tagName === "DIV") {
-			if (!$_eseecode.instructions.set[div.getAttribute("instructionSetId")].dummy) {
+			if (!$_eseecode.instructions.set[div.getAttribute("data-instructionsetid")].dummy) {
 				div.addEventListener(handler,callPointer,false);
 			}
 		}
@@ -386,12 +386,12 @@
 				nextDiv = null;
 			}
 		} else if (parent) {
-			var instructionSetId = parentDiv.getAttribute("instructionSetId");
+			var instructionSetId = parentDiv.getAttribute("data-instructionsetid");
 			if (instructionSetId && $_eseecode.instructions.set[instructionSetId].block) { // Append child inside the block, before closure
 				nextDiv = parentDiv.lastChild;
 			}
 		}
-		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("data-instructionsetid")];
 		if (instruction.block && !blockDiv.firstChild.nextSibling && !instruction.text) { // If we are adding a block to the console for the first time, create its children
 			$e_createSubblocks(blockDiv);
 		}
@@ -410,7 +410,7 @@
 	 */
 	function $e_createSubblocks(blockDiv) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
-		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("data-instructionsetid")];
 		if (instruction.block) {
 			var oldChild = blockDiv.firstChild.nextSibling; // The first element inside a BlockDiv is its span title, so we can safely skip it
 			var action = "keep";
@@ -418,7 +418,7 @@
 			var instructionName = instruction.block[instructionBlockIndex];
 			var instructionId = $e_getInstructionSetIdFromName(instructionName);
 			while (oldChild !== null) {
-				var oldInstructionId = oldChild.getAttribute("instructionSetId");
+				var oldInstructionId = oldChild.getAttribute("data-instructionsetid");
 				var oldInstruction = $_eseecode.instructions.set[oldInstructionId];
 				if (oldInstruction.dummy === true) {
 					if (instructionId !== oldInstructionId) {
@@ -441,7 +441,7 @@
 				var instructionId = $e_getInstructionSetIdFromName(instructionName);
 				var childDiv = document.createElement("div");
 				childDiv.id = $e_newDivId();
-				childDiv.setAttribute("instructionSetId",instructionId);
+				childDiv.setAttribute("data-instructionsetid",instructionId);
 				blockDiv.appendChild(childDiv);
 				$e_createBlock(level,childDiv);
 			}
@@ -483,7 +483,7 @@
 	 */
 	function $e_searchBlockByPosition(element, position, count) {
 		while (element && count != position) { // if the code is almost empty position could be far ahead of the last block
-			var instruction = $_eseecode.instructions.set[element.getAttribute("instructionSetId")];
+			var instruction = $_eseecode.instructions.set[element.getAttribute("data-instructionsetid")];
 			if (instruction.block) {
 				var output = $e_searchBlockByPosition(element.firstChild.nextSibling, position, count+1);
 				count = output.count-1;
@@ -538,11 +538,11 @@
 	 */
 	function $e_setupBlock(div, blockAdd) {
 		var returnVal = true;
-		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
 		if (instruction.dummy && instruction.parameters === null) {
 			// This is a subblock, configure its parent node
 			div = div.parentNode;
-			instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+			instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
 		}
 		var instructionName = instruction.name;
 		var parameterInputs = [];
@@ -556,8 +556,8 @@
 			parameterInputs[i].name = _(parameter.name);
 			parameterInputs[i].id = paramNumber;
 			var defaultValue = parameter.initial;
-			if (div.getAttribute("param"+paramNumber) !== undefined) {
-				defaultValue = div.getAttribute("param"+paramNumber);
+			if (div.getAttribute("data-param"+paramNumber) !== undefined) {
+				defaultValue = div.getAttribute("data-param"+paramNumber);
 			}
 			if (parameter.type == "number") {
 				if (defaultValue !== "" && defaultValue !== undefined && defaultValue !== null) {
@@ -571,7 +571,7 @@
 		}
 		if (parameterInputs.length > 0 || instruction.convert) {		
 			// We have parameters to ask for. Create a msgBox
-			var instructionSetId = div.getAttribute("instructionSetId");
+			var instructionSetId = div.getAttribute("data-instructionsetid");
 			var instruction = $_eseecode.instructions.set[instructionSetId];
 			var instructionName = instruction.name;
 			var msgDiv = document.createElement("div");
@@ -594,7 +594,7 @@
 				convertDiv.appendChild(span);
 				var element = document.createElement("select");
 				element.id = "setupBlockConvert";
-				element.innerHTML = "<option value='"+div.getAttribute("instructionSetId")+"' selected=\"selected\">"+instruction.name+"</option>";
+				element.innerHTML = "<option value='"+div.getAttribute("data-instructionsetid")+"' selected=\"selected\">"+instruction.name+"</option>";
 				for (var i = 0; i < instruction.convert.length; i++) {
 					var convertInstruction = instruction.convert[i];
 					element.innerHTML += "<option value='"+$e_getInstructionSetIdFromName(convertInstruction)+"'>"+convertInstruction+"</option>";
@@ -610,7 +610,7 @@
 			iconDiv.id = "setupBlockIcon";
 			iconDiv.className = "block";
 			iconDiv.style.float = "left";
-			iconDiv.setAttribute("instructionSetId", instructionSetId);
+			iconDiv.setAttribute("data-instructionsetid", instructionSetId);
 			var icon = document.createElement("canvas");
 			$e_paintBlock(iconDiv, false, false);
 			iconDiv.appendChild(icon);
@@ -684,7 +684,7 @@
 			iconDiv.style.display = "none";
 		}
 		var blockDiv = document.getElementById(document.getElementById("setupBlockDiv").value);
-		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("data-instructionsetid")];
 		var parameters = instruction.parameters;
 		var parametersCount = document.getElementById("setupBlockCount").value;
 		var updateIcon = function() {
@@ -699,9 +699,9 @@
 			iconDiv.innerHTML = "";	
 			for (var i=0; i<parametersCount; i++) {
 				if (i <= lastParameterWithValue) {
-					iconDiv.setAttribute("param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
+					iconDiv.setAttribute("data-param"+(i+1),document.getElementById("setupBlock"+(i+1)).value);
 				} else {
-					iconDiv.removeAttribute("param"+(i+1));
+					iconDiv.removeAttribute("data-param"+(i+1));
 				}
 			}
 			$e_paintBlock(iconDiv, false, false);
@@ -809,9 +809,9 @@
 					elementMinus.type = "button";
 					elementMinus.value = "-";
 					elementMinus.style.width = "50px";
-					elementMinus.setAttribute("valueEscalation", valueEscalation);
+					elementMinus.setAttribute("data-valueescalation", valueEscalation);
 					elementMinus.addEventListener("click", function() {
-						var valueEscalation = parseFloat(this.getAttribute("valueEscalation"));
+						var valueEscalation = parseFloat(this.getAttribute("data-valueescalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
@@ -843,15 +843,15 @@
 						if (defaultValue !== undefined && defaultValue !== "") {
 							elementInput.value = defaultValue*valueEscalation;
 						} else if (parameter.initial !== undefined) {
-							input.value = parameter.initial*valueEscalation;
+							elementInput.value = parameter.initial*valueEscalation;
 						}
 						elementInput.min = minValue*valueEscalation;
 						elementInput.max = maxValue*valueEscalation;
-						elementInput.setAttribute("valueEscalation", valueEscalation);
+						elementInput.setAttribute("data-valueescalation", valueEscalation);
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
-							document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseFloat(this.getAttribute("valueEscalation"));
-							document.getElementById(parameterInputId).value = this.value/parseFloat(this.getAttribute("valueEscalation"));
+							document.getElementById(parameterInputId+"VisualSpan").innerHTML = this.value/parseFloat(this.getAttribute("data-valueescalation"));
+							document.getElementById(parameterInputId).value = this.value/parseFloat(this.getAttribute("data-valueescalation"));
 							updateIcon();
 						}, false);
 						var elementText = document.createElement("span");
@@ -867,10 +867,10 @@
 						var elementInput = document.createElement("input");
 						elementInput.id = parameterInputId+"VisualInput";
 						elementInput.setAttribute("type", "number");
-					if (defaultValue !== undefined && defaultValue !== "") {
+						if (defaultValue !== undefined && defaultValue !== "") {
 							elementInput.value = defaultValue;
 						} else if (parameter.initial !== undefined) {
-							input.value = parameter.initial;
+							elementInput.value = parameter.initial;
 						}
 						if (minValue !== undefined) {
 							elementInput.min = minValue;
@@ -878,7 +878,7 @@
 						if (maxValue !== undefined) {
 							elementInput.max = maxValue;
 						}
-						elementInput.setAttribute("valueEscalation", valueEscalation);
+						elementInput.setAttribute("data-valueescalation", valueEscalation);
 						elementInput.step = stepValue;
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -891,9 +891,9 @@
 					elementPlus.type = "button";
 					elementPlus.value = "+";
 					elementPlus.style.width = "50px";
-					elementPlus.setAttribute("valueEscalation", valueEscalation);
+					elementPlus.setAttribute("data-valueescalation", valueEscalation);
 					elementPlus.addEventListener("click", function() {
-						var valueEscalation = parseFloat(this.getAttribute("valueEscalation"));
+						var valueEscalation = parseFloat(this.getAttribute("data-valueescalation"));
 						var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 						var elem = document.getElementById(parameterInputId+"VisualInput");
 						var val;
@@ -1074,7 +1074,7 @@
 		var div = document.getElementById(divId);
 		var parametersCount = document.getElementById("setupBlockCount").value;
 		var paramNumber = 1;
-		var instructionId = div.getAttribute("instructionSetId");
+		var instructionId = div.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionId];
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
 		var instructionConverted = false;
@@ -1087,7 +1087,7 @@
 				newDiv.setAttribute("id", newDivId);	
 				$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].id, newDiv, newInstructionId)
 				instructionId = newInstructionId;
-				newDiv.setAttribute("instructionSetId",instructionId);
+				newDiv.setAttribute("data-instructionsetid",instructionId);
 				$e_createSubblocks(newDiv);
 				div.parentNode.insertBefore(newDiv, div);
 				div.parentNode.removeChild(div);
@@ -1117,11 +1117,11 @@
 			var value = document.getElementById("setupBlock"+paramNumber).value;
 			var defaultValue = document.getElementById("setupBlock"+paramNumber+"Default").value;
 			if (i <= lastParameterWithValue) {
-				div.setAttribute("param"+(i+1), value);
+				div.setAttribute("data-param"+(i+1), value);
 			} else {
-				div.removeAttribute("param"+(i+1));
+				div.removeAttribute("data-param"+(i+1));
 			}
-			setupChanges.push(["param"+paramNumber, defaultValue, value]);
+			setupChanges.push(["data-param"+paramNumber, defaultValue, value]);
 			paramNumber++;
 		}
 		if (setupChanges.length > 0) {
@@ -1178,12 +1178,12 @@
 	function $e_createBlock(level, div, instructionSetId, dialog) {
 		var codeId;
 		if (instructionSetId == null) { // If no instructionSetId is passed we just want to update the block
-			instructionSetId = div.getAttribute("instructionSetId");
+			instructionSetId = div.getAttribute("data-instructionsetid");
 			codeId = div.id;
 		} else { // This is a block that didn't exist before
 			codeId = $e_newDivId();
 			div.setAttribute("id", codeId);
-			div.setAttribute("instructionSetId", instructionSetId);
+			div.setAttribute("data-instructionsetid", instructionSetId);
 		}
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		div.className = "block "+level+" "+instruction.name;
@@ -1230,11 +1230,11 @@
 	 */
 	function $e_paintBlock(div, dialog, skipRecursiveRepaint) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
-		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
 		var color = "transparent"; // default color
 		var searchCategoryForColor = instruction.category;
 		if (instruction.category == "internal" && div.parentNode) {
-			var parentInstruction = $_eseecode.instructions.set[div.parentNode.getAttribute("instructionSetId")];
+			var parentInstruction = $_eseecode.instructions.set[div.parentNode.getAttribute("data-instructionsetid")];
 			if (parentInstruction && parentInstruction.block) {
 				searchCategoryForColor = parentInstruction.category;
 			}
@@ -1351,7 +1351,7 @@
 			div.style.backgroundImage = "url("+bgCanvas.toDataURL()+")";
 		}
 		if (!skipRecursiveRepaint) {
-			while (div.parentNode && div.parentNode.getAttribute("instructionSetId")) {
+			while (div.parentNode && div.parentNode.getAttribute("data-instructionsetid")) {
 				div = div.parentNode;
 				$e_paintBlock(div,dialog,true);
 			}

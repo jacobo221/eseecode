@@ -1917,7 +1917,7 @@
 				var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
 				var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 				while (startInstructionDiv !== null) {
-					if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
+					if (startInstructionDiv.getAttribute("data-instructionsetid") == startInstructionId) {
 						break;
 					}
 					startInstructionDiv = startInstructionDiv.nextSibling;
@@ -2002,7 +2002,7 @@
 		var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
 		var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 		while (startInstructionDiv !== null) {
-			if (startInstructionDiv.getAttribute("instructionSetId") == startInstructionId) {
+			if (startInstructionDiv.getAttribute("data-instructionsetid") == startInstructionId) {
 				break;
 			}
 			startInstructionDiv = startInstructionDiv.nextSibling;
@@ -2065,7 +2065,7 @@
 	 * @example $e_loadParameters("level2", document.getElementById("div-123123123"))
 	 */
 	function $e_loadParameters(level, div, dialog) {
-		var instructionSetId = div.getAttribute("instructionSetId");
+		var instructionSetId = div.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		var parameters = [];
 		if (instruction.parameters !== null) {
@@ -2074,20 +2074,20 @@
 			// parameters up to it and don't set the parameters at all after it
 			var lastParameterWithValue = -1;
 			for (var i=instruction.parameters.length-1; i>=0 && lastParameterWithValue<0; i--) {
-				if (div.getAttribute("param"+(i+1)) != null && div.getAttribute("param"+(i+1)) !== "") {
+				if (div.getAttribute("data-param"+(i+1)) != null && div.getAttribute("data-param"+(i+1)) !== "") {
 					lastParameterWithValue = i;
 				}
 			}
 			for (i=0; i<instruction.parameters.length; i++) {
 				var param = undefined;
-				if (div.getAttribute("param"+(i+1)) !== null) {
-					param = div.getAttribute("param"+(i+1));
+				if (div.getAttribute("data-param"+(i+1)) !== null) {
+					param = div.getAttribute("data-param"+(i+1));
 				} else if (instruction.parameters[i].initial !== undefined && (instruction.parameters[i].optional !== true || instruction.parameters[i].forceInitial == true)) {
 					param = instruction.parameters[i].initial;
 					if (instruction.parameters[i].type == "number") {
 						param = $e_parsePredefinedConstants(param);
 					}
-					div.setAttribute("param"+(i+1),param);
+					div.setAttribute("data-param"+(i+1),param);
 				} else if (i <= lastParameterWithValue) {
 					param = "";
 				}
@@ -2095,8 +2095,8 @@
 					parameters.push(param);
 				}
 			}
-			for (; div.getAttribute("param"+(i+1)) !== null; i++) {
-				var param = div.getAttribute("param"+(i+1));
+			for (; div.getAttribute("data-param"+(i+1)) !== null; i++) {
+				var param = div.getAttribute("data-param"+(i+1));
 				if (param) {
 					parameters.push(param);
 				}
@@ -2285,7 +2285,7 @@
 						div.style.border = "1px solid #AAAAAA";
 						div.style.color = $e_readableText(color);
 						div.setAttribute("title", _(instruction.tip));
-						div.setAttribute("instructionSetId", instruction.index);
+						div.setAttribute("data-instructionsetid", instruction.index);
 						div.addEventListener("click", $e_writeText, false);
 						if (firstInCategory) {
 							div.style.marginTop = "5px";
@@ -2338,10 +2338,10 @@
 	function $e_writeText(event) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var div = event.target;
-		while (div && !div.getAttribute("instructionSetId")) { // Target could be a span in the div, so let's fetch the parent div
+		while (div && !div.getAttribute("data-instructionsetid")) { // Target could be a span in the div, so let's fetch the parent div
 			div = div.parentNode;
 		}
-		var instruction = $_eseecode.instructions.set[div.getAttribute("instructionSetId")];
+		var instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
 		var text = "";
 		if (instruction.inorder) {
 			text += " ";

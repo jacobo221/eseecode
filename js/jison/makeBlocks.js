@@ -20,9 +20,9 @@
 			div.setAttribute("instructionName", instruction);
 		}
 		if (params) {
-			div.setAttribute("param1", ""); // At least force it to have one parameter
+			div.setAttribute("data-param1", ""); // At least force it to have one parameter
 			for (var i=0; i<params.length; i++) {
-				div.setAttribute("param"+(i+1), params[i]);
+				div.setAttribute("data-param"+(i+1), params[i]);
 			}
 		}
 		if ($_eseecode.instructions.set[instructionSetId].block) {
@@ -96,7 +96,7 @@
 		if (this.alternate !== null) {
 			// Now we convert the block into an ifelse
 			// We couldn't do it before because we wanted the inner blocks to go _before_ the else block
-			div.setAttribute("instructionSetId",$e_getInstructionSetIdFromName("ifelse"));
+			div.setAttribute("data-instructionsetid",$e_getInstructionSetIdFromName("ifelse"));
 			if (this.alternate.type == "IfStatement") {
 				 // else if
 				this.alternate.makeBlocks(level,div,true);

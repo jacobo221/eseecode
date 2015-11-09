@@ -36,7 +36,7 @@
 		}
 		var code = "";
 		while (blockDiv && blockDiv.id != "console-blocks-tip") { // Check that there really is code in the block code area, otherwise there's nothing to convert
-			var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("instructionSetId")];
+			var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("data-instructionsetid")];
 			var thisIndentation = indentation;
 			if (instruction.code && instruction.code.unindent) {
 				thisIndentation = thisIndentation.substr(0,thisIndentation.length-1);
