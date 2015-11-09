@@ -19,7 +19,7 @@
 				link: "CHANGELOG.md"
 			},
 			logo: {
-				text: "images/eSeeCode-logo.png",
+				text: "images/eSeeCode_logo.png",
 				link: "http://www.eseecode.com"
 			},
 			author: {
