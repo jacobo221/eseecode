@@ -433,5 +433,8 @@ $_eseecode.i18n.available.ca = {
 	"string": "text",
 	"symbol": "símbol",
 	"function": "funció",
-	"array": "vector"
+	"array": "vector",
+	"Returns the position in the input string": "Retorna la posició de la cadena d'entrada",
+	"What is the position in the input string?": "A quina posició vols seguir llegint?",
+	"Resets the position from where we read the input string": "Reinicia la posició del cursor a la cadena d'entrada"
 }
