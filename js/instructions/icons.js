@@ -53,6 +53,22 @@
 			ctx.lineTo(margin,height-margin);
 			ctx.closePath();
 			ctx.fill();
+			ctx.strokeStyle = '#FFFFFF';
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.arc(width-1.5*margin,height-1.5*margin, 1.5*margin/2, 0, 2*Math.PI);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(width-1.5*margin,height-1.5*margin);
+			ctx.lineTo(width-1.5*margin+margin/2,height-1.5*margin);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(width-1.5*margin,height-1.5*margin);
+			ctx.lineTo(width-1.5*margin,height-1.5*margin-margin/2);
+			ctx.closePath();
+			ctx.stroke();
 		},
 		"arc": function(ctx, width, height, param) {
 			var margin = 15;
@@ -1018,6 +1034,27 @@
 			ctx.moveTo(width/4,margin);
 			ctx.lineTo(width/4,height-margin);
 			ctx.lineTo(3*width/4,height/2);
+			ctx.fill();
+		},
+		"snapshot": function(ctx, width, height, param) {
+			var margin = 15;
+			var separation = 4;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.moveTo(margin+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,(height-margin)-separation);
+			ctx.lineTo(margin+separation,(height-margin)-separation);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillStyle = '#222222';
+			ctx.beginPath();
+			ctx.moveTo(margin,height/3);
+			ctx.lineTo(2*width/3,height/3);
+			ctx.lineTo(2*width/3,height-margin);
+			ctx.lineTo(margin,height-margin);
+			ctx.closePath();
 			ctx.fill();
 		},
 		"stop": function(ctx, width, height, param) {

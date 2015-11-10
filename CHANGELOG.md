@@ -7,6 +7,7 @@
  *   Code cleanup regarding UI/code separation and URL parameters parsing
  *   Embedding setup Wizard example added
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
+ *   Improved animateLayers() icon and added snapshot() icon
  *   Removed stop() instrution
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
