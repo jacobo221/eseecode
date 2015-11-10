@@ -294,7 +294,7 @@
 			}
 			if (!$e_isNumber(param,true) || param > maxparam*0.75) {
 				param = maxparam*0.75;
-			} 
+			}
 			var lineHeight = (height-margin*2)/2*(1-param/maxparam);
 			var lineWidth = (width-margin*2)*param/maxparam;
 			var arrowHeight = lineHeight*2;
@@ -1101,12 +1101,12 @@
 			var lineWidth = outerRadius-innerRadius;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.arc(width/2, height/2, outerRadius, startAngle, endAngle, false);
-			ctx.arc(width/2, height/2, innerRadius, endAngle, startAngle, true);
-			ctx.moveTo(width/2+outerRadius,height/2);
-			ctx.lineTo(width/2+outerRadius,2*height/3);
-			ctx.lineTo(width/2+innerRadius,2*height/3);
-			ctx.lineTo(width/2+innerRadius,height/2);
+			ctx.arc(width/2, height/2+margin/2, outerRadius, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2+margin/2, innerRadius, endAngle, startAngle, true);
+			ctx.moveTo(width/2+outerRadius,height/2+margin/2);
+			ctx.lineTo(width/2+outerRadius,height-margin);
+			ctx.lineTo(width/2+innerRadius,height-margin);
+			ctx.lineTo(width/2+innerRadius,height/2+margin/2);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
@@ -1115,7 +1115,7 @@
 			COy = (margin+lineWidth/2)-height/2;
 			var rotateAngle = -param*Math.PI/180;
 			var x = width/2-Math.cos(rotateAngle)*COy+Math.sin(rotateAngle)*COx;
-			var y = height/2-Math.sin(rotateAngle)*COy-Math.cos(rotateAngle)*COx;
+			var y = height/2+margin/2-Math.sin(rotateAngle)*COy-Math.cos(rotateAngle)*COx;
 			ctx.save();
 			ctx.translate(x,y);
 			ctx.rotate(-1*Math.PI/180+rotateAngle);
@@ -1173,12 +1173,12 @@
 			var lineWidth = outerRadius-innerRadius;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
-			ctx.moveTo(width/2-outerRadius,height/2);
-			ctx.lineTo(width/2-outerRadius,2*height/3);
-			ctx.lineTo(width/2-innerRadius,2*height/3);
-			ctx.lineTo(width/2-innerRadius,height/2);
-			ctx.arc(width/2, height/2, outerRadius, startAngle, endAngle, false);
-			ctx.arc(width/2, height/2, innerRadius, endAngle, startAngle, true);
+			ctx.moveTo(width/2-outerRadius,height/2+margin/2);
+			ctx.lineTo(width/2-outerRadius,height-margin);
+			ctx.lineTo(width/2-innerRadius,height-margin);
+			ctx.lineTo(width/2-innerRadius,height/2+margin/2);
+			ctx.arc(width/2, height/2+margin/2, outerRadius, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2+margin/2, innerRadius, endAngle, startAngle, true);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
@@ -1187,7 +1187,7 @@
 			COy = (margin+lineWidth/2)-height/2;
 			var rotateAngle = (-90+param)*Math.PI/180;
 			var x = width/2+Math.cos(rotateAngle)*COx-Math.sin(rotateAngle)*COy;
-			var y = height/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
+			var y = height/2+margin/2+Math.sin(rotateAngle)*COx+Math.cos(rotateAngle)*COy;
 			ctx.save();
 			ctx.translate(x,y);
 			ctx.rotate(90*Math.PI/180+rotateAngle);

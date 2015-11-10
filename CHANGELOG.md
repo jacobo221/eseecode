@@ -1,14 +1,22 @@
 ## 2.3 (ongoing work)
 
- *Milestone: Easy input/output methods*
+ *Milestone reached: Easy input/output methods*
  *   New input and output instructions and panels
  *   Added URL parameters grid, gridStep, guide, input and timeout
  *   New APIs: getLayersAsAnimation, getLayersAsGrid, getWhiteboard, loadURLParams, execute, setInput, getOutput, uploadPrecode, ...
  *   Code cleanup regarding UI/code separation and URL parameters parsing
  *   Embedding setup Wizard example added
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
+ *   Removed stop() instrution
+ *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
+ *   Fix: Translate variable types
+ *   Fix: Correcting wrong styling in inline functions
+ *   Fix: uploadCode() turns to Code view if code cannot be parsed, so code is loaded and not lost
+ *   Fix: Grid coordinates are always rounded now
  *   Fix: instructions= parameters are set even if they are defined as optionals for the instruction
  *   Fix: Axis coords were show with decimals, now just integers
+ *   Fix: Fixed initial value overwriting even without forceInitial in layer/number parameters
+ *   Fix: Renamed custom attributes to HTML5 "data-" prefixes
 
 ## 2.2 (2015-10-31)
 
@@ -29,7 +37,7 @@
  *   Added tips, initial, minValue, etc to all parameters in instructions
  *   Added constants E and Phi, renamed pi to Pi
  *   Keep Code cursor position when executing
- *   Now optional parameters are unset by default, neverming the "initial" key defined in the instructionSet
+ *   Now optional parameters are unset by default, ignoring the "initial" key defined in the instructionSet unless forceInitial is set
  *   Now asks for confirmation before leaving, even when embedded, if not saved or downloaded
  *   Support for size 1px lines
  *   Fix: Several fixes in Build mode when optional parameters are unset
