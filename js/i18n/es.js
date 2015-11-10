@@ -418,6 +418,8 @@ $_eseecode.i18n.available.es = {
 	"I/O": "E/S",
 	"Input": "Entrada",
 	"Output": "Salida",
+	"Read an input from the I/O area": "Leer una entrada del área I/O",
+	"Output a text in the I/O area": "Escribir un texto en el área I/O",
 	"Could not read a number, instead read:": "No se ha podido leer un número, en su lugar se ha leido:",
 	"doesn't have a valid value:": "no tiene un valor válido",
 	"Error found during execution at line %s in %s": "Error detectado en la línea %s ejecutando %s",

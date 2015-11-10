@@ -16,7 +16,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#API_downloadCode">API_downloadCode</a></b>()
+								<div class="fixedFont"><b><a href="#API_downloadCode">API_downloadCode</a></b>()
 								</div>
 								<div class="description">Returns the user's code</div>
 							</td>
@@ -25,9 +25,135 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/_global_.html#API_uploadCode">API_uploadCode</a></b>(code, noRun, preload)
+								<div class="fixedFont"><b><a href="#API_execute">API_execute</a></b>()
+								</div>
+								<div class="description">Runs the code in the console</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_getOuput">API_getOuput</a></b>()
+								</div>
+								<div class="description">Gets the output from I/O</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_getWhiteboard">API_getWhiteboard</a></b>()
+								</div>
+								<div class="description">Returns the image binary of the whiteboard</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_setAxis">API_setAxis</a></b>(value, action)
+								</div>
+								<div class="description">Chooses the predefined axis to use for the grid</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_setGridStep">API_setGridStep</a></b>(value, action)
+								</div>
+								<div class="description">Sets the separation of the lines in the grid</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_setInput">API_setInput</a></b>(value, action)
+								</div>
+								<div class="description">Sets the input in I/O</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_setInstructions">API_setInstructions</a></b>(value, action)
+								</div>
+								<div class="description">Sets the instruction blocks to make available to the user</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_setTimeout">API_setTimeout</a></b>(value, action)
+								</div>
+								<div class="description">Sets the execution time limit</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_showFilemenu">API_showFilemenu</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the filemenu</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_showGrid">API_showGrid</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the grid</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_showGuide">API_showGuide</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the guide</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_switchLanguage">API_switchLanguage</a></b>(value, action)
+								</div>
+								<div class="description">Switches to the specified language</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_switchView">API_switchView</a></b>(value, action)
+								</div>
+								<div class="description">Switches to the specified view</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_uploadCode">API_uploadCode</a></b>(code, run)
 								</div>
 								<div class="description">Loads code into the console</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#API_uploadPrecode">API_uploadPrecode</a></b>(code, run)
+								</div>
+								<div class="description">Loads precode into the console</div>
 							</td>
 						</tr>
 					
@@ -91,11 +217,689 @@
 
 					<hr />
 				
+					<a name="API_execute"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_execute</b>()
+					
+					</div>
+					<div class="description">
+						Runs the code in the console
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_execute()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_getOuput"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>API_getOuput</b>()
+					
+					</div>
+					<div class="description">
+						Gets the output from I/O
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_getOuput("1 1 2 3 5 8")</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> Output in the I/O</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_getWhiteboard"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{*}</span>
+					<b>API_getWhiteboard</b>()
+					
+					</div>
+					<div class="description">
+						Returns the image binary of the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_getWhiteboard()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{*}</span> Image binary of the whiteboard</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_setAxis"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_setAxis</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Chooses the predefined axis to use for the grid
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_setAxis(0)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Index of the predefined axis to use</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_setGridStep"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_setGridStep</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets the separation of the lines in the grid
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_setGridStep(50)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Pixels between each line in the grid</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_setInput"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_setInput</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets the input in I/O
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_setInput("1 1 2 3 5 8")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Input to use</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_setInstructions"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_setInstructions</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets the instruction blocks to make available to the user
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_setInstructions("turnLeft;90;forward")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Instructions to makwe available (spearated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_setTimeout"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_setTimeout</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets the execution time limit
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_setTimeout(20)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Seconds to wait for the execution to finish</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_showFilemenu"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_showFilemenu</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the filemenu
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_showFilemenu(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_showGrid"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_showGrid</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the grid
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_showGrid(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_showGuide"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_showGuide</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the guide
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_showGuide(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_switchLanguage"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_switchLanguage</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Switches to the specified language
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_switchLanguage("ca")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Language to switch to</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_switchView"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_switchView</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Switches to the specified view
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_switchView("build")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>View to switch to</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="API_uploadCode"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_uploadCode</b>(code, noRun, preload)
+					<b>API_uploadCode</b>(code, run)
 					
 					</div>
 					<div class="description">
@@ -109,7 +913,7 @@
 					
 					
 					
-					<pre class="code">API_uploadCode("repeat(4){forward(100)}",false)</pre>
+					<pre class="code">API_uploadCode("repeat(4){forward(100)}",true)</pre>
 					
 					
 					
@@ -124,20 +928,69 @@
 								<dd>Code to upload</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Boolean}</span> <b>noRun</b>
-									<i>Optional</i>
+									<span class="light fixedFont">{Boolean}</span> <b>run</b>
+									<i>Optional, Default: false</i>
 								</dt>
-								<dd>If true, it doesn't run the code yet. Also, if preload is true, only runs the precode when user presses run</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Boolean}</span> <b>preload</b>
-									<i>Optional</i>
-								</dt>
-								<dd>If true, stores it to be run before every execution of user code. By default it runs immediately after</dd>
+								<dd>If true, it runs the code immediately</dd>
 							
 							</dl>
 						
 						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="API_uploadPrecode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>API_uploadPrecode</b>(code, run)
+					
+					</div>
+					<div class="description">
+						Loads precode into the console
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">API_uploadPrecode("repeat(4){forward(100)}")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>code</b>
+									
+								</dt>
+								<dd>Code to set as precode</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>run</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>If false, it doesn't run the code immediately, only when the user executes user code</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.2</dd>
+							</dl>
+							</dl>
 						
 						
 						

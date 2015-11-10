@@ -15,6 +15,8 @@ for file in $files; do
 	echo "<html><head><title></title><link rel="stylesheet" type="text/css" href=\"$cssFile\" /></head><body>" > "$fileOut"
 	sed -n "$firstLine","$lastLine"p "$jsdocFileOut" >> "$fileOut"
 	echo "</body></html>" >> "$fileOut"
+	mv -f "$fileOut" "$fileOut".tmp
+	sed 's/\.\.\/symbols\/_global_\.html//g' "$fileOut".tmp > "$fileOut"
+	rm -rf "$fileOut".tmp
 done
-
 rm -rf "$dirOut/index.html" "$dirOut/files.html" "$dirOut/symbols/"
