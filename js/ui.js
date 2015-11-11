@@ -1683,7 +1683,7 @@
 		window.removeEventListener("beforeunload", $e_windowRefresh, false);
 		window.addEventListener("beforeunload", $e_windowRefresh, false);
 		if (!notInitial) {
-			window.addEventListener('resize', $e_windowResizeHandler);
+			window.addEventListener('resize', $e_windowResizeHandler, false);
 			var orientation = "landscape";
 			if (screen.orientation && screen.orientation.lock) {
 				screen.orientation.lock(orientation).catch(function() {});

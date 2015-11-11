@@ -56,7 +56,7 @@
 	 * Block clicked listener. It listenes for clicks on blocks and acts accordingly
 	 * @private
 	 * @param {Object} event Event
-	 * @example div.addEventListener(handler,$e_clickBlock)
+	 * @example div.addEventListener(handler,$e_clickBlock, false)
 	 */
 	function $e_clickBlock(event) {
 		if ($_eseecode.session.breakpointHandler) {
@@ -149,7 +149,7 @@
 	 * Block unclicked listener. It listens for unclicks on blocks and acts accordingly
 	 * @private
 	 * @param {Object} event Event
-	 * @example div.addEventListener(handler,$e_unclickBlock)
+	 * @example div.addEventListener(handler,$e_unclickBlock, false)
 	 */
 	function $e_unclickBlock(event) {
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
