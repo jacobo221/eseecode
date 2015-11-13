@@ -321,6 +321,7 @@
 		buttonDiv.style.width = "100%"
 		buttonDiv.style.margin = "5px 0px 5px 0px";
 		var input = document.createElement("input");
+		input.id = "msgBoxAccept"+id;
 		input.type = "submit";
 		if (config && config.acceptName) {
 			input.value = config.acceptName;
@@ -342,6 +343,7 @@
 		}
 		if (config && (config.cancel || config.cancelName || config.cancelAction)) {
 			input = document.createElement("input");
+			input.id = "msgBoxCancel"+id;
 			if (config.noSubmit === true) {
 				focusElement = input;
 			}

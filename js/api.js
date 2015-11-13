@@ -2,38 +2,46 @@
 
 	/**
 	 * Parses the parameters in the URL
-	 * @private
+	 * @public
+	 * @param {String} [urlParams] URL to parse. If unset use browser's location
 	 * @example $e_loadURLParams()
 	 */
-	function $e_loadURLParams() {
-		var urlParams = window.location.href.split("&");
-		for (var i=0; i< urlParams.length;i++) {
-			var urlParamParts = urlParams[i].match(/(\?|&)?([A-z-_]+)=([^&#]+)/);
+	function $e_loadURLParams(urlParams) {
+		var action;
+		if (urlParams === undefined) {
+			urlParams = window.location.href;
+			action = false;
+		} else {
+			action = true;
+		}
+		urlParams = urlParams.split("&");
+		for (var i=0; i<urlParams.length; i++) {
+			var urlParamParts = urlParams[i].match(/(\?|&)?([A-z\-_]+)=([^&#]+)/);
 			if (urlParamParts !== null) {
 				var key = urlParamParts[2].toLowerCase();
 				var value = urlParamParts[3];
 				if (key == "grid") {
-					API_showGrid(value, false);
+					API_showGrid(value, action);
 				} else if (key == "gridstep") {
-					API_setGridStep(value, false);
+					API_setGridStep(value, action);
 				} else if (key == "guide") {
-					API_showGuide(value, false);
+					API_showGuide(value, action);
 				} else if (key == "filemenu") {
-					API_showFilemenu(value, false);
+					API_showFilemenu(value, action);
 				} else if (key == "lang") {
-					API_switchLanguage(value, false);
+					API_switchLanguage(value, action);
 				} else if (key == "input") {
 					var value = decodeURIComponent(value);
 					API_setInput(value);
 				} else if (key == "timeout") {
-					API_setTimeout(value, false);
+					API_setTimeout(value, action);
 				} else if (key == "axis") {
-					API_setAxis(value, false);
+					API_setAxis(value, action);
 				} else if (key == "view") {
-					API_switchView(value, false);
+					API_switchView(value, action);
 				} else if (key == "instructions") {
 					var value = decodeURIComponent(value);
-					API_setInstructions(value, false);
+					API_setInstructions(value, action);
 				}
 			}
 		}

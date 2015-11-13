@@ -283,6 +283,9 @@
 		if (div.tagName !== "SPAN" && div.tagName !== "DIV") {
 			return;
 		}
+		if (!div.getAttribute("data-instructionsetid")) {
+			return;
+		}
 		if (div.tagName === "DIV") {
 			if (!$_eseecode.instructions.set[div.getAttribute("data-instructionsetid")].dummy) {
 				div.addEventListener(handler,callPointer,false);
@@ -484,7 +487,7 @@
 	function $e_searchBlockByPosition(element, position, count) {
 		while (element && count != position) { // if the code is almost empty position could be far ahead of the last block
 			var instruction = $_eseecode.instructions.set[element.getAttribute("data-instructionsetid")];
-			if (instruction.block) {
+			if (instruction && instruction.block) {
 				var output = $e_searchBlockByPosition(element.firstChild.nextSibling, position, count+1);
 				count = output.count-1;
 				if (output.element) {

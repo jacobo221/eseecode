@@ -9,6 +9,8 @@
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
  *   Improved animateLayers() icon and added snapshot() icon
  *   Removed stop() instrution
+ *   Prepared for better external access
+ *   New guiding system to teach to use eSeeCode
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
  *   Fix: Correcting wrong styling in inline functions
