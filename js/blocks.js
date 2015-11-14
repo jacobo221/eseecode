@@ -607,7 +607,7 @@
 			}
 			var msgTab = document.createElement("div");
 			msgTab.className = "msgBox-tabs";
-			msgTab.innerHTML = "<a href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
 			msgDiv.appendChild(msgTab);
 			var iconDiv = document.createElement("div");
 			iconDiv.id = "setupBlockIcon";

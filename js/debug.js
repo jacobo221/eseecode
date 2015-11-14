@@ -516,7 +516,7 @@
 	function $e_resetDebug() {
 		// Clean old debug info and create new debug info
 		$e_resetDebugLayers();
-		document.getElementById("dialog-debug-analyzer-toolbar").innerHTML = "<div><input type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" /><input type=\"button\" value=\"+ "+_("Watchpoint")+"\" onclick=\"$e_addWatchpoint()\" />";
+		document.getElementById("dialog-debug-analyzer-toolbar").innerHTML = "<div><input id=\"dialog-debug-breakpoint-add\" type=\"button\" value=\"+ "+_("Breakpoint")+"\" onclick=\"$e_addBreakpoint()\" /><input id=\"dialog-debug-watchpoint-add\" type=\"button\" value=\"+ "+_("Watchpoint")+"\" onclick=\"$e_addWatchpoint()\" />";
 		document.getElementById("dialog-debug-analyzer-breakpoints").innerHTML = "";
 		document.getElementById("dialog-debug-analyzer-watches").innerHTML = "";
 		for (var breakpoint in $_eseecode.session.breakpoints) {

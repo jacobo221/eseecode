@@ -7,22 +7,22 @@
 <iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="../index.html";></iframe>
 <script type="text/javascript">
     var guideSteps = [
-        { type: "api", command: "view=touch" },
+        { type: "api", argument: "view=touch" },
         { type: "info", text: "This tutorial will show you the basics about using the Touch view", timeout: 5 },
-        { type: "htmlElement", id: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here", position: "inside", action: "clickMessage" },
-        { type: "htmlElement", id: "dialog-blocks", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage" },
-        { type: "htmlElement", id: "console-blocks", text: "Here you will see the code you are creating", position: "inside", action: "clickMessage" },
+        { type: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here", position: "inside", action: "clickMessage" },
+        { type: "dialog", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage" },
+        { type: "console", text: "Here you will see the code you are creating", position: "inside", action: "clickMessage" },
         { type: "info", text: "How about drawing a square?<br />Let's try it!" },
-        { type: "dialogInstructionId", id: 12, text: "Let's begin drawing: Move the guide forward by clicking this instruction" },
-        { type: "dialogInstructionId", id: 18, text: "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction" },
-        { type: "dialogInstructionId", id: 12, text: "Let's move it forward again by clicking this instruction.<br />See how the previous instruction affects it's direction" },
-        { type: "dialogInstructionId", id: 18, text: "Now let's rotate it by 90 degrees again" },
-        { type: "dialogInstructionId", id: 12, text: "And move forward again" },
-        { type: "dialogInstructionId", id: 18, text: "And rotate again..." },
-        { type: "dialogInstructionId", id: 13, text: "Let's move forward to draw the fourth and last side of this square" },
+        { type: "dialogInstructionId", argument: 12, text: "Let's begin drawing: Move the guide forward by clicking this instruction" },
+        { type: "dialogInstructionId", argument: 18, text: "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction" },
+        { type: "dialogInstructionId", argument: 12, text: "Let's move it forward again by clicking this instruction.<br />See how the previous instruction affects it's direction" },
+        { type: "dialogInstructionId", argument: 18, text: "Now let's rotate it by 90 degrees again" },
+        { type: "dialogInstructionId", argument: 12, text: "And move forward again" },
+        { type: "dialogInstructionId", argument: 18, text: "And rotate again..." },
+        { type: "dialogInstructionId", argument: 13, text: "Let's move forward to draw the fourth and last side of this square" },
         { type: "info", text: "Ooops! Sorry I told you to click the wrong instruction!<br />This forward doesn't move forward enough to close the square...<br />Let's undo the last instruction" },
-        { type: "htmlElement", id: "button-undo", text: "At any moment you can undo the last instruction by pressing this button", position: "above" },
-        { type: "dialogInstructionId", id: 12, text: "Now let's do it right and move forward to close the square" },
+        { type: "undo", text: "At any moment you can undo the last instruction by pressing this button", position: "above" },
+        { type: "dialogInstructionId", argument: 12, text: "Now let's do it right and move forward to close the square" },
         { type: "info", text: "Congratulations!<br />You have finished this tutorial!" }
     ];
     
