@@ -88,6 +88,10 @@
 			event.stopPropagation();
 			return;
 		}
+		if ($_eseecode.session.floatingBlock.div) {
+			// If two blocks are clicked too fast (before the animation is finished), make sure we add the previous one
+			$e_unclickBlock();
+		}
 		var dialog = false;
 		if (div.parentNode.id.match(/^dialog-/)) {
 			dialog = true;
@@ -194,6 +198,10 @@
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		var consoleDiv = document.getElementById("console-blocks");
 		var div = $_eseecode.session.floatingBlock.div;
+		if (!div) {
+			// If the floatingBlock has already been added there's nothing to do here (this could happen if two blocks are added before too quickly, before the first block's animation has finished)
+			return;
+		}
 		var divId = div.id;
 		var action;
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
@@ -1304,7 +1312,11 @@
 		span.style.color = $e_readableText(color);
 		span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
 		span.style.fontFamily = "Arial";
-		span.style.fontSize = "10px";
+		if (level == "level3") {
+			span.style.fontSize = "13px";
+		} else {
+			span.style.fontSize = "10px";
+		}
 		span.style.fontWeight = "bold";
 		span.className = "blockTitle";
 		if (level == "level1") {
