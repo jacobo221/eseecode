@@ -317,11 +317,61 @@
         iframe = document.getElementById(iframeId);
         if (iframe) {
             window.addEventListener("load", function() {
-                iframe.addEventListener("load", guideInit, false);
+                iframe.addEventListener("load", function() {
+                    createMouseClickHandler();
+                    guideInit();
+                }, false);
                 iframe.src = iframe.src; // Reload the iframe so the iframe's onload trigger is run
             }, false);
         }
     }
+
+    function createMouseClickHandler() {
+        var doc = iframe.contentWindow.document;
+		var animationInterval = 50;
+		var animationRepetitions = 8;
+		var animationSizeIncrement = 4;
+	    var shadowDiv = document.createElement("div");
+		shadowDiv.style.display = "none";
+		shadowDiv.style.border = "none";
+		shadowDiv.style.backgroundColor = "#00FF00";
+		shadowDiv.style.opacity = "0.5";
+		shadowDiv.style.position = "absolute";
+		shadowDiv.style.pointerEvents = "none";
+        shadowDiv.style.zIndex = 100001;
+        doc.body.appendChild(shadowDiv);
+		var shadowMouseClick = function(event) {
+		    if (event) {
+		        var blockSizeInitial = 4;
+		        shadowDiv.style.width = blockSizeInitial+"px";
+        		shadowDiv.style.height = blockSizeInitial+"px";
+        		shadowDiv.setAttribute("data-downcounter", animationRepetitions);
+        		shadowDiv.style.left = event.clientX-blockSizeInitial/2;
+        		shadowDiv.style.top = event.clientY-blockSizeInitial/2;
+        		shadowDiv.style.borderRadius = (blockSizeInitial/2)+"px";
+        		// We don't want to run this code yet becuaes otherwise the new div goes under the pointer and the real element isn't clicked
+				setTimeout(shadowMouseClick, animationInterval*3);
+		    } else {
+    			var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
+    			if (downcounter == 0) {
+    				shadowDiv.style.display = "none";
+    			} else {
+    			    shadowDiv.style.display = "block";
+    				downcounter--;
+    				var blockSize = parseInt(shadowDiv.style.width.replace("px",""))+animationSizeIncrement;
+            		shadowDiv.style.borderRadius = (blockSize/2)+"px";
+    				shadowDiv.style.height = blockSize+"px";
+    				shadowDiv.style.width = blockSize+"px";
+            		shadowDiv.style.left = (parseInt(shadowDiv.style.left.replace("px",""))-animationSizeIncrement/2)+"px";
+            		shadowDiv.style.top = (parseInt(shadowDiv.style.top.replace("px",""))-animationSizeIncrement/2)+"px";
+    				shadowDiv.setAttribute("data-downcounter", downcounter);
+    				setTimeout(shadowMouseClick, animationInterval);
+    			}
+		    }
+		}
+        doc.body.addEventListener("mousedown", shadowMouseClick, false);
+        doc.body.addEventListener("touchstart", shadowMouseClick, false);
+	}
 
     var currentLanguage;
     var currentGuideIndex;
