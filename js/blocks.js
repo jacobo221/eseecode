@@ -268,9 +268,13 @@
 			}
 			$_eseecode.session.blocksUndo[blocksUndoIndex].div = div;
 		} else { // The block is dropped
-			if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog	
+			if ($_eseecode.session.floatingBlock.fromDiv) { // if the block doesn't come from the Dialog
+				var previousBlock = $_eseecode.session.floatingBlock.fromDiv.previousElementSibling;
+				var nextBlock = $_eseecode.session.floatingBlock.fromDiv.nextSibling;
 				$e_deleteBlock($_eseecode.session.floatingBlock.fromDiv);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = false;
+				$e_roundBlockCorners(previousBlock);
+				$e_roundBlockCorners(nextBlock);
 				action = "remove";
 			} else {
 				action = "cancel";
@@ -466,7 +470,7 @@
 			var action = "keep";
 			var instructionBlockIndex = 0;
 			var instructionName = instruction.block[instructionBlockIndex];
-			var instructionId = $e_getInstructionSetIdFromName(instructionName);
+			var instructionId = instructionName;
 			while (oldChild !== null) {
 				var oldInstructionId = oldChild.getAttribute("data-instructionsetid");
 				var oldInstruction = $_eseecode.instructions.set[oldInstructionId];
@@ -477,7 +481,7 @@
 						action = "keep";
 						instructionBlockIndex++;
 						instructionName = instruction.block[instructionBlockIndex];
-						instructionId = $e_getInstructionSetIdFromName(instructionName);
+						instructionId = instructionName;
 					}
 				}
 				var oldChildSibling = oldChild.nextSibling; // we do this because we might delete old child before getting nextSibling
@@ -488,7 +492,7 @@
 			}
 			for (var i=instructionBlockIndex; i<instruction.block.length; i++) {
 				var instructionName = instruction.block[i];
-				var instructionId = $e_getInstructionSetIdFromName(instructionName);
+				var instructionId = instructionName;
 				var childDiv = document.createElement("div");
 				childDiv.id = $e_newDivId();
 				childDiv.setAttribute("data-instructionsetid",instructionId);
@@ -647,7 +651,7 @@
 				element.innerHTML = "<option value='"+div.getAttribute("data-instructionsetid")+"' selected=\"selected\">"+instruction.name+"</option>";
 				for (var i = 0; i < instruction.convert.length; i++) {
 					var convertInstruction = instruction.convert[i];
-					element.innerHTML += "<option value='"+$e_getInstructionSetIdFromName(convertInstruction)+"'>"+convertInstruction+"</option>";
+					element.innerHTML += "<option value='"+convertInstruction+"'>"+convertInstruction+"</option>";
 				}
 				convertDiv.appendChild(element);
 				msgDiv.appendChild(convertDiv);
@@ -1132,6 +1136,68 @@
 		}
 		return value;
 	}
+	
+	function $e_roundBlockCorners(div) {
+		if (!div || div.tagName != "DIV") {
+			return;
+		}
+		var width = div.getBoundingClientRect().width;
+		if (width) {
+			var borderRadius = 10;
+			var previous = div.previousElementSibling;
+			var next = div.nextSibling;
+			var isFunction;
+			if (div.className.match(/\bfunction\b/)) {
+				isFunction = true;
+			} else {
+				isFunction = false;
+			}
+			if (!previous || previous.tagName != "DIV" || isFunction ) {
+				if (previous && isFunction) {
+					previous.style.borderBottomRightRadius = borderRadius+"px";
+					previous.style.borderBottomLeftRadius = borderRadius+"px";
+				}
+				div.style.borderTopRightRadius = borderRadius+"px";
+				div.style.borderTopLeftRadius = borderRadius+"px";
+			} else {
+				var previousWidth = previous.getBoundingClientRect().width;
+				if (previousWidth > width) {
+					previous.style.borderBottomRightRadius = Math.min(previousWidth-width,borderRadius)+"px";
+					div.style.borderTopRightRadius = "";
+				} else if (width > previousWidth) {
+					previous.style.borderBottomRightRadius = "";
+					div.style.borderTopRightRadius = Math.min(width-previousWidth,borderRadius)+"px";
+				} else {
+					previous.style.borderBottomRightRadius = "";
+					div.style.borderTopRightRadius = "";
+				}
+				previous.style.borderBottomLeftRadius = "";
+				div.style.borderTopLeftRadius = "";
+			}
+			if (!next || next.className.match(/\bdummyBlock\b/) || isFunction) {
+				div.style.borderBottomRightRadius = borderRadius+"px";
+				div.style.borderBottomLeftRadius = borderRadius+"px";
+				if (next && isFunction) {
+					next.style.borderTopRightRadius = borderRadius+"px";
+					next.style.borderTopLeftRadius = borderRadius+"px";
+				}
+			} else {
+				var nextWidth = next.getBoundingClientRect().width;
+				if (nextWidth > width) {
+					div.style.borderBottomRightRadius = "";
+					next.style.borderTopRightRadius = Math.min(nextWidth-width,borderRadius)+"px";;
+				} else if (width > nextWidth) {
+					div.style.borderBottomRightRadius = Math.min(width-nextWidth,borderRadius)+"px";
+					next.style.borderTopRightRadius = "";
+				} else {
+					div.style.borderBottomRightRadius = "";
+					next.style.borderTopRightRadius = "";
+				}
+				div.style.borderBottomLeftRadius = "";
+				next.style.borderTopLeftRadius = "";
+			}
+		}
+	}
 
 	/**
 	 * Takes the parameters from a msgBox and applies them in the block. You probably want to call msgBoxClose() here
@@ -1246,7 +1312,7 @@
 	 * @private
 	 * @param {String} level Current level name
 	 * @param {!HTMLElement} div Block div
-	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
+	 * @param {String} instructionSetId Id of the instruction in $_eseecode.instructions.set
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @example $e_createBlock("level2", document.body.createElement("div"), 3)
 	 */
@@ -1271,7 +1337,7 @@
 	 * @private
 	 * @param {String} level Current level name
 	 * @param {!HTMLElement} div Block div
-	 * @param {Number} instructionSetId Id of the instruction in $_eseecode.instructions.set
+	 * @param {String} instructionSetId Id of the instruction in $_eseecode.instructions.set
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
 	 * @example $e_addBlockEventListeners("level2", document.body.createElement("div"))
 	 */
@@ -1432,6 +1498,9 @@
 			bgCtx.fillText(text,1,12);
 */
 			div.style.backgroundImage = "url("+bgCanvas.toDataURL()+")";
+			if (!dialog) {
+				$e_roundBlockCorners(div);
+			}
 		}
 		if (!skipRecursiveRepaint) {
 			while (div.parentNode && div.parentNode.getAttribute("data-instructionsetid")) {

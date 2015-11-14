@@ -1996,3 +1996,64 @@
 		}
 		$_eseecode.execution.inputPosition = position;
 	}
+	
+	// Additional instructions
+	
+	/**
+	 * Allows to iterate a specific amount of times
+	 * It updates a variable repeatCount which starts at 0 and increments on every iteration
+	 * @name repeat
+	 * @since 1.0
+	 * @public
+	 * @param {Number} count Amout of times to repeat the inline block of code
+	 * @example repeat(4) { forward(100); turnLeft(90); }
+	 */
+	
+	/**
+	 * Allows to iterate based on a condition
+	 * @name while
+	 * @since 1.0
+	 * @public
+	 * @param {Boolean} condition While this condition resolves true the inline code will be repeatedly run
+	 * @example while(a < 4) { write(a); a = a+1; }
+	 */
+	
+	/**
+	 * Allows to branch the code
+	 * @name if
+	 * @since 1.0
+	 * @public
+	 * @param {Boolean} condition While this condition resolves true the inline code will be repeatedly run
+	 * @example if(isWrong) { write("Wrong answer!"); }
+	 */
+	
+	/**
+	 * Allows to encapsulate groups of instructions
+	 * @name function
+	 * @since 1.0
+	 * @public
+	 * @param {String} identifier Unique identifier for the function
+	 * @param {Array<*>} parameters Parameters of the function
+	 * @return Pointer to the function
+	 * @example function test(parameter) { if (parameter=="test") write("correct!"); }
+	 */
+	
+	/**
+	 * Allows to declare a variable
+	 * @name var
+	 * @since 1.0
+	 * @public
+	 * @param {String} identifier Unique identifier for the variable
+	 * @return Pointer to the variable
+	 * @example var thisIsAVariable
+	 */
+	
+	/**
+	 * Allows to declare a variable containing several values
+	 * @name array
+	 * @since 1.0
+	 * @public
+	 * @param {String} identifier Unique identifier for the array
+	 * @return Pointer to the array
+	 * @example array thisIsAnArray
+	 */

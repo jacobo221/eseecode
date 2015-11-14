@@ -194,11 +194,11 @@
 	 */
 	function API_setInstructions(value, action) {
 		var instructions = value.split(";");
-		var newInstructionId = $_eseecode.instructions.set.length;
 		for (var j=0; j<instructions.length; j++) {
 			var instructionName = instructions[j].trim();
-			var baseInstructionId = $e_getInstructionSetIdFromName(instructionName);
-			if (baseInstructionId >= 0) {
+			var baseInstructionId = instructionName;
+			var newInstructionId = baseInstructionId+"-custom"+j;
+			if ($_eseecode.instructions.set[baseInstructionId]) {
 		        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
 		        $_eseecode.instructions.set[newInstructionId].show = [];
 				$_eseecode.instructions.custom[$_eseecode.instructions.custom.length] = newInstructionId;

@@ -75,7 +75,7 @@ function createIcon() {
 	canvas.width = width;
 	canvas.height = height;
 	var ctx = canvas.getContext("2d");
-	var instrId = $e_getInstructionSetIdFromName(instr);
+	var instrId = instr;
 	var instrObj = $_eseecode.instructions.set[instrId];
 	var color = "transparent";
 	for (var i=0; i<$_eseecode.instructions.categories.length; i++) {

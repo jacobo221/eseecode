@@ -375,7 +375,7 @@
 			$e_switchDialogMode("debug");
 			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
 		} else if (err.type == "codeError") {
-			var instructionId = $e_getInstructionSetIdFromName(err.name);
+			var instructionId = err.name;
 			var brackets = "";
 			if (instructionId >=0) {
 				var instruction = $_eseecode.instructions.set[instructionId];
@@ -443,7 +443,7 @@
 	 * @example $e_parseParameterTypes("forward",arguments);
 	 */
 	function $e_parseParameterTypes(instructionName,params) {
-		var instructionId = $e_getInstructionSetIdFromName(instructionName);
+		var instructionId = instructionName;
 		var instruction = $_eseecode.instructions.set[instructionId];
 		var instructionParams = instruction.parameters;
 		var msg = "";

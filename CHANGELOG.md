@@ -9,9 +9,12 @@
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
  *   Improved animateLayers() icon and added snapshot() icon
  *   Removed stop() instrution
+ *   Blocks in code are now always rounded and adapting to context
  *   Prepared for better external access
  *   New guiding system to teach to use eSeeCode
  *   New animation in Touch view when adding new blocks
+ *   Better way of accessing the instructions' definitions
+ *   Added documentation for not-in-implementation.js code elements such as repeat(), while(), if(), ...
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
  *   Fix: Correcting wrong styling in inline functions

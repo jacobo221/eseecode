@@ -5,9 +5,9 @@
 
 	function appendBlock(level, instruction, parentDiv, params) {
 		var div = document.createElement('div');
-		var instructionSetId = $e_getInstructionSetIdFromName(instruction);
-		if (instructionSetId < 0) {
-			instructionSetId = $e_getInstructionSetIdFromName("unknownFunction");
+		var instructionSetId = instruction;
+		if (!$_eseecode.instructions.set[instructionSetId]) {
+			instructionSetId = "unknownFunction";
 			// Custom functions recieve all parameters as a single one because we don't know how many they must have so there's no need to separate them
 			var parametersTexts = "";
 			for (var i=0; i<params.length; i++) {
@@ -96,7 +96,7 @@
 		if (this.alternate !== null) {
 			// Now we convert the block into an ifelse
 			// We couldn't do it before because we wanted the inner blocks to go _before_ the else block
-			div.setAttribute("data-instructionsetid",$e_getInstructionSetIdFromName("ifelse"));
+			div.setAttribute("data-instructionsetid","ifelse");
 			if (this.alternate.type == "IfStatement") {
 				 // else if
 				this.alternate.makeBlocks(level,div,true);

@@ -1476,26 +1476,6 @@
 	}
 
 	/**
-	 * Returns the index where the given instruction is in $_eseecode.instructions.set, or -1 if it didn't find it
-	 * @private
-	 * @param instructionName Name of the instruction to search
-	 * @param startId Index to start from. Useful when an instruction appears several times in the set and we want to skip the ones we've seen
-	 * @return {Number} Index of the given instruction
-	 * @example $e_getInstructionSetIdFromName("forward")
-	 */
-	function $e_getInstructionSetIdFromName(instructionName, startId) {
-		if (startId == null) { // By default search from the beginning
-			startId = 0;
-		}
-		for (var i=startId; i<$_eseecode.instructions.set.length; i++) {
-			if (instructionName == $_eseecode.instructions.set[i].name) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	/**
 	 * Downloads the user code as a file to the user's device
 	 * @private
 	 * @example $e_saveCode()
@@ -1916,7 +1896,7 @@
 /*
 			// Dialog highlight first block to use
 			if (level === "level1") {
-				var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
+				var startInstructionId = "goToCenter";
 				var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 				while (startInstructionDiv !== null) {
 					if (startInstructionDiv.getAttribute("data-instructionsetid") == startInstructionId) {
@@ -2001,7 +1981,7 @@
 		if ($_eseecode.ui.tipInterval) {
 			clearInterval($_eseecode.ui.tipInterval);
 		}
-		var startInstructionId = $e_getInstructionSetIdFromName("goToCenter");
+		var startInstructionId = "goToCenter";
 		var startInstructionDiv = document.getElementById("dialog-blocks").firstChild;
 		while (startInstructionDiv !== null) {
 			if (startInstructionDiv.getAttribute("data-instructionsetid") == startInstructionId) {
@@ -2048,9 +2028,9 @@
 	 */
 	function $e_getFunctions(type) {
 		var values = [];
-		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
-			if ($_eseecode.instructions.set[i].type === type) {
-				values.push($_eseecode.instructions.set[i].name);
+		for (var key in $_eseecode.instructions.set) {
+			if ($_eseecode.instructions.set[key].type === type) {
+				values.push($_eseecode.instructions.set[key].name);
 			}
 		}
 		return values;
@@ -2191,7 +2171,6 @@
 	 */
 	function $e_initDialogBlocks(level, dialog) {
 		$e_resetDialog(dialog);
-		var instructions = $_eseecode.instructions.set;
 		var width = $_eseecode.setup.blockWidth[level];
 		var height = $_eseecode.setup.blockHeight[level];
 		var clearNext = false;
@@ -2216,22 +2195,22 @@
 	        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
 		        var category = $_eseecode.instructions.categories[n].name;
 		        var firstInCategory = true;
-		        for (var i=0;i<$_eseecode.instructions.set.length;i++) {
+		        for (var key in $_eseecode.instructions.set) {
 			        // Only show instructions in the current category
-			        if (category != $_eseecode.instructions.set[i].category) {
+			        if (category != $_eseecode.instructions.set[key].category) {
 				        continue;
 			        }
 			        // See if this instruction is shown in this level
 			        var show = false;
-			        for (var j=0; j<$_eseecode.instructions.set[i].show.length; j++) {
-				        if ($_eseecode.instructions.set[i].show[j] == level) {
+			        for (var j=0; j<$_eseecode.instructions.set[key].show.length; j++) {
+				        if ($_eseecode.instructions.set[key].show[j] == level) {
 					        show = true;
 					        break;
 				        }
 			        }
 			        if (show) {
-				        var codeId = $_eseecode.instructions.set[i].name;
-				        if (codeId == "blank") {
+				        var codeId = $_eseecode.instructions.set[key].name;
+				        if (codeId.match(/^blank[0-9]*$/)) {
 					        clearNext = true;
 					        continue;
 				        }
@@ -2242,7 +2221,7 @@
 					        clearNext = false;
 				        }
 				        dialog.appendChild(div);
-				        $e_createBlock(level,div,i,true);
+				        $e_createBlock(level,div,key,true);
 			        }
 				}
 			}
@@ -2258,16 +2237,19 @@
 	 */
 	function $e_initDialogWrite(level, dialog) {
 		$e_resetDialog(dialog);
-		for (var i=0; i<$_eseecode.instructions.set.length; i++) {
-			$_eseecode.instructions.set[i].index = i;
+		// First, let's sort the instructions alphabetically
+		var keys = [];
+		for (var key in $_eseecode.instructions.set) {
+			keys[keys.length] = key;
 		}
-		var instructions = $_eseecode.instructions.set.concat().sort(function(a,b) { if (a.name<b.name) return -1; if (a.name>b.name) return 1; return 0; });
+		keys = keys.sort();
+		// Now let's do the rest
 		for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
 			var category = $_eseecode.instructions.categories[n].name;
 			var color = $_eseecode.instructions.categories[n].color;
 			var firstInCategory = true;
-			for (var i=0;i<instructions.length;i++) {
-				var instruction = instructions[i];
+			for (var i=0; i<keys.length; i++) {
+				var instruction = $_eseecode.instructions.set[keys[i]];
 				if (category == instruction.category) {
 					var show = false;
 					for (var j=0; j<instruction.show.length; j++) {
@@ -2286,7 +2268,7 @@
 						div.style.border = "1px solid #AAAAAA";
 						div.style.color = $e_readableText(color);
 						div.setAttribute("title", _(instruction.tip));
-						div.setAttribute("data-instructionsetid", instruction.index);
+						div.setAttribute("data-instructionsetid", instruction.name);
 						div.addEventListener("click", $e_writeText, false);
 						if (firstInCategory) {
 							div.style.marginTop = "5px";

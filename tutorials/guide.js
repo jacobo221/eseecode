@@ -136,21 +136,7 @@
         var currentGuideStep = guideSteps[currentGuideIndex];
         var element = undefined;
         switch (currentGuideStep.type.toLowerCase()) {
-            case "dialoginstructionname":
-                var instructionSet = iframe.contentWindow.$_eseecode.instructions.set;
-                var instruction = currentGuideStep.id;
-                var id;
-                for (var key in instructionSet) {
-                    if (instructionSet[key].name == instruction) {
-                        currentGuideStep.argument = key;
-                        break;
-                    }
-                }
-                if (currentGuideStep.argument !== undefined) {
-                    currentGuideStep.type = "dialogInstructionId";
-                }
-                // We just searched for the id given the name, now search for the block given the id, so don't break
-            case "dialoginstructionid":
+            case "dialoginstruction":
                 var instruction = currentGuideStep.argument;
                 var block = doc.getElementById("dialog-blocks").firstChild;
                 //Search for the instruction
@@ -180,7 +166,7 @@
                     element = blockTuple.element;
                     // Scroll to this block
 					var blockHeight = iframe.contentWindow.$e_blockSize(iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]].id, element).height;
-                    consoleDiv.scrollTop = id*blockHeight-10;
+                    consoleDiv.scrollTop = currentGuideStep.argument*blockHeight-10;
                 }
                 if (currentGuideStep.action === undefined) {
                     currentGuideStep.action = "mousedown";
@@ -228,7 +214,7 @@
         } else if (currentGuideStep.type == "floatingBlock") {
             doc.body.addEventListener("mouseup", guideFinishStep, false);
             doc.body.addEventListener("touchend", guideFinishStep, false);
-        } else {
+        } else if (element) {
             if (!currentGuideStep.action) {
                 currentGuideStep.action = "mouseup";
             }

@@ -135,6 +135,15 @@ Angle 0 is when the guide is looking horizontally right</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#getInputPosition">getInputPosition</a></b>()
+								</div>
+								<div class="description">Returns the current input position</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#getLayerHeight">getLayerHeight</a></b>()
 								</div>
 								<div class="description">Returns the height of the layer</div>
@@ -327,6 +336,15 @@ Angle 0 is when the guide is looking horizontally right</div>
 								<div class="fixedFont"><b><a href="#input">input</a></b>(type)
 								</div>
 								<div class="description">Reads from the input area</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#inputReset">inputReset</a></b>(position)
+								</div>
+								<div class="description">Sets the position of the input pointer to a fixed place.</div>
 							</td>
 						</tr>
 					
@@ -823,6 +841,216 @@ The original angle is the guide looking horizontally to the right</div>
 			
 
 <!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="array"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>array</b>
+					
+					</div>
+					<div class="description">
+						Allows to declare a variable containing several values
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">array thisIsAnArray</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="function"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>function</b>
+					
+					</div>
+					<div class="description">
+						Allows to encapsulate groups of instructions
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">function test(parameter) { if (parameter=="test") write("correct!"); }</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="if"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>if</b>
+					
+					</div>
+					<div class="description">
+						Allows to branch the code
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">if(isWrong) { write("Wrong answer!"); }</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="repeat"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>repeat</b>
+					
+					</div>
+					<div class="description">
+						Allows to iterate a specific amount of times
+It updates a variable repeatCount which starts at 0 and increments on every iteration
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">repeat(4) { forward(100); turnLeft(90); }</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="var"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>var</b>
+					
+					</div>
+					<div class="description">
+						Allows to declare a variable
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">var thisIsAVariable</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="while"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>while</b>
+					
+					</div>
+					<div class="description">
+						Allows to iterate based on a condition
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">while(a < 4) { write(a); a = a+1; }</pre>
+					
+					
+
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>1.0</dd>
+							</dl>
+						
+						
+						
+
+					
+				
 			
 
 <!-- ============================== method details ========================= -->		
@@ -1546,6 +1774,51 @@ Angle 0 is when the guide is looking horizontally right
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{Number}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getInputPosition"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>getInputPosition</b>()
+					
+					</div>
+					<div class="description">
+						Returns the current input position
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">getInputPosition()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> The index position of the input chain</dd>
 							
 							</dl>
 						
@@ -2730,6 +3003,55 @@ Angle 0 is when the guide is looking horizontally right
 								<dd>codeError</dd>
 							
 							</dl>
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="inputReset"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>inputReset</b>(position)
+					
+					</div>
+					<div class="description">
+						Sets the position of the input pointer to a fixed place.
+						
+							<br />
+							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/instructions/implementation.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">inputReset(10)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>position</b>
+									<i>Optional, Default: 0</i>
+								</dt>
+								<dd>Position to go to</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
 						
 						
 						
