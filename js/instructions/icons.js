@@ -82,7 +82,7 @@
 			}
 			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
 				ctx.font = 12+"px Verdana";
-      				ctx.fillStyle = '#000000';
+      			ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
 			}
 			var maxparam1 = 100;
@@ -90,14 +90,14 @@
 			if ($e_isNumber(param2,true) && param2 < 0) {
 				param2 = 360 - param;
 			}
-			if (!$e_isNumber(param1,true) || param1 > (height-margin*2)/2) {
-				param1 = (height-margin*2)/2;
+			if (!$e_isNumber(param1,true)) {
+				param1 = maxparam1;
 			}
 			if (!$e_isNumber(param2,true) || param2 > maxparam2) {
 				param2 = maxparam2;
 			}
 			var radius = (height-margin*2)/2*(param1/maxparam1);
-			ctx.strokeStyle = '#0000FF';
+			ctx.strokeStyle = '#000000';
 			ctx.lineWidth = 3;
 			var startAngle = 0;
 			var endAngle = param2*Math.PI/180;
