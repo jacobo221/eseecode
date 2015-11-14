@@ -1040,6 +1040,29 @@
 					updateIcon();
 				}, false);
 				element.appendChild(input);
+			} else if (parameter.type == "var") {
+				visualTypeSupportedByBrowser = true;
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				var input = document.createElement("input");
+				input.id = parameterInputId+"VisualInput";
+				input.type = "text";
+				if (defaultValue !== undefined && defaultValue !== "") {
+					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
+						defaultValue = defaultValue.substring(1,defaultValue.length-1);
+					}
+					input.value = defaultValue;
+				} else if (parameter.initial !== undefined) {
+					input.value = parameter.initial;
+				}
+				var changeFunction = function() {
+					var parameterInputId = this.parentNode.id.match(/setupBlock[0-9]+/)[0];
+					document.getElementById(parameterInputId).value = this.value;
+					updateIcon();
+				};
+				input.addEventListener("change", changeFunction, false);
+				input.addEventListener("keyup", changeFunction, false);
+				element.appendChild(input);
 			}
 			if (!visualTypeSupportedByBrowser) {
 				element = document.createElement("input");
@@ -1123,7 +1146,6 @@
 		var divId = document.getElementById("setupBlockDiv").value;
 		var div = document.getElementById(divId);
 		var parametersCount = document.getElementById("setupBlockCount").value;
-		var paramNumber = 1;
 		var instructionId = div.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionId];
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0];
@@ -1146,6 +1168,7 @@
 				divId = newDivId;
 			}
 		}
+		var paramNumber = 1;
 		for (var i=0; i<parametersCount; i++) {
 			if (instruction.parameters[i] && instruction.parameters[i].validate) {
 				var value = document.getElementById("setupBlock"+paramNumber).value;
@@ -1154,6 +1177,7 @@
 					return;
 				}
 			}
+			paramNumber++;
 		}
 		// First we search which is the last parameter with value, so we use "undefined" with all unset
 		// parameters up to it and don't set the parameters at all after it
@@ -1163,13 +1187,14 @@
 				lastParameterWithValue = i;
 			}
 		}
+		paramNumber = 1;
 		for (var i=0; i<parametersCount; i++) {
 			var value = document.getElementById("setupBlock"+paramNumber).value;
 			var defaultValue = document.getElementById("setupBlock"+paramNumber+"Default").value;
 			if (i <= lastParameterWithValue) {
-				div.setAttribute("data-param"+(i+1), value);
+				div.setAttribute("data-param"+paramNumber, value);
 			} else {
-				div.removeAttribute("data-param"+(i+1));
+				div.removeAttribute("data-param"+paramNumber);
 			}
 			setupChanges.push(["data-param"+paramNumber, defaultValue, value]);
 			paramNumber++;

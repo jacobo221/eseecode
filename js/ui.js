@@ -2075,7 +2075,7 @@
 			// First we search which is the last parameter with value, so we use "undefined" with all unset
 			// parameters up to it and don't set the parameters at all after it
 			var lastParameterWithValue = -1;
-			for (var i=instruction.parameters.length-1; i>=0 && lastParameterWithValue<0; i--) {
+			for (i=instruction.parameters.length-1; i>=0 && lastParameterWithValue<0; i--) {
 				if (div.getAttribute("data-param"+(i+1)) != null && div.getAttribute("data-param"+(i+1)) !== "") {
 					lastParameterWithValue = i;
 				}
@@ -2127,7 +2127,20 @@
 		if (dialog || (level != "level3" && level != "level4" && instruction.name != "unknownFunction")) {
 			return { parameters: parameters, text: text };
 		}
-		if (instruction.parameters !== null) {
+		if (instruction.inorder) {
+			// This overwrites all the text previosuly done. It is specifically done for =,+,-,...
+			text = div.getAttribute("data-param1");
+			if (instruction.code && instruction.code.space) {
+				text += " ";
+			}
+			text += instruction.name;
+			if (div.getAttribute("data-param2")) {
+				if (instruction.code && instruction.code.space) {
+					text += " ";
+				}
+				text += div.getAttribute("data-param2");
+			}
+		} else if (instruction.parameters !== null) {
 			var bracketsStatus = null; // null indicates we haven't started yet
 			var bracketsExist = false;
 			for (i=0; i<parameters.length; i++) {
@@ -2165,20 +2178,6 @@
 		}
 		if (instruction.code && instruction.code.suffix) {
 			text += instruction.code.suffix;
-		}
-		// This overwrites all the "text" set above. It's specifically done for =,+,-,...
-		if (instruction.inorder) {
-			text = div.getAttribute("param1");
-			if (instruction.code && instruction.code.space) {
-				text += " ";
-			}
-			text += instruction.name;
-			if (div.getAttribute("param2")) {
-				if (instruction.code && instruction.code.space) {
-					text += " ";
-				}
-				text += div.getAttribute("param2");
-			}
 		}
 		return { parameters: parameters, text: text };
 	}
