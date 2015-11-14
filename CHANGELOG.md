@@ -16,6 +16,8 @@
  *   Better way of accessing the instructions' definitions
  *   Added documentation for not-in-implementation.js code elements such as repeat(), while(), if(), ...
  *   Prevent from selecting text (except in Code view), which frequently was an error when trying to click
+ *   Improved order of blocks in dialog in Touch and Drag views
+ *   Deprecated unsetColor()
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
  *   Fix: Correcting wrong styling in inline functions

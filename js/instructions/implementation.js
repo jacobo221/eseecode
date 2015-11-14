@@ -1602,6 +1602,7 @@
 	/**
 	 * Resets the size of the future draw lines and text in the currently active layer
 	 * @since 1.0
+	 * @deprecated since version 2.3
 	 * @public
 	 * @example unsetSize()
 	 */
