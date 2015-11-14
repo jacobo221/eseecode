@@ -1,8 +1,15 @@
 function fibonacci(a, b, limit) {
-  if (limit != 0) {
-    arc(b, 90, true);
-    fibonacci(b, a+b, limit-1);
-  }
+	if (limit != 0) {
+		arc(b, 90, true)
+		fibonacci(b, a + b, limit - 1)
+	}
 }
-goToCenter();
-fibonacci(1, 1, 12);
+
+repeat (30) {
+	goToCenter()
+	clean()
+	fibonacci(1, 1, 12)
+	turnRight(12)
+	snapshot()
+}
+animateLayers(0.1)
