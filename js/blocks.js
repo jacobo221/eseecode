@@ -140,7 +140,46 @@
 			document.body.addEventListener("touchmove", $e_moveBlock, false);
 			document.body.addEventListener("touchcancel", $e_cancelFloatingBlock, false);
 		} else { // In level1 we stick the block immediately
-			$e_unclickBlock();
+			if ($_eseecode.session.floatingBlock.div.getBoundingClientRect().top) {
+				var consoleDiv = document.getElementById("console-blocks");
+				var blockMeasures = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].id, $_eseecode.session.floatingBlock.div);
+				var blockPosition = $_eseecode.session.floatingBlock.div.getBoundingClientRect();
+				var consolePosition = consoleDiv.getBoundingClientRect();
+				var diffTop = consolePosition.top - blockPosition.top;
+				var diffLeft = consolePosition.left - blockPosition.left;
+				var diffHeight = consoleDiv.style.height.replace("px","") - blockMeasures.height;
+				var diffWidth = (consolePosition.width?consolePosition.width:367) - blockMeasures.width;
+				var animationInterval = 50;
+				var animationRepetitions = 8;
+				var shadowDiv = document.createElement("div");
+				shadowDiv.style.width = blockMeasures.width+"px";
+				shadowDiv.style.height = blockMeasures.height+"px";
+				shadowDiv.style.border = "3px solid #666666";
+				shadowDiv.setAttribute("data-downcounter", animationRepetitions);
+				shadowDiv.style.position = "absolute";
+				shadowDiv.style.top = blockPosition.top;
+				shadowDiv.style.left = blockPosition.left;
+				document.body.appendChild(shadowDiv);
+				var shadowBlockToConsole = function() {
+					var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
+					if (downcounter == 0) {
+						document.body.removeChild(shadowDiv);
+					} else {
+						downcounter--;
+						var upcounter = animationRepetitions-downcounter;
+						shadowDiv.style.top = (blockPosition.top + diffTop/animationRepetitions*upcounter) + "px";
+						shadowDiv.style.left = (blockPosition.left + diffLeft/animationRepetitions*upcounter) + "px";
+						shadowDiv.style.height = (blockMeasures.height + diffHeight/animationRepetitions*upcounter) + "px";
+						shadowDiv.style.width = (blockMeasures.width + diffWidth/animationRepetitions*upcounter) + "px";
+						shadowDiv.setAttribute("data-downcounter", downcounter);
+						setTimeout(shadowBlockToConsole, animationInterval);
+					}
+				}
+				setTimeout(shadowBlockToConsole, animationInterval);
+				setTimeout($e_unclickBlock, animationInterval*animationRepetitions); // We call this appart from the animation instead of when finishing the animation so thatif the animation fails it still runs
+			} else {
+				$e_unclickBlock();
+			}
 		}
 		event.stopPropagation();
 	}

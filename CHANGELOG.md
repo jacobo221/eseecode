@@ -11,6 +11,7 @@
  *   Removed stop() instrution
  *   Prepared for better external access
  *   New guiding system to teach to use eSeeCode
+ *   New animation in Touch view when adding new blocks
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
  *   Fix: Correcting wrong styling in inline functions
