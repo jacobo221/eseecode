@@ -426,7 +426,6 @@ $_eseecode.i18n.available.es = {
 	"follow": "segueix",
 	"Should the arc follow the guide's position and angle and move the guide to the end of the arc?": "¿Debería seguir la guía la posición y ángulo del final del arco?",
 	"Draw the arc clockwise?": "¿Dibujar el arco en sentido antihorario?",
-	"How to read the input. Possible values: \"char\", \"word\", \"number\", \"line\", \"guess\"": "",
 	"Value to output": "Valor a escribir en la salida",
 	"Do you want a new line?": "¿Al acabar saltar de línea?",
 	"How to read the input. Possible values: \"char\", \"word\", \"number\", \"line\", \"guess\"": "Como leer la entrada. Posibles valores: \"char\", \"word\", \"number\", \"line\", \"guess\"",
@@ -436,5 +435,8 @@ $_eseecode.i18n.available.es = {
 	"string": "texto",
 	"symbol": "símbolo",
 	"function": "función",
-	"array": "vector"
+	"array": "vector",
+	"Returns the position in the input string": "Devuelve la posición de lectura en la cadena de entrada",
+	"What is the position in the input string?": "En que posición quieres seguir leyendo?",
+	"Resets the position from where we read the input string": "Reinicia la posición del cursor en la cadena de entrada"
 }

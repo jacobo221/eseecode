@@ -1970,3 +1970,29 @@
 		}
 		return result;
 	}
+
+	/**
+	 * Returns the current input position
+	 * @since 2.3
+	 * @public
+	 * @return {Number} The index position of the input chain
+	 * @example getInputPosition()
+	 */
+	function getInputPosition() {
+		return $_eseecode.execution.inputPosition;
+	}
+
+	/**
+	 * Sets the position of the input pointer to a fixed place.
+	 * @since 2.3
+	 * @public
+	 * @param {Number} [position=0] Position to go to
+	 * @example inputReset(10)
+	 */
+	function inputReset(position) {
+		$e_parseParameterTypes("inputReset", arguments);
+		if (position === undefined) {
+			position = 0;
+		}
+		$_eseecode.execution.inputPosition = position;
+	}
