@@ -311,31 +311,31 @@
 			if (!$e_isNumber(param,true) || param > maxparam*0.75) {
 				param = maxparam*0.75;
 			}
-			var lineHeight = (height-margin*2)/2*(1-param/maxparam);
-			var lineWidth = (width-margin*2)*param/maxparam;
-			var arrowHeight = lineHeight*2;
-			var arrowWidth = (width-margin*2)-lineWidth;
+			var lineHeight = (height-margin*2)*param/maxparam;
+			var lineWidth = (width-margin*2)/2*(1-param/maxparam);
+			var arrowHeight = (height-margin*2)-lineHeight;
+			var arrowWidth = Math.min (2*lineWidth, width-2*margin);
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
 			if (!backwards) {
-				ctx.moveTo(height/2-lineHeight/2, height-margin);
-				ctx.lineTo(height/2+lineHeight/2, height-margin);
-				ctx.lineTo(height/2+lineHeight/2, margin+arrowWidth);
-				ctx.lineTo(height/2-lineHeight/2, margin+arrowWidth);
-				ctx.moveTo(height/2-arrowHeight/2, margin+arrowWidth);
-				ctx.lineTo(height/2, margin);
-				ctx.lineTo(height/2+arrowHeight/2, margin+arrowWidth);
+				ctx.moveTo(width/2-lineWidth/2, height-margin);
+				ctx.lineTo(width/2+lineWidth/2, height-margin);
+				ctx.lineTo(width/2+lineWidth/2, margin+arrowHeight);
+				ctx.lineTo(width/2+arrowWidth/2, margin+arrowHeight);
+				ctx.lineTo(width/2, margin);
+				ctx.lineTo(width/2-arrowWidth/2, margin+arrowHeight);
+				ctx.lineTo(width/2-lineWidth/2, margin+arrowHeight);
 			} else {
-				ctx.moveTo(height/2-lineHeight/2, margin);
-				ctx.lineTo(height/2+lineHeight/2, margin);
-				ctx.lineTo(height/2+lineHeight/2, margin+lineWidth);
-				ctx.lineTo(height/2-lineHeight/2, margin+lineWidth);
-				ctx.moveTo(height/2-arrowHeight/2, margin+lineWidth);
-				ctx.lineTo(height/2, height-margin);
-				ctx.lineTo(height/2+arrowHeight/2, margin+lineWidth);
+				ctx.moveTo(width/2-lineWidth/2, margin);
+				ctx.lineTo(width/2+lineWidth/2, margin);
+				ctx.lineTo(width/2+lineWidth/2, margin+lineHeight);
+				ctx.lineTo(width/2+arrowWidth/2, margin+lineHeight);
+				ctx.lineTo(width/2, height-margin);
+				ctx.lineTo(width/2-arrowWidth/2, margin+lineHeight);
+				ctx.lineTo(width/2-lineWidth/2, margin+lineHeight);
 			}
-			ctx.fill();
 			ctx.closePath();
+			ctx.fill();
 		},
 		"function" : function(ctx, width, height, param) {
 			if (param) {
@@ -826,6 +826,7 @@
 				param1 = maxparam1;
 			}
 			var lineWidth = height/20;
+			ctx.beginPath();
 			ctx.lineWidth = lineWidth;
 			ctx.strokeStyle = '#000000';
 			ctx.lineWidth = 3;
@@ -861,6 +862,7 @@
 				param1 = maxparam1*(-1);
 			}
 			var lineWidth = height/20;
+			ctx.beginPath();
 			ctx.lineWidth = lineWidth;
 			ctx.strokeStyle = '#000000';
 			ctx.lineWidth = 3;
@@ -879,6 +881,7 @@
 			ctx.fillStyle = "#000000";
 			ctx.arc(x, y, 1.5*lineWidth, 0, 2*Math.PI, false);
 			ctx.fill();
+			ctx.closePath()
 		},
 		"scale": function(ctx, width, height, param) {
 			var margin = 15;
@@ -1113,7 +1116,7 @@
 			ctx.fill();
 		},
 		"turnLeft": function(ctx, width, height, param) {
-			var margin = 15;
+			var margin = 16;
 			if (param) {
 				param = parseInt(param[0]);
 			} else {
@@ -1164,7 +1167,7 @@
 			ctx.restore();
 		},
 		"turnReset": function(ctx, width, height, param) {
-			var margin = 15;
+			var margin = 16;
 			if (param) {
 				param = parseInt(param[0]);
 			} else {
@@ -1182,7 +1185,7 @@
 			ctx.fill();
 		},
 		"turnRight": function(ctx, width, height, param) {
-			var margin = 15;
+			var margin = 16;
 			if (param) {
 				param = parseInt(param[0]);
 			} else {
@@ -1210,12 +1213,12 @@
 			var lineWidth = outerRadius-innerRadius;
 			ctx.fillStyle = "#0000FF";
 			ctx.beginPath();
+			ctx.arc(width/2, height/2+margin/2, outerRadius, startAngle, endAngle, false);
+			ctx.arc(width/2, height/2+margin/2, innerRadius, endAngle, startAngle, true);
 			ctx.moveTo(width/2-outerRadius,height/2+margin/2);
 			ctx.lineTo(width/2-outerRadius,height-margin);
 			ctx.lineTo(width/2-innerRadius,height-margin);
 			ctx.lineTo(width/2-innerRadius,height/2+margin/2);
-			ctx.arc(width/2, height/2+margin/2, outerRadius, startAngle, endAngle, false);
-			ctx.arc(width/2, height/2+margin/2, innerRadius, endAngle, startAngle, true);
 			ctx.fill();
 			ctx.closePath();
 			ctx.fillStyle = "#0000FF";
