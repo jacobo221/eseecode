@@ -1314,8 +1314,12 @@
 		span.style.fontFamily = "Arial";
 		if (level == "level3") {
 			span.style.fontSize = "13px";
+			span.style.paddingLeft = "5px";
+			span.style.paddingRight = "5px";
 		} else {
 			span.style.fontSize = "10px";
+			span.style.paddingLeft = "";
+			span.style.paddingRight = "";
 		}
 		span.style.fontWeight = "bold";
 		span.className = "blockTitle";
