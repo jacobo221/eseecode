@@ -2,9 +2,9 @@
 
 	/**
 	 * Parses the parameters in the URL
-	 * @public
+	 * @private
 	 * @param {String} [urlParams] URL to parse. If unset use browser's location
-	 * @example $e_loadURLParams()
+	 * @example $e_loadURLParams("view=drag")
 	 */
 	function $e_loadURLParams(urlParams) {
 		var action;
@@ -48,6 +48,17 @@
 	}
 
 	/**
+	 * Parses the parameters in the URL
+	 * @since 2.3
+	 * @public
+	 * @param {String} [urlParams] URL to parse. If unset use browser's location
+	 * @example API_loadURLParams("view=drag")
+	 */
+	function API_loadURLParams(urlParams) {
+		$e_loadURLParams(urlParams);
+	}
+
+	/**
 	 * Returns the user's code
 	 * @public
 	 * @return {String} User code
@@ -74,6 +85,17 @@
 	 */
 	function API_execute() {
 		$e_executeFromUI();
+	}
+	
+	/**
+	 * Returns the name of the current dialog
+	 * @since 2.3
+	 * @public
+	 * @returns {String} Name of the current dialog
+	 * @example API_getDialog(
+	 */
+	function API_getDialog() {
+		return $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.toLowerCase();
 	}
 
 	/**
@@ -108,6 +130,17 @@
 	function API_getOuput() {
 		return document.getElementById("dialog-io-output").value;
 	}
+	
+	/**
+	 * Returns the name of the current view
+	 * @since 2.3
+	 * @public
+	 * @returns {String} Name of the current view
+	 * @example API_getView()
+	 */
+	function API_getView() {
+		return $_eseecode.modes.console[$_eseecode.modes.console[0]].name.toLowerCase();
+	}
 
 	/**
 	 * Returns the image binary of the whiteboard
@@ -118,6 +151,27 @@
 	 */
 	function API_getWhiteboard() {
 		return $e_imagifyWhiteboard().imageBinary;
+	}
+	
+	/**
+	 * Resets the execution
+	 * @since 2.3
+	 * @public
+	 * @example API_reset()
+	 */
+	function API_reset() {
+		$e_resetCanvasFromUI();
+	}
+	
+	/**
+	 * Restarts eSeeCode interface
+	 * @since 2.3
+	 * @public
+	 * @example API_restart()
+	 */
+	function API_restart() {
+		$e_resetUI(false);
+		$e_msgBoxClose();
 	}
 	
 	/**

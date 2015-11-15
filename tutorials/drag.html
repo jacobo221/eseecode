@@ -4,43 +4,71 @@
         <script type="text/javascript" src="guide.js"></script>
     </head>
 <body>
-<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="../index.html";></iframe>
+<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src=""></iframe>
 <script type="text/javascript">
     var guideSteps = [
-        { type: "api", argument: "view=drag" },
+        { type: "view", argument: "drag" },
         { type: "info", text: "This tutorial will show you the basics about using the Drag view", timeout: 5 },
         { type: "dialogInstruction", argument: "forward", text: "Drag this block into the code area" },
-        { type: "floatingBlock", text: "Drop it in the code area" },
         { type: "popup", text: "As you can see, in the Drag mode when you add an instruction to the code you can define more accurately its configuration.<br />For now, just leave it as it is", action: "clickMessage", position: "inside" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0A" },
         { type: "dialogInstruction", argument: "turnLeft", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0A" },
         { type: "dialogInstruction", argument: "forward", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
         { type: "dialogInstruction", argument: "turnLeft", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0A" },
         { type: "dialogInstruction", argument: "forward", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
         { type: "dialogInstruction", argument: "turnLeft", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0A" },
         { type: "dialogInstruction", argument: "forward", text: "Now drag this block into the code area, at the end" },
-        { type: "floatingBlock", text: "Drop it in the code area after the previous block" },
         { type: "buttonAccept", text: "Accept the default instruction parameter values" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
         { type: "run", text: "Now see what this code does by clicking on this button", position: "above" },
+        { type: "whiteboard", text: "Here you can see the result of your code. Observe you have drawn a square.", position: "above", action: "clickMessage" },
         { type: "consoleBlockLine", argument: "1", text: "Click here to configure this instruction" },
-        { type: "htmlElement", argument: "setupBlock1Visual", text: "Use this slider to choose how much the guide should turn" },
+        { type: "htmlElement", argument: "setupBlock1Visual", text: "Use this slider to choose how much the guide should turn. Set it to 45" },
         { type: "buttonAccept", text: "When you're done configuring the instruction click this button" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(45)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
         { type: "consoleBlockLine", argument: "1", text: "Notice the icon has changed to reflect the new configuration of this instruction", action: "clickMessage" },
         { type: "run", text: "Now see how the drawing changes with the changes you made to the code", position: "above" },
+        { type: "whiteboard", text: "Observe the second turn wasn't 90 degrees, so this doesn't form a square anymore", position: "above", action: "clickMessage" },
         { type: "info", text: "Drag view allows you to reorder the instructions" },
         { type: "consoleBlockLine", argument: "1", text: "Drag this instruction right above its previous instruction" },
-        { type: "floatingBlock", text: "Drop it right above its previous instruction" },
+        { type: "verify", argument: "turnLeft(45)%0Aforward(100)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "consoleBlockLine", argument: "1", text: "Observe you now turn 45 degrees before begining to draw. Let's see what the result is.", action: "clickMessage" },
         { type: "run", text: "Execute the code again to see how the drawing changes", position: "above" },
+        { type: "whiteboard", text: "So the drawing is all shifted by 45 degrees and the first line is double the length of the others, that is because there are now 2 consecutive forward()'s.", position: "above", action: "clickMessage" },
+        { type: "info", text: "Now we go back to when we had a code that draw a square" },
+        { type: "restart" },
+        { type: "view", argument: "drag" },
+        { type: "code", argument: "forward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "execute" },
+        { type: "console", text: "Remember this code?", timeout: 3, position: "above" },
+        { type: "console", text: "Observe what the code does is to repeat four times this sequence: forward+turnLeft", position: "above", action: "clickMessage" },
+        { type: "info", text: "So let's simplify the code", timeout: 3 },
+        { type: "reset" },
+        { type: "dialogInstruction", argument: "repeat", text: "Drag this block TO THE TOP of the code area" },
+        { type: "htmlElement", argument: "setupBlock1Visual", text: "How many times do we need to repeat forward+turnLeft to draw a square?<br />Four times<br />So set the value to 4" },
+        { type: "buttonAccept", text: "Click accept to add the instruction to the code" },
+        { type: "verify", argument: "repeat%20(4)%20%7B%0A%7D%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "consoleBlockLine", argument: "2", text: "Drag this block inside the Repeat block" },
+        { type: "verify", argument: "repeat%20(4)%20%7B%0A%09forward(100)%0A%7D%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "consoleBlockLine", argument: "3", text: "Drag this block inside the Repeat block too" },
+        { type: "verify", argument: "repeat%20(4)%20%7B%0A%09forward(100)%0A%09turnLeft(90)%0A%7D%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "info", text: "Now we should remove the rest of the instructions, since they aren't needed anymore" },
+        { type: "consoleBlockLine", argument: "4", text: "Drag this instruction outside of the code to remove it" },
+        { type: "verify", argument: "repeat%20(4)%20%7B%0A%09forward(100)%0A%09turnLeft(90)%0A%7D%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },
+        { type: "console", text: "Keep removing the rest of the instructions (except Repeat and the two instructions inside it)", timeout: 3, position: "above" },
+        { type: "run", text: "When you are done click here to check if you were able to draw a square with a simple code", position: "above" },
+        { type: "verify", argument: "repeat%20(4)%20%7B%0A%09forward(100)%0A%09turnLeft(90)%0A%7D%0A", stepsBack: 3 },
         { type: "info", text: "Very well!<br />You have finished this tutorial!" }
     ];
     
@@ -51,7 +79,7 @@
         }
     };
     
-    loadGuide("eseecode-frame");
+    loadGuide("eseecode-frame", "../index.html");
 </script>
 </body>
 </html>

@@ -12,21 +12,33 @@
 		}
 		return translated;
 	}
+	
+	function ttWrapperActivate() {
+        var ttBoxWrapper = document.createElement("div");
+        ttBoxWrapper.id = "ttBoxWrapper";
+        ttBoxWrapper.style.position = "fixed";
+        ttBoxWrapper.style.opacity = 0;
+        ttBoxWrapper.style.zIndex = 99999;
+        ttBoxWrapper.style.top = 0;
+        ttBoxWrapper.style.left = 0;
+        ttBoxWrapper.style.width = "100%";
+        ttBoxWrapper.style.height = "100%";
+        doc.body.appendChild(ttBoxWrapper);
+	}
 
-    function ttActivate () {
-        var currentGuideStep = guideSteps[currentGuideIndex];
+    function ttActivate (currentGuideStep) {
         var element = currentGuideStep.element;
         var position = currentGuideStep.position;
         var width = currentGuideStep.width;
-        // create tooltip element.
-        ttBox = document.createElement("div");
+        // Create tooltip
+        var ttBox = document.createElement("div");
         ttBox.id = "ttBox";
         ttBox.style.borderRadius = "10px";
         ttBox.style.backgroundColor = "#EFEFEF";
         ttBox.style.textAlign = "center";
         ttBox.style.border = "1px solid #000000";
         ttBox.style.zIndex = 100000;
-        ttBox.innerHTML = _(currentGuideStep.text);
+        ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
         iframe.contentWindow.document.body.appendChild(ttBox);
         if (element && element.getBoundingClientRect().left) {
             ttBox.style.position = "absolute";
@@ -45,6 +57,7 @@
                 if (ttBox.getBoundingClientRect().height) {
                     coordY -= ttBox.getBoundingClientRect().height;
                 }
+                ttBox.style.borderBottomLeftRadius = "0px";
             } else if (position == "inside") {
                 if (element.getBoundingClientRect().height) {
                     coordY += element.getBoundingClientRect().height/2;
@@ -52,6 +65,7 @@
                 }
             } else { // "under"
                 coordY = element.getBoundingClientRect().bottom;
+                ttBox.style.borderTopLeftRadius = "0px";
             }
             ttBox.style.left = coordX + "px";
             ttBox.style.top = coordY + "px";
@@ -69,26 +83,62 @@
             ttBox.style.top = "50%";
             ttBox.style.width = width + "px";
         }
+        if (currentGuideStep.runNext === undefined) {
+            currentGuideStep.runNext = guideFinishStep;
+        }
+        if (currentGuideStep.timeout) {
+            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
+            setTimeout(ttCountdown, 1000);
+            setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+        } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+            ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
+            ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
+            ttBox.innerHTML += "<br />"+_("Click on this message to continue");
+        } else if (element && action != "none") {
+            if (!currentGuideStep.action) {
+                currentGuideStep.action = "mouseup";
+            }
+            var action = currentGuideStep.action;
+            if (action == "mousedown" || action == "touchstart" || action == "click") {
+                element.addEventListener("mousedown", currentGuideStep.runNext, false);
+                element.addEventListener("touchstart", currentGuideStep.runNext, false);
+            } else if (action == "mouseup" || action == "touchend") {
+                element.addEventListener("mouseup", currentGuideStep.runNext, false);
+                element.addEventListener("touchend", currentGuideStep.runNext, false);
+            }
+        }
+        if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+            ttWrapperActivate();
+        }
+        doc.body.appendChild(ttBox);
     }
 
     function ttDeactivate(clearBorders) {
+        if (currentGuideIndex < 0) {
+            console.warn("Got index "+ currentGuideIndex+" in ttDeactivate. Trace:\n"+console.trace());
+            return;
+        }
         var currentGuideStep = guideSteps[currentGuideIndex];
-        var doc = iframe.contentWindow.document;
-        if (ttBox && ttBox.parentNode) {
+        var ttBox = doc.getElementById("ttBox");
+        if (ttBox) {
             ttBox.parentNode.removeChild(ttBox);
         }
+        var ttBoxWrapper = doc.getElementById("ttBoxWrapper");
+        if (ttBoxWrapper) {
+            ttBoxWrapper.parentNode.removeChild(ttBoxWrapper);
+        }
         if (clearBorders !== false) {
+            doc.body.removeEventListener("mousemove", dragTtBox, false);
+            doc.body.removeEventListener("touchmove", dragTtBox, false);
+            doc.body.removeEventListener("mouseup", currentGuideStep.runNext, false);
+            doc.body.removeEventListener("touchend", currentGuideStep.runNext, false);
             if (currentGuideStep.element) {
-                doc.body.removeEventListener("mousemove", dragTtBox, false);
-                doc.body.removeEventListener("touchmove", dragTtBox, false);
-                doc.body.removeEventListener("mouseup", guideFinishStep, false);
-                doc.body.removeEventListener("touchend", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("mousedown", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("touchstart", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("mousemove", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("touchmove", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("mouseup", guideFinishStep, false);
-                currentGuideStep.element.removeEventListener("touchend", guideFinishStep, false);
+                currentGuideStep.element.removeEventListener("mousedown", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("touchstart", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("mousemove", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("touchmove", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("mouseup", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("touchend", currentGuideStep.runNext, false);
                 currentGuideStep.element.className = currentGuideStep.element.className.replace(/\bguideBorder\b/,'');
             }
             // Remove console blocks which have been copied with guideBorder
@@ -101,13 +151,7 @@
         }
     }
     
-    function dragTtBox() {
-        ttDeactivate(false);
-        ttActivate();
-    }
-    
     function ttCountdown() {
-        var doc = iframe.contentWindow.document;
         var countdownElement = doc.getElementById("ttBoxCountdown");
         if (countdownElement) {
             var timeLeft = parseFloat(countdownElement.innerHTML);
@@ -117,14 +161,108 @@
             }
         }
     }
+    
+    function verifyOutput(currentGuideStep) {
+        if (currentGuideStep.argument === undefined) {
+            console.warn("verify step lacks an argument");
+            return;
+        }
+        var validation = (currentGuideStep.argument == encodeURIComponent(iframe.contentWindow.API_getOutput()));
+        if (!validation) {
+            guideStepBack(currentGuideStep);
+        } else {
+            currentGuideStep.action = undefined;
+            setTimeout(currentGuideStep.runNext, 0); // Run next step and leave this step to close
+        }
+    }
+    
+    function verifyCode(currentGuideStep) {
+        if (currentGuideStep.argument === undefined) {
+            console.warn("verify step lacks an argument");
+            return;
+        }
+        var validation = (currentGuideStep.argument == encodeURIComponent(iframe.contentWindow.API_downloadCode()));
+        if (!validation) {
+            guideStepBack(currentGuideStep);
+        } else {
+            currentGuideStep.action = undefined;
+            setTimeout(currentGuideStep.runNext, 0); // Run next step and leave this step to close
+        }
+    }
+    
+    // While we stay in the same step from time to time verify that the element still exists, if it doesn't it is because the user did something wrong
+    function verifyElement(element, elementGuideIndex) {
+        if (elementGuideIndex === currentGuideIndex) {
+            if (!element || !doc.getElementById(element.id)) {
+                ttDeactivate();
+                ttActivate({ text: "You stepped away from the instructions, you have to start the tutorial all over again", action: "clickMessage", runNext: function() {
+                    iframe.contentWindow.API_restart();
+                    setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
+                } });
+            } else {
+                setTimeout(function() {
+                    verifyElement(element, elementGuideIndex);
+                }, 500);
+            }
+        }
+    }
+    
+    function dragTtBox() {
+        var floatingBlocks = doc.getElementsByClassName("floatingBlock");
+        var currentGuideStep = guideSteps[currentGuideIndex];
+        ttDeactivate(false);
+        ttActivate({ text: currentGuideStep.text, element: floatingBlocks[0], position: currentGuideStep.position, width: currentGuideStep.width, action: "none" });
+    }
+    
+    function guideDraggingBlock() {
+        var floatingBlocks = doc.getElementsByClassName("floatingBlock");
+        if (floatingBlocks) {
+            doc.body.addEventListener("mousemove", dragTtBox, false);
+            doc.body.addEventListener("touchmove", dragTtBox, false);
+            doc.body.addEventListener("mouseup", guideFinishStep, false);
+            doc.body.addEventListener("touchend", guideFinishStep, false);
+        }
+    }
+    
+    function guideStepBack(currentGuideStep) {
+        var ttBox;
+        if (!steppingBack) {
+            ttDeactivate();
+            ttActivate({ text: ((currentGuideStep.type == "verify" && currentGuideStep.text !== undefined)?currentGuideStep.text:"You didn't follow the step correctly. Please pay attention to the instructions."), action: "clickMessage" });
+        }
+        if (currentGuideStep.type == "verify") {
+            var backupCode = currentGuideStep.correction;
+            if (backupCode === undefined) {
+                for (var i=currentGuideIndex-1; i>=0; i--) {
+                    if (guideSteps[i].type == "verify") {
+                        backupCode = guideSteps[i].argument;
+                        break;
+                    }
+                }
+            }
+            if (backupCode === undefined) {
+                backupCode = "";   
+            }
+            var runNow = (iframe.contentWindow.API_getView() == "touch");
+            iframe.contentWindow.API_uploadCode(decodeURI(backupCode), runNow);
+        }
+        if (currentGuideStep.stepsBack === undefined) {
+            currentGuideStep.stepsBack = 2;
+        }
+        if (currentGuideStep.stepsBack > 0) {
+            currentGuideIndex -= (currentGuideStep.stepsBack);
+            if (steppingBack) {
+                setTimeout(guideFinishStep, 0); // If no ttBox is being displayed (and this no ttBox will be clicked), run next step and leave this step to close
+            } else {
+                ttBox = doc.getElementById("ttBox");
+                ttBox.innerHTML += ", "+_("you are being taken back to the previous step");
+            }
+        }
+        steppingBack = true;
+    }
 
-    function guideInit() {
-        var doc = iframe.contentWindow.document;
+    function guideRestart() {
         currentGuideIndex = 0;
-        var style = doc.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = '.guideBorder { border: 2px solid red !important; }';
-        doc.getElementsByTagName('head')[0].appendChild(style);
         guideNextStep();
     }
 
@@ -132,13 +270,17 @@
         if (currentGuideIndex >= guideSteps.length) {
             return;
         }
-        var doc = iframe.contentWindow.document;
         var currentGuideStep = guideSteps[currentGuideIndex];
         var element = undefined;
+        var skipElement = false;
+        if (currentGuideStep.runNext === undefined) {
+            currentGuideStep.runNext = guideFinishStep;
+        }
         switch (currentGuideStep.type.toLowerCase()) {
             case "dialoginstruction":
                 var instruction = currentGuideStep.argument;
-                var block = doc.getElementById("dialog-blocks").firstChild;
+                var dialogDiv = doc.getElementById("dialog-blocks");
+                var block = dialogDiv.firstChild;
                 //Search for the instruction
                 while (block) {
                     if (block.getAttribute("data-instructionsetid") == instruction) {
@@ -147,16 +289,20 @@
                     }
                     block = block.nextSibling;
                 }
+                if (element) {
+                    // Scroll to this block
+                    var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
+					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
+					if (element.offsetTop < dialogDiv.scrollTop || element.offsetTop+blockHeight/2>dialogDiv.scrollTop+dialogDiv.offsetHeight) {
+                        dialogDiv.scrollTop = element.offsetTop;-blockHeight;
+					}
+                }
                 if (currentGuideStep.action === undefined) {
                     currentGuideStep.action = "mousedown";
                 }
-                break;
-            case "floatingblock":
-                var floatingBlocks = doc.getElementsByClassName("floatingBlock");
-                if (floatingBlocks) {
-                    element = floatingBlocks[0];
-                    doc.body.addEventListener("mousemove", dragTtBox, false);
-                    doc.body.addEventListener("touchmove", dragTtBox, false);
+                // Inject floatingBlock before going to next step
+                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                    currentGuideStep.runNext = guideDraggingBlock;
                 }
                 break;
             case "consoleblockline":
@@ -165,22 +311,105 @@
                 if (blockTuple && blockTuple.element) {
                     element = blockTuple.element;
                     // Scroll to this block
-					var blockHeight = iframe.contentWindow.$e_blockSize(iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]].id, element).height;
-                    consoleDiv.scrollTop = currentGuideStep.argument*blockHeight-10;
+                    var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
+					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
+					if (element.offsetTop < consoleDiv.scrollTop || element.offsetTop+blockHeight/2>consoleDiv.scrollTop+consoleDiv.offsetHeight) {
+                        consoleDiv.scrollTop = element.offsetTop-blockHeight;
+					}
                 }
                 if (currentGuideStep.action === undefined) {
                     currentGuideStep.action = "mousedown";
                 }
+                // Inject floatingBlock before going to next step
+                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                    currentGuideStep.runNext = guideDraggingBlock;
+                }
                 break;
             case "info":
                 element = undefined;
+                skipElement = true;
                 break;
             case "api":
                 if (currentGuideStep.argument) {
-                    iframe.contentWindow.$e_loadURLParams(currentGuideStep.argument);
+                    iframe.contentWindow.API_loadURLParams(currentGuideStep.argument);
                 }
                 element = undefined;
-                setTimeout(guideFinishStep, 120);
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "view":
+            case "grid":
+            case "gridstep":
+            case "guide":
+            case "filemenu":
+            case "lang":
+            case "input":
+            case "timeout":
+            case "axis":
+            case "view":
+            case "instructions":
+                if (currentGuideStep.argument) {
+                    iframe.contentWindow.API_loadURLParams(currentGuideStep.type.toLowerCase()+"="+currentGuideStep.argument);
+                }
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "code":
+                if (currentGuideStep.argument) {
+                    iframe.contentWindow.API_uploadCode(decodeURI(currentGuideStep.argument));
+                }
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "execute":
+                iframe.contentWindow.API_execute();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "reset":
+                iframe.contentWindow.API_reset();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "restart":
+                iframe.contentWindow.API_restart();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "precode":
+                if (currentGuideStep.argument) {
+                    iframe.contentWindow.API_uploadPrecode(decodeURI(currentGuideStep.argument));
+                }
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "verify":
+                element = undefined;
+                skipElement = true;
+                setTimeout(function() {
+                    verifyCode(currentGuideStep);
+                }, 300); // Wait for the Touch mode animation to be finished
+                return;
+                break;
+            case "output":
+                element = undefined;
+                skipElement = true;
+                setTimeout(function() {
+                    verifyOutput(currentGuideStep);
+                }, 300); // Wait for the Touch mode animation to be finished
                 return;
                 break;
             default:
@@ -196,37 +425,18 @@
                 }
                 break;
         }
-        currentGuideStep.element = element;
-        currentGuideStep.text = "<b>"+currentGuideStep.text+"</b>";
-        ttActivate(element, currentGuideStep);
         if (element) {
             currentGuideStep.oldBorder = getComputedStyle(element, '').getPropertyValue('border');
             element.className += " guideBorder";
+            verifyElement(element, currentGuideIndex);
+        } else if (!skipElement) {
+            guideStepBack(currentGuideStep);
+            return;
         }
-        if (currentGuideStep.timeout) {
-            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
-            setTimeout(ttCountdown, 1000);
-            setTimeout(guideFinishStep, currentGuideStep.timeout*1000);
-        } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
-            ttBox.addEventListener("mousedown", guideFinishStep, false);
-            ttBox.addEventListener("touchstart", guideFinishStep, false);
-            ttBox.innerHTML += "<br />Click on this message to continue";
-        } else if (currentGuideStep.type == "floatingBlock") {
-            doc.body.addEventListener("mouseup", guideFinishStep, false);
-            doc.body.addEventListener("touchend", guideFinishStep, false);
-        } else if (element) {
-            if (!currentGuideStep.action) {
-                currentGuideStep.action = "mouseup";
-            }
-            var action = currentGuideStep.action;
-            if (action == "mousedown" || action == "touchstart" || action == "click") {
-                element.addEventListener("mousedown", guideFinishStep, false);
-                element.addEventListener("touchstart", guideFinishStep, false);
-            } else if (action == "mouseup" || action == "touchend") {
-                element.addEventListener("mouseup", guideFinishStep, false);
-                element.addEventListener("touchend", guideFinishStep, false);
-            }
-        }
+        steppingBack = false;
+        currentGuideStep.element = element;
+        ttActivate(currentGuideStep);
+        var ttBox = doc.getElementById("ttBox");
     }
 
     function guideFinishStep() {
@@ -292,7 +502,7 @@
         return elementId;
     }
     
-    function loadGuide(iframeId, lang) {
+    function loadGuide(iframeId, src, lang) {
         currentLanguage = lang?lang:"en";
         if (iframeId === undefined) {
             iframeId = getElementsByTagName("iframe");
@@ -304,16 +514,22 @@
         if (iframe) {
             window.addEventListener("load", function() {
                 iframe.addEventListener("load", function() {
+                    doc = iframe.contentWindow.document;
+                    var style = doc.createElement('style');
+                    style.type = 'text/css';
+                    style.innerHTML = '.guideBorder { border: 2px solid red !important; }';
+                    doc.getElementsByTagName('head')[0].appendChild(style);
+                    doc.getElementsByTagName("html")[0].style.height = "100%";
+                    doc.body.style.height = "100%";
                     createMouseClickHandler();
-                    guideInit();
+                    guideRestart();
                 }, false);
-                iframe.src = iframe.src; // Reload the iframe so the iframe's onload trigger is run
+                iframe.src = src; // Reload the iframe so the iframe's onload trigger is run
             }, false);
         }
     }
 
     function createMouseClickHandler() {
-        var doc = iframe.contentWindow.document;
 		var animationInterval = 50;
 		var animationRepetitions = 8;
 		var animationSizeIncrement = 4;
@@ -335,7 +551,7 @@
         		shadowDiv.style.left = event.clientX-blockSizeInitial/2;
         		shadowDiv.style.top = event.clientY-blockSizeInitial/2;
         		shadowDiv.style.borderRadius = (blockSizeInitial/2)+"px";
-        		// We don't want to run this code yet becuaes otherwise the new div goes under the pointer and the real element isn't clicked
+        		// We don't want to run this code yet because otherwise the new div goes under the pointer and the real element isn't clicked
 				setTimeout(shadowMouseClick, animationInterval*3);
 		    } else {
     			var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
@@ -361,5 +577,5 @@
 
     var currentLanguage;
     var currentGuideIndex;
-    var ttBox;
-    var iframe;
+    var steppingBack = false;
+    var iframe, doc;

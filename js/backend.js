@@ -403,7 +403,7 @@
 	 * @example $e_uploadCode("repeat(4){forward(100)}",false)
 	 */
 	function $e_uploadCode(code,run,preload) {
-		if (!code) {
+		if (code === undefined) {
 			return;
 		}
 		if (!$e_resetUI(true)) {
@@ -441,9 +441,9 @@
 					$e_switchConsoleMode("code");
 					$e_resetWriteConsole(code);
 				}
-		        $e_resetCanvas();
 		}
 		if (run) {
+		    $e_resetCanvas();
 			$e_execute();
 		}
 	}
