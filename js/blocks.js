@@ -114,8 +114,8 @@
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
 		// Try to drag the block pinned from the same position it was clicked
-		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left;
-		$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top;
+		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left - window.scrollX;
+		$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top - window.scrollY;
 		// Copy parameters
 		for (var i=1; div.getAttribute("data-param"+i) !== null; i++) {
 			$_eseecode.session.floatingBlock.div.setAttribute("data-param"+i,div.getAttribute("data-param"+i));
@@ -308,35 +308,37 @@
 	 * @private
 	 * @param {!HTMLElement} consoleDiv Blocks console div
 	 * @param {Object} coords Coordinates
+	 * @param !HTMLElement} [blockElement] Block to start with
 	 * @return {Number} Position where the block has been dropped
 	 * @example $e_blockPositionFromCoords(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
 	 */
-	function $e_blockPositionFromCoords(consoleDiv, coords) {
+	function $e_blockPositionFromCoords(consoleDiv, coords, blockElement) {
+		if (blockElement === undefined) {
+			blockElement = consoleDiv.firstChild;
+		}
 		var position = 0;
-		var blockElement = consoleDiv.firstChild;
 		var blockHeight;
-		if (blockElement.getBoundingClientRect().height) {
-			blockHeight = blockElement.getBoundingClientRect().height;
+		// Check the height of the span, because the block's height includes subblocks
+		if (!blockElement || blockElement.id == "console-blocks-tip") {
+			// Console is empty
+			return 0;
+		}
+		if (blockElement.firstChild.getBoundingClientRect().height) {
+			blockHeight = blockElement.firstChild.getBoundingClientRect().height;
 		} else {
-			blockHeight = blockElement.getBoundingClientRect().bottom-blockElement.getBoundingClientRect().top;
+			blockHeight = blockElement.firstChild.getBoundingClientRect().bottom-blockElement.firstChild.getBoundingClientRect().top;
 		}
-		while (blockElement && blockElement !== consoleDiv.nextSibling && coords.y > blockElement.getBoundingClientRect().top+blockHeight/2) {
+		console.log(blockElement.id+": "+coords.y+" > "+(blockElement.getBoundingClientRect().top+blockHeight/2));
+		if (coords.y > blockElement.getBoundingClientRect().top+blockHeight/2) {
 			position++;
-			if (blockElement.firstChild && blockElement.firstChild.nextSibling) { // If has subblocks
-				blockElement = blockElement.firstChild.nextSibling;
-			} else if (blockElement.nextSibling) {
-				blockElement = blockElement.nextSibling;
-			} else {
-				blockElement = blockElement.parentNode.nextSibling;
+			if (blockElement.firstChild.nextSibling) { // If has subblocks
+				position += $e_blockPositionFromCoords(consoleDiv, coords, blockElement.firstChild.nextSibling);
 			}
-			if (blockElement) {
-				if (blockElement.getBoundingClientRect().height) {
-					blockHeight = blockElement.getBoundingClientRect().height;
-				} else {
-					blockHeight = blockElement.getBoundingClientRect().bottom-blockElement.getBoundingClientRect().top;
-				}
+			if (blockElement.nextSibling) {
+				position += $e_blockPositionFromCoords(consoleDiv, coords, blockElement.nextSibling);
 			}
 		}
+		console.log(position)
 		return position;
 	}
 
@@ -1446,6 +1448,8 @@
 		span.style.color = $e_readableText(color);
 		if (!instruction.dummy) {
 			span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
+		} else {
+			span.style.minHeight = "15px";
 		}
 		span.style.fontFamily = "Arial";
 		if (level == "level3") {
