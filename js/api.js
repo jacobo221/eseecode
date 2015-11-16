@@ -42,6 +42,8 @@
 				} else if (key == "instructions") {
 					var value = decodeURIComponent(value);
 					API_setInstructions(value, action);
+				} else if (key == "fullscreenmenu") {
+					API_showFullscreenmenu(value, action);
 				}
 			}
 		}
@@ -91,8 +93,24 @@
 	 * Returns the name of the current dialog
 	 * @since 2.3
 	 * @public
+	 * @param {Boolean} [fullscreen] Force fullscreen
+	 * @example API_fullscreen()
+	 */
+	function API_fullscreen(value) {
+		if (value === true || value == "true" || value == "1" || value == "yes") {
+			value = true;
+		} else {
+			value = false;
+		}
+		$e_toggleFullscreen(value);
+	}
+	
+	/**
+	 * Returns the name of the current dialog
+	 * @since 2.3
+	 * @public
 	 * @returns {String} Name of the current dialog
-	 * @example API_getDialog(
+	 * @example API_getDialog()
 	 */
 	function API_getDialog() {
 		return $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.toLowerCase();
@@ -312,6 +330,26 @@
 		}
 		if (action !== false) {
 			$e_resetFilemenu();
+		}
+	}
+	
+	/**
+	 * Shows/Hides the fullscreen menu
+	 * @since 2.3
+	 * @public
+	 * @param {Boolean|String} value Whether to show it (true) or hide it (false)
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_showFilemenu(false)
+	 */
+	function API_showFullscreenmenu(value, action) {
+		value = value.toLowerCase();
+		if (value === false || value == "false" || value == "0" || value == "no" || value == "none") {
+			$_eseecode.ui.fullscreenmenuVisible = false;
+		} else {
+			$_eseecode.ui.fullscreenmenuVisible = true;
+		}
+		if (action !== false) {
+			$e_toggleFullscreenIcon();
 		}
 	}
 	

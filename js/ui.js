@@ -1720,11 +1720,13 @@
 	 * Redraws the maximize/restore fullscreen icon
 	 * @example $e_toggleFullscreenIcon();
 	 */
-	function $e_toggleFullscreenIcon(maximize) {
+	function $e_toggleFullscreenIcon() {
 		var fullscreenButton = document.getElementById("fullscreen-button");
 		// Do not show this button if the page is embedded
-		if ($e_isEmbedded()) {
-			fullscreenButton.style.display = "none";
+		if ($e_isEmbedded() && $_eseecode.ui.fullscreenmenuVisible === false) {
+				fullscreenButton.style.display = "none";
+		} else {
+				fullscreenButton.style.display = "block";
 		}
 		var iconMargin = 2;
 		if (!$e_isFullscreen()) {
@@ -1751,10 +1753,11 @@
 
 	/**
 	 * Set/unsets fullscreen view
+	 * @param {Boolean} [fullscreen] Force fullscreen
 	 * @example $e_toggleFullscreen();
 	 */
-	function $e_toggleFullscreen() {
-		if (!$e_isFullscreen()) {
+	function $e_toggleFullscreen(fullscreen) {
+		if (!$e_isFullscreen() || fullscreen === true) {
 			//var element = document.getElementById("eseecode");
 			var element = document.documentElement;
 			if(element.requestFullscreen) {

@@ -109,6 +109,7 @@
 			gridVisible: true,
 			gridStep: 25,
 			filemenuVisible: true,
+			fullscreenmenuVisible: undefined,
 			scrollTimeout: null,
 			tipInterval: null,
 			downloadLayersInterval: 500,

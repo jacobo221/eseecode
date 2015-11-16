@@ -362,6 +362,7 @@
             case "timeout":
             case "axis":
             case "view":
+            case "fullscreenmenu":
             case "instructions":
                 if (currentGuideStep.argument) {
                     iframe.contentWindow.API_loadURLParams(currentGuideStep.type+"="+currentGuideStep.argument);
@@ -387,6 +388,13 @@
                 break;
             case "restart":
                 iframe.contentWindow.API_restart();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "fullscreen":
+                iframe.contentWindow.API_fullscreen(currentGuideStep.argument);
                 element = undefined;
                 skipElement = true;
                 setTimeout(currentGuideStep.runNext, 120);
