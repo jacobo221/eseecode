@@ -7,7 +7,7 @@
 		    if (lang[text]) {
 		    	translated = lang[text];
 		    } else {
-		        console.log('"'+text+'": ""');
+		        console.warn('"'+text+'": ""');
 		    }
 		}
 		return translated;
@@ -95,7 +95,7 @@
             ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
             var elements = ttBox.getElementsByTagName("a");
             for (var i=0; i<elements.length; i++) {
-                elements[i].addEventListener("mousedown", function(event){alert();event.stopPropagation();}, false);
+                elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
                 elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
             } 
             ttBox.innerHTML += "<br />"+_("Click on this message to continue");
@@ -247,7 +247,7 @@
             var backupCode = currentGuideStep.correction;
             if (backupCode === undefined) {
                 for (var i=currentGuideIndex-1; i>=0; i--) {
-                    if (guideSteps[i].type == "verify") {
+                    if (guideSteps[i].type == "verify" || guideSteps[i].type == "code") {
                         backupCode = guideSteps[i].argument;
                         break;
                     }
@@ -311,16 +311,12 @@
                     block = block.nextSibling;
                 }
                 if (element) {
-                    // Scroll to this block
+    				iframe.contentWindow.$e_scrollToBlock(element, dialogDiv);
+                    // Inject floatingBlock before going to next step
                     var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
-					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
-					if (element.offsetTop < dialogDiv.scrollTop || element.offsetTop+blockHeight/2>dialogDiv.scrollTop+dialogDiv.offsetHeight) {
-                        dialogDiv.scrollTop = element.offsetTop-blockHeight;
-					}
-                // Inject floatingBlock before going to next step
-                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
-                    currentGuideStep.runNext = guideDraggingBlock;
-                }
+                    if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                        currentGuideStep.runNext = guideDraggingBlock;
+                    }
                 }
                 if (currentGuideStep.action === undefined) {
                     currentGuideStep.action = "mousedown";
@@ -332,13 +328,9 @@
                 if (blockTuple && blockTuple.element) {
                     element = blockTuple.element;
                     // Scroll to this block
-                    var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
-					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
-					console.log(element.offsetTop+" < "+consoleDiv.scrollTop)
-					if (element.offsetTop < consoleDiv.scrollTop || element.offsetTop+blockHeight/2>consoleDiv.scrollTop+consoleDiv.offsetHeight) {
-                        consoleDiv.scrollTop = element.offsetTop-blockHeight;
-					}
+    				iframe.contentWindow.$e_scrollToBlock(element, consoleDiv);
                     // Inject floatingBlock before going to next step
+                    var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
                     if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
                         currentGuideStep.runNext = guideDraggingBlock;
                     }
@@ -461,7 +453,11 @@
         var ttBox = doc.getElementById("ttBox");
     }
 
-    function guideFinishStep() {
+    function guideFinishStep(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse attend only to left button
+			return;
+		}
         ttDeactivate();
         currentGuideIndex++;
         // We use this timeout so that the UI changes have been made between one step and the next
@@ -565,6 +561,10 @@
         shadowDiv.style.zIndex = 100001;
         doc.body.appendChild(shadowDiv);
 		var shadowMouseClick = function(event) {
+    		if (event && event.which > 0 && event.which != 1) {
+    			// If its a mouse click attend only to left button
+    			return;
+    		}
 		    if (event) {
 		        var blockSizeInitial = 4;
 		        shadowDiv.style.width = blockSizeInitial+"px";

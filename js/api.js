@@ -263,14 +263,14 @@
 			        	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = instructions[j+1+k];
 			        	$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
 			        } else {
-						console.log("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
+						console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
 			        }
 			        k++;
 				}
 				j += k;
 				newInstructionId++;
 			} else {
-				console.log("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
+				console.warn("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
 			}
 		}
 		if (action !== false) {

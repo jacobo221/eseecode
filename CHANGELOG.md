@@ -20,6 +20,7 @@
  *   Prevent from selecting text (except in Code view), which frequently was an error when trying to click
  *   Improved order of blocks in dialog in Touch and Drag views
  *   Deprecated unsetColor()
+ *   When using mouse attend only to left button
  *   Fix: Long awaited fix to get the exact position of a block and scroll to its exact position
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types

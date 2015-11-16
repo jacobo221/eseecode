@@ -55,7 +55,7 @@
         { type: "console", text: "Observe what the code does is to repeat four times this sequence: forward+turnLeft", position: "above", action: "clickMessage" },
         { type: "info", text: "So let's simplify the code", timeout: 3 },
         { type: "clear" },
-        { type: "dialogInstruction", argument: "repeat", text: "Drag this block TO THE TOP of the code area" },
+        { type: "dialogInstruction", argument: "repeat", text: "Drag this block TO THE TOP of the code area", position: "above" },
         { type: "htmlElement", argument: "setupBlock1Visual", text: "How many times do we need to repeat forward+turnLeft to draw a square?<br />Four times<br />So set the value to 4" },
         { type: "accept", text: "Click accept to add the instruction to the code" },
         { type: "verify", argument: "repeat%20(4)%20%7B%0A%7D%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A" },

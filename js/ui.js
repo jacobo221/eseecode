@@ -1417,17 +1417,7 @@
 				if (reason != "breakpoint") {
 					div.style.boxShadow = "5px 5px 5px "+style;
 				}
-					var blockHeight;
-					if (div.getBoundingClientRect().height) {
-						blockHeight = div.getBoundingClientRect().height;
-					} else {
-						blockHeight = div.getBoundingClientRect().bottom-div.getBoundingClientRect().top;
-					}
-				if (div.offsetTop < consoleDiv.scrollTop) {
-					$e_smoothScroll(consoleDiv, div.offsetTop-10);
-				} else if (div.offsetTop+blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
-					$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.clientHeight+blockHeight+10);
-				}
+				$e_scrollToBlock(div, consoleDiv);
 			}
 		} else if (mode == "write") {
 			var style;

@@ -59,6 +59,10 @@
 	 * @example div.addEventListener(handler,$e_clickBlock, false)
 	 */
 	function $e_clickBlock(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse click attend only to left button
+			return;
+		}
 		if ($_eseecode.session.breakpointHandler) {
 			$e_addBreakpointEventEnd(event);
 			return;
@@ -191,6 +195,10 @@
 	 * @example div.addEventListener(handler,$e_unclickBlock, false)
 	 */
 	function $e_unclickBlock(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse click attend only to left button
+			return;
+		}
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		var consoleDiv = document.getElementById("console-blocks");
 		var div = $_eseecode.session.floatingBlock.div;
@@ -250,19 +258,7 @@
 						}
 						$e_paintBlock(div);
 					}
-					var blockHeight;
-					if (div.getBoundingClientRect().height) {
-						blockHeight = div.getBoundingClientRect().height;
-					} else {
-						blockHeight = div.getBoundingClientRect().bottom-div.getBoundingClientRect().top;
-					}
-					setTimeout(function() {
-						if (div.offsetTop < consoleDiv.scrollTop) {
-							$e_smoothScroll(consoleDiv, div.offsetTop-10);
-						} else if (div.offsetTop+blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
-							$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.clientHeight+blockHeight+10);
-						}
-					}, 100); // Scroll appropiately to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
+					$e_scrollToBlock(div, consoleDiv);
 				}
 			}
 			$_eseecode.session.blocksUndo[blocksUndoIndex].div = div;
@@ -302,7 +298,31 @@
 			$e_refreshUndoUI();
 		}
 	}
-
+	
+	
+	/**
+	 * Scrolls to the given element in the givent parent node
+	 * @private
+	 * @param {!HTMLElement} element Block
+	 * @param {!HTMLElement} parentDiv Blocks container div
+	 * @example $e_scrollToBlock(document.getElementById("div-1231231231"), document.getElementById("console-blocks"))
+	 */
+	function $e_scrollToBlock(element, parentDiv) {
+		var blockHeight;
+		if (element.getBoundingClientRect().height) {
+			blockHeight = element.getBoundingClientRect().height;
+		} else {
+			blockHeight = element.getBoundingClientRect().bottom-element.getBoundingClientRect().top;
+		}
+		setTimeout(function() {
+			if (element.offsetTop < parentDiv.scrollTop) {
+				$e_smoothScroll(parentDiv, element.offsetTop-10);
+			} else if (element.offsetTop+blockHeight > parentDiv.scrollTop+parentDiv.clientHeight) {
+				$e_smoothScroll(parentDiv, element.offsetTop-parentDiv.clientHeight+blockHeight+10);
+			}
+		}, 100); // Scroll appropiately to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
+	}
+	
 	/**
 	 * Returns the position where he block has been dropped
 	 * @private
@@ -317,18 +337,17 @@
 			blockElement = consoleDiv.firstChild;
 		}
 		var position = 0;
-		var blockHeight;
 		// Check the height of the span, because the block's height includes subblocks
 		if (!blockElement || blockElement.id == "console-blocks-tip") {
 			// Console is empty
 			return 0;
 		}
+		var blockHeight;
 		if (blockElement.firstChild.getBoundingClientRect().height) {
 			blockHeight = blockElement.firstChild.getBoundingClientRect().height;
 		} else {
 			blockHeight = blockElement.firstChild.getBoundingClientRect().bottom-blockElement.firstChild.getBoundingClientRect().top;
 		}
-		console.log(blockElement.id+": "+coords.y+" > "+(blockElement.getBoundingClientRect().top+blockHeight/2));
 		if (coords.y > blockElement.getBoundingClientRect().top+blockHeight/2) {
 			position++;
 			if (blockElement.firstChild.nextSibling) { // If has subblocks
@@ -338,7 +357,6 @@
 				position += $e_blockPositionFromCoords(consoleDiv, coords, blockElement.nextSibling);
 			}
 		}
-		console.log(position)
 		return position;
 	}
 
@@ -430,8 +448,8 @@
 			blockWidth = div.getBoundingClientRect().right-div.getBoundingClientRect().left;
 		}
 		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
-			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x - 10 +"px"; // -10 is a magic number, it seems to work perfect
-			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x- window.scrollX - 10 +"px"; // -10 is a magic number, it seems to work perfect
+			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y - window.scrollY +"px";
 		} else {
 			div.style.left = pos.x - blockWidth/2 +"px";
 			div.style.top = pos.y - blockHeight/2 +"px";
@@ -1476,8 +1494,6 @@
 		} else {
 			div.appendChild(span);
 		}
-		// Disable text selection on the span
-		//span.addEventListener("mousedown",function(e){e.preventDefault();},false);
 		div.style.minWidth = $_eseecode.setup.blockWidth[level]+"px";
 		if (!instruction.dummy) {
 			div.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";

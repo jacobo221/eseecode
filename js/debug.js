@@ -145,6 +145,10 @@
 	 * @example $e_addWatchpointEventEnd()
 	 */
 	function $e_addWatchpointEventEnd(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse click attend only to left button
+			return;
+		}
 		var watch = document.getElementById("watchpointAddInput").value;
 		if (watch.match(/^[A-Za-z][A-Za-z_0-9]*$/)) {
 			$e_addWatchpoint(watch);
@@ -162,6 +166,10 @@
 	 * @example $e_addBreakpointEventEnd()
 	 */
 	function $e_addBreakpointEventEnd(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse click attend only to left button
+			return;
+		}
 		var line;
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			line = ace.edit("console-write").selection.getCursor()["row"]+1;
@@ -194,7 +202,11 @@
 	 * @private
 	 * @example $e_addBreakpointEventCancel()
 	 */
-	function $e_addBreakpointEventCancel() {
+	function $e_addBreakpointEventCancel(event) {
+		if (event && event.which > 0 && event.which != 1) {
+			// If its a mouse click attend only to left button
+			return;
+		}
 		$_eseecode.session.breakpointHandler = false;
 		var tabdiv = document.getElementById("console-tabdiv");
 		tabdiv.style.webkitFilter = "";
