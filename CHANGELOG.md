@@ -12,6 +12,7 @@
  *   Blocks in code are now always rounded and adapting to context
  *   Prepared for better external access
  *   New guiding system to teach to use eSeeCode
+ *   Blocks are translucent when draggin so you can see where you drop them
  *   Added some tutorials
  *   New animation in Touch view when adding new blocks
  *   Better way of accessing the instructions' definitions

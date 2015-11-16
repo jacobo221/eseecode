@@ -132,6 +132,7 @@
 			$_eseecode.session.floatingBlock.div.className += " floatingBlock";
 		}
 		$e_paintBlock($_eseecode.session.floatingBlock.div);
+		$_eseecode.session.floatingBlock.div.style.opacity = 0.8;
 		$e_moveBlock();
 		$_eseecode.session.floatingBlock.div.removeEventListener("click", $e_clickBlock, false);
 		$_eseecode.session.floatingBlock.div.removeEventListener("touchstart", $e_clickBlock, false);
@@ -197,6 +198,7 @@
 			// If the floatingBlock has already been added there's nothing to do here (this could happen if two blocks are added before too quickly, before the first block's animation has finished)
 			return;
 		}
+		$_eseecode.session.floatingBlock.div.style.opacity = 1;
 		var divId = div.id;
 		var action;
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
@@ -326,6 +328,13 @@
 				blockElement = blockElement.nextSibling;
 			} else {
 				blockElement = blockElement.parentNode.nextSibling;
+			}
+			if (blockElement) {
+				if (blockElement.getBoundingClientRect().height) {
+					blockHeight = blockElement.getBoundingClientRect().height;
+				} else {
+					blockHeight = blockElement.getBoundingClientRect().bottom-blockElement.getBoundingClientRect().top;
+				}
 			}
 		}
 		return position;
@@ -1435,7 +1444,9 @@
 		// We must first creat the inner text so the div expands its width if necessary
 		var span = document.createElement("span");
 		span.style.color = $e_readableText(color);
-		span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
+		if (!instruction.dummy) {
+			span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
+		}
 		span.style.fontFamily = "Arial";
 		if (level == "level3") {
 			span.style.fontSize = "13px";
@@ -1462,9 +1473,13 @@
 			div.appendChild(span);
 		}
 		// Disable text selection on the span
-		span.addEventListener("mousedown",function(e){e.preventDefault();},false);
+		//span.addEventListener("mousedown",function(e){e.preventDefault();},false);
 		div.style.minWidth = $_eseecode.setup.blockWidth[level]+"px";
-		div.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
+		if (!instruction.dummy) {
+			div.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
+		} else {
+			div.style.minHeight = "15px";
+		}
 		div.setAttribute("title", text+((dialog && instruction.tip)?": "+_(instruction.tip):"")); // help for blind people
 		if (!instruction.dummy) {
 			var bgWidth = div.clientWidth;
