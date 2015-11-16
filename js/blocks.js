@@ -113,10 +113,9 @@
 		}
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
-		if (div.offsetLeft > 0) { // Make sure the browser is compatible with offsetLeftTop
-			$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.offsetLeft + div.parentNode.scrollLeft;
-			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.offsetTop + div.parentNode.scrollTop;
-		}
+		// Try to drag the block pinned from the same position it was clicked
+		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left;
+		$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top;
 		// Copy parameters
 		for (var i=1; div.getAttribute("data-param"+i) !== null; i++) {
 			$_eseecode.session.floatingBlock.div.setAttribute("data-param"+i,div.getAttribute("data-param"+i));
@@ -144,46 +143,42 @@
 			document.body.addEventListener("touchmove", $e_moveBlock, false);
 			document.body.addEventListener("touchcancel", $e_cancelFloatingBlock, false);
 		} else { // In level1 we stick the block immediately
-			if ($_eseecode.session.floatingBlock.div.getBoundingClientRect().top) {
-				var consoleDiv = document.getElementById("console-blocks");
-				var blockMeasures = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].id, $_eseecode.session.floatingBlock.div);
-				var blockPosition = $_eseecode.session.floatingBlock.div.getBoundingClientRect();
-				var consolePosition = consoleDiv.getBoundingClientRect();
-				var diffTop = consolePosition.top - blockPosition.top;
-				var diffLeft = consolePosition.left - blockPosition.left;
-				var diffHeight = consoleDiv.style.height.replace("px","") - blockMeasures.height;
-				var diffWidth = (consolePosition.width?consolePosition.width:367) - blockMeasures.width;
-				var animationInterval = 50;
-				var animationRepetitions = 8;
-				var shadowDiv = document.createElement("div");
-				shadowDiv.style.width = blockMeasures.width+"px";
-				shadowDiv.style.height = blockMeasures.height+"px";
-				shadowDiv.style.border = "3px solid #666666";
-				shadowDiv.setAttribute("data-downcounter", animationRepetitions);
-				shadowDiv.style.position = "absolute";
-				shadowDiv.style.top = blockPosition.top;
-				shadowDiv.style.left = blockPosition.left;
-				document.body.appendChild(shadowDiv);
-				var shadowBlockToConsole = function() {
-					var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
-					if (downcounter == 0) {
-						document.body.removeChild(shadowDiv);
-					} else {
-						downcounter--;
-						var upcounter = animationRepetitions-downcounter;
-						shadowDiv.style.top = (blockPosition.top + diffTop/animationRepetitions*upcounter) + "px";
-						shadowDiv.style.left = (blockPosition.left + diffLeft/animationRepetitions*upcounter) + "px";
-						shadowDiv.style.height = (blockMeasures.height + diffHeight/animationRepetitions*upcounter) + "px";
-						shadowDiv.style.width = (blockMeasures.width + diffWidth/animationRepetitions*upcounter) + "px";
-						shadowDiv.setAttribute("data-downcounter", downcounter);
-						setTimeout(shadowBlockToConsole, animationInterval);
-					}
+			var consoleDiv = document.getElementById("console-blocks");
+			var blockMeasures = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].id, $_eseecode.session.floatingBlock.div);
+			var blockPosition = $_eseecode.session.floatingBlock.div.getBoundingClientRect();
+			var consolePosition = consoleDiv.getBoundingClientRect();
+			var diffTop = consolePosition.top - blockPosition.top;
+			var diffLeft = consolePosition.left - blockPosition.left;
+			var diffHeight = consoleDiv.style.height.replace("px","") - blockMeasures.height;
+			var diffWidth = (consolePosition.width?consolePosition.width:367) - blockMeasures.width;
+			var animationInterval = 50;
+			var animationRepetitions = 8;
+			var shadowDiv = document.createElement("div");
+			shadowDiv.style.width = blockMeasures.width+"px";
+			shadowDiv.style.height = blockMeasures.height+"px";
+			shadowDiv.style.border = "3px solid #666666";
+			shadowDiv.setAttribute("data-downcounter", animationRepetitions);
+			shadowDiv.style.position = "absolute";
+			shadowDiv.style.top = blockPosition.top;
+			shadowDiv.style.left = blockPosition.left;
+			document.body.appendChild(shadowDiv);
+			var shadowBlockToConsole = function() {
+				var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
+				if (downcounter == 0) {
+					document.body.removeChild(shadowDiv);
+				} else {
+					downcounter--;
+					var upcounter = animationRepetitions-downcounter;
+					shadowDiv.style.top = (blockPosition.top + diffTop/animationRepetitions*upcounter) + "px";
+					shadowDiv.style.left = (blockPosition.left + diffLeft/animationRepetitions*upcounter) + "px";
+					shadowDiv.style.height = (blockMeasures.height + diffHeight/animationRepetitions*upcounter) + "px";
+					shadowDiv.style.width = (blockMeasures.width + diffWidth/animationRepetitions*upcounter) + "px";
+					shadowDiv.setAttribute("data-downcounter", downcounter);
+					setTimeout(shadowBlockToConsole, animationInterval);
 				}
-				setTimeout(shadowBlockToConsole, animationInterval);
-				setTimeout($e_unclickBlock, animationInterval*animationRepetitions); // We call this appart from the animation instead of when finishing the animation so thatif the animation fails it still runs
-			} else {
-				$e_unclickBlock();
 			}
+			setTimeout(shadowBlockToConsole, animationInterval);
+			setTimeout($e_unclickBlock, animationInterval*animationRepetitions); // We call this appart from the animation instead of when finishing the animation so thatif the animation fails it still runs
 		}
 		event.stopPropagation();
 	}
@@ -207,10 +202,10 @@
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var pos = $e_eventPosition(event);
 		if (level == "level1" ||
-		    (pos.x > consoleDiv.offsetLeft &&
-		     pos.x < consoleDiv.offsetLeft+consoleDiv.offsetWidth &&
-		     pos.y > consoleDiv.offsetTop &&
-		     pos.y < consoleDiv.offsetTop+consoleDiv.offsetHeight)) {
+		    (pos.x > consoleDiv.getBoundingClientRect().left &&
+		     pos.x < consoleDiv.getBoundingClientRect().left+consoleDiv.offsetWidth &&
+		     pos.y > consoleDiv.getBoundingClientRect().top &&
+		     pos.y < consoleDiv.getBoundingClientRect().top+consoleDiv.offsetHeight)) {
 			div.style.position = "static";
 			if (level == "level1") {
 				action = "add";
@@ -224,10 +219,7 @@
 				$e_recursiveAddEventListener(div,"touchstart",$e_clickBlock);
 				// The block was dropped in the code so we must add it
 				// Detect where in the code we must insert the div
-				var blockHeight = $e_blockSize(level, div).height;
-				var position = (pos.y-consoleDiv.offsetTop+consoleDiv.scrollTop)/blockHeight;
-				position += 0.5; // +0.5 to allow click upper half of block to insert above, lower half of block to insert below
-				position = Math.floor(position);
+				var position = $e_blockPositionFromCoords(consoleDiv, pos);
 				$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = position;
 				if (($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition === $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) || ($e_isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition) && $e_isNumber($_eseecode.session.blocksUndo[blocksUndoIndex].divPosition) && $_eseecode.session.blocksUndo[blocksUndoIndex].divPosition-1 == $_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition)) { // Nothing changed: Note that moving a block right below has no effect
 					// We aren't using the floating block
@@ -256,12 +248,17 @@
 						}
 						$e_paintBlock(div);
 					}
+					var blockHeight;
+					if (div.getBoundingClientRect().height) {
+						blockHeight = div.getBoundingClientRect().height;
+					} else {
+						blockHeight = div.getBoundingClientRect().bottom-div.getBoundingClientRect().top;
+					}
 					setTimeout(function() {
-						var blockHeight = $e_blockSize($_eseecode.modes.console[$_eseecode.modes.console[0]].id, div).height;
-						if (position*blockHeight < consoleDiv.scrollTop) {
-							$e_smoothScroll(consoleDiv, position*blockHeight-10);
-						} else if ((position+1)*blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
-							$e_smoothScroll(consoleDiv, (position+1)*blockHeight-consoleDiv.clientHeight+10);
+						if (div.offsetTop < consoleDiv.scrollTop) {
+							$e_smoothScroll(consoleDiv, div.offsetTop-10);
+						} else if (div.offsetTop+blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
+							$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.clientHeight+blockHeight+10);
 						}
 					}, 100); // Scroll appropiately to see the new block. Do it after timeout, since the div scroll size isn't updated until this event is complete
 				}
@@ -302,6 +299,36 @@
 			}
 			$e_refreshUndoUI();
 		}
+	}
+
+	/**
+	 * Returns the position where he block has been dropped
+	 * @private
+	 * @param {!HTMLElement} consoleDiv Blocks console div
+	 * @param {Object} coords Coordinates
+	 * @return {Number} Position where the block has been dropped
+	 * @example $e_blockPositionFromCoords(document.getElementById("console-blocks"), document.getElementById("div-1231231231"))
+	 */
+	function $e_blockPositionFromCoords(consoleDiv, coords) {
+		var position = 0;
+		var blockElement = consoleDiv.firstChild;
+		var blockHeight;
+		if (blockElement.getBoundingClientRect().height) {
+			blockHeight = blockElement.getBoundingClientRect().height;
+		} else {
+			blockHeight = blockElement.getBoundingClientRect().bottom-blockElement.getBoundingClientRect().top;
+		}
+		while (blockElement && blockElement !== consoleDiv.nextSibling && coords.y > blockElement.getBoundingClientRect().top+blockHeight/2) {
+			position++;
+			if (blockElement.firstChild && blockElement.firstChild.nextSibling) { // If has subblocks
+				blockElement = blockElement.firstChild.nextSibling;
+			} else if (blockElement.nextSibling) {
+				blockElement = blockElement.nextSibling;
+			} else {
+				blockElement = blockElement.parentNode.nextSibling;
+			}
+		}
+		return position;
 	}
 
 	/**
@@ -381,21 +408,28 @@
 		if (!event) {  // firefox doesn't know window.event
 			return;
 		}
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id
 		var div = $_eseecode.session.floatingBlock.div;
 		var pos = $e_eventPosition(event);
+		var blockHeight, blockWidth;
+		if (div.getBoundingClientRect().height) {
+			blockHeight = div.getBoundingClientRect().height;
+			blockWidth = div.getBoundingClientRect().width;
+		} else {
+			blockHeight = div.getBoundingClientRect().bottom-div.getBoundingClientRect().top;
+			blockWidth = div.getBoundingClientRect().right-div.getBoundingClientRect().left;
+		}
 		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
-			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x +"px";
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x - 10 +"px"; // -10 is a magic number, it seems to work perfect
 			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
 		} else {
-			div.style.left = pos.x - $_eseecode.setup.blockWidth[level]/2 +"px";
-			div.style.top = pos.y - $_eseecode.setup.blockHeight[level]/2 +"px";
+			div.style.left = pos.x - blockWidth/2 +"px";
+			div.style.top = pos.y - blockHeight/2 +"px";
 		}
 		// if mouse is above the console or under the console, scroll. Don't use $e_smoothScroll since it uses a timeout and it will queue up in the events to launch
 		var consoleDiv = document.getElementById("console-blocks");
-		if (pos.y < consoleDiv.offsetTop) {
+		if (pos.y < consoleDiv.getBoundingClientRect().top) {
 			consoleDiv.scrollTop -= 2;
-		} else if (pos.y > consoleDiv.offsetTop+consoleDiv.clientHeight) {
+		} else if (pos.y > consoleDiv.getBoundingClientRect().top+consoleDiv.clientHeight) {
 			consoleDiv.scrollTop += 2;
 		}
 		if (event) {

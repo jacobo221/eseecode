@@ -12,12 +12,14 @@
  *   Blocks in code are now always rounded and adapting to context
  *   Prepared for better external access
  *   New guiding system to teach to use eSeeCode
+ *   Added some tutorials
  *   New animation in Touch view when adding new blocks
  *   Better way of accessing the instructions' definitions
  *   Added documentation for not-in-implementation.js code elements such as repeat(), while(), if(), ...
  *   Prevent from selecting text (except in Code view), which frequently was an error when trying to click
  *   Improved order of blocks in dialog in Touch and Drag views
  *   Deprecated unsetColor()
+ *   Fix: Long awaited fix to get the exact position of a block and scroll to its exact position
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
  *   Fix: Correcting wrong styling in inline functions

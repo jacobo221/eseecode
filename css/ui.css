@@ -103,8 +103,9 @@
 		background-color: rgba(0,0,0,0.4);
 	}
 	.program {
+		position: relative;
 		width: inherit;
-		height: 349px; // This will be modified via javascript
+		height: 349px; /* This will be modified via javascript */
 		background-color: #FFFFFF;
 		color: inherit;
 		overflow-x: hidden;

@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>eSeeCode UI tutorial</title>
+        <script type="text/javascript" src="guide.js"></script>
+    </head>
+<body>
+<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src=""></iframe>
+<script type="text/javascript">
+    var guideSteps = [
+        { type: "view", argument: "touch" },
+        { type: "info", text: "This tutorial will guide you through the UI elements in eSeeCode", timeout: 5 },
+        { type: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction", position: "above", action: "clickMessage" },
+        { type: "dialog", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage" },
+        { type: "console", text: "Here you will see the code you are creating", position: "inside", action: "clickMessage" },
+        { type: "setup", text: "From here you can access basic functions" },
+        { type: "language", text: "You can switch the language" },
+        { type: "htmlElement", argument: "filemenu", text: "Save or Load code", action: "clickMessage" },
+        { type: "gridenable", text: "Enable/disable the grid..." },
+        { type: "grid", argument: "true" },
+        { type: "gridsetup", text: "...and the setup the distance between the lines in the grid" },
+        { type: "coordinates", text: "We can change the coordinates system" },
+        { type: "guideenable", text: "You can also enable/disable the guide..." },
+        { type: "timeoutfield", text: "And define how long we allow our code to run before it stops (to prevent it from running forever if there is a problem in the code", action: "clickMessage" },
+        { type: "pieces", text: "Now let's get into programming" },
+        { type: "gridstep", argument: "25" },
+        { type: "axis", argument: "2" },
+        { type: "guide", argument: "true" },
+        { type: "restart" },
+        { type: "views", text: "At any moment you can change your 'view' of the code: Touch, Drag, Build or Code", action: "clickMessage" },
+        { type: "touchButton", text: "Right now you are in Touch view. This view allows to program very easily, so easy you don't even need to know how to read!", action: "clickMessage" },
+        { type: "dialog", text: "In Touch view you just have to click on an instruction and it will immediately be appended to the code and run", position: "inside", action: "clickMessage" },
+        { type: "dialogInstruction", argument: "forward1", text: "Click this instruction to see how it works" },
+        //{ type: "verify", argument: "forward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "console", text: "You can see how the instruction has been immediately added to the code...", position: "above", action: "clickMessage" },
+        { type: "whiteboard", text: "...and the guide has moved to begin drawing", position: "above", action: "clickMessage" },
+        { type: "dialog", text: "Each instruction here does something different", position: "inside", action: "clickMessage" },
+        { type: "dialogInstruction", argument: "forward2", text: "This instruction, for instance, moves the guide forward but not as far as the previous instruction. Click it to try it" },
+        //{ type: "verify", argument: "forward(100)%0Aforward(50)%0A", text: "You clicked the wrong button!" },
+        { type: "undoButton", text: "At any given momement you can remove the last instruction added...", position: "above" },
+        //{ type: "verify", argument: "forward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "redoButton", text: "...or add it back", position: "above" },
+        //{ type: "verify", argument: "forward(100)%0Aforward(50)%0A", text: "You clicked the wrong button!" },
+        { type: "resetButton", text: "Or even clear the whole code you've worked on so far", position: "above" },
+        { type: "popup", text: "Since we haven't saved our code we have to confirm we really want to clear the code", position: "inside", action: "clickMessage" },
+        { type: "cancel", text: "For now let's cancel so we can keep the code and continue with the tutorial" },
+        { type: "views", text: "There are three more views. Your code will be transformed into the view you click, so you can see how it looks", action: "clickMessage" },
+        { type: "dragButton", text: "Click here to see what the Drag view looks like" },
+        { type: "info", text: "In Drag view you have to drag the instructions into the code, so you can decide where in the code to put them" },
+        { type: "dialog", text: "First thing you should notice is that there are new instructions available", position: "inside", action: "clickMessage" },
+        { type: "dialogInstruction", argument: "turnLeft", text: "Drag this instruction into the code, right in between the other two instructions" },
+        { type: "popup", text: "When you add an instruction you might have to configure it. In this case we don't want to alter its parameters, so leave them with the default values", position: "inside", action: "clickMessage" },
+        { type: "accept", text: "Click the Accept button to add the instruction" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0A", correction: "forward(100)%0Aforward(50)%0A" },
+        { type: "whiteboard", text: "Notice in Drag view the code isn't immediately run, instead you have to think how to order the instructions in the code and then...", position: "above", action: "clickMessage" },
+        { type: "executeButton", text: "...click the run button to see the result", position: "above" },
+        { type: "whiteboard", text: "Once you click the run button the result of your code will appear in the whiteboard", position: "above", action: "clickMessage" },
+        { type: "camera", text: "You can download a picture of the whiteboard..." },
+        { type: "cameraimage", text: "...from this button" },
+        { type: "clearButton", text: "You can also clear the whiteboard at any time", position: "above" },
+        { type: "info", text: "Drag view offers unlimited layers which will all be displayed in the whiteboard" },
+        { type: "dialogInstruction", argument: "use", text: "With this instruction you create a new independent layer. Drag it to the end of the code" },
+        { type: "accept", text: "Accept without changing the default configuration" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0Ause()%0A" },
+        { type: "dialogInstruction", argument: "turnRight", text: "Add this instruction to the end of the code" },
+        { type: "accept", text: "Accept without changing the default configuration" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0Ause()%0AturnRight(90)%0A" },
+        { type: "dialogInstruction", argument: "forward", text: "And finally this instruction also to the end of the code" },
+        { type: "accept", text: "Accept without changing the default configuration" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0Ause()%0AturnRight(90)%0Aforward(100)%0A" },{ type: "view", argument: "drag" },
+        { type: "executeButton", text: "Now run the code to see the result", position: "above" },
+        { type: "whiteboard", text: "It looks like a single layer, but the whiteboard is now actually two independent layers all together", position: "above", action: "clickMessage" },
+        { type: "camera", text: "You already know can download a picture of the whiteboard..." },
+        { type: "cameraanimation", text: "...but since now you have more than one layer, you can download it as an animation..." },
+        { type: "camera", text: "But not only can you download the layers as an image or an animation..." },
+        { type: "cameragrid", text: "...you can also download it as a grid of images" },
+        { type: "debug", text: "You can switch to Debug to see each layer independently" },
+        { type: "dialog-debug-layers", text: "Here you can see each layer independently, switch them on or off, etc", timeout: 5 },
+        { type: "dialog", text: "Debug system is complex enough as to have <a href=\"/tutorials/debug.html\" target=\"_blank\">its own tutorial</a>", position: "inside", action: "clickMessage" },
+        { type: "pieces", text: "Lets go back to programming" },
+        { type: "view", argument: "drag" },{ type: "code", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0Ause()%0AturnRight(90)%0Aforward(100)%0A" },{ type: "execute" },
+        { type: "info", text: "In Drag view you can remove specific instructions, not just the last one" },
+        { type: "consoleblockline", argument: 3, text: "Drag this instruction out of the code to remove it" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0AturnRight(90)%0Aforward(100)%0A" },
+        { type: "console", text: "Now remove the last two instructions of code", timeout: 4 },
+        { type: "executeButton", text: "Run the code to see the result", position: "above" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(50)%0A", stepsBack: 3 },
+        { type: "info", text: "You can reconfigure any instruction by clicking it" },
+        { type: "consoleblockline", argument: 2, text: "For example, click this instruction" },
+        { type: "parameter1Visual", text: "Configure it to move forward 150 pixels" },
+        { type: "accept", text: "Click the Accept button to enable the new configuration for this instruction" },
+        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0Aforward(150)%0A" },
+        { type: "consoleblockline", argument: 2, text: "Notice how the icon in the instruction changes to reflect its new configuration", action: "clickMessage" },
+        { type: "executeButton", text: "Now click the run button to see the result", position: "above" },
+        { type: "info", text: "In Drag view you can also reorder the instructions in the code" },
+        { type: "consoleblockline", argument: 1, text: "Drag this instruction to the beginning of the code" },
+        { type: "verify", argument: "turnLeft(90)%0Aforward(100)%0Aforward(150)%0A" },
+        { type: "executeButton", text: "Click the run button to see the result", position: "above" },
+        { type: "info", text: "To learn more about the Drag view, take the <a href=\"/tutorials/drag.html\" target=\"_blank\">Drag view Tutorial</a>" },
+        { type: "buildButton", text: "Click here to see what the Build view looks like" },
+        { type: "info", text: "Here you begin to program seeing the code, but still by dragging blocks of instructions.<br />To learn more about the Build view, take the <a href=\"/tutorials/build.html\" target=\"_blank\">Build view Tutorial</a>" },
+        { type: "codeButton", text: "Click here to see what the Code view looks like" },
+        { type: "info", text: "Here you program with pure code, where anything can be achieved.<br />To learn more about the Code view, take the <a href=\"/tutorials/code.html\" target=\"_blank\">Code view Tutorial</a>" },
+        { type: "info", text: "Congratulations!<br />You have finished this tutorial!" }
+    ];
+    
+    var translations = {
+        ca: {
+        },
+        es: {
+        }
+    };
+    
+    loadGuide("eseecode-frame", "../index.html");
+</script>
+</body>
+</html>

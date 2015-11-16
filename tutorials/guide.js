@@ -40,12 +40,12 @@
         ttBox.style.zIndex = 100000;
         ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
         iframe.contentWindow.document.body.appendChild(ttBox);
-        if (element && element.getBoundingClientRect().left) {
+        if (element) {
             ttBox.style.position = "absolute";
             var coordX, coordY;
             var margin = 40;
             coordX = element.getBoundingClientRect().left;
-            if (width === undefined && element.getBoundingClientRect().width) {
+            if (width === undefined) {
                 coordX += margin;
                 width = Math.max(200,element.getBoundingClientRect().width-margin*2);
             } else {
@@ -93,6 +93,11 @@
         } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
             ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
+            var elements = ttBox.getElementsByTagName("a");
+            for (var i=0; i<elements.length; i++) {
+                elements[i].addEventListener("mousedown", function(event){alert();event.stopPropagation();}, false);
+                elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
+            } 
             ttBox.innerHTML += "<br />"+_("Click on this message to continue");
         } else if (element && action != "none") {
             if (!currentGuideStep.action) {
@@ -111,6 +116,14 @@
             ttWrapperActivate();
         }
         doc.body.appendChild(ttBox);
+        // The following allows to click links in the ttBox
+        if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+            var elements = ttBox.getElementsByTagName("a");
+            for (var i=0; i<elements.length; i++) {
+                elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
+                elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
+            } 
+        }
     }
 
     function ttDeactivate(clearBorders) {
@@ -276,7 +289,15 @@
         if (currentGuideStep.runNext === undefined) {
             currentGuideStep.runNext = guideFinishStep;
         }
-        switch (currentGuideStep.type.toLowerCase()) {
+        currentGuideStep.type = currentGuideStep.type.toLowerCase();
+        var parameterCode = currentGuideStep.type.match(/^parameter([1-9][0-9]*)(visual)?$/);
+        if (parameterCode) {
+            var paramNumber = parameterCode[1];
+            var paramVisual = (parameterCode[2]?"Visual":"");
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "setupBlock"+paramNumber+paramVisual;
+        }
+        switch (currentGuideStep.type) {
             case "dialoginstruction":
                 var instruction = currentGuideStep.argument;
                 var dialogDiv = doc.getElementById("dialog-blocks");
@@ -294,15 +315,15 @@
                     var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
 					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
 					if (element.offsetTop < dialogDiv.scrollTop || element.offsetTop+blockHeight/2>dialogDiv.scrollTop+dialogDiv.offsetHeight) {
-                        dialogDiv.scrollTop = element.offsetTop;-blockHeight;
+                        dialogDiv.scrollTop = element.offsetTop-blockHeight;
 					}
-                }
-                if (currentGuideStep.action === undefined) {
-                    currentGuideStep.action = "mousedown";
-                }
                 // Inject floatingBlock before going to next step
                 if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
                     currentGuideStep.runNext = guideDraggingBlock;
+                }
+                }
+                if (currentGuideStep.action === undefined) {
+                    currentGuideStep.action = "mousedown";
                 }
                 break;
             case "consoleblockline":
@@ -313,16 +334,17 @@
                     // Scroll to this block
                     var currentMode = iframe.contentWindow.$_eseecode.modes.console[iframe.contentWindow.$_eseecode.modes.console[0]];
 					var blockHeight = iframe.contentWindow.$e_blockSize(currentMode.id, element).height;
+					console.log(element.offsetTop+" < "+consoleDiv.scrollTop)
 					if (element.offsetTop < consoleDiv.scrollTop || element.offsetTop+blockHeight/2>consoleDiv.scrollTop+consoleDiv.offsetHeight) {
                         consoleDiv.scrollTop = element.offsetTop-blockHeight;
 					}
+                    // Inject floatingBlock before going to next step
+                    if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                        currentGuideStep.runNext = guideDraggingBlock;
+                    }
                 }
                 if (currentGuideStep.action === undefined) {
                     currentGuideStep.action = "mousedown";
-                }
-                // Inject floatingBlock before going to next step
-                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
-                    currentGuideStep.runNext = guideDraggingBlock;
                 }
                 break;
             case "info":
@@ -350,16 +372,7 @@
             case "view":
             case "instructions":
                 if (currentGuideStep.argument) {
-                    iframe.contentWindow.API_loadURLParams(currentGuideStep.type.toLowerCase()+"="+currentGuideStep.argument);
-                }
-                element = undefined;
-                skipElement = true;
-                setTimeout(currentGuideStep.runNext, 120);
-                return;
-                break;
-            case "code":
-                if (currentGuideStep.argument) {
-                    iframe.contentWindow.API_uploadCode(decodeURI(currentGuideStep.argument));
+                    iframe.contentWindow.API_loadURLParams(currentGuideStep.type+"="+currentGuideStep.argument);
                 }
                 element = undefined;
                 skipElement = true;
@@ -373,7 +386,7 @@
                 setTimeout(currentGuideStep.runNext, 120);
                 return;
                 break;
-            case "reset":
+            case "clear":
                 iframe.contentWindow.API_reset();
                 element = undefined;
                 skipElement = true;
@@ -382,6 +395,15 @@
                 break;
             case "restart":
                 iframe.contentWindow.API_restart();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "code":
+                if (currentGuideStep.argument) {
+                    iframe.contentWindow.API_uploadCode(decodeURI(currentGuideStep.argument));
+                }
                 element = undefined;
                 skipElement = true;
                 setTimeout(currentGuideStep.runNext, 120);
@@ -413,16 +435,16 @@
                 return;
                 break;
             default:
-                if (currentGuideStep.type != "htmlElement") {
+                if (currentGuideStep.type != "htmlelement") {
                     var elementId = translateToHTMLElement(currentGuideStep.type);
                     if (elementId) {
-                        currentGuideStep.type = "htmlElement";
                         currentGuideStep.argument = elementId;
+                    } else {
+                        currentGuideStep.argument = currentGuideStep.type;
                     }
+                    currentGuideStep.type = "htmlelement";
                 }
-                if (currentGuideStep.type == "htmlElement") {
-                    element = doc.getElementById(currentGuideStep.argument);
-                }
+                element = doc.getElementById(currentGuideStep.argument);
                 break;
         }
         if (element) {
@@ -448,55 +470,55 @@
     
     function translateToHTMLElement(code) {
         var translationTable = {
-            "undo": "button-undo",
-            "redo": "button-redo",
-            "touch": "console-tabs-level1",
-            "drag": "console-tabs-level2",
-            "build": "console-tabs-level3",
-            "code": "console-tabs-level4",
+            "undobutton": "button-undo",
+            "redobutton": "button-redo",
+            "touchbutton": "console-tabs-level1",
+            "dragbutton": "console-tabs-level2",
+            "buildbutton": "console-tabs-level3",
+            "codebutton": "console-tabs-level4",
             "title": "title",
             "fillscreen": "fullscreen-button",
             "camera": "whiteboard-tabs-download-button",
             "dialog": "dialog-body",
-            "dialogTabs": "dialog-tabs",
+            "dialogs": "dialog-tabs",
             "console": "console-blocks",
-            "consoleTabs": "console-tabs",
+            "views": "console-tabs",
             "whiteboard": "whiteboard",
-            "cameraImage": "whiteboard-downloadImage",
-            "cameraAnimation": "whiteboard-downloadLayers-animation",
-            "cameraAnimationSetup": "setup-downloadLayers-interval",
-            "cameraGrid": "whiteboard-downloadLayers-grid",
-            "cameraGridSetup": "setup-downloadLayers-columns",
+            "cameraimage": "whiteboard-downloadImage",
+            "cameraanimation": "whiteboard-downloadLayers-animation",
+            "cameraanimationsetup": "setup-downloadLayers-interval",
+            "cameragrid": "whiteboard-downloadLayers-grid",
+            "cameragridsetup": "setup-downloadLayers-columns",
             "popup": "msgBox0",
-            "buttonAccept": "msgBoxAccept0",
-            "buttonCancel": "msgBoxCancel0",
-            "buttonClose": "msgBoxCancel0",
-            "parametersBasic": "setupBlockTabsBasic",
-            "parametersAdvanced": "setupBlockTabsAdvanced",
-            "run": "button-execute",
-            "clear": "button-clear",
-            "reset": "button-reset",
+            "accept": "msgBoxAccept0",
+            "cancel": "msgBoxCancel0",
+            "close": "msgBoxCancel0",
+            "parametersbasic": "setupBlockTabsBasic",
+            "parametersadvanced": "setupBlockTabsAdvanced",
+            "executebutton": "button-execute",
+            "clearbutton": "button-clear",
+            "resetbutton": "button-reset",
             "setup": "dialog-tabs-setup",
             "language": "language-select",
             "load": "loadcode",
             "save": "savecode",
-            "gridEnable": "setup-grid-enable",
-            "gridSetup": "setup-grid-step",
+            "gridenable": "setup-grid-enable",
+            "gridsetup": "setup-grid-step",
             "coordinates": "setup-grid-coordinates",
-            "guideEnable": "setup-guide-enable",
-            "setup-execute-time": "setup-execute-time",
+            "guideenable": "setup-guide-enable",
+            "timeoutfield": "setup-execute-time",
             "pieces": "dialog-tabs-pieces",
             "window": "dialog-tabs-window",
             "io": "dialog-tabs-io",
             "input": "dialog-io-input",
             "output": "dialog-io-output",
             "debug": "dialog-tabs-debug",
-            "pauseEnable": "dialog-debug-execute-stepped",
-            "pauseSetup": "dialog-debug-execute-step",
-            "debugCommand": "dialog-debug-command-input",
-            "debugCommandRun": "dialog-debug-command-button",
-            "breakpointAdd": "dialog-debug-breakpoint-add",
-            "watchpointAdd": "dialog-debug-watchpoint-add"
+            "pauseenable": "dialog-debug-execute-stepped",
+            "pausesetup": "dialog-debug-execute-step",
+            "debugcommand": "dialog-debug-command-input",
+            "debugcommandexecute": "dialog-debug-command-button",
+            "breakpointadd": "dialog-debug-breakpoint-add",
+            "watchpointadd": "dialog-debug-watchpoint-add"
         }
         var elementId = translationTable[code];
         return elementId;

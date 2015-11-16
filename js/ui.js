@@ -39,6 +39,7 @@
 		link.href = image.imageBinary;
 		var d = new Date();
 		link.download = "canvas-"+d.getTime()+"."+image.extension;
+		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
 	/**
@@ -1398,7 +1399,6 @@
 			reason = $_eseecode.session.highlight.reason;
 		}
 		$e_unhighlight();
-		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if (mode == "blocks") {
 			var consoleDiv = document.getElementById("console-blocks");
@@ -1417,7 +1417,17 @@
 				if (reason != "breakpoint") {
 					div.style.boxShadow = "5px 5px 5px "+style;
 				}
-				$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.offsetTop-consoleDiv.clientHeight/2+$e_blockSize(level,consoleDiv.firstChild).height/2);
+					var blockHeight;
+					if (div.getBoundingClientRect().height) {
+						blockHeight = div.getBoundingClientRect().height;
+					} else {
+						blockHeight = div.getBoundingClientRect().bottom-div.getBoundingClientRect().top;
+					}
+				if (div.offsetTop < consoleDiv.scrollTop) {
+					$e_smoothScroll(consoleDiv, div.offsetTop-10);
+				} else if (div.offsetTop+blockHeight > consoleDiv.scrollTop+consoleDiv.clientHeight) {
+					$e_smoothScroll(consoleDiv, div.offsetTop-consoleDiv.clientHeight+blockHeight+10);
+				}
 			}
 		} else if (mode == "write") {
 			var style;
@@ -1551,6 +1561,7 @@
 	 */
 	function $e_smoothScroll(div, height, startTop) {
 		clearTimeout($_eseecode.ui.scrollTimeout); // This is to prevent two scroll timeouts tunning at the same time
+		height = parseInt(height);
 		if (!startTop) {
 			startTop = div.scrollTop;
 		}
