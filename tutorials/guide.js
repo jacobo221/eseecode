@@ -25,22 +25,12 @@
         ttBoxWrapper.style.height = "100%";
         doc.body.appendChild(ttBoxWrapper);
 	}
-
-    function ttActivate(currentGuideStep) {
+	
+	function ttPosition(ttBox, currentGuideStep) {
         var element = currentGuideStep.element;
         var position = currentGuideStep.position;
         var width = currentGuideStep.width;
-        // Create tooltip
-        var ttBox = document.createElement("div");
-        ttBox.id = "ttBox";
-        ttBox.style.borderRadius = "10px";
-        ttBox.style.backgroundColor = "#EFEFEF";
-        ttBox.style.textAlign = "center";
-        ttBox.style.border = "1px solid #000000";
-        ttBox.style.zIndex = 100000;
-        ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
-        doc.body.appendChild(ttBox);
-        if (element) {
+	    if (element) {
             if (width === undefined) {
                 width = Math.max(200,element.getBoundingClientRect().width);
             }
@@ -88,6 +78,22 @@
             ttBox.style.top = "50%";
             ttBox.style.width = width + "px";
         }
+	}
+
+    function ttActivate(currentGuideStep) {
+        var element = currentGuideStep.element;
+        var position = currentGuideStep.position;
+        // Create tooltip
+        var ttBox = document.createElement("div");
+        ttBox.id = "ttBox";
+        ttBox.style.borderRadius = "10px";
+        ttBox.style.backgroundColor = "#EFEFEF";
+        ttBox.style.textAlign = "center";
+        ttBox.style.border = "1px solid #000000";
+        ttBox.style.zIndex = 100000;
+        ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
+        doc.body.appendChild(ttBox);
+        ttPosition(ttBox, currentGuideStep);
         if (currentGuideStep.runNext === undefined) {
             currentGuideStep.runNext = guideFinishStep;
         }
@@ -211,6 +217,13 @@
                     timeoutHandler = setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
                 } });
             } else {
+                var floatingBlocks = doc.getElementsByClassName("floatingBlock");
+                if (floatingBlocks.length === 0) {
+                    var ttBox = doc.getElementById("ttBox");
+                    if (ttBox) {
+                        ttPosition(ttBox, guideSteps[elementGuideIndex]);
+                    }
+                }
                 timeoutHandler = setTimeout(function() {
                     verifyElement(element, elementGuideIndex);
                 }, 500);
@@ -569,7 +582,6 @@
         if (element) {
             currentGuideStep.oldBorder = getComputedStyle(element, '').getPropertyValue('border');
             element.className += " guideBorder";
-            verifyElement(element, currentGuideIndex);
         } else if (!skipElement) {
             guideStepBack(currentGuideStep);
             return;
@@ -578,6 +590,9 @@
         currentGuideStep.element = element;
         if (silent !== true) {
             ttActivate(currentGuideStep);
+            if (element) {
+                verifyElement(element, currentGuideIndex);
+            }
         }
     }
 
@@ -698,7 +713,7 @@
                 var stepButton = document.createElement("span");
                 stepButton.innerHTML = (i+1);
                 stepButton.id = "guideHumanStepButton"+guideHumanStep.index;
-                stepButton.title = guideHumanStep.title;
+                stepButton.title = _(guideHumanStep.title);
                 stepButton.className = "guideHumanStepButton";
                 stepButton.setAttribute("onclick", "guideGoToStep("+guideHumanStep.index+")");
                 guideStepsButtons.appendChild(stepButton);
