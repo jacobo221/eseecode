@@ -117,6 +117,17 @@
 	}
 
 	/**
+	 * Gets the input from I/O
+	 * @since 2.3
+	 * @public
+	 * @return {String} Input in the I/O
+	 * @example API_getInput()
+	 */
+	function API_getInput() {
+		return document.getElementById("dialog-io-input").value;
+	}
+
+	/**
 	 * Returns an image grid containing all the layers
 	 * @private
 	 * @param {Number} columns Amount of columns per line
@@ -143,7 +154,7 @@
 	 * @since 2.3
 	 * @public
 	 * @return {String} Output in the I/O
-	 * @example API_getOuput("1 1 2 3 5 8")
+	 * @example API_getOuput()
 	 */
 	function API_getOuput() {
 		return document.getElementById("dialog-io-output").value;

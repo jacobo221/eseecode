@@ -26,7 +26,7 @@
         doc.body.appendChild(ttBoxWrapper);
 	}
 
-    function ttActivate (currentGuideStep) {
+    function ttActivate(currentGuideStep) {
         var element = currentGuideStep.element;
         var position = currentGuideStep.position;
         var width = currentGuideStep.width;
@@ -39,19 +39,16 @@
         ttBox.style.border = "1px solid #000000";
         ttBox.style.zIndex = 100000;
         ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
-        iframe.contentWindow.document.body.appendChild(ttBox);
+        doc.body.appendChild(ttBox);
         if (element) {
+            if (width === undefined) {
+                width = Math.max(200,element.getBoundingClientRect().width);
+            }
+            ttBox.style.width = width + "px";
             ttBox.style.position = "absolute";
             var coordX, coordY;
             var margin = 40;
             coordX = element.getBoundingClientRect().left;
-            if (width === undefined) {
-                coordX += margin;
-                width = Math.max(200,element.getBoundingClientRect().width-margin*2);
-            } else {
-                coordX += margin;
-            }
-            ttBox.style.width = width + "px";
             coordY = element.getBoundingClientRect().top;
             if (position == "above") {
                 if (ttBox.getBoundingClientRect().height) {
@@ -62,23 +59,31 @@
                 if (element.getBoundingClientRect().height) {
                     coordY += element.getBoundingClientRect().height/2;
                     coordY -= Math.min(margin,element.getBoundingClientRect().height/2);
+                    if (currentGuideStep.width === undefined) {
+                        coordX += margin;
+                        width = Math.max(200,element.getBoundingClientRect().width-margin*2);
+                        ttBox.style.width = width + "px";
+                    } else {
+                        coordX += margin;
+                    }
                 }
+            } else if (position == "left") {
+                coordY = element.getBoundingClientRect().top;
+                coordX = element.getBoundingClientRect().left - width;
+                coordX += 15; // Magic number, makes it align well in Chrome
+                ttBox.style.borderTopRightRadius = "0px";
             } else { // "under"
                 coordY = element.getBoundingClientRect().bottom;
                 ttBox.style.borderTopLeftRadius = "0px";
             }
             ttBox.style.left = coordX + "px";
             ttBox.style.top = coordY + "px";
-            if (width === undefined) {
-                width = 200;
-            }
         } else {
             if (width === undefined) {
                 width = 400;
             }
             ttBox.style.position = "fixed";
             ttBox.style.marginLeft = (width/2*(-1)) + "px";
-            ttBox.style.marginTop = (margin*(-1)) + "px";
             ttBox.style.left = "50%";
             ttBox.style.top = "50%";
             ttBox.style.width = width + "px";
@@ -89,7 +94,7 @@
         if (currentGuideStep.timeout) {
             ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
             setTimeout(ttCountdown, 1000);
-            setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+            timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
         } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
             ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
@@ -97,7 +102,7 @@
             for (var i=0; i<elements.length; i++) {
                 elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
                 elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
-            } 
+            }
             ttBox.innerHTML += "<br />"+_("Click on this message to continue");
         } else if (element && action != "none") {
             if (!currentGuideStep.action) {
@@ -115,7 +120,6 @@
         if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             ttWrapperActivate();
         }
-        doc.body.appendChild(ttBox);
         // The following allows to click links in the ttBox
         if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             var elements = ttBox.getElementsByTagName("a");
@@ -141,10 +145,6 @@
             ttBoxWrapper.parentNode.removeChild(ttBoxWrapper);
         }
         if (clearBorders !== false) {
-            doc.body.removeEventListener("mousemove", dragTtBox, false);
-            doc.body.removeEventListener("touchmove", dragTtBox, false);
-            doc.body.removeEventListener("mouseup", currentGuideStep.runNext, false);
-            doc.body.removeEventListener("touchend", currentGuideStep.runNext, false);
             if (currentGuideStep.element) {
                 currentGuideStep.element.removeEventListener("mousedown", currentGuideStep.runNext, false);
                 currentGuideStep.element.removeEventListener("touchstart", currentGuideStep.runNext, false);
@@ -175,26 +175,24 @@
         }
     }
     
-    function verifyOutput(currentGuideStep) {
+    function verify(system, currentGuideStep) {
         if (currentGuideStep.argument === undefined) {
             console.warn("verify step lacks an argument");
             return;
         }
-        var validation = (currentGuideStep.argument == encodeURIComponent(iframe.contentWindow.API_getOutput()));
-        if (!validation) {
-            guideStepBack(currentGuideStep);
-        } else {
-            currentGuideStep.action = undefined;
-            setTimeout(currentGuideStep.runNext, 0); // Run next step and leave this step to close
+        var handler;
+        switch (system) {
+            case "input":
+                handler = iframe.contentWindow.API_getInput;
+                break;
+            case "output":
+                handler = iframe.contentWindow.API_getOutput;
+                break;
+            case "code":
+                handler = iframe.contentWindow.API_downloadCode;
+                break;
         }
-    }
-    
-    function verifyCode(currentGuideStep) {
-        if (currentGuideStep.argument === undefined) {
-            console.warn("verify step lacks an argument");
-            return;
-        }
-        var validation = (currentGuideStep.argument == encodeURIComponent(iframe.contentWindow.API_downloadCode()));
+        var validation = (currentGuideStep.argument == encodeURIComponent(handler()));
         if (!validation) {
             guideStepBack(currentGuideStep);
         } else {
@@ -210,10 +208,10 @@
                 ttDeactivate();
                 ttActivate({ text: "You stepped away from the instructions, you have to start the tutorial all over again", action: "clickMessage", runNext: function() {
                     iframe.contentWindow.API_restart();
-                    setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
+                    timeoutHandler = setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
                 } });
             } else {
-                setTimeout(function() {
+                timeoutHandler = setTimeout(function() {
                     verifyElement(element, elementGuideIndex);
                 }, 500);
             }
@@ -232,9 +230,110 @@
         if (floatingBlocks) {
             doc.body.addEventListener("mousemove", dragTtBox, false);
             doc.body.addEventListener("touchmove", dragTtBox, false);
-            doc.body.addEventListener("mouseup", guideFinishStep, false);
-            doc.body.addEventListener("touchend", guideFinishStep, false);
+            doc.body.addEventListener("mouseup", guideDraggingBlockEnd, false);
+            doc.body.addEventListener("touchend", guideDraggingBlockEnd, false);
         }
+    }
+    
+    function guideDraggingBlockEnd() {
+        doc.body.removeEventListener("mousemove", dragTtBox, false);
+        doc.body.removeEventListener("touchmove", dragTtBox, false);
+        doc.body.removeEventListener("mouseup", guideDraggingBlockEnd, false);
+        doc.body.removeEventListener("touchend", guideDraggingBlockEnd, false);
+        guideFinishStep();
+    }
+    
+    function guideGetHumanSteps() {
+        var humanSteps = [];
+        // First see if the guide programmer has defined manually the human steps
+        for (var tempGuideIndex = 0; tempGuideIndex < guideSteps.length; tempGuideIndex++) {
+            var tempGuideStep = guideSteps[tempGuideIndex];
+            if (tempGuideStep.humanStep) {
+                humanSteps[humanSteps.length] = { index: tempGuideIndex, title: tempGuideStep.humanStep };
+            }
+        }
+        // If no human steps have been definedmanually, try to guess them
+        if (!humanSteps.length) {
+            for (var tempGuideIndex = 0; tempGuideIndex < guideSteps.length; tempGuideIndex++) {
+                var tempGuideStep = guideSteps[tempGuideIndex];
+                switch (tempGuideStep.type.toLowerCase()) {
+                    // Filter which types of guides can be accessible directly
+                    case "dialoginstruction":
+                    case "consoleblockline":
+                    case "info":
+                    case "executebutton":
+                    case "clearbutton":
+                    case "resetbutton":
+                    case "touchbutton":
+                    case "dragbutton":
+                    case "buildbutton":
+                    case "codebutton":
+                    case "fullscreen":
+                    case "dialog":
+                    case "dialogs":
+                    case "console":
+                    case "views":
+                    case "whiteboard":
+                    case "pieces":
+                    case "window":
+                    case "io":
+                    case "debug":
+                        if (tempGuideStep.text) {
+                            humanSteps[humanSteps.length] = { index: tempGuideIndex };
+                        }
+                }
+            }
+        }
+        return humanSteps;
+    }
+    
+    function guideGoToStep(stepNumber) {
+        if (stepNumber < 0 || stepNumber >= guideSteps.length) {
+            return;
+        }
+        clearTimeout(timeoutHandler);
+        ttDeactivate();
+        // Create a mashup of the last state of each type
+        var mashupGuide = {};
+        for (var tempGuideIndex = 0; tempGuideIndex < stepNumber; tempGuideIndex++) {
+            var tempGuideStep = guideSteps[tempGuideIndex];
+            var type = tempGuideStep.type.toLowerCase();
+            if (type == "restart") {
+                mashupGuide = [];
+            } else {
+                if (type == "verify") {
+                    type = "code";
+                } else if (type == "verifyInput") {
+                    type = "input";
+                }
+                mashupGuide[type] = tempGuideStep.argument;
+            }
+        }
+        // Reproduce all the steps
+        for (var key in mashupGuide) {
+            // Only reproduce this type of step
+            switch (key) {
+                case "view":
+                case "grid":
+                case "gridstep":
+                case "guide":
+                case "filemenu":
+                case "lang":
+                case "input":
+                case "timeout":
+                case "axis":
+                case "view":
+                case "fullscreenmenu":
+                case "instructions":
+                case "code":
+                case "precode":
+                case "input":
+                guideNextStep({ type: key, argument: mashupGuide[key] }, true);
+                break;
+            }
+        }
+        currentGuideIndex = stepNumber;
+        guideNextStep();
     }
     
     function guideStepBack(currentGuideStep) {
@@ -279,11 +378,23 @@
         guideNextStep();
     }
 
-    function guideNextStep() {
-        if (currentGuideIndex >= guideSteps.length) {
-            return;
+    function guideNextStep(currentGuideStep, silent) {
+        if (currentGuideStep === undefined) {
+            if (currentGuideIndex >= guideSteps.length) {
+                return;
+            }
+            currentGuideStep = guideSteps[currentGuideIndex];
+            var guideHumanStepButton = document.getElementById("guideHumanStepButton"+currentGuideIndex);
+            if (guideHumanStepButton) {
+                var activeGuideHumanButtons = document.getElementsByClassName("guideHumanActiveStep");
+                for (var i=0; i<activeGuideHumanButtons.length; i++) {
+                    activeGuideHumanButtons[i].className = activeGuideHumanButtons[i].className.replace(" guideHumanActiveStep","");
+                }
+                guideHumanStepButton.className += " guideHumanActiveStep";
+            }
+        } else {
+            currentGuideStep.runNext = null;
         }
-        var currentGuideStep = guideSteps[currentGuideIndex];
         var element = undefined;
         var skipElement = false;
         if (currentGuideStep.runNext === undefined) {
@@ -422,7 +533,7 @@
                 element = undefined;
                 skipElement = true;
                 setTimeout(function() {
-                    verifyCode(currentGuideStep);
+                    verify("code", currentGuideStep);
                 }, 300); // Wait for the Touch mode animation to be finished
                 return;
                 break;
@@ -430,7 +541,15 @@
                 element = undefined;
                 skipElement = true;
                 setTimeout(function() {
-                    verifyOutput(currentGuideStep);
+                    verify("output", currentGuideStep);
+                }, 300); // Wait for the Touch mode animation to be finished
+                return;
+                break;
+            case "verifyinput":
+                element = undefined;
+                skipElement = true;
+                setTimeout(function() {
+                    verify("input", currentGuideStep);
                 }, 300); // Wait for the Touch mode animation to be finished
                 return;
                 break;
@@ -457,8 +576,9 @@
         }
         steppingBack = false;
         currentGuideStep.element = element;
-        ttActivate(currentGuideStep);
-        var ttBox = doc.getElementById("ttBox");
+        if (silent !== true) {
+            ttActivate(currentGuideStep);
+        }
     }
 
     function guideFinishStep(event) {
@@ -481,7 +601,7 @@
             "buildbutton": "console-tabs-level3",
             "codebutton": "console-tabs-level4",
             "title": "title",
-            "fillscreen": "fullscreen-button",
+            "fullscreen": "fullscreen-button",
             "camera": "whiteboard-tabs-download-button",
             "dialog": "dialog-body",
             "dialogs": "dialog-tabs",
@@ -502,6 +622,7 @@
             "executebutton": "button-execute",
             "clearbutton": "button-clear",
             "resetbutton": "button-reset",
+            "fullscreenbutton": "fullscreen-button",
             "setup": "dialog-tabs-setup",
             "language": "language-select",
             "load": "loadcode",
@@ -536,6 +657,10 @@
                 iframeId = iframeId[0].id;
             }
         }
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = guideCSS;
+        document.body.appendChild(css);
         iframe = document.getElementById(iframeId);
         if (iframe) {
             window.addEventListener("load", function() {
@@ -552,6 +677,37 @@
                 }, false);
                 iframe.src = src; // Reload the iframe so the iframe's onload trigger is run
             }, false);
+            var guideStepsButtons = document.createElement("div");
+            var iframeWidth = iframe.getBoundingClientRect().width;
+            if (iframeWidth === undefined) {
+                iframeWidth = iframe.style.width;
+            }
+            if (iframeWidth === undefined) {
+                iframeWidth = iframe.style.width.replace("px","");
+            }
+            if (iframeWidth === undefined) {
+                iframeWidth = iframe.width //getAttribute("width");
+            }
+            if (iframeWidth) {
+                guideStepsButtons.style.maxWidth = iframeWidth+"px";
+            }
+            guideStepsButtons.className = "guideHumanSteps";
+            var guideHumanSteps = guideGetHumanSteps();
+            for (var i=0; i<guideHumanSteps.length; i++) {
+                var guideHumanStep = guideHumanSteps[i];
+                var stepButton = document.createElement("span");
+                stepButton.innerHTML = (i+1);
+                stepButton.id = "guideHumanStepButton"+guideHumanStep.index;
+                stepButton.title = guideHumanStep.title;
+                stepButton.className = "guideHumanStepButton";
+                stepButton.setAttribute("onclick", "guideGoToStep("+guideHumanStep.index+")");
+                guideStepsButtons.appendChild(stepButton);
+            }
+            if (iframe.nextSibling) {
+                iframe.parentNode.insertBefore(guideStepsButtons, iframe.nextSibling);
+            } else {
+                iframe.parentNode.appendChild(guideStepsButtons);
+            }
         }
     }
 
@@ -608,4 +764,22 @@
     var currentLanguage;
     var currentGuideIndex;
     var steppingBack = false;
+    var timeoutHandler;
     var iframe, doc;
+    
+    var guideCSS = "\
+            .guideHumanSteps {\
+            }\
+            .guideHumanStepButton {\
+                float: left;\
+                margin: 5px;\
+                color: #000000;\
+                cursor: pointer;\
+            }\
+            .guideHumanActiveStep {\
+                font-weight: bold;\
+                background-color: #888888;\
+                color: #FFFFFF;\
+                padding: 0px 5px 0px 5px;\
+            }\
+            "
