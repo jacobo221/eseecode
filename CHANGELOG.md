@@ -1,4 +1,4 @@
-## 2.3 (ongoing work)
+## 2.3
 
  *Milestone reached: Easy input/output methods*
  *   New input and output instructions and panels
