@@ -20,7 +20,9 @@
  *   Prevent from selecting text (except in Code view), which frequently was an error when trying to click
  *   Improved order of blocks in dialog in Touch and Drag views
  *   Deprecated unsetColor()
+ *   arc() by default draws circles
  *   When using mouse attend only to left button
+ *   Fix: Keep maximum precision in cursor movements
  *   Fix: Long awaited fix to get the exact position of a block and scroll to its exact position
  *   Fix. Watchpoints were highlighting wrong lines when in repeat/for/etc
  *   Fix: Translate variable types
