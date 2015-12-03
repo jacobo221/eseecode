@@ -1006,6 +1006,9 @@
 		var posx, posy;
 		var startradians, endradians;
 		var move;
+		if (degrees === undefined) {
+			degrees = 360;
+		}
 		if (counterclockwise) {
 			degrees = -degrees;
 			move = 1;

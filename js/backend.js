@@ -319,8 +319,8 @@
 	 * @example $e_moveGuide({x: 50, y: 50})
 	 */
 	function $e_moveGuide(pos) {
-		$_eseecode.currentCanvas.guide.x = Math.round(pos.x); // Make sure the value is integer
-		$_eseecode.currentCanvas.guide.y = Math.round(pos.y); // Make sure the value is integer
+		$_eseecode.currentCanvas.guide.x = pos.x; // Make sure the value is integer
+		$_eseecode.currentCanvas.guide.y = pos.y; // Make sure the value is integer
 		$e_drawGuide();
 	}
 	
