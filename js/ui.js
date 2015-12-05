@@ -195,7 +195,9 @@
 			// Watermark
 			ctx.font = "20px Arial";
 			ctx.strokeStyle="#99AAAAAA";
-			ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),shiftX+whiteboardWidth/4,shiftY+whiteboardHeight-20);
+			if (document.getElementById("dialog-debug-command-input").value != "nocaption") {
+				ctx.strokeText(_("Made with %s",[$_eseecode.platform.web.text]),shiftX+whiteboardWidth/4,shiftY+whiteboardHeight-20);
+			}
 			if (!grid) {
 				encoder.addFrame(ctx);
 			}
