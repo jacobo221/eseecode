@@ -31,7 +31,7 @@
 				} else if (key == "lang") {
 					API_switchLanguage(value, action);
 				} else if (key == "input") {
-					var value = decodeURIComponent(value);
+					value = decodeURIComponent(value);
 					API_setInput(value);
 				} else if (key == "timeout") {
 					API_setTimeout(value, action);
@@ -40,10 +40,18 @@
 				} else if (key == "view") {
 					API_switchView(value, action);
 				} else if (key == "instructions") {
-					var value = decodeURIComponent(value);
+					value = decodeURIComponent(value);
 					API_setInstructions(value, action);
 				} else if (key == "fullscreenmenu") {
 					API_showFullscreenmenu(value, action);
+				} else if (key == "precode") {
+					value = decodeURIComponent(value);
+					API_uploadPrecode(value);
+				} else if (key == "code") {
+					value = decodeURIComponent(value);
+					API_uploadCode(value);
+				} else if (key == "execute") {
+					API_execute();
 				}
 			}
 		}
