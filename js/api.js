@@ -481,3 +481,14 @@
 		$e_uploadCode(code, run, true);
 	}
 
+	/**
+	 * Runs code silently
+	 * @since 2.3
+	 * @public
+	 * @param {String} code Code to run
+	 * @example API_runCode("repeat(4){forward(100)}")
+	 */
+	function API_runCode(code) {
+		$e_execute(true, code);
+	}
+

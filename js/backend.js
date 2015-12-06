@@ -430,17 +430,17 @@
 			$_eseecode.execution.precode.code = code;
 			$_eseecode.execution.precode.standby = !run;
 		} else {
-				$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
-				if (codeParseable) {
-			        if (mode == "blocks") {
-				        program.makeBlocks(level,document.getElementById("console-blocks"));
-			        } else if (mode == "write") {
-				        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
-			        }
-				} else {
-					$e_switchConsoleMode("code");
-					$e_resetWriteConsole(code);
-				}
+			$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
+			if (codeParseable) {
+		        if (mode == "blocks") {
+			        program.makeBlocks(level,document.getElementById("console-blocks"));
+		        } else if (mode == "write") {
+			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
+		        }
+			} else {
+				$e_switchConsoleMode("code");
+				$e_resetWriteConsole(code);
+			}
 		}
 		if (run) {
 		    $e_resetCanvas();

@@ -542,6 +542,15 @@
                 setTimeout(currentGuideStep.runNext, 120);
                 return;
                 break;
+            case "inject":
+                if (currentGuideStep.argument) {
+                    iframe.contentWindow.API_runCode(decodeURI(currentGuideStep.argument));
+                }
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
             case "verify":
                 element = undefined;
                 skipElement = true;
