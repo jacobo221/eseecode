@@ -8,6 +8,7 @@
  *   Embedding setup Wizard example added
  *   Rotated forward and turnLeft/Right icons as suggested by Laura Morera
  *   Improved animateLayers() icon and added snapshot() icon
+ *   Added pop() instruction
  *   Removed stop() instrution
  *   Blocks in code are now always rounded and adapting to context
  *   Prepared for better external access

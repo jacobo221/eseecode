@@ -438,5 +438,7 @@ $_eseecode.i18n.available.es = {
 	"array": "vector",
 	"Returns the position in the input string": "Devuelve la posición de lectura en la cadena de entrada",
 	"What is the position in the input string?": "En que posición quieres seguir leyendo?",
-	"Resets the position from where we read the input string": "Reinicia la posición del cursor en la cadena de entrada"
+	"Resets the position from where we read the input string": "Reinicia la posición del cursor en la cadena de entrada",
+	"Which layer do you want to delete?\n(Leave blank to affect the current layer)": "¿Qué capa quieres borrar?\n(Deja en blanco para afectar la capa actual)",
+	"There is only one layer, you cannot delete it": "Solo hay una capa, no se puede eliminar"
 }

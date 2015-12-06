@@ -1438,6 +1438,41 @@
 	}
 
 	/**
+	 * Deletes a layer
+	 * @since 2.3
+	 * @public
+	 * @param {String|Number} [id="top"] Id of the layer to affect
+	 * @throws codeError
+	 * @example pop(3)
+	 */
+	function pop(id) {
+		$e_parseParameterTypes("pop", arguments);
+		var layer;
+		if (id === undefined) {
+			layer = $_eseecode.canvasArray["top"];
+		} else {
+			layer = $_eseecode.canvasArray[id];
+		}
+		if (!layer.layerUnder && !layer.layerOver) { // We must check if there is only one layer
+			throw new $e_codeError("pop",_("There is only one layer, you cannot delete it"));
+		}
+		$e_removeCanvas(layer.name);
+		if (layer.layerOver) {
+			layer.layerOver.layerUnder = layer.layerUnder;
+		} else {
+			$_eseecode.canvasArray["top"] = layer.layerUnder;
+		}
+		if (layer.layerUnder) {
+			layer.layerUnder.layerOver = layer.layerOver;
+		} else {
+			$_eseecode.canvasArray["bottom"] = layer.layerOver;
+		}
+		if ($_eseecode.currentCanvas == layer) {
+			$_eseecode.currentCanvas = $_eseecode.canvasArray["top"];
+		}
+	}
+	
+	/**
 	 * Deletes all content in a layer
 	 * @since 1.0
 	 * @public

@@ -53,7 +53,7 @@
 			ctx.lineTo(margin,height-margin);
 			ctx.closePath();
 			ctx.fill();
-			ctx.strokeStyle = '#FFFFFF';
+			ctx.strokeStyle = '#AAAAAA';
 			ctx.lineWidth = 3;
 			ctx.beginPath();
 			ctx.arc(width-1.5*margin,height-1.5*margin, 1.5*margin/2, 0, 2*Math.PI);
@@ -780,6 +780,37 @@
 			ctx.lineTo(margin,height/2+(height-margin*2)/2*(param-1)/(maxparam-1));
 			ctx.fill();
 			ctx.closePath();
+		},
+		"pop": function(ctx, width, height, param) {
+			var margin = 15;
+			var separation = 4;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.moveTo(margin+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,height/3-separation);
+			ctx.lineTo(2*width/3+separation,(height-margin)-separation);
+			ctx.lineTo(margin+separation,(height-margin)-separation);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(margin+separation*2,height/3-separation*2);
+			ctx.lineTo(2*width/3+separation*2,height/3-separation*2);
+			ctx.lineTo(2*width/3+separation*2,(height-margin)-separation*2);
+			ctx.lineTo(margin+separation*2,(height-margin)-separation*2);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.strokeStyle = '#AAAAAA';
+			ctx.beginPath();
+			ctx.moveTo(margin,height/3);
+			ctx.lineTo(2*width/3,height-margin);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.lineTo(2*width/3,height/3);
+			ctx.lineTo(margin,height-margin);
+			ctx.closePath();
+			ctx.stroke();
 		},
 		"repeat": function(ctx, width, height, param) {
 			param = parseInt(param[0]);
