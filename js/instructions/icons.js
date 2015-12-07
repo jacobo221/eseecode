@@ -1389,6 +1389,9 @@
 			if (param) {
 				param = param[0];
 			}
+			if (!param) {
+				return;
+			}
 			var margin = 15;
 			var maxparam = 10;
 			var fontSize = (width-margin)/param.length;
