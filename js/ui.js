@@ -1637,6 +1637,7 @@
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();
 		$e_resetWatchpoints(true);
+		$e_resetInstructionsCount();
 		$e_resetFilemenu();
 		// init $_eseecode.modes array with div objects
 		for (var i=1;i<$_eseecode.modes.console.length;i++) {
@@ -2196,6 +2197,7 @@
                 }
                 dialog.appendChild(div);
                 $e_createBlock(level,div,instructionId,true);
+                $e_checkDialogBlockCount(div);
             }
 		} else {
 	        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {
@@ -2228,6 +2230,7 @@
 				        }
 				        dialog.appendChild(div);
 				        $e_createBlock(level,div,key,true);
+                		$e_checkDialogBlockCount(div);
 			        }
 				}
 			}
@@ -2626,7 +2629,7 @@
 	}
 	
 	/**
-	 * Shows/Hide unro/redo buttons
+	 * Shows/Hide undo/redo buttons
 	 * @private
 	 * @example $e_refreshUndoUI()
 	 */

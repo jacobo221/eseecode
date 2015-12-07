@@ -299,7 +299,6 @@
 		}
 	}
 	
-	
 	/**
 	 * Scrolls to the given element in the givent parent node
 	 * @private
@@ -480,6 +479,11 @@
 	 * @example $e_addBlock(block, true)
 	 */
 	function $e_addBlock(blockDiv, position, parent, isConverting) {
+		var instructionId = blockDiv.getAttribute("data-instructionsetid");
+		var instruction = $_eseecode.instructions.set[instructionId];
+		if ($e_isNumber(instruction.maxInstances) && instruction.countInstances >= instruction.maxInstances) {
+			return;
+		}
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
@@ -508,9 +512,12 @@
 				nextDiv = parentDiv.lastChild;
 			}
 		}
-		var instruction = $_eseecode.instructions.set[blockDiv.getAttribute("data-instructionsetid")];
 		if (instruction.block && !blockDiv.firstChild.nextSibling && !instruction.text) { // If we are adding a block to the console for the first time, create its children
 			$e_createSubblocks(blockDiv);
+		}
+		if ($e_isNumber(instruction.maxInstances)) {
+			instruction.countInstances++;
+			$e_checkDialogBlockCount(instructionId);
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
 		$e_paintBlock(blockDiv);
@@ -618,6 +625,57 @@
 	}
 
 	/**
+	 * Enables/Disabled dialog blocks when their count reaches maxInstances
+	 * @private
+	 * @param {!String|!HTMLElement} instruction Instruction id or dialog block
+	 * @example $e_checkDialogBlockCount("forward1")
+	 */
+	function $e_checkDialogBlockCount(instructionObject) {
+		if (!instructionObject) {
+			return;
+		}
+		var instructionId, dialogBlock;
+		if ((typeof instructionObject) === "string") {
+			instructionId = instructionObject;
+			// Find the block in the dialog
+			dialogBlock = document.getElementById("dialog-blocks").firstChild;
+			while (dialogBlock) {
+				if (dialogBlock.getAttribute("data-instructionsetid") == instructionId) {
+					// Found it
+					break;
+				}
+				dialogBlock = dialogBlock.nextSibling;
+			}
+		} else {
+			instructionId = instructionObject.getAttribute("data-instructionsetid");
+			dialogBlock = instructionObject;
+		}
+		if (!dialogBlock) {
+			return;
+		}
+		var instruction = $_eseecode.instructions.set[instructionId];
+		if (instruction.countInstances >= instruction.maxInstances) {
+			dialogBlock.style.opacity = "0.4";
+		} else {
+			dialogBlock.style.opacity = "1";
+		}
+	}
+
+	/**
+	 * Resets the instances count for all instructions
+	 * @private
+	 * @example $e_resetInstructionsCount()
+	 */
+	function $e_resetInstructionsCount() {
+		for (var key in $_eseecode.instructions.set) {
+			var instruction = $_eseecode.instructions.set[key];
+			if ($e_isNumber(instruction.maxInstances)) {
+				instruction.countInstances = 0;
+			}
+		}
+	}
+	
+	/**
 	 * Removes a block from the console and deletes it
 	 * @private
 	 * @param {!HTMLElement} div Block to delete
@@ -627,6 +685,12 @@
 		// We must do this before we delete the block
 		$e_updateBlocksBreakpoints(div, "deleteBlock");
 		var consoleDiv = document.getElementById("console-blocks");
+		var instructionId = div.getAttribute("data-instructionsetid");
+		var instruction = $_eseecode.instructions.set[instructionId];
+		if ($e_isNumber(instruction.maxInstances) && div != $_eseecode.session.floatingBlock.div) {
+			instruction.countInstances--;
+			$e_checkDialogBlockCount(instructionId);
+		}
 		div.parentNode.removeChild(div);
 		if (!consoleDiv.firstChild) {
 			$e_resetBlocksConsole(consoleDiv);
@@ -660,6 +724,10 @@
 			// This is a subblock, configure its parent node
 			div = div.parentNode;
 			instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
+		}
+		if (instruction.noChange) {
+			returnVal = false;
+			return returnVal;
 		}
 		var instructionName = instruction.name;
 		var parameterInputs = [];

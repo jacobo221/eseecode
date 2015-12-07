@@ -1,4 +1,9 @@
-## 2.3
+## 2.4 (ongoing work)
+ *Milestone reached: Enpower guided exercises and challanges*
+ *   Create custom instruction set where instructions parameters can't be customized
+ *   Instructions can now have a maximum amount of uses (only in blocks modes)
+
+## 2.3 (2015-12-06)
 
  *Milestone reached: Easy input/output methods*
  *   New input and output instructions and panels

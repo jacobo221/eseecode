@@ -294,10 +294,24 @@
 		        $_eseecode.instructions.set[newInstructionId].show = [];
 				$_eseecode.instructions.custom[$_eseecode.instructions.custom.length] = newInstructionId;
 				var k = 0;
-				while (j+1+k < instructions.length && ($e_isNumber(instructions[j+1+k],true) || $e_isBoolean(instructions[j+1+k],true) || decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' || decodeURIComponent(instructions[j+1+k]).charAt(0) == "'")) {
+				while (j+1+k < instructions.length && (
+				  $e_isNumber(instructions[j+1+k],true) ||
+				  $e_isBoolean(instructions[j+1+k],true) ||
+				  decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' ||
+				  decodeURIComponent(instructions[j+1+k]).charAt(0) == "'" ||
+				  instructions[j+1+k] == "noChange" ||
+				  instructions[j+1+k].indexOf("count:") == 0)) {
                     // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
-			        if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
-			        	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = instructions[j+1+k];
+                    if (instructions[j+1+k] == "noChange") {
+                    	$_eseecode.instructions.set[newInstructionId].noChange = true;
+                    } else if (instructions[j+1+k].indexOf("count:") == 0) {
+                    	var maxCount = parseInt(instructions[j+1+k].split(":")[1]);
+                    	if ($e_isNumber(maxCount)) {
+                    		$_eseecode.instructions.set[newInstructionId].maxInstances = maxCount;
+                    		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
+                    	}
+                    } else if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
+		            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = instructions[j+1+k];
 			        	$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
 			        } else {
 						console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
