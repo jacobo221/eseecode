@@ -4,18 +4,23 @@
 	 * If needed, layer is created overlapping exactly the whiteboard div element
 	 * The created layer can be accessed via $_eseecode.canvasArray[id]
 	 * @private
-	 * @param {Number} [id] Layer id (if blank it creates a new id)
+	 * @param {Number|String} [id] Layer id (if blank it creates a new id)
 	 * @return {!Object} Layer in the whiteboard
+	 * @throws $e_codeError
 	 * @example $_eseecode.currentCanvas = $e_getCanvas(id)
 	 */
 	function $e_getCanvas(id) {
+		var layer = undefined;
 		if (typeof id === "undefined") {
-			id = 0;
-			while ($_eseecode.canvasArray[id]) {
-				id++;
-			}
+			var d = new Date();
+			id = "canvas-"+(d.getTime()*10000+Math.floor((Math.random()*10000)));
+		} else {
+			layer = $e_getLayer(id);
 		}
-		if (!$_eseecode.canvasArray[id]) {
+		if (!layer) {
+			if ($e_isNumber(id, true)) {
+				throw new $e_codeError("use", _("No layer exists in this position")+": "+id);
+			}
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
 			var div = document.createElement("div");
 			div.id = "canvas-div-"+id;
@@ -26,7 +31,7 @@
 			div.style.height = canvasSize+"px";
 			if ($_eseecode.canvasArray["top"]) {
 				div.style.zIndex = Number($_eseecode.canvasArray["top"].div.style.zIndex)+1;
-			} else if($_eseecode.canvasArray["grid"]) {
+			} else if ($_eseecode.canvasArray["grid"]) {
 				div.style.zIndex = Number($_eseecode.canvasArray["grid"].div.style.zIndex)+1;
 			} else {
 				// No canvas exist yet, suppose it is grid
@@ -50,34 +55,54 @@
 				layerOver: null,
 				layerUnder: $_eseecode.canvasArray["top"]
 			};
-			$_eseecode.canvasArray[id].context.lineWidth = $_eseecode.canvasArray[id].style.size;
-			$_eseecode.canvasArray[id].context.fillStyle = $_eseecode.canvasArray[id].style.color;
-			$_eseecode.canvasArray[id].context.strokeStyle = $_eseecode.canvasArray[id].style.color;
-			$_eseecode.canvasArray[id].context.strokeStyle = $_eseecode.canvasArray[id].style.color;
+			layer = $_eseecode.canvasArray[id];
+			layer.context.lineWidth = layer.style.size;
+			layer.context.fillStyle = layer.style.color;
+			layer.context.strokeStyle = layer.style.color;
+			layer.context.strokeStyle = layer.style.color;
 			var font = "";
-			if ($_eseecode.canvasArray[id].style.italic) {
+			if (layer.style.italic) {
 				font += "italic ";
 			}
-			if ($_eseecode.canvasArray[id].style.bold) {
+			if (layer.style.bold) {
 				font += "bold ";
 			}
-			font += ($_eseecode.canvasArray[id].style.size+$_eseecode.setup.defaultFontSize)+"px ";
-			font += $_eseecode.canvasArray[id].style.font;
-			$_eseecode.canvasArray[id].context.font = font;
-			$_eseecode.canvasArray[id].context.globalAlpha = $_eseecode.canvasArray[id].style.alpha;
-			if (id >= 0) { // grid/guide canvas don't count as top or bottom
+			font += (layer.style.size+$_eseecode.setup.defaultFontSize)+"px ";
+			font += layer.style.font;
+			layer.context.font = font;
+			layer.context.globalAlpha = layer.style.alpha;
+			if (id != "grid" && id != "guide") { // grid/guide canvas don't count as top or bottom
 				if ($_eseecode.canvasArray["top"]) {
-					$_eseecode.canvasArray["top"].layerOver = $_eseecode.canvasArray[id];
+					$_eseecode.canvasArray["top"].layerOver = layer;
 				}
-				$_eseecode.canvasArray["top"] = $_eseecode.canvasArray[id]; // newest canvas is always on top
+				$_eseecode.canvasArray["top"] = layer; // newest canvas is always on top
 				if (!$_eseecode.canvasArray["bottom"]) {
-					$_eseecode.canvasArray["bottom"] = $_eseecode.canvasArray[id];
+					$_eseecode.canvasArray["bottom"] = layer;
 				}
 			}
 			div.appendChild(canvas);
 			$_eseecode.whiteboard.appendChild(div);
 		}
-		return $_eseecode.canvasArray[id];
+		return layer;
+	}
+
+	/** Returns the layer
+	 * @private
+	 * @param {Number|String} id Layer id (can be the name or the position in the layers stack)
+	 * @return {Array<*>} The desired layer
+	 * @example var layer = $e_getLayer("guide")
+	 */
+	function $e_getLayer(layerId) {
+		var layer = undefined;
+		if ($e_isNumber(layerId, true)) {
+			layer = $_eseecode.canvasArray["bottom"];
+			for (var count=0; count < parseInt(layerId) && layer; count++) {
+				layer = layer.layerOver;
+			}
+		} else {
+			layer = $_eseecode.canvasArray[layerId];
+		}
+		return layer;
 	}
 
 	/** Returns a window and focuses to it if none had focus
@@ -125,18 +150,19 @@
 	 * @example $e_removeCanvas(3)
 	 */
 	function $e_removeCanvas(id) {
-		if ($_eseecode.canvasArray[id]) {
-			$_eseecode.whiteboard.removeChild($_eseecode.canvasArray[id].div);
-			if ($_eseecode.canvasArray["top"] == $_eseecode.canvasArray[id]) {
-				$_eseecode.canvasArray["top"] = $_eseecode.canvasArray[id].layerUnder;
+		var layer = $e_getLayer(id);
+		if (layer) {
+			$_eseecode.whiteboard.removeChild(layer.div);
+			if ($_eseecode.canvasArray["top"] == layer) {
+				$_eseecode.canvasArray["top"] = layer.layerUnder;
 			}
-			delete $_eseecode.canvasArray[id];
+			delete $_eseecode.canvasArray[layer.name];
 		}
 	}
 
 	/** Switches the currently active layer, returns the layer
 	 * @private
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @return {!Object} The layer
 	 * @example $e_switchCanvas(3)
 	 */
@@ -280,15 +306,13 @@
 	function $e_clearCanvas(id) {
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var ctx, canvas;
-		if (!$_eseecode.canvasArray[id]) {
-			return;
-		}
 		if (typeof id === "undefined") {
 			ctx = $_eseecode.currentCanvas.context;
 			canvas = $_eseecode.currentCanvas.canvas;
 		} else {
-			ctx = $_eseecode.canvasArray[id].context;
-			canvas = $_eseecode.canvasArray[id].canvas;
+			var layer = $e_getLayer(id);
+			ctx = layer.context;
+			canvas = layer.canvas;
 		}
 		ctx.clearRect(0,0,canvasSize,canvasSize);
 		canvas.width = canvasSize;

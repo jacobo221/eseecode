@@ -440,5 +440,7 @@ $_eseecode.i18n.available.ca = {
 	"What is the position in the input string?": "A quina posició vols seguir llegint?",
 	"Resets the position from where we read the input string": "Reinicia la posició del cursor a la cadena d'entrada",
 	"Which layer do you want to delete?\n(Leave blank to affect the current layer)": "Quina capa vols esborrar?\n(Deixa en blanc per afectar a la capa actual)",
-	"There is only one layer, you cannot delete it": "Només hi ha una capa, no es pot eliminar"
+	"There is only one layer, you cannot delete it": "Només hi ha una capa, no es pot eliminar",
+	"Which layer do you want the capture to go to?\n(Leave blank to save it in a new layer)": "A quina capa vols que es desi la captura?\n(Deixa en blanc per desar-la a una nova capa)",
+	"No layer exists in this position": "No existeix cap capa en aquesta possició"
 }

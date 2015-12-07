@@ -12,14 +12,14 @@
 		var layer = $_eseecode.canvasArray["top"];
 		var oldLayer = null;
 		for (var i=0; layer; i++) {
-			list[i] = layer.name;
+			listReverse[i] = {name: layer.name, position: i};
 			oldLayer = layer;
 			layer = layer.layerUnder;
 		}
 		// Check that the list is equal downwards and upwards
 		var layer = $_eseecode.canvasArray["bottom"];
 		for (var i=0; layer; i++) {
-			listReverse[i] = layer.name;
+			list[i] = {name: layer.name, position: i};
 			oldLayer = layer;
 			layer = layer.layerOver;
 		}
@@ -28,7 +28,7 @@
 			valid = false;
 		} else {
 			for (var i=0; i<list.length; i++) {
-				if (list[i] != listReverse[listReverse.length-i-1]) {
+				if (list[i].name != listReverse[listReverse.length-i-1].name) {
 					valid = false;
 					break;
 				}
@@ -39,12 +39,12 @@
 			ret[0] = "Inconsistent layer list!<br /"+">";
 			ret[0] += "Top to bottom:<br /"+">";
 			for (var i=0; i<list.length; i++) {
-				ret[0] += list[i]+" ";
+				ret[0] += list[i].name+" ";
 			}
 			ret[0] += "<br /"+">";
 			ret[0] += "Bottom to top:<br /"+">";
 			for (var i=0; i<listReverse.length; i++) {
-				ret[0] += listReverse[i]+" ";
+				ret[0] += listReverse[i].name+" ";
 			}
 			list = ret;
 		}
@@ -496,15 +496,20 @@
 	function $e_resetDebugLayers() {
 		var list = $e_debugLayers();
 		var layersText = ""
-		for (var i=0;i<list.length;i++) {
-			var id = list[i];
+		for (var i=list.length-1;i>=0;i--) {
+			var id = list[i].name;
+			var name = id;
+			// Only set name to the layer if it has been explicitly set
+			if (typeof id == "string" && id.indexOf("canvas-") === 0) {
+				name = list[i].position;
+			}
 			var checked = "";
 			if (document.getElementById("canvas-div-"+id).style.display != "none") {
 				checked = " checked";
 			}
-			layersText += "<div><label for=\"toggle-canvas-"+id+"\">"+_("Toggle layer")+" "+id+"</label><input id=\"toggle-canvas-"+id+"\" type=\"checkbox\" title=\""+_("Toggle layer")+" "+id+"\""+checked+" /"+"><span id=\"link-canvas-"+id+"\" class=\"link\">";
-			var showName = _("Layer")+" "+list[i];
-			if ($_eseecode.currentCanvas.name == list[i]) {
+			layersText += "<div><span id=\"layer-position-"+id+"\" class=\"dialog-debug-layers-position\">"+list[i].position+": </span><label for=\"toggle-canvas-"+id+"\">"+_("Toggle layer")+" "+id+"</label><input id=\"toggle-canvas-"+id+"\" type=\"checkbox\" title=\""+_("Toggle layer")+" "+id+"\""+checked+" /"+"><span id=\"link-canvas-"+id+"\" class=\"link\">";
+			var showName = _("Layer")+" "+name;
+			if ($_eseecode.currentCanvas.name == id) {
 				layersText += "<b>"+showName+"</b>";
 			} else {
 				layersText += showName;
@@ -514,9 +519,9 @@
 		document.getElementById("dialog-debug-layers").innerHTML = layersText;
 		document.getElementById("dialog-debug-layers").addEventListener('mouseout', $e_unhighlightCanvas, false);
 		for (var i=0;i<list.length;i++) {
-			document.getElementById("link-canvas-"+list[i]).addEventListener('mouseover', (function(id){return function (evt) {$e_highlightCanvas(id)}})(list[i]), false);
-			document.getElementById("link-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_switchCanvas(id);$e_resetDebug()}})(list[i]), false);
-			document.getElementById("toggle-canvas-"+list[i]).addEventListener('click', (function(id){return function (evt) {$e_toggleCanvas(id)}})(list[i]), false);
+			document.getElementById("link-canvas-"+list[i].name).addEventListener('mouseover', (function(id){return function (evt) {$e_highlightCanvas(id)}})(list[i].name), false);
+			document.getElementById("link-canvas-"+list[i].name).addEventListener('click', (function(id){return function (evt) {$e_switchCanvas(id);$e_resetDebug()}})(list[i].name), false);
+			document.getElementById("toggle-canvas-"+list[i].name).addEventListener('click', (function(id){return function (evt) {$e_toggleCanvas(id)}})(list[i].name), false);
 		}
 	}
 
@@ -668,7 +673,6 @@
 	 * @example $e_highlightCanvas(3)
 	 */
 	function $e_highlightCanvas(id) {
-		id = parseInt(id);
 		$e_unhighlightCanvas(); // Make sure we never have more than one highlighted canvas
 		// Since we destroy it and create it again every time it should always be on top of the canvas stack
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
@@ -689,7 +693,7 @@
 		if ($_eseecode.ui.gridVisible) {
 			context.drawImage($_eseecode.canvasArray["grid"].canvas, 0, 0);
 		}
-		var targetCanvas = $_eseecode.canvasArray[id];
+		var targetCanvas = $e_getLayer(id);
 		context.drawImage(targetCanvas.canvas, 0, 0);
 		var xScale = $_eseecode.coordinates.xScale;
 		if (xScale < 0) {

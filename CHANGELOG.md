@@ -2,6 +2,8 @@
  *Milestone reached: Enpower guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
+ *   Now Layers can be called by name or position in the stack
+ *   Debug shows the position and name of every layer
 
 ## 2.3 (2015-12-06)
 

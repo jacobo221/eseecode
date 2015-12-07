@@ -440,5 +440,7 @@ $_eseecode.i18n.available.es = {
 	"What is the position in the input string?": "En que posición quieres seguir leyendo?",
 	"Resets the position from where we read the input string": "Reinicia la posición del cursor en la cadena de entrada",
 	"Which layer do you want to delete?\n(Leave blank to affect the current layer)": "¿Qué capa quieres borrar?\n(Deja en blanco para afectar la capa actual)",
-	"There is only one layer, you cannot delete it": "Solo hay una capa, no se puede eliminar"
+	"There is only one layer, you cannot delete it": "Solo hay una capa, no se puede eliminar",
+	"Which layer do you want the capture to go to?\n(Leave blank to save it in a new layer)": "En que capa quieres guardar la captura?\n(Deja en blanco para guardarla en una nueva capa)",
+	"No layer exists in this position": "No existe ninguna capa en esta posición"
 }

@@ -87,7 +87,13 @@
 	 * @example $e_isLayer(5)
 	 */
 	function $e_isLayer(value) {
-		return $_eseecode.canvasArray[value] !== undefined;
+		var retVal;
+		if ($e_isNumber(value, true)) {
+			retVal = ($e_getLayer(value) !== undefined);
+		} else {
+			retVal = ($_eseecode.canvasArray[value] !== undefined);
+		}
+		return retVal;
 	}
 
 	/**

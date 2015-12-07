@@ -22,8 +22,7 @@
 			layer = layer.layerOver;
 		}
 		if ($_eseecode.ui.guideVisible) {
-			var id = $_eseecode.currentCanvas.name;
-			$e_drawDebugGuide(ctx, $_eseecode.canvasArray[id].guide, id, undefined, undefined, true);
+			$e_drawDebugGuide(ctx, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.name, undefined, undefined, true);
 		}
 		return { imageBinary: canvas.toDataURL(), extension: "png" };
 	}
@@ -411,7 +410,7 @@
 		if (!id) {
 			id = oldMode;
 		}
-		if (!$e_isNumber(id)) {
+		if (!$e_isNumber(id, true)) {
 			for (var i=1; i<$_eseecode.modes.console.length; i++) {
 				if ($_eseecode.modes.console[i].id == id || $_eseecode.modes.console[i].name.toLocaleLowerCase() == id.toLocaleLowerCase()) {
 					id = i;
@@ -546,7 +545,7 @@
 		} else if (id == "window") {
 			document.getElementById("dialog-tabs-window").style.display = "block";
 		}
-		if (!$e_isNumber(id)) {
+		if (!$e_isNumber(id, true)) {
 			for (var i=1; i<$_eseecode.modes.dialog.length; i++) {
 				if ($_eseecode.modes.dialog[i].id == id) {
 					id = i;
@@ -1099,7 +1098,7 @@
 		if (id === undefined) {
 			id = $_eseecode.currentCanvas.name;
 		}
-		var targetCanvas = $_eseecode.canvasArray[id];
+		var targetCanvas = $e_getLayer(id);
 		var size = 20;
 		var org = targetCanvas.guide;
 		var angle = targetCanvas.guide.angle;
@@ -1167,7 +1166,7 @@
 	 * @example $e_toggleCanvas(3)
 	 */
 	function $e_toggleCanvas(id, force) {
-		var div = $_eseecode.canvasArray[id].div;
+		var div = $e_getLayer(id).div;
 		if (force === true || div.style.display == "none") {
 			div.style.display = "block";
 		} else {
@@ -2433,7 +2432,7 @@
 		$_eseecode.canvasArray = [];
 		$e_initGuide();
 		$e_getCanvas("grid").canvas.style.zIndex = -1; // canvas-0 is special
-		$e_switchCanvas(0); // canvas-0 is the default
+		$e_switchCanvas(); // canvas-0 is the default
 		$e_changeAxisBasedOnUISettings();
 		// reset guide	
 		$e_moveGuide($e_user2systemCoords({x: 0, y: 0}));

@@ -106,7 +106,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {String} id Image id
-	 * @param {String} canvasId Layer id that will be used as image
+	 * @param {String|Number} canvasId Layer id that will be used as image
 	 * @param {Number} [posx] X coordinate to place the image in the window
 	 * @param {Number} [posy] Y coordinate to place the image in the window
 	 * @param {Number} [width] Width to resize the image to
@@ -124,7 +124,7 @@
 		$e_switchDialogMode("window");
 		img.style.position = "absolute";
 		if (canvasId) {
-			img.src = $_eseecode.canvasArray[canvasId].canvas.toDataURL();
+			img.src = $e_getLayer(canvasId).canvas.toDataURL();
 		}
 		if (posx !== undefined) {
 			img.style.left = ($_eseecode.ui.dialogWindow.offsetLeft+posx)+"px";
@@ -279,7 +279,7 @@
 	 * @public
 	 * @param {Number} windowId Window id
 	 * @param {String} id Image id
-	 * @param {String} canvasId Layer id that will be used as image
+	 * @param {String|Number} canvasId Layer id that will be used as image
 	 * @param {Number} [posx] X coordinate to place the image in the window
 	 * @param {Number} [posy] Y coordinate to place the image in the window
 	 * @param {Number} [width] Width to resize the image to
@@ -337,7 +337,7 @@
 	 * Hides a layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} id Layer id
+	 * @param {Number|String} id Layer id
 	 * @param {Boolean} [hide=true] Whether to hide the layer or not
 	 * @example hide(2)
 	 */
@@ -345,7 +345,7 @@
 		$e_parseParameterTypes("hide", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
-			canvas = $_eseecode.canvasArray[id];
+			canvas = $e_getLayer(id);
 		}
 		if (hide === false) {
 			show(id);
@@ -410,7 +410,7 @@
 	 * Shows a layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @param {Boolean} [show=true] Whether to show the layer or not
 	 * @example show(2)
 	 */
@@ -418,7 +418,7 @@
 		$e_parseParameterTypes("show", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
-			canvas = $_eseecode.canvasArray[id];
+			canvas = $e_getLayer(id);
 		}
 		if (show === false) {
 			hide(id);
@@ -467,7 +467,7 @@
 		$e_parseParameterTypes("getLayerName", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
-			canvas = $_eseecode.canvasArray[id];
+			canvas = $e_getLayer(id);
 		}
 		var value = canvas.name;
 		return value;
@@ -477,7 +477,7 @@
 	 * Returns if the specified layer is visible or hidden
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @return {Boolean} Whether the specified layer is visible or hidden
 	 * @example getLayerVisibility(2)
 	 */
@@ -485,7 +485,7 @@
 		$e_parseParameterTypes("getLayerVisibility", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
-			canvas = $_eseecode.canvasArray[id];
+			canvas = $e_getLayer(id);
 		}
 		var value = (canvas.div.style.display != "none");
 		return value;
@@ -495,7 +495,7 @@
 	 * Returns as a value the image visible in the specified layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @return {String} Image in the specified layer
 	 * @example getLayerImage(2)
 	 */
@@ -503,7 +503,7 @@
 		$e_parseParameterTypes("getLayerImage", arguments);
 		var canvas = $_eseecode.currentCanvas;
 		if (id !== undefined) {
-			canvas = $_eseecode.canvasArray[id];
+			canvas = $e_getLayer(id);
 		}
 		return canvas.canvas.toDataURL();
 	}
@@ -889,7 +889,7 @@
 	 * Returns the layer's guide's position's X coordinate
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @return {Number} The layer's guide's position's X coordinate
 	 * @example getX()
 	 */
@@ -899,7 +899,7 @@
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			guide = $_eseecode.canvasArray[id].guide;
+			guide = $e_getLayer(id).guide;
 		}
 		guide = $e_system2userCoords(guide);
 		return guide.x;
@@ -909,7 +909,7 @@
 	 * Returns the layer's guide's position's Y coordinate
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Number|String} [id] Layer id
 	 * @return {Number} The layer's guide's position's Y coordinate
 	 * @example getY()
 	 */
@@ -919,7 +919,7 @@
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			guide = $_eseecode.canvasArray[id].guide;
+			guide = $e_getLayer(id).guide;
 		}
 		guide = $e_system2userCoords(guide);
 		return guide.y;
@@ -930,7 +930,7 @@
 	 * Angle 0 is when the guide is looking horizontally right
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id
+	 * @param {Numbe|Stringr} [id] Layer id
 	 * @return {Number} The layer's guide's position's angle
 	 * @example getAngle()
 	 */
@@ -940,7 +940,7 @@
 		if (typeof id === "undefined") {
 			guide = $_eseecode.currentCanvas.guide;
 		} else {
-			guide = $_eseecode.canvasArray[id].guide;
+			guide = $e_getLayer(id).guide;
 		}
 		return $e_system2userAngle(guide.angle);
 	}
@@ -1312,7 +1312,7 @@
 	 * @since 2.2
 	 * @public
 	 * @param {Number} value Transparency value in the range [0,1]
-	 * @param {Number} [id] Id of the layer to affect
+	 * @param {Number|String} [id] Id of the layer to affect
 	 * @throws codeError
 	 * @example transparency(0.5)
 	 */
@@ -1326,7 +1326,7 @@
 			throw new $e_codeError("transparency",_("Value cannot be higher than 1, received:")+" "+value);
 		}
 		if (id !== undefined) {
-			layer = $_eseecode.canvasArray[id];
+			layer = $e_getLayer(id);
 		}
 		layer.context.globalAlpha = value;
 	}
@@ -1337,11 +1337,11 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to push the layer down
-	 * @param {Number} [id] Id of the layer to affect
+	 * @param {Number|String} [id] Id of the layer to affect
 	 * @throws codeError
 	 * @example push(3)
 	 */
-	function push(levels, id) {
+		function push(levels, id) {
 		$e_parseParameterTypes("push", arguments);
 		if (levels < 0) {
 			throw new $e_codeError("push",_("Levels cannot be lower than 0, received:")+" "+levels);
@@ -1356,7 +1356,7 @@
 		if (id === undefined) {
 			layer = $_eseecode.currentCanvas;
 		} else {
-			layer = $_eseecode.canvasArray[id];
+			layer = $e_getLayer(id);
 		}
 		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
 			$_eseecode.canvasArray["top"] = layer.layerUnder;
@@ -1390,7 +1390,7 @@
 	 * @since 1.0
 	 * @public
 	 * @param {Number} [levels=1] Amount of steps to pull the layer up
-	 * @param {Number} [id] Id of the layer to affect
+	 * @param {Number|String} [id] Id of the layer to affect
 	 * @throws codeError
 	 * @example pull(3)
 	 */
@@ -1409,7 +1409,7 @@
 		if (id === undefined) {
 			layer = $_eseecode.currentCanvas;
 		} else {
-			layer = $_eseecode.canvasArray[id];
+			layer = $e_getLayer(id);
 		}
 		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
 			$_eseecode.canvasArray["bottom"] = layer.layerOver;
@@ -1451,7 +1451,7 @@
 		if (id === undefined) {
 			layer = $_eseecode.canvasArray["top"];
 		} else {
-			layer = $_eseecode.canvasArray[id];
+			layer = $e_getLayer(id);
 		}
 		if (!layer.layerUnder && !layer.layerOver) { // We must check if there is only one layer
 			throw new $e_codeError("pop",_("There is only one layer, you cannot delete it"));
@@ -1476,7 +1476,7 @@
 	 * Deletes all content in a layer
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id. If missing, currently active layer
+	 * @param {Number|String} [id] Layer id. If missing, currently active layer
 	 * @example clean()
 	 */
 	function clean(id) {
@@ -1589,7 +1589,7 @@
 	 * Switches the currently active layer, returns the layer name
 	 * @since 1.0
 	 * @public
-	 * @param {Number} [id] Layer id. If unset it switches to a new layer
+	 * @param {Number|String} [id] Layer id. If unset it switches to a new layer
 	 * @return {Number} Layer name
 	 * @example use()
 	 */
@@ -1603,7 +1603,7 @@
 	 * Creates a clone of the current layer in another layer, returns the layer name
 	 * @since 2.1
 	 * @public
-	 * @param {Number} [id] Layer id. If unset it creates it in a new layer
+	 * @param {Number|String} [id] Layer id. If unset it creates it in a new layer
 	 * @return {Number} Layer name
 	 * @throws codeError
 	 * @example snapshot()
