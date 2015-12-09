@@ -94,7 +94,7 @@
         if (currentGuideStep.text) {
             ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
         }
-        if (currentGuideStep.timeout || currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+        if (currentGuideStep.text || currentGuideStep.timeout || currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             doc.body.appendChild(ttBox);
         }
         ttPosition(ttBox, currentGuideStep);
@@ -312,6 +312,7 @@
         ttDeactivate();
         // Create a mashup of the last state of each type
         var mashupGuide = {};
+        mashupGuide.code = ""; // By default, reset code, so if we go back to the first step it is blank
         for (var tempGuideIndex = 0; tempGuideIndex < stepNumber; tempGuideIndex++) {
             var tempGuideStep = guideSteps[tempGuideIndex];
             var type = tempGuideStep.type.toLowerCase();
@@ -376,7 +377,7 @@
                 backupCode = "";   
             }
             var runNow = (iframe.contentWindow.API_getView() == "touch");
-            iframe.contentWindow.API_uploadCode(decodeURI(backupCode), runNow);
+            iframe.contentWindow.API_uploadCode(decodeURIComponent(backupCode), runNow);
         }
         if (currentGuideStep.stepsBack === undefined) {
             currentGuideStep.stepsBack = 2;
@@ -532,8 +533,8 @@
                 return;
                 break;
             case "code":
-                if (currentGuideStep.argument) {
-                    iframe.contentWindow.API_uploadCode(decodeURI(currentGuideStep.argument));
+                if (currentGuideStep.argument || currentGuideStep.argument === "") {
+                    iframe.contentWindow.API_uploadCode(decodeURIComponent(currentGuideStep.argument));
                 }
                 element = undefined;
                 skipElement = true;
@@ -541,8 +542,8 @@
                 return;
                 break;
             case "precode":
-                if (currentGuideStep.argument) {
-                    iframe.contentWindow.API_uploadPrecode(decodeURI(currentGuideStep.argument));
+                if (currentGuideStep.argument || currentGuideStep.argument === "") {
+                    iframe.contentWindow.API_uploadPrecode(decodeURIComponent(currentGuideStep.argument));
                 }
                 element = undefined;
                 skipElement = true;
@@ -551,7 +552,7 @@
                 break;
             case "inject":
                 if (currentGuideStep.argument) {
-                    iframe.contentWindow.API_runCode(decodeURI(currentGuideStep.argument));
+                    iframe.contentWindow.API_runCode(decodeURIComponent(currentGuideStep.argument));
                 }
                 element = undefined;
                 skipElement = true;

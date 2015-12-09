@@ -286,6 +286,7 @@
 	function API_setInstructions(value, action) {
 		var instructions = value.split(";");
 		var customNameCount = {};
+		$_eseecode.instructions.custom = [];
 		for (var j=0; j<instructions.length; j++) {
 			var instructionName = instructions[j].trim();
 			if (customNameCount[instructionName] === undefined) {
@@ -298,7 +299,11 @@
 			if ($_eseecode.instructions.set[baseInstructionId]) {
 		        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
 		        $_eseecode.instructions.set[newInstructionId].show = [];
-				$_eseecode.instructions.custom[$_eseecode.instructions.custom.length] = newInstructionId;
+		        var customInstructionsNum = 0;
+		        if ($_eseecode.instructions.custom) {
+		        	customInstructionsNum = $_eseecode.instructions.custom.length;
+		        }
+				$_eseecode.instructions.custom[customInstructionsNum] = newInstructionId;
 				var k = 0;
 				while (j+1+k < instructions.length && (
 				  $e_isNumber(instructions[j+1+k],true) ||

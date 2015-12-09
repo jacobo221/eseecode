@@ -76,11 +76,14 @@
 			if (param) {
 				param1 = parseInt(param[0]);
 				param2 = parseInt(param[1]);
+				if (!$e_isNumber(param2, true)) {
+					param2 = 360;
+				}
 			} else {
 				param1 = (height-margin*2)/3;
-				param2 = 50;
+				param2 = 360;
 			}
-			if (!$e_isNumber(param1,true) || !$e_isNumber(param2,true)) {
+			if (!$e_isNumber(param1, true) || !$e_isNumber(param2, true)) {
 				ctx.font = 12+"px Verdana";
       			ctx.fillStyle = '#000000';
 				ctx.fillText(_("variable"),margin,height);
@@ -88,7 +91,7 @@
 			var maxparam1 = 100;
 			var maxparam2 = 360;
 			if ($e_isNumber(param2,true) && param2 < 0) {
-				param2 = 360 - param;
+				param2 = param2 % 360;
 			}
 			if (!$e_isNumber(param1,true)) {
 				param1 = maxparam1;

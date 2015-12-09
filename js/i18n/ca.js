@@ -442,5 +442,7 @@ $_eseecode.i18n.available.ca = {
 	"Which layer do you want to delete?\n(Leave blank to affect the current layer)": "Quina capa vols esborrar?\n(Deixa en blanc per afectar a la capa actual)",
 	"There is only one layer, you cannot delete it": "Només hi ha una capa, no es pot eliminar",
 	"Which layer do you want the capture to go to?\n(Leave blank to save it in a new layer)": "A quina capa vols que es desi la captura?\n(Deixa en blanc per desar-la a una nova capa)",
-	"No layer exists in this position": "No existeix cap capa en aquesta possició"
+	"No layer exists in this position": "No existeix cap capa en aquesta possició",
+	"Name of the variable": "Nom de la variable",
+	"Which value do you want to give the variable?": "Quin valor vols donar a la variable?"
 }
