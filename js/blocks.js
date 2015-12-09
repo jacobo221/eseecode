@@ -482,7 +482,9 @@
 		var instructionId = blockDiv.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionId];
 		if ($e_isNumber(instruction.maxInstances) && instruction.countInstances >= instruction.maxInstances) {
-			return;
+			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added
+				return;
+			}
 		}
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
@@ -516,8 +518,10 @@
 			$e_createSubblocks(blockDiv);
 		}
 		if ($e_isNumber(instruction.maxInstances)) {
-			instruction.countInstances++;
-			$e_checkDialogBlockCount(instructionId);
+			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added)
+				instruction.countInstances++;
+				$e_checkDialogBlockCount(instructionId);
+			}
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
 		$e_paintBlock(blockDiv);
