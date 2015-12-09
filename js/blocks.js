@@ -743,10 +743,15 @@
 			var defaultValue = parameter.initial;
 			if (div.getAttribute("data-param"+paramNumber) !== undefined) {
 				defaultValue = div.getAttribute("data-param"+paramNumber);
+			} else {
+				// Only check predefined values if coming from programmer instruction set initializations
+				defaultValue = $e_parsePredefinedConstants(defaultValue);
 			}
 			if (parameter.type == "number") {
 				if (defaultValue !== "" && defaultValue !== undefined && defaultValue !== null) {
-					defaultValue = parseFloat($e_parsePredefinedConstants(defaultValue));
+					if ($e_isNumber(defaultValue, true)) {
+						defaultValue = parseFloat(defaultValue);
+					}
 				} else {
 					defaultValue = "";
 				}
