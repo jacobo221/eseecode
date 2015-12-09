@@ -349,6 +349,9 @@
                 break;
             }
         }
+        if (iframe.contentWindow.API_getView() == "touch") {
+            iframe.contentWindow.API_execute();
+        }
         currentGuideIndex = stepNumber;
         guideNextStep();
     }
