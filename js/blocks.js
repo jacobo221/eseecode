@@ -805,7 +805,7 @@
 				var textDiv = document.createElement("div");
 				var helpText = "";
 				if (level != "level2") {
-					helpText += _("Enter the value for %s's %s parameter",[instructionName+"()", $e_ordinal(parameter.id)])+" \""+_(parameter.name)+"\":\n";
+					helpText += _("Enter the value for %s's %s parameter",[instructionName+(parameter.noBrackets?"":"()"), $e_ordinal(parameter.id)])+" \""+_(parameter.name)+"\":\n";
 				}
 				var tipTrans = _(parameter.tip);
 				if (parameter.tip) {

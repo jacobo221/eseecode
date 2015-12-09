@@ -722,7 +722,7 @@
                 var stepButton = document.createElement("span");
                 stepButton.innerHTML = (i+1);
                 stepButton.id = "guideHumanStepButton"+guideHumanStep.index;
-                stepButton.title = _(guideHumanStep.title);
+                stepButton.title = guideHumanStep.title?_(guideHumanStep.title):_("Step")+" "+(i+1);
                 stepButton.className = "guideHumanStepButton";
                 stepButton.setAttribute("onclick", "guideGoToStep("+guideHumanStep.index+")");
                 guideStepsButtons.appendChild(stepButton);

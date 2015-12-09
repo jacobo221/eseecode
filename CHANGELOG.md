@@ -4,6 +4,11 @@
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
  *   Now Layers can be called by name or position in the stack
  *   Debug shows the position and name of every layer
+ *   Allow variables and expressions in parameters from API
+ *   Fix: Check that = has a value
+ *   Fix: Inorder instructions don't show null first param when adding floating block
+ *   Fix: In guide do not show "undefined" in steps titles if no title has been defined
+ *   Fix: In Block setup the tip about parameters only shows () if the instruction uses brackets
 
 ## 2.3 (2015-12-06)
 

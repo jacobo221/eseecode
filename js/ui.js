@@ -2115,7 +2115,7 @@
 		}
 		if (instruction.inorder) {
 			// This overwrites all the text previosuly done. It is specifically done for =,+,-,...
-			text = div.getAttribute("data-param1");
+			text = div.getAttribute("data-param1")?div.getAttribute("data-param1"):"";
 			if (instruction.code && instruction.code.space) {
 				text += " ";
 			}

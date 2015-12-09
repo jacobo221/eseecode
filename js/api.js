@@ -300,6 +300,7 @@
 				  decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' ||
 				  decodeURIComponent(instructions[j+1+k]).charAt(0) == "'" ||
 				  instructions[j+1+k] == "noChange" ||
+				  instructions[j+1+k].indexOf("param:") == 0 ||
 				  instructions[j+1+k].indexOf("count:") == 0)) {
                     // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
                     if (instructions[j+1+k] == "noChange") {
@@ -311,7 +312,11 @@
                     		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
                     	}
                     } else if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
-		            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = instructions[j+1+k];
+		            	var param = instructions[j+1+k];
+                    	if (param.indexOf("param:") == 0) {
+                    		param = param.split(":")[1];
+                    	}
+		            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = param;
 			        	$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
 			        } else {
 						console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
