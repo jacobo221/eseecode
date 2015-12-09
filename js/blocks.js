@@ -918,7 +918,7 @@
 			var defaultValue = input.value;
 			var visualTypeSupportedByBrowser = false;
 			var element;
-			if (parameter.type === "text") {
+			if (parameter.type === "text" || parameter.type === "layer") {
 				visualTypeSupportedByBrowser = true;
 				element = document.createElement("div");
 				element.id = parameterInputId+"Block";
@@ -970,7 +970,7 @@
 					updateIcon();
 				}, false);
 				element.appendChild(input);
-			} else if (parameter.type === "number" || parameter.type === "layer") {
+			} else if (parameter.type === "number") {
 				element = document.createElement("div");
 				element.id = parameterInputId+"Block";
 				if (supportedInputs["range"]) {
