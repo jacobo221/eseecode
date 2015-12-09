@@ -10,6 +10,7 @@
  *   Fix: In guide do not show "undefined" in steps titles if no title has been defined
  *   Fix: In Block setup the tip about parameters only shows () if the instruction uses brackets
  *   Fix: Accept read correctly variables and expressions in number fields in setupBlock
+ *   Fix: Allow steps with no message in guide
 
 ## 2.3 (2015-12-06)
 

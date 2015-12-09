@@ -91,8 +91,12 @@
         ttBox.style.textAlign = "center";
         ttBox.style.border = "1px solid #000000";
         ttBox.style.zIndex = 100000;
-        ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
-        doc.body.appendChild(ttBox);
+        if (currentGuideStep.text) {
+            ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
+        }
+        if (currentGuideStep.timeout || currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+            doc.body.appendChild(ttBox);
+        }
         ttPosition(ttBox, currentGuideStep);
         if (currentGuideStep.runNext === undefined) {
             currentGuideStep.runNext = guideFinishStep;
