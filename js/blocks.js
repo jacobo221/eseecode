@@ -118,8 +118,13 @@
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
 		var mousePos = $e_eventPosition(event);
 		// Try to drag the block pinned from the same position it was clicked
-		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left - window.scrollX;
-		$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top - window.scrollY;
+		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left - window.pageXOffset;
+		if ($e_isNumber($_eseecode.session.floatingBlock.mouse.x)) {
+			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top - window.pageYOffset;
+		} else {
+			// IE8 and earlier don't support window.pageXOffset
+			$_eseecode.session.floatingBlock.mouse.x = undefined;
+		}
 		// Copy parameters
 		for (var i=1; div.getAttribute("data-param"+i) !== null; i++) {
 			$_eseecode.session.floatingBlock.div.setAttribute("data-param"+i,div.getAttribute("data-param"+i));
@@ -447,8 +452,8 @@
 			blockWidth = div.getBoundingClientRect().right-div.getBoundingClientRect().left;
 		}
 		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
-			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x- window.scrollX - 10 +"px"; // -10 is a magic number, it seems to work perfect
-			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y - window.scrollY +"px";
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x - window.pageXOffset - 10 +"px"; // -10 is a magic number, it seems to work perfect
+			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y - window.pageYOffset +"px";
 		} else {
 			div.style.left = pos.x - blockWidth/2 +"px";
 			div.style.top = pos.y - blockHeight/2 +"px";
