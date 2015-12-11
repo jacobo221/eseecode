@@ -1592,13 +1592,12 @@
 			var bgCtx = bgCanvas.getContext("2d");
 			bgCtx.fillStyle = color;
 			bgCtx.fillRect(0,0,bgWidth,bgHeight);
-			/* This bug has been fixed since in IE11
 			if (!!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
 				// There is a bug in IE11 where it fails to show transparent gradients on canvas. See https://connect.microsoft.com/IE/feedback/details/828441 . This hack works around the bug
 				if (color.charAt(0) == "#") {
 					var r = color.substr(1,2);
-					var g = color.substr(3,5);
-					var b = color.substr(5,7);
+					var g = color.substr(3,2);
+					var b = color.substr(5,2);
 					if (level == "level1" || level == "level2") {
 						var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight,bgWidth/3,bgHeight/3,bgHeight/4);
 						gradient.addColorStop(0,'rgb(150,150,150)');
@@ -1621,7 +1620,6 @@
 						bgCtx.fillRect(0,0,bgWidth,bgHeight);
 				}
 			} else {
-			*/
 				if (level == "level1" || level == "level2") {
 					var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight*1.5,bgWidth/3,bgHeight/3,bgHeight/4);
 					gradient.addColorStop(0.0,'rgba(0,0,0,1)');
@@ -1639,7 +1637,7 @@
 					bgCtx.fillStyle = gradient;
 					bgCtx.fillRect(0,-bgHeight*2,bgWidth,bgHeight*3);
 				}
-			/* } */
+			}
 			var height = parseInt(div.style.minHeight.replace("px",""));
 			var width = parseInt(div.style.minWidth.replace("px",""));
 			if ((level == "level1" || level == "level2") && $_eseecode.instructions.icons[instruction.name]) {
