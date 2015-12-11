@@ -119,12 +119,35 @@
                 currentGuideStep.action = "mouseup";
             }
             var action = currentGuideStep.action;
-            if (action == "mousedown" || action == "touchstart" || action == "click") {
+            if (action == "mousedown" || action == "touchstart") {
                 element.addEventListener("mousedown", currentGuideStep.runNext, false);
                 element.addEventListener("touchstart", currentGuideStep.runNext, false);
-            } else if (action == "mouseup" || action == "touchend") {
+                element.addEventListener("touchstart", currentGuideStep.runNext, false);
+            } else if (action == "mouseup" || action == "touchend" || action == "click") {
                 element.addEventListener("mouseup", currentGuideStep.runNext, false);
                 element.addEventListener("touchend", currentGuideStep.runNext, false);
+                if (element.nodeName == "BUTTON" || (element.nodeName == "INPUT" && (element.type == "button" || element.type == "submit"))) {
+                    element.addEventListener("keydown", function (event) {
+                        var keyCode = event.which || event.keyCode;
+                        if (keyCode == 13) { // Enter key
+                            currentGuideStep.runNext(event);
+                        }
+                    }, false);
+                    element.addEventListener("keyup", function (event) {
+                        var keyCode = event.which || event.keyCode;
+                        if (keyCode == 32) { // Space key
+                            currentGuideStep.runNext(event);
+                        }
+                    }, false);
+                } else if (element.nodeName == "INPUT") {
+                    element.addEventListener("keypress", currentGuideStep.runNext, false);
+                    element.addEventListener("paste", currentGuideStep.runNext, false);
+                    element.addEventListener("input", currentGuideStep.runNext, false);
+                    element.addEventListener("change", currentGuideStep.runNext, false);
+                }
+                if ((element.nodeName == "BUTTON" || element.nodeName == "INPUT") && element.type == "submit") {
+                    element.form.addEventListener("submit", currentGuideStep.runNext, false);
+                }
             }
         }
         if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
@@ -141,6 +164,7 @@
     }
 
     function ttDeactivate(clearBorders) {
+        clearTimeout(timeoutHandler);
         if (currentGuideIndex < 0) {
             console.warn("Got index "+ currentGuideIndex+" in ttDeactivate. Trace:\n"+console.trace());
             return;
@@ -162,6 +186,13 @@
                 currentGuideStep.element.removeEventListener("touchmove", currentGuideStep.runNext, false);
                 currentGuideStep.element.removeEventListener("mouseup", currentGuideStep.runNext, false);
                 currentGuideStep.element.removeEventListener("touchend", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("keydown", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("keyup", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("keypress", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("paste", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("input", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("change", currentGuideStep.runNext, false);
+                currentGuideStep.element.removeEventListener("submit", currentGuideStep.runNext, false);
                 currentGuideStep.element.className = currentGuideStep.element.className.replace(/\bguideBorder\b/,'');
             }
             // Remove console blocks which have been copied with guideBorder
@@ -308,7 +339,6 @@
         if (stepNumber < 0 || stepNumber >= guideSteps.length) {
             return;
         }
-        clearTimeout(timeoutHandler);
         ttDeactivate();
         // Create a mashup of the last state of each type
         var mashupGuide = {};
@@ -425,7 +455,7 @@
         var parameterCode = currentGuideStep.type.match(/^parameter([1-9][0-9]*)(visual)?$/);
         if (parameterCode) {
             var paramNumber = parameterCode[1];
-            var paramVisual = (parameterCode[2]?"Visual":"");
+            var paramVisual = (parameterCode[2]?"VisualInput":"");
             currentGuideStep.type = "htmlelement";
             currentGuideStep.argument = "setupBlock"+paramNumber+paramVisual;
         }
@@ -614,7 +644,7 @@
     }
 
     function guideFinishStep(event) {
-		if (event && event.which > 0 && event.which != 1) {
+		if (event && event.clientX /* to check it is a Mouse event */ && event.which > 0 && event.which != 1) {
 			// If its a mouse attend only to left button
 			return;
 		}

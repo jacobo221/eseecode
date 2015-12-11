@@ -16,6 +16,7 @@
  *   Fix: arc() icon
  *   Fix: encodeURI/encodeURIComponent mess in guide
  *   Fix: Reset code when going back to first steps in guide
+ *   Fix: Guide now supports shortcuts
  *   Fix: Custom instructions in guide are now reset when reloaded
 
 ## 2.3 (2015-12-06)
