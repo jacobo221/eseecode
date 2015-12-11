@@ -1624,12 +1624,12 @@
 	 * @example $e_resetUI()
 	 */
 	function $e_resetUI(notInitial) {
+		$_eseecode.whiteboard = document.getElementById("whiteboard");
+		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		if (notInitial !== true) {
 			$e_loadURLParams();
 			$e_initializeUISetup();
 		}
-		$_eseecode.whiteboard = document.getElementById("whiteboard");
-		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		$e_initUIElements();
 		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.platform.logo.text+'" title="" /></a>';
 		$e_resetGridModeSelect();
@@ -1694,7 +1694,8 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
-		return true;
+		$e_loadURLParams(undefined,["precode","code","execute"]);
+		return;
 	}
 
 	/**

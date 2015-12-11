@@ -5,6 +5,7 @@
  *   Now Layers can be called by name or position in the stack
  *   Debug shows the position and name of every layer
  *   Allow variables and expressions in parameters from API
+ *   Allow code, precode and execute from URL
  *   Fix: Check that = has a value
  *   Fix: Default degrees value in arc() is now undefined
  *   Fix: Added parameter tips for =

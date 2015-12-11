@@ -4,9 +4,10 @@
 	 * Parses the parameters in the URL
 	 * @private
 	 * @param {String} [urlParams] URL to parse. If unset use browser's location
+	 * @param {String} [parameters] Only load this specific parameters
 	 * @example $e_loadURLParams("view=drag")
 	 */
-	function $e_loadURLParams(urlParams) {
+	function $e_loadURLParams(urlParams, parameters) {
 		var action;
 		if (urlParams === undefined) {
 			urlParams = window.location.href;
@@ -20,6 +21,9 @@
 			if (urlParamParts !== null) {
 				var key = urlParamParts[2].toLowerCase();
 				var value = urlParamParts[3];
+				if (parameters && parameters.indexOf(key) < 0) {
+					continue;
+				}
 				if (key == "grid") {
 					API_showGrid(value, action);
 				} else if (key == "gridstep") {

@@ -430,9 +430,7 @@
 		if (code === undefined) {
 			return;
 		}
-		if (!$e_resetUI(true)) {
-			return;
-		}
+		//$e_resetUI(true);
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var program;
