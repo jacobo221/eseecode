@@ -50,6 +50,8 @@
 					API_setInstructions(value, action);
 				} else if (key == "fullscreenmenu") {
 					API_showFullscreenmenu(value, action);
+				} else if (key == "preventexit") {
+					API_setPreventExit(value, action);
 				} else if (key == "precode") {
 					value = decodeURIComponent(value);
 					API_uploadPrecode(value);
@@ -421,6 +423,23 @@
 		}
 		if (action !== false) {
 			$e_toggleFullscreenIcon();
+		}
+	}
+	
+	/**
+	 * Prevent exit when user has entered code
+	 * @since 2.4
+	 * @public
+	 * @param {Boolean|String} value Whether to prevent exit when user has coded
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_setPreventExit(false)
+	 */
+	function API_setPreventExit(value, action) {
+		value = value.toLowerCase();
+		if ($e_confirmNo(value)) {
+			$_eseecode.ui.preventExit = false;
+		} else {
+			$_eseecode.ui.preventExit = true;
 		}
 	}
 	

@@ -4,9 +4,8 @@
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
  *   Now Layers can be called by name or position in the stack
  *   Debug shows the position and name of every layer
- *   Allow variables and expressions in parameters from API
+ *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
  *   Allow code, precode and execute from URL
- *   Allow to maximize code console from API
  *   Allow to initialize variables when declating them in blocks views
  *   New tool to ease creation of customized eseecode for exercises
  *   Fix: When setting a value in blocks views changin from advanced to basic setup won't remove quotes in strings

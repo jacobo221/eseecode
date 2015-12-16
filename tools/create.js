@@ -33,6 +33,7 @@
             { id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"] },
             { id: "timeout", title: "How long before the execution of a program is stopped?", type: "number" },
             { id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"] },
+            { id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"] },
             { id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"] },
             { id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set },
             { id: "precode", title: "Code to preload (hidden to the user)", type: "textarea" },

@@ -1829,7 +1829,7 @@
 	 * @example $e_windowRefresh()
 	 */
 	function $e_windowRefresh(event) {
-		if ($_eseecode.session.lastSave < $_eseecode.session.lastChange) {
+		if ($_eseecode.session.lastSave < $_eseecode.session.lastChange && $_eseecode.ui.preventExit !== false) {
                 event.returnValue = _("Careful, any code you haven't saved will be lost if you leave this page!");
 		}
 	}

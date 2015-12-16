@@ -2,7 +2,7 @@
 
 	/**
 	 * Public instruction set
-	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [optional]:Boolean, [initial]:String, [forceInitial]:Boolean, [tip]:String, [minValue]:Number, [maxValue]:Number, [stepValue]:Number, [validate]:function(String):Boolean, [noBrackets]:Boolean}>, [tip]:String, show:Array<String>, [type]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>}>, [noChange]:Boolean, [maxInstances]:Number, [countInstances]:Number, [convert]:Array<String>}
+	 * @type {Array<{name:String, category:String, [parameters]:Array<{name:String, [type]:String, [optional]:Boolean, [initial]:String, [forceInitial]:Boolean, [tip]:String, [minValue]:Number, [maxValue]:Number, [stepValue]:Number, [validate]:function(String):Boolean, [noBrackets]:Boolean, [separator]:String}>, [tip]:String, show:Array<String>, [type]:String, [block]:Array<String>, [nameRewrite]:Array<{String, String}>, [dummy]:Boolean, [code]:Array<[unindent]:Boolean, [prefix]:String, [noName]:Boolean, [space]:Boolean, [noBrackets]:Boolean, [suffix]:String>}>, [noChange]:Boolean, [maxInstances]:Number, [countInstances]:Number, [convert]:Array<String>}
 	 * @example { name: "forward", category: "guide", parameters: [{name: "pixels", type: "number", initial: 100, tip: "How many pixels do you want to move forward?"}], tip: "Moves forward", show: ["level2","level3","level4"] }
 	 */
 	$_eseecode.instructions.set = {
