@@ -1197,9 +1197,6 @@
 				input.id = parameterInputId+"VisualInput";
 				input.type = "text";
 				if (defaultValue !== undefined && defaultValue !== "") {
-					if (defaultValue.charAt(0) === '"' && defaultValue.charAt(defaultValue-1) === '"') {
-						defaultValue = defaultValue.substring(1,defaultValue.length-1);
-					}
 					input.value = defaultValue;
 				} else if (parameter.initial !== undefined) {
 					input.value = parameter.initial;

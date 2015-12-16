@@ -8,7 +8,8 @@
  *   Allow code, precode and execute from URL
  *   Allow to maximize code console from API
  *   Allow to initialize variables when declating them in blocks views
- *   New tool to ease creation of customized eseecode for exercises 
+ *   New tool to ease creation of customized eseecode for exercises
+ *   Fix: When setting a value in blocks views changin from advanced to basic setup won't remove quotes in strings
  *   Fix: Check that = has a value
  *   Fix: Default degrees value in arc() is now undefined
  *   Fix: Added parameter tips for =
