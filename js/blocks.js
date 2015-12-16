@@ -142,7 +142,7 @@
 		}
 		$e_paintBlock($_eseecode.session.floatingBlock.div);
 		$_eseecode.session.floatingBlock.div.style.opacity = 0.8;
-		$e_moveBlock();
+		$e_moveBlock(event);
 		$_eseecode.session.floatingBlock.div.removeEventListener("click", $e_clickBlock, false);
 		$_eseecode.session.floatingBlock.div.removeEventListener("touchstart", $e_clickBlock, false);
 		if (level != "level1") {
@@ -452,8 +452,8 @@
 			blockWidth = div.getBoundingClientRect().right-div.getBoundingClientRect().left;
 		}
 		if ($_eseecode.session.floatingBlock.mouse.x !== undefined) {
-			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x - window.pageXOffset - 10 +"px"; // -10 is a magic number, it seems to work perfect
-			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y - window.pageYOffset +"px";
+			div.style.left = pos.x - $_eseecode.session.floatingBlock.mouse.x - 10 +"px"; // -10 is a magic number, it seems to work perfect
+			div.style.top = pos.y - $_eseecode.session.floatingBlock.mouse.y +"px";
 		} else {
 			div.style.left = pos.x - blockWidth/2 +"px";
 			div.style.top = pos.y - blockHeight/2 +"px";
