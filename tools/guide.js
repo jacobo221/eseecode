@@ -119,14 +119,29 @@
                 currentGuideStep.action = "mouseup";
             }
             var action = currentGuideStep.action;
+            if (currentGuideStep.timeout) {
+            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
+            setTimeout(ttCountdown, 1000);
+            timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+        } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
+            ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
+            ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
+            var elements = ttBox.getElementsByTagName("a");
+            for (var i=0; i<elements.length; i++) {
+                elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
+                elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
+            }
+            ttBox.innerHTML += "<br />"+_("Click on this message to continue");
+        } else if (element && action != "none") {
+            if (!currentGuideStep.action) {
+                currentGuideStep.action = "mouseup";
+            }
+            var action = currentGuideStep.action;
             if (action == "mousedown" || action == "touchstart") {
                 element.addEventListener("mousedown", currentGuideStep.runNext, false);
                 element.addEventListener("touchstart", currentGuideStep.runNext, false);
-                element.addEventListener("touchstart", currentGuideStep.runNext, false);
             } else if (action == "mouseup" || action == "touchend" || action == "click") {
-                element.addEventListener("mouseup", currentGuideStep.runNext, false);
-                element.addEventListener("touchend", currentGuideStep.runNext, false);
-                if (element.nodeName == "BUTTON" || (element.nodeName == "INPUT" && (element.type == "button" || element.type == "submit"))) {
+                if (element.nodeName == "BUTTON"  || (element.nodeName == "INPUT" && element.type == "button")) {
                     element.addEventListener("keydown", function (event) {
                         var keyCode = event.which || event.keyCode;
                         if (keyCode == 13) { // Enter key
@@ -139,14 +154,17 @@
                             currentGuideStep.runNext(event);
                         }
                     }, false);
+                    element.addEventListener("mouseup", currentGuideStep.runNext, false);
+                    element.addEventListener("touchend", currentGuideStep.runNext, false);
+                } else if ((element.nodeName == "BUTTON" || element.nodeName == "INPUT") && element.type == "submit") {
+                    element.form.addEventListener("submit", currentGuideStep.runNext, false);
                 } else if (element.nodeName == "INPUT") {
                     element.addEventListener("keypress", currentGuideStep.runNext, false);
                     element.addEventListener("paste", currentGuideStep.runNext, false);
                     element.addEventListener("input", currentGuideStep.runNext, false);
                     element.addEventListener("change", currentGuideStep.runNext, false);
-                }
-                if ((element.nodeName == "BUTTON" || element.nodeName == "INPUT") && element.type == "submit") {
-                    element.form.addEventListener("submit", currentGuideStep.runNext, false);
+                    element.addEventListener("mouseup", currentGuideStep.runNext, false);
+                    element.addEventListener("touchend", currentGuideStep.runNext, false);
                 }
             }
         }
