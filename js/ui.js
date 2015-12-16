@@ -2149,9 +2149,15 @@
 					text += ") ";
 					bracketsStatus = false;
 				} else if (bracketsStatus !== null) {
-					text += ", ";
+					if (instruction.parameters[i].separator) {
+						text += " "+instruction.parameters[i].separator+" ";
+					} else {
+						text += ", ";
+					}
 				} else if (bracketsStatus === null) {
-					if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
+					if (instruction.parameters[i].separator) {
+						text += " "+instruction.parameters[i].separator+" ";
+					} else if (instruction.code && instruction.code.space && text[text.length-1] !== " ") {
 						text += " ";
 					}
 				}

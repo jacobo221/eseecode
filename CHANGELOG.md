@@ -7,6 +7,8 @@
  *   Allow variables and expressions in parameters from API
  *   Allow code, precode and execute from URL
  *   Allow to maximize code console from API
+ *   Allow to initialize variables when declating them in blocks views
+ *   New tool to ease creation of customized eseecode for exercises 
  *   Fix: Check that = has a value
  *   Fix: Default degrees value in arc() is now undefined
  *   Fix: Added parameter tips for =

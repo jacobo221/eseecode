@@ -221,7 +221,7 @@
 		var div = appendBlock(level,"do",parentDiv,null);
 		this.body.makeBlocks(level,div);
 		div.lastChild.setAttribute("param1",this.test.makeWrite(level, "", ""));
-		paintBlock(div.lastChild);
+		$e_paintBlock(div.lastChild);
 	};
 
 	ast.ForStatementNode.prototype.makeBlocks = function(level,parentDiv) {
@@ -302,14 +302,28 @@
 			return this.makeWrite(level,"","");
 		}
 		var type = this.kind;
-		var declarations = "";
-		for (var i=0,len=this.declarations.length; i<len; i++) {
-			if (i !== 0) {
-				declarations += ", ";
+		if (this.declarations.length === 1) {
+			var id = this.declarations[0].id.name;
+			var init = this.declarations[0].init;
+			if (init) {
+				if (init.name) {
+					appendBlock(level,type,parentDiv,[id,init.name]);
+				} else {
+					appendBlock(level,type,parentDiv,[id,init.value]);
+				}
+			} else {
+				appendBlock(level,type,parentDiv,[id]);
 			}
-			declarations += this.declarations[i].makeBlocks(level,null);
+		} else {
+			var declarations = "";
+			for (var i=0,len=this.declarations.length; i<len; i++) {
+				if (i !== 0) {
+					declarations += ", ";
+				}
+				declarations += this.declarations[i].makeBlocks(level,null);
+			}
+			appendBlock(level,type,parentDiv,[declarations]);
 		}
-		var div = appendBlock(level,this.kind,parentDiv,[declarations]);
 	};
 
 	ast.VariableDeclaratorNode.prototype.makeBlocks = function(level,parentDiv) {
