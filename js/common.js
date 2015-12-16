@@ -166,3 +166,31 @@
 	function $e_isEmbedded() {
 		return window != window.top;
 	}
+
+	/**
+	 * Returns true if the value looks like an OK, false otherwise
+	 * @private
+	 * @paaram {String|Boolean} value Value to check
+	 * @return {Boolean} Whether the value looks liek an OK
+	 * @example $e_confirmYes("Yes")
+	 */
+	function $e_confirmYes(value) {
+		if (typeof value == "string") {
+			value = value.toLowerCase();
+		}
+		return value === true || value == "true" || value == "1" || value == "yes" || value === 1;
+	}
+
+	/**
+	 * Returns true if the value looks like an OK, false otherwise
+	 * @private
+	 * @paaram {String|Boolean} value Value to check
+	 * @return {Boolean} Whether the value looks liek an OK
+	 * @example $e_confirmNo("No")
+	 */
+	function $e_confirmNo(value) {
+		if (typeof value == "string") {
+			value = value.toLowerCase();
+		}
+		return value === false || value == "false" || value == "0" || value == "no" || value == "none" || value === 0;
+	}

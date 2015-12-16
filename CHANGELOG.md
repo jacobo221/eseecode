@@ -6,6 +6,7 @@
  *   Debug shows the position and name of every layer
  *   Allow variables and expressions in parameters from API
  *   Allow code, precode and execute from URL
+ *   Allow to maximize code console from API
  *   Fix: Check that = has a value
  *   Fix: Default degrees value in arc() is now undefined
  *   Fix: Added parameter tips for =

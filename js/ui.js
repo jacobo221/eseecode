@@ -554,20 +554,24 @@
 			}
 		}
 		for (i=1;i<$_eseecode.modes.dialog.length;i++) {
-			$_eseecode.modes.dialog[i].element.style.display = "none";
-			$_eseecode.modes.dialog[i].tab.className = "tab";
+			if ($_eseecode.modes.dialog[i].element) { // We might run this before the dialogs have been created, so check
+				$_eseecode.modes.dialog[i].element.style.display = "none";
+				$_eseecode.modes.dialog[i].tab.className = "tab";
+			}
 		}
 		// window doesn't need inicialization
-		$_eseecode.modes.dialog[id].element.style.display = "block";
-		if ($_eseecode.modes.dialog[id].tab.classList) {
-			$_eseecode.modes.dialog[id].tab.classList.add("tab-active");
-		} else {
-			$_eseecode.modes.dialog[id].tab.className += " tab-active";
-		}
-		if ($_eseecode.modes.dialog[id].div == "blocks") {
-			$e_initDialogBlocks($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
-		} else if ($_eseecode.modes.dialog[id].div == "write") {
-			$e_initDialogWrite($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
+		if ($_eseecode.modes.dialog[id].element) { // We might run this before the dialogs have been created, so check
+			$_eseecode.modes.dialog[id].element.style.display = "block";
+			if ($_eseecode.modes.dialog[id].tab.classList) {
+				$_eseecode.modes.dialog[id].tab.classList.add("tab-active");
+			} else {
+				$_eseecode.modes.dialog[id].tab.className += " tab-active";
+			}
+			if ($_eseecode.modes.dialog[id].div == "blocks") {
+				$e_initDialogBlocks($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
+			} else if ($_eseecode.modes.dialog[id].div == "write") {
+				$e_initDialogWrite($_eseecode.modes.dialog[id].id, $_eseecode.modes.dialog[id].element);
+			}
 		}
 		var debugCommand = document.getElementById("dialog-debug-command-form");
 		if ($_eseecode.modes.dialog[id].id == "debug") {
@@ -1694,7 +1698,7 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
-		$e_loadURLParams(undefined,["precode","code","execute"]);
+		$e_loadURLParams(undefined,["precode","code","execute","maximize"]);
 		return;
 	}
 

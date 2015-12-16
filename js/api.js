@@ -34,6 +34,8 @@
 					API_showFilemenu(value, action);
 				} else if (key == "lang") {
 					API_switchLanguage(value, action);
+				} else if (key == "maximize") {
+					API_maximize(value, action);
 				} else if (key == "input") {
 					value = decodeURIComponent(value);
 					API_setInput(value);
@@ -102,19 +104,35 @@
 	}
 	
 	/**
-	 * Returns the name of the current dialog
+	 * Sets tool in fullscreen
 	 * @since 2.3
 	 * @public
 	 * @param {Boolean} [fullscreen] Force fullscreen
 	 * @example API_fullscreen()
 	 */
 	function API_fullscreen(value) {
-		if (value === true || value == "true" || value == "1" || value == "yes") {
+		if ($e_confirmYes(value)) {
 			value = true;
 		} else {
 			value = false;
 		}
 		$e_toggleFullscreen(value);
+	}
+	
+	/**
+	 * Sets the code console maximized
+	 * @since 2.4
+	 * @public
+	 * @param {Boolean} [fullscreen] Force fullscreen
+	 * @example API_maximize()
+	 */
+	function API_maximize(value) {
+		if ($e_confirmYes(value)) {
+			value = true;
+		} else {
+			value = false;
+		}
+		$e_resizeConsole(!value);
 	}
 	
 	/**
@@ -376,7 +394,7 @@
 	 */
 	function API_showFilemenu(value, action) {
 		value = value.toLowerCase();
-		if (value === false || value == "false" || value == "0" || value == "no" || value == "none") {
+		if ($e_confirmNo(value)) {
 			$_eseecode.ui.filemenuVisible = false;
 		} else {
 			$_eseecode.ui.filemenuVisible = true;
@@ -396,7 +414,7 @@
 	 */
 	function API_showFullscreenmenu(value, action) {
 		value = value.toLowerCase();
-		if (value === false || value == "false" || value == "0" || value == "no" || value == "none") {
+		if ($e_confirmNo(value)) {
 			$_eseecode.ui.fullscreenmenuVisible = false;
 		} else {
 			$_eseecode.ui.fullscreenmenuVisible = true;
@@ -416,7 +434,7 @@
 	 */
 	function API_showGrid(value, action) {
 		value = value.toLowerCase();
-		if (value === false || value == "false" || value == "0" || value == "no" || value == "none") {
+		if ($e_confirmNo(value)) {
 			$_eseecode.ui.gridVisible = false;
 		} else {
 			$_eseecode.ui.gridVisible = true;
@@ -437,7 +455,7 @@
 	 */
 	function API_showGuide(value, action) {
 		value = value.toLowerCase();
-		if (value === false || value == "false" || value == "0" || value == "no" || value == "none") {
+		if ($e_confirmNo(value)) {
 			$_eseecode.ui.guideVisible = false;
 		} else {
 			$_eseecode.ui.guideVisible = true;
