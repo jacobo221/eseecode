@@ -78,7 +78,8 @@
 	}
 	.msgBox .msgBox-tabs {
 		clear: both;
-		text-align: right;
+		text-align: left;
+		margin-bottom: 5px;
 	}
 	.msgBox .msgBox-tabs a {
 		margin: 2px 0px 0px 0px;
@@ -89,6 +90,10 @@
 		text-decoration: none;
 		font-weight: bold;
 		border: 2px solid #123456;
+	}
+	.msgBox .msgBox-tabs a.outsider {
+		background-color: #89900A;
+		float: right;
 	}
 	.msgBox .msgBox-tabs a:hover {
 		margin: 0px 0px 0px 0px;

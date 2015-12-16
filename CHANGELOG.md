@@ -7,6 +7,7 @@
  *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
  *   Allow code, precode and execute from URL
  *   Allow to initialize variables when declating them in blocks views
+ *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
  *   Fix: When setting a value in blocks views changin from advanced to basic setup won't remove quotes in strings
  *   Fix: Check that = has a value

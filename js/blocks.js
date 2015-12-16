@@ -803,8 +803,9 @@
 			}
 			var msgTab = document.createElement("div");
 			msgTab.className = "msgBox-tabs";
-			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a></div>";
+			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a> <a id=\"setupBlockTabsDuplicate\" href=\"#\" onclick=\"$e_duplicateBlock();\" class=\"outsider\">"+_("Duplicate")+"</a></div>";
 			msgDiv.appendChild(msgTab);
+			var msgContent = document.createElement("div");
 			var iconDiv = document.createElement("div");
 			iconDiv.id = "setupBlockIcon";
 			iconDiv.className = "block";
@@ -813,7 +814,7 @@
 			var icon = document.createElement("canvas");
 			$e_paintBlock(iconDiv, false, false);
 			iconDiv.appendChild(icon);
-			msgDiv.appendChild(iconDiv);
+			msgContent.appendChild(iconDiv);
 			for (var i=0; i<parameterInputs.length; i++) {
 				var parameter = parameterInputs[i];
 				var textDiv = document.createElement("div");
@@ -847,13 +848,14 @@
 				input.value = parameter.initial;
 				input.type = "hidden";
 				textDiv.appendChild(input);
-				msgDiv.appendChild(textDiv);
+				msgContent.appendChild(textDiv);
 			}
 			input = document.createElement("input");
 			input.id = "setupBlockCount";
 			input.value = parameterInputs.length;
 			input.type = "hidden";
-			msgDiv.appendChild(input);
+			msgContent.appendChild(input);
+			msgDiv.appendChild(msgContent);
 			$e_msgBox(msgDiv, {acceptAction:$e_setupBlockAccept,cancelAction:$e_setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
 			if (level === "level2") {
 				$e_setupBlockVisual(true, instruction.parameters);
@@ -869,6 +871,26 @@
 		return returnVal;
 	}
 
+	/**
+	 * Duplicates a block in the code
+	 * @private
+	 * @example $e_duplicateBlock()
+	 */
+	function $e_duplicateBlock() {
+		var divId = document.getElementById("setupBlockDiv").value;
+		$e_setupBlockAccept();
+		var div = document.getElementById(divId);
+		var newDiv = div.cloneNode(true);
+		newDiv.id = $e_newDivId();
+		$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].id, newDiv, undefined, false, true);
+		div.parentNode.insertBefore(newDiv, div);
+		$e_paintBlock(newDiv);
+		var blocksUndoIndex = ++$_eseecode.session.blocksUndo[0];
+		$_eseecode.session.blocksUndo[blocksUndoIndex] = {};
+		$_eseecode.session.blocksUndo[blocksUndoIndex].div = newDiv;
+		$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = $e_recursiveCount(document.getElementById("console-blocks").firstChild, newDiv).count;
+	}
+	
 	/**
 	 * Adds or removes the visual parameters setup in parameters setup dialog
 	 * @private
@@ -1481,10 +1503,17 @@
 	 * @param {!HTMLElement} div Block div
 	 * @param {String} instructionSetId Id of the instruction in $_eseecode.instructions.set
 	 * @param {Boolean} [dialog=false] Whether or not the block is in the dialog window
+	 * @param {Boolean} [recursive=false] Whether or not to recurisvely add the listeners to all children
 	 * @example $e_addBlockEventListeners("level2", document.body.createElement("div"))
 	 */
 	
-	function $e_addBlockEventListeners(level, div, instructionSetId, dialog) {
+	function $e_addBlockEventListeners(level, div, instructionSetId, dialog, recursive) {
+		if (!div || div.tagName != "DIV") {
+			return;
+		}
+		if (instructionSetId === undefined) {
+			instructionSetId = div.getAttribute("data-instructionsetid");
+		}
 		var instruction = $_eseecode.instructions.set[instructionSetId];
 		if (instruction.dummy) {
 			return;
@@ -1499,6 +1528,17 @@
 			} else if (level == "level2" || level == "level3") {
 				div.addEventListener("mousedown", $e_clickBlock, false);
 				div.addEventListener("touchstart", $e_clickBlock, false);
+			}
+		}
+		if (recursive) {
+			if (recursive === true) {
+				recursive = 1;
+			}
+			if (div.firstChild) {
+				$e_addBlockEventListeners(level, div.firstChild, undefined, dialog, recursive+1);
+			}
+			if (recursive !== true && div.nextSibling) {
+				$e_addBlockEventListeners(level, div.nextSibling, undefined, dialog, recursive+1);
 			}
 		}
 	}

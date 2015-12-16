@@ -444,5 +444,6 @@ $_eseecode.i18n.available.ca = {
 	"Which layer do you want the capture to go to?\n(Leave blank to save it in a new layer)": "A quina capa vols que es desi la captura?\n(Deixa en blanc per desar-la a una nova capa)",
 	"No layer exists in this position": "No existeix cap capa en aquesta possició",
 	"Name of the variable": "Nom de la variable",
-	"Which value do you want to give the variable?": "Quin valor vols donar a la variable?"
+	"Which value do you want to give the variable?": "Quin valor vols donar a la variable?",
+	"Duplicate": "Duplicar"
 }
