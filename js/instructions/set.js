@@ -18,7 +18,7 @@
 		"clean": { name: "clean", category: "canvas", parameters: [{ name: "id", type: "layer", minValue: 0, optional: true, tip: "Which layer do you want to clean?\n(Leave blank to clean the current layer)" }], tip: "Wipes the canvas", show: ["level3", "level4"] },
 		//"flipHorizontally": { name: "flipHorizontally", category: "canvas", parameters: [], tip: "Flips the canvas horizontally", show: ["level2","level3","level4"] },
 		//"flipVertically": { name: "flipVertically", category: "canvas", parameters: [], tip: "Flips the canvas vertically", show: ["level2","level3","level4"] },
-		"blank": { name: "blank", category: "guide", show: ["level1","level2"] },
+		"blank": { name: "blank", category: "guide", show: ["level2"] },
 		"forward": { name: "forward", category: "guide", parameters: [{name: "pixels", initial: 100, type: "number", tip: "How many pixels do you want to move forward?"}], tip: "Moves forward", show: ["level2","level3","level4"] },
 		"forward1": { name: "forward", category: "guide", parameters: [{name: "pixels", initial: 100, type: "number", tip: "How many pixels do you want to move forward?"}], tip: "Moves 100 steps forward", show: ["level1"] },
 		"forward2": { name: "forward", category: "guide", parameters: [{name: "pixels", initial: 50, type: "number", tip: "How many pixels do you want to move forward?"}], tip: "Moves 50 steps forward", show: ["level1"] },

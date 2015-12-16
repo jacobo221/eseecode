@@ -116,7 +116,10 @@
 			var margin = 15;
 			var minfont = 10;
 			var maxfont = 20;
-			var fontSize = (width-margin*2)/param.length;
+			var fontSize = minfont;
+			if (param) {
+				fontSize = (width-margin*2)/param.length;
+			}
 			if (fontSize < minfont) {
 				fontSize = minfont;
 			}
@@ -347,7 +350,10 @@
 			var margin = 15;
 			var minfont = 10;
 			var maxfont = 20;
-			var fontSize = (width-margin*2)/param.length;
+			var fontSize = minfont;
+			if (param) {
+				fontSize = (width-margin*2)/param.length;
+			}
 			if (fontSize < minfont) {
 				fontSize = minfont;
 			}
