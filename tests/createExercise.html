@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Build your own eSeeCode exercise</title>
+    </head>
+    <body>
+        <div id="tool"></div>
+        <p>URL: <input id="url" type="text" style="width:400px" /><br></p>
+        <div id="notes" style="color:#FF0000;font-weight:bold;"></div>
+        <u><b>Preview:</b></u><br />
+        <iframe height="500" style="height:500px;border:none" id="eseecode-frame" src="" width="1150"></iframe>
+        <script type="text/javascript" src="../tools/create.js"></script>
+        <script type="text/javascript" src="../js/instructions/set.js"></script>
+        <script type="text/javascript">
+            function createExerciseHandle(url) {
+                document.getElementById("url").value = "<iframe width=\"1000\" height=\"600\" src=\""+url+"\"></iframe>";
+                document.getElementById("eseecode-frame").src = url;
+                if (url.length >= 2000) {
+                    document.getElementById("notes").innerHTML = "The resulting URL has 2000 characters or more. This URL might not load correctly in Internet Explorer browsers!";
+                } else {
+                    document.getElementById("notes").innerHTML = "";
+                }
+            }
+            createExerciseTool("tool", createExerciseHandle, "http://eseecode-jacobo221.c9.io/");
+        </script>
+    </body>
+</html>
