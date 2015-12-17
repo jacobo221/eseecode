@@ -133,6 +133,12 @@
 		delete $_eseecode.session.breakpoints[line];
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "write") {
 			ace.edit("console-write").session.clearBreakpoint(line-1);
+		} else {
+			var blockDiv = $e_searchBlockByPosition(document.getElementById("console-blocks").firstChild, line-1, 0).element;
+			if (blockDiv) {
+				console.log(": "+blockDiv.id)
+				blockDiv.style.boxShadow = "";
+			}
 		}
 		var div = document.getElementById("dialog-debug-analyzer-line"+line);
 		div.parentNode.removeChild(div);
