@@ -1053,7 +1053,14 @@
 						if (elem.getAttribute("min") && parseFloat(elem.value) < elem.getAttribute("min")) {
 							elem.value = elem.getAttribute("min");
 						}
-						elem.dispatchEvent(new Event('change'));
+						try {
+							elem.dispatchEvent(new Event('change'));
+						} catch(err) {
+							// IE doesn't support the previous method
+							var event = document.createEvent('Event');
+							event.initEvent('change', true, true);
+							elem.dispatchEvent(event);
+						}
 					}, false);
 					element.appendChild(elementMinus);
 					if (useSlider) {
@@ -1135,7 +1142,14 @@
 						if (elem.getAttribute("max") && parseFloat(elem.value) > elem.getAttribute("max")) {
 							elem.value = elem.getAttribute("max");
 						}
-						elem.dispatchEvent(new Event('change'));
+						try {
+							elem.dispatchEvent(new Event('change'));
+						} catch(err) {
+							// IE doesn't support the previous method
+							var event = document.createEvent('Event');
+							event.initEvent('change', true, true);
+							elem.dispatchEvent(event);
+						}
 					}, false);
 					element.appendChild(elementPlus);
 					if (useSlider) {
