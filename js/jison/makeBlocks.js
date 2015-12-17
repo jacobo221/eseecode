@@ -308,8 +308,10 @@
 			if (init) {
 				if (init.name) {
 					appendBlock(level,type,parentDiv,[id,init.name]);
-				} else {
+				} else if (init.value) {
 					appendBlock(level,type,parentDiv,[id,init.value]);
+				} else {
+					appendBlock(level,type,parentDiv,[id,init.makeWrite(level,"","")]);
 				}
 			} else {
 				appendBlock(level,type,parentDiv,[id]);

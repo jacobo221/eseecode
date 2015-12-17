@@ -256,7 +256,9 @@
 			if (consoleColumn.classList) {
 				consoleColumn.classList.remove("maximized");
 			} else {
-				consoleColumn.div.className = consoleColumn.className.replace(/\s+maximized/,"");
+				if (consoleColumn.div) {
+					consoleColumn.div.className = consoleColumn.className.replace(/\s+maximized/,"");
+				}
 			}
 			setupTab.parentNode.removeChild(setupTab);
 			document.getElementById("dialog-tabs").appendChild(setupTab);
@@ -936,7 +938,7 @@
 			var option = document.createElement("option");
 			option.value = i;
 			option.text = _(gridModes[i].name);
-			if (i == currentPredefinedMode || (currentPredefinedMode == undefined && gridModes[i].default)) {
+			if (i == currentPredefinedMode || (currentPredefinedMode == undefined && gridModes[i].initial)) {
 				option.selected = true;
 			}
 			element.add(option);
@@ -1674,9 +1676,7 @@
 		if (!notInitial) {
 			window.addEventListener('resize', $e_windowResizeHandler, false);
 			var orientation = "landscape";
-			if (screen.orientation && screen.orientation.lock) {
-				screen.orientation.lock(orientation).catch(function() {});
-			} else if (screen.lockOrientation) {
+			if (screen.lockOrientation) {
 				screen.lockOrientation(orientation);
 			} else if (screen.mzLockOrientation) {
 				screen.mzLockOrientation(orientation);
@@ -2631,7 +2631,7 @@
 		if ($_eseecode.coordinates.userSelection == gridModes.length) { // It was set as Custom
 			newUserSelection = 0;
 			for (var i=0; i<gridModes.length; i++) {
-				if (gridModes[i].default) {
+				if (gridModes[i].initial) {
 					newUserSelection = i;
 					break;
 				}
