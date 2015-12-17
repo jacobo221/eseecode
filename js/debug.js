@@ -136,7 +136,6 @@
 		} else {
 			var blockDiv = $e_searchBlockByPosition(document.getElementById("console-blocks").firstChild, line-1, 0).element;
 			if (blockDiv) {
-				console.log(": "+blockDiv.id)
 				blockDiv.style.boxShadow = "";
 			}
 		}
