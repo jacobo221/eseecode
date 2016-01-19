@@ -5,15 +5,19 @@
 	 * @private
 	 * @param {String} [urlParams] URL to parse. If unset use browser's location
 	 * @param {String} [parameters] Only load this specific parameters
+	 * @param {Boolean} [action] Run the action (true) or only set it up (false)
 	 * @example $e_loadURLParams("view=drag")
 	 */
-	function $e_loadURLParams(urlParams, parameters) {
-		var action;
+	function $e_loadURLParams(urlParams, parameters, action) {
 		if (urlParams === undefined) {
 			urlParams = window.location.href;
-			action = false;
+			if (action === undefined) {
+				action = false;
+			}
 		} else {
-			action = true;
+			if (action === undefined) {
+				action = true;
+			}
 		}
 		urlParams = urlParams.split("&");
 		for (var i=0; i<urlParams.length; i++) {
@@ -45,6 +49,8 @@
 					API_setAxis(value, action);
 				} else if (key == "view") {
 					API_switchView(value, action);
+				} else if (key == "dialog") {
+					API_switchDialog(value, action);
 				} else if (key == "instructions") {
 					value = decodeURIComponent(value);
 					API_setInstructions(value, action);
@@ -482,6 +488,37 @@
 		if (action !== false) {
 			$e_resetGuide();
 			$e_initializeUISetup();
+		}
+	}
+	
+	/**
+	 * Switches to the specified dialog
+	 * @since 2.4
+	 * @public
+	 * @param {String} value Dialog to switch to
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_switchDialog("io")
+	 */
+	function API_switchDialog(value, action) {
+		value = value.toLowerCase();
+		// Check that the dialog exists
+		if ($e_isNumber(value,true) && $_eseecode.modes.dialog[value]) {
+			$_eseecode.modes.dialog[0] = value;
+		} else {
+			for (var id in $_eseecode.modes.dialog) {
+				if (id == 0) {
+					continue;
+				}
+				var levelName = $_eseecode.modes.dialog[id].name.toLowerCase();
+				var levelId = $_eseecode.modes.dialog[id].id.toLowerCase();
+				if (levelName == value || levelId == value) {
+					$_eseecode.modes.dialog[0] = id;
+					break;
+				}
+			}
+		}
+		if (action !== false) {
+			$e_switchDialogMode();
 		}
 	}
 	
