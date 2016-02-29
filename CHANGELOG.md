@@ -10,6 +10,7 @@
  *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
  *   Allow animate() to recieve functions
+ *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes
  *   Fix: Icons now update when chaning params in IE
  *   Fix: All icons can now be resized

@@ -1514,7 +1514,7 @@
 		}
 		if (timeoutHandlersIndex === undefined) {
 			timeoutHandlersIndex = $_eseecode.session.timeoutHandlers.length;
-		} else {			
+		} else {
 			clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
 		}
 		if (count > 1 || (count === undefined && returnValue !== false)) {

@@ -2441,6 +2441,7 @@
   		for(key in $_eseecode.canvasArray) {
 			$e_removeCanvas(key);
 		}
+		$e_stopPreviousAnimations();
 		$e_resetBreakpointWatches();
 		$e_resetWatchpoints();
 		delete $_eseecode.canvasArray;
