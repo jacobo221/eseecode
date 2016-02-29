@@ -1481,7 +1481,7 @@
 	 * It will run a code on every specified time until the code returns false or an amount of times is specified
 	 * @since 2.0
 	 * @public
-	 * @param {String} command Code to run on every 
+	 * @param {String|Function} command Code to run on every 
 	 * @param {Number} [seconds=0.5] Seconds between each code run
 	 * @param {Number} [count] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
@@ -1492,18 +1492,22 @@
 	function animate(command, seconds, count, timeoutHandlersIndex) {
 		$e_parseParameterTypes("animate", arguments);
 		var returnValue;
-		try {
-			returnValue = eval(command);
-		} catch(event) {
-			// TODO: delays should reset timeout timestamp to avoid infinite loops but don't stop the animation with general timeout
-			if (event === "executionTimeout") {
-				if (timeoutHandlersIndex !== undefined) {
-					unanimate(timeoutHandlersIndex);
+		if (typeof command === "string") {
+			try {
+				returnValue = eval(command);
+			} catch(event) {
+				// TODO: delays should reset timeout timestamp to avoid infinite loops but don't stop the animation with general timeout
+				if (event === "executionTimeout") {
+					if (timeoutHandlersIndex !== undefined) {
+						unanimate(timeoutHandlersIndex);
+					}
+					return false;
+				} else {
+					throw event;
 				}
-				return false;
-			} else {
-				throw event;
 			}
+		} else if (typeof command === "function"){
+			command();
 		}
 		if (seconds === undefined) {
 			seconds = 0.5;
