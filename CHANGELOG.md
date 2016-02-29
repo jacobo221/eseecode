@@ -9,6 +9,7 @@
  *   Allow to initialize variables when declating them in blocks views
  *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
+ *   Fix: Image and Button fixes
  *   Fix: Icons now update when chaning params in IE
  *   Fix: When setting a value in blocks views changin from advanced to basic setup won't remove quotes in strings
  *   Fix: Check that = has a value

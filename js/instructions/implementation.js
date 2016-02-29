@@ -40,11 +40,8 @@
 			button = oldButton.cloneNode(true); // Clone to remove handlers
 			oldButton.parentNode.replaceChild(button, oldButton);
 			if (action !== true) {
-				if (!$e_isTouchDevice()) {
-					button.addEventListener("click", function() { $e_execute(true,action); }, false);
-				} else {
-					button.addEventListener("touchstart", function() { $e_execute(true,action); }, false);
-				}
+				button.addEventListener("mousedown", function() { $e_execute(true,action); }, false);
+				button.addEventListener("touchstart", function() { $e_execute(true,action); }, false);
 			}
 		}
 	}
@@ -119,9 +116,10 @@
 	function windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
 		$e_parseParameterTypes("windowImageEdit", arguments);
 		var id = "element-"+id;
-    		var div = document.getElementById(id);
+    	var img = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
 		$e_switchDialogMode("window");
+		
 		img.style.position = "absolute";
 		if (canvasId) {
 			img.src = $e_getLayer(canvasId).canvas.toDataURL();
@@ -144,29 +142,20 @@
  			oldImg.parentNode.replaceChild(img, oldImg);
 			if (onmouseover && onmouseover !== true) {
 				if (onmouseover) {
-					if (!$e_isTouchDevice()) {
-				    		img.addEventListener("mouseover",function() { $e_execute(true,onmouseover); }, false);
-					} else {
-				    		img.addEventListener("touchstart",function() { $e_execute(true,onmouseover); }, false);
-					}
+				    img.addEventListener("mouseover",function() { $e_execute(true,onmouseover); }, false);
+					img.addEventListener("touchstart",function() { $e_execute(true,onmouseover); }, false);
 				}
 			}
 			if (onclick && onclick !== true) {
 				if (onclick) {
-					if (!$e_isTouchDevice()) {
-				    		img.addEventListener("click",function() { $e_execute(true,onclick); }, false);
-					} else {
-		   	 			img.addEventListener("touchstart",function() { $e_execute(true,onclick); }, false);
-					}
+				    img.addEventListener("mousedown",function() { $e_execute(true,onclick); }, false);
+					img.addEventListener("touchstart",function() { $e_execute(true,onclick); }, false);
 				}
 			}
 			if (onmouseout && onmouseout !== true) {
 				if (onmouseout) {
-					if (!$e_isTouchDevice()) {
-				    		img.addEventListener("mouseout",function() { $e_execute(true,onmouseout); }, false);
-					} else {
-		    			img.addEventListener("touchend",function() { $e_execute(true,onmouseout); }, false);
-					}
+			   		img.addEventListener("mouseout",function() { $e_execute(true,onmouseout); }, false);
+					img.addEventListener("touchend",function() { $e_execute(true,onmouseout); }, false);
 				}
 			}
 		}
