@@ -5,7 +5,7 @@
 <body>
 <h1>Test instruction icons</h1>
 <p>Instruction: <select id="instructions"></select></p>
-<p>Parameters: <input id="param1" type="text" value="" style="width:80px" /> <input id="param2" type="text" value="" style="width:80px" /></p>
+<p>Parameters: <input id="param1" type="text" value="" style="width:80px" /> <input id="param2" type="text" value="" style="width:80px" /> <input id="param3" type="text" value="" style="width:80px" /> <input id="param4" type="text" value="" style="width:80px" /></p>
 <p>Size: <input id="width" type="number" value="68" style="width:50px" />x<input id="height" type="number" value="68" style="width:50px" /></p>
 <p>Show title: <select id="showTitle"><option value="yes">Yes</option><option value="no">No</option></select></p>
 <p>Show flat background: <select id="showFlatBg"><option value="yes">Yes</option><option value="no" selected="selected">No</option></select></p>
@@ -15,6 +15,7 @@
 <p><canvas id="icon" style="width:68px;height:68px;"></canvas></p>
 <p><b><a href="" onclick="downloadIcon(this)">Download</a></b></p>
 <script type="text/javascript">
+// Some icons need environment objects available, simualte them:
 var $_eseecode = {
 	instructions: {
 		icons: null
@@ -22,6 +23,16 @@ var $_eseecode = {
 	whiteboard: {
 		offsetWidth: 400,
 		offsetHeight: 400
+	},
+	coordinates: {
+		position: {
+			x: 0,
+			y: 0
+		},
+		scale:{
+			x: 1,
+			y: 1
+		},
 	}
 }
 </script>
@@ -114,11 +125,10 @@ function createIcon() {
 		ctx.fill();
     }
 	var params = new Array();
-	if (document.getElementById('param1').value.length > 0) {
-		params[0] = document.getElementById('param1').value;
-	}
-	if (document.getElementById('param2').value.length > 0) {
-		params[1] = document.getElementById('param2').value;
+	for (var paramNum = 1; document.getElementById("param"+paramNum); paramNum++) {
+		if (document.getElementById('param'+paramNum).value.length > 0) {
+			params[paramNum-1] = document.getElementById('param'+paramNum).value;
+		}
 	}
 	icons[instr](ctx, document.getElementById('width').value, document.getElementById('height').value, params);
     if (showBorder != "no") {
