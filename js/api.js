@@ -314,6 +314,7 @@
 	 * @example API_setInstructions("turnLeft;90;forward")
 	 */
 	function API_setInstructions(value, action) {
+		$_eseecode.session.disableCode = false; // By default enable code, but if there's a block with maxInstances enabled we must disable code
 		var instructions = value.split(";");
 		var customNameCount = {};
 		$_eseecode.instructions.custom = [];
@@ -349,6 +350,7 @@
                     } else if (instructions[j+1+k].indexOf("count:") == 0) {
                     	var maxCount = parseInt(instructions[j+1+k].split(":")[1]);
                     	if ($e_isNumber(maxCount)) {
+                    		$_eseecode.session.disableCode = true; // Disable Code view since we cannot count blocks usage there
                     		$_eseecode.instructions.set[newInstructionId].maxInstances = maxCount;
                     		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
                     	}

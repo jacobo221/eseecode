@@ -101,6 +101,12 @@
 			dialog = true;
 		}
 		$e_cancelFloatingBlock();
+		// Cancel click block if it is disabled
+		if ($e_isNumber(instruction.maxInstances) && instruction.countInstances >= instruction.maxInstances) {
+			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added
+				return;
+			}
+		}
 		var blocksUndoIndex = $_eseecode.session.blocksUndo[0]+1;
 		if (blocksUndoIndex > $_eseecode.setup.undoDepth) { // never remember more than 20 actions (which means the array has 21 elements, since the first one is the index)
 			blocksUndoIndex--;
@@ -490,11 +496,6 @@
 	function $e_addBlock(blockDiv, position, parent, isConverting) {
 		var instructionId = blockDiv.getAttribute("data-instructionsetid");
 		var instruction = $_eseecode.instructions.set[instructionId];
-		if ($e_isNumber(instruction.maxInstances) && instruction.countInstances >= instruction.maxInstances) {
-			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added
-				return;
-			}
-		}
 		var consoleDiv = document.getElementById("console-blocks");
 		// Before adding first block delete console tip
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id == "console-blocks-tip") {
@@ -667,19 +668,21 @@
 			return;
 		}
 		var instruction = $_eseecode.instructions.set[instructionId];
-		var blockCountSpan = document.getElementById(dialogBlock.id+"-blockCount");
-		if (!blockCountSpan) {
-			var blockCountSpan = document.createElement("span");
-			blockCountSpan.id = dialogBlock.id+"-blockCount";
-			blockCountSpan.className = "blockCount";
-			blockCountSpan.innerHTML = instruction.maxInstances;
-			dialogBlock.appendChild(blockCountSpan);
-		}
-		blockCountSpan.innerHTML = instruction.maxInstances - instruction.countInstances;
-		if (instruction.countInstances >= instruction.maxInstances) {
-			dialogBlock.style.opacity = "0.4";
-		} else {
-			dialogBlock.style.opacity = "1";
+		if ($e_isNumber(instruction.maxInstances)) {
+			var blockCountSpan = document.getElementById(dialogBlock.id+"-blockCount");
+			if (!blockCountSpan) {
+				var blockCountSpan = document.createElement("span");
+				blockCountSpan.id = dialogBlock.id+"-blockCount";
+				blockCountSpan.className = "blockCount";
+				blockCountSpan.innerHTML = instruction.maxInstances;
+				dialogBlock.appendChild(blockCountSpan);
+			}
+			blockCountSpan.innerHTML = instruction.maxInstances - instruction.countInstances;
+			if (instruction.countInstances >= instruction.maxInstances) {
+				dialogBlock.style.opacity = "0.4";
+			} else {
+				dialogBlock.style.opacity = "1";
+			}
 		}
 	}
 
