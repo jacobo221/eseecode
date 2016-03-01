@@ -2211,7 +2211,7 @@
                 }
                 dialog.appendChild(div);
                 $e_createBlock(level,div,instructionId,true);
-                $e_checkDialogBlockCount(div);
+                $e_updateBlockCount(div);
             }
 		} else {
 	        for (var n=0;n<$_eseecode.instructions.categories.length;n++) {

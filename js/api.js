@@ -389,6 +389,8 @@
 		}
 		if (action !== false) {
 			$e_initializeUISetup();
+			// Apply to currently running code if any
+			$_eseecode.execution.endLimit = $_eseecode.execution.startTime+value*1000;
 		}
 	}
 	

@@ -148,6 +148,7 @@
                 innerDiv.appendChild(buttonsDiv);
                 var select2 = document.createElement("select");
                 select2.id = elementId;
+                select2.style.float = "left";
                 select2.style.height = "150px";
                 select2.style.minWidth = "100px";
                 select2.setAttribute("multiple", true);
@@ -188,7 +189,11 @@
                 var setupDiv = document.createElement("div");
                 setupDiv.id = "setupDiv";
                 setupDiv.style.display = "none";
-                setupDiv.innerHTML = "<input id=\"setupDivIndex\" type=\"hidden\" />"
+                setupDiv.style.float = "left";
+                setupDiv.style.width = "auto";
+                setupDiv.style.border = "1px solid black";
+                setupDiv.innerHTML = "<div id=\"setupDivTitle\"></div>";
+                setupDiv.innerHTML += "<input id=\"setupDivIndex\" type=\"hidden\" />"
                 setupDiv.innerHTML += "<input id=\"setupDivName\" type=\"hidden\" />"
                 for (var i=1; i<=6; i++) {
                     setupDiv.innerHTML += "Parameter "+i+": <input id=\"setupDivParam"+i+"\" /><br />";
@@ -327,6 +332,8 @@
         var countParams = 1;
         document.getElementById("setupDivNoChange").checked = false;
         document.getElementById("setupDivCount").value = "";
+        document.getElementById("setupDivTitle").innerHTML = "Parameters for '"+event.target.innerHTML+"':";
+        var countParams = 1;
         for (var i=1; document.getElementById("setupDivParam"+i); i++) {
             document.getElementById("setupDivParam"+i).value = "";
         }

@@ -14,6 +14,21 @@
 		display: block;
 		white-space: nowrap;
 	}
+	.blockCount {
+		position: absolute;
+		bottom: -5px;
+		right: -5px;
+		display: inline-block;
+		min-width: 12px;
+		height: 12px;
+		font-size: 12px;
+		border-radius: 6px;
+		text-align: center;
+		vertical-align: middle;
+		font-weight: bold;
+		color: #FFFFFF;
+		background-color: #FF0000;
+	}
 	.dummyBlock {
 		background-image: none;
 		background-color: transparent;
@@ -73,6 +88,7 @@
 		cursor: crosshair !important;
 	}
 	#dialog .block {
+		position: relative;
 		border: 1px solid #AAAAAA;
 		margin: 2px;
 		float: left;

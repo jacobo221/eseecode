@@ -13,14 +13,14 @@
         <script type="text/javascript">
             function createExerciseHandle(url) {
                 document.getElementById("url").value = "<iframe width=\"1000\" height=\"600\" src=\""+url+"\"></iframe>";
-                document.getElementById("eseecode-frame").src = url;
+                document.getElementById("eseecode-frame").src = url+"&preventexit=false";
                 if (url.length >= 2000) {
                     document.getElementById("notes").innerHTML = "The resulting URL has 2000 characters or more. This URL might not load correctly in Internet Explorer browsers!";
                 } else {
                     document.getElementById("notes").innerHTML = "";
                 }
             }
-            createExerciseTool("tool", createExerciseHandle, "http://eseecode-jacobo221.c9.io/");
+            createExerciseTool("tool", createExerciseHandle, "https://eseecode-jacobo221.c9.io/");
         </script>
     </body>
 </html>

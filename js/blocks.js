@@ -116,6 +116,10 @@
 			$_eseecode.session.blocksUndo[blocksUndoIndex].fromDivPosition = $e_recursiveCount(element, div).count;
 		}
 		$_eseecode.session.floatingBlock.div = div.cloneNode(true);
+		// Remove coundown from floating block
+		if (dialog && $_eseecode.session.floatingBlock.div.firstChild.nextSibling) {
+			$_eseecode.session.floatingBlock.div.removeChild($_eseecode.session.floatingBlock.div.firstChild.nextSibling)
+		}
 		var mousePos = $e_eventPosition(event);
 		// Try to drag the block pinned from the same position it was clicked
 		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left - window.pageXOffset;
@@ -169,8 +173,8 @@
 			shadowDiv.style.border = "3px solid #666666";
 			shadowDiv.setAttribute("data-downcounter", animationRepetitions);
 			shadowDiv.style.position = "absolute";
-			shadowDiv.style.top = blockPosition.top;
-			shadowDiv.style.left = blockPosition.left;
+			shadowDiv.style.top = blockPosition.top+"px";
+			shadowDiv.style.left = blockPosition.left+"px";
 			document.body.appendChild(shadowDiv);
 			var shadowBlockToConsole = function() {
 				var downcounter = parseInt(shadowDiv.getAttribute("data-downcounter"));
@@ -525,7 +529,7 @@
 		if ($e_isNumber(instruction.maxInstances)) {
 			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added)
 				instruction.countInstances++;
-				$e_checkDialogBlockCount(instructionId);
+				$e_updateBlockCount(instructionId);
 			}
 		}
 		parentDiv.insertBefore(blockDiv, nextDiv); // if it's the last child nextSibling is null so it'll be added at the end of the list
@@ -580,7 +584,7 @@
 			}
 		}
 	}
-
+	
 	/**
 	 * Returns in found if targetDiv was found in currentDiv or its siblings and in count its position
 	 * @private
@@ -637,9 +641,9 @@
 	 * Enables/Disabled dialog blocks when their count reaches maxInstances
 	 * @private
 	 * @param {!String|!HTMLElement} instruction Instruction id or dialog block
-	 * @example $e_checkDialogBlockCount("forward1")
+	 * @example $e_updateBlockCount("forward1")
 	 */
-	function $e_checkDialogBlockCount(instructionObject) {
+	function $e_updateBlockCount(instructionObject) {
 		if (!instructionObject) {
 			return;
 		}
@@ -663,6 +667,15 @@
 			return;
 		}
 		var instruction = $_eseecode.instructions.set[instructionId];
+		var blockCountSpan = document.getElementById(dialogBlock.id+"-blockCount");
+		if (!blockCountSpan) {
+			var blockCountSpan = document.createElement("span");
+			blockCountSpan.id = dialogBlock.id+"-blockCount";
+			blockCountSpan.className = "blockCount";
+			blockCountSpan.innerHTML = instruction.maxInstances;
+			dialogBlock.appendChild(blockCountSpan);
+		}
+		blockCountSpan.innerHTML = instruction.maxInstances - instruction.countInstances;
 		if (instruction.countInstances >= instruction.maxInstances) {
 			dialogBlock.style.opacity = "0.4";
 		} else {
@@ -698,7 +711,7 @@
 		var instruction = $_eseecode.instructions.set[instructionId];
 		if ($e_isNumber(instruction.maxInstances) && div != $_eseecode.session.floatingBlock.div) {
 			instruction.countInstances--;
-			$e_checkDialogBlockCount(instructionId);
+			$e_updateBlockCount(instructionId);
 		}
 		div.parentNode.removeChild(div);
 		if (!consoleDiv.firstChild) {
@@ -1567,7 +1580,8 @@
 	 */
 	function $e_paintBlock(div, dialog, skipRecursiveRepaint) {
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
-		var instruction = $_eseecode.instructions.set[div.getAttribute("data-instructionsetid")];
+		var instructionId = div.getAttribute("data-instructionsetid");
+		var instruction = $_eseecode.instructions.set[instructionId];
 		var color = "transparent"; // default color
 		var searchCategoryForColor = instruction.category;
 		if (instruction.category == "internal" && div.parentNode) {
@@ -1702,6 +1716,10 @@
 			div.style.backgroundImage = "url("+bgCanvas.toDataURL()+")";
 			if (!dialog) {
 				$e_roundBlockCorners(div);
+			} else {
+				if ($e_isNumber(instruction.maxInstances)) {
+					$e_updateBlockCount(instructionId);
+				}
 			}
 		}
 		if (!skipRecursiveRepaint) {
