@@ -309,7 +309,7 @@
 	 * Sets the instruction blocks to make available to the user
 	 * @since 2.3
 	 * @public
-	 * @param {String} value Instructions to makwe available (spearated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)
+	 * @param {String} value Instructions to make available (separated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)
 	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
 	 * @example API_setInstructions("turnLeft;90;forward")
 	 */
@@ -374,6 +374,11 @@
 		}
 		if (action !== false) {
 			$e_initDialogBlocks($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
+		}
+		if ($_eseecode.session.disableCode) {
+			ace.edit("console-write").setOptions({readOnly: true});
+		} else {
+			ace.edit("console-write").setOptions({readOnly: false});
 		}
 	}
 	

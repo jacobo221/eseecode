@@ -470,12 +470,6 @@
 					$e_resetUndoWrite();
 				}
 				ace.edit("console-write").session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakponts
-				if ($_eseecode.session.disableCode) {
-					$e_msgBox(_("There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code."));
-					ace.edit("console-write").setOptions({readOnly: true});
-				} else {
-					ace.edit("console-write").setOptions({readOnly: false});
-				}
 			} else if ($_eseecode.modes.console[id].div == "blocks") {
 				$e_blocks2blocks(level);
 			}
@@ -2338,6 +2332,9 @@
 					}
 				}
 			}
+		}
+		if ($_eseecode.session.disableCode) {
+			$e_msgBox(_("There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code."));
 		}
 	}
 
