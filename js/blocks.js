@@ -103,7 +103,7 @@
 		$e_cancelFloatingBlock();
 		// Cancel click block if it is disabled
 		if ($e_isNumber(instruction.maxInstances) && instruction.countInstances >= instruction.maxInstances) {
-			if (!$_eseecode.session.floatingBlock.fromDiv) { // Make sure the block is not being moved instead of added
+			if (dialog) { // Make sure the block is not being moved instead of added
 				return;
 			}
 		}
