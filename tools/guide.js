@@ -120,9 +120,10 @@
             }
             var action = currentGuideStep.action;
             if (currentGuideStep.timeout) {
-            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
-            setTimeout(ttCountdown, 1000);
-            timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+                ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
+                setTimeout(ttCountdown, 1000);
+                timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+            }
         } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
             ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
