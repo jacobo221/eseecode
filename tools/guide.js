@@ -114,16 +114,6 @@
                 elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
             }
             ttBox.innerHTML += "<br />"+_("Click on this message to continue");
-        } else if (element && action != "none") {
-            if (!currentGuideStep.action) {
-                currentGuideStep.action = "mouseup";
-            }
-            var action = currentGuideStep.action;
-            if (currentGuideStep.timeout) {
-                ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
-                setTimeout(ttCountdown, 1000);
-                timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
-            }
         } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
             ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
@@ -133,11 +123,16 @@
                 elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
             }
             ttBox.innerHTML += "<br />"+_("Click on this message to continue");
-        } else if (element && action != "none") {
-            if (!currentGuideStep.action) {
+        } else if (element && currentGuideStep.action != "none") {
+            var action = currentGuideStep.action;
+            if (!action) {
                 currentGuideStep.action = "mouseup";
             }
-            var action = currentGuideStep.action;
+            if (currentGuideStep.timeout) {
+                ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
+                setTimeout(ttCountdown, 1000);
+                timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
+            }
             if (action == "mousedown" || action == "touchstart") {
                 element.addEventListener("mousedown", currentGuideStep.runNext, false);
                 element.addEventListener("touchstart", currentGuideStep.runNext, false);
