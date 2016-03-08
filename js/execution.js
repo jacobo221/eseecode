@@ -50,8 +50,8 @@
 	 * @example $e_checkExecutionLimits(31)
 	 */
 	function $e_checkExecutionLimits(lineNumber, inline) {
-		if ($_eseecode.execution.precode.running) {
-			// Precode is run as is with no checks and without altering $_eseecode.execution variables
+		if ($_eseecode.execution.precode.running) { // We do checkLimits with postcoding because if this code calls a user-defined function we must count statistics and check limits
+			// Precode/Postcode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
 		var executionTime = new Date().getTime();
@@ -119,8 +119,8 @@
 	 * @example $e_initProgramCounter()
 	 */
 	function $e_initProgramCounter(disableStepping) {
-		if ($_eseecode.execution.precode.running) {
-			// Precode is run as is with no checks and without altering $_eseecode.execution variables
+		if ($_eseecode.execution.precode.running) { // We do check limits with postcode because if it runs user-defined functions we must count statistics and check limits
+			// Precode/Postcode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
 		var withStep = $_eseecode.execution.stepped;
@@ -295,6 +295,9 @@
 			}
 			if (!justPrecode) {
 				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+$e_code2run(code);
+				if (!inCode && $_eseecode.execution.postcode.code) { // Don't load postcode again when running the code of an event
+					jsCode += ";$_eseecode.execution.postcode.running=true;"+$e_code2run($_eseecode.execution.postcode.code)+";$_eseecode.execution.postcode.running=false;\n";
+				}
 			}
 		} catch (exception) {
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
@@ -426,8 +429,10 @@
 	 * @example $e_endExecution();
 	 */
 	function $e_endExecution() {
-		var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-		document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
+		if ($_eseecode.execution.startTime !== undefined) { // When running precode initially startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
+			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
+			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
+		}
 		$_eseecode.execution.programCounter = 0;
 		$_eseecode.execution.programCounterLimit = 0;
 		$_eseecode.execution.breakpointCounterLimit = 1;

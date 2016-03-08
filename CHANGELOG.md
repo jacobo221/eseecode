@@ -5,7 +5,7 @@
  *   Now Layers can be called by name or position in the stack
  *   Debug shows the position and name of every layer
  *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
- *   Allow code, precode, execute and set dialog mode from URL
+ *   Allow code, precode, postcode, execute and set dialog mode from URL
  *   Allow to initialize variables when declaring them in blocks views
  *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
@@ -29,6 +29,7 @@
  *   Fix: Reset code when going back to first steps in guide
  *   Fix: Guide now supports shortcuts
  *   Fix: Custom instructions in guide are now reset when reloaded
+ *   Fix: Debug showing statistics when only precode has been run
 
 ## 2.3 (2015-12-06)
 

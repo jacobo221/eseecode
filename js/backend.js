@@ -423,10 +423,10 @@
 	 * @private
 	 * @param {String} code Code to upload
 	 * @param {Boolean} [run=false] If true, it runs the code immediately
-	 * @param {Boolean} [preload=false] If true, it stores the code to be also run before every execution of user code
-	 * @example $e_uploadCode("repeat(4){forward(100)}",false)
+	 * @param {String} [type="code"] If "code" it stores the code as user code, if "precode" it stores the code to be run before every execution of user code, if "postcode" it will be run after
+	 * @example $e_uploadCode("repeat(4){forward(100)}", "precode")
 	 */
-	function $e_uploadCode(code,run,preload) {
+	function $e_uploadCode(code, run, type) {
 		if (code === undefined) {
 			return;
 		}
@@ -448,9 +448,11 @@
 			codeParseable = false;
 			$e_msgBox(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode",[level]));
 		}
-		if (preload === true) {
+		if (type === "precode") {
 			$_eseecode.execution.precode.code = code;
 			$_eseecode.execution.precode.standby = !run;
+		} else if (type === "postcode") {
+			$_eseecode.execution.postcode.code = code;
 		} else {
 			$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
 			if (codeParseable) {
@@ -465,8 +467,12 @@
 			}
 		}
 		if (run) {
-		    $e_resetCanvas();
-			$e_execute();
+			$e_resetCanvas();
+			if (type === "precode") {
+				$e_execute(undefined, undefined, true);
+			} else {
+				$e_execute();
+			}
 		}
 	}
-	
+

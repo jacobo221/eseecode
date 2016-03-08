@@ -1698,7 +1698,7 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
-		$e_loadURLParams(undefined,["precode","code","execute","maximize"]);
+		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
 		$e_loadURLParams(undefined, ["dialog"], true);
 		return;
 	}

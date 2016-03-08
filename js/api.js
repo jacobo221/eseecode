@@ -61,11 +61,14 @@
 				} else if (key == "precode") {
 					value = decodeURIComponent(value);
 					API_uploadPrecode(value);
+				} else if (key == "postcode") {
+					value = decodeURIComponent(value);
+					API_uploadPostcode(value);
 				} else if (key == "code") {
 					value = decodeURIComponent(value);
 					API_uploadCode(value);
 				} else if (key == "execute") {
-					API_execute();
+					API_execute(value);
 				}
 			}
 		}
@@ -105,10 +108,16 @@
 	 * Runs the code in the console
 	 * @since 2.3
 	 * @public
-	 * @example API_execute()
+	 * @param {Boolean} [value] Run or not the code
+	 * @example API_execute(value)
 	 */
-	function API_execute() {
-		$e_executeFromUI();
+	function API_execute(value) {
+		if (value === undefined) {
+			value = true;
+		}
+		if ($e_confirmYes(value)) {
+			$e_executeFromUI();
+		}
 	}
 	
 	/**
@@ -588,7 +597,7 @@
 		if (run === undefined) {
 			run = false;
 		}
-		$e_uploadCode(code, run, false);
+		$e_uploadCode(code, run);
 	}
 
 	/**
@@ -603,7 +612,18 @@
 		if (run === undefined) {
 			run = true;
 		}
-		$e_uploadCode(code, run, true);
+		$e_uploadCode(code, run, "precode");
+	}
+
+	/**
+	 * Loads postcode into the console
+	 * @since 2.4
+	 * @public
+	 * @param {String} code Code to set as postcode
+	 * @example API_uploadPostcode("repeat(4){forward(100)}")
+	 */
+	function API_uploadPostcode(code) {
+		$e_uploadCode(code, false, "postcode");
 	}
 
 	/**

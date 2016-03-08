@@ -38,6 +38,7 @@
             { id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set },
             { id: "precode", title: "Code to preload (hidden to the user)", type: "textarea" },
             { id: "code", title: "Code to load (displayed to the user)", type: "textarea" },
+            { id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea" },
             { id: "input", title: "Input", type: "textarea" },
             { id: "execute", title: "Execute the code", type: "checkbox" }
         ];
@@ -394,3 +395,4 @@
         setupDiv.style.display = "none";
         buildURL();
     }
+
