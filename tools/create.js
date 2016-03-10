@@ -8,8 +8,6 @@
 	}
 	var handle;
 	var mainURL;
-
-
 	var setupItems;
 
 	function createExerciseTool(divId, createExerciseHandle, src) {
@@ -21,7 +19,7 @@
 		mainURL = src;
 		if (!mainURL) {
 			// default handle is to display url in alert
-			mainURL = "http://play.eseecode.com";
+			mainURL = "https://play.eseecode.com";
 		}
 		var assistant = document.getElementById(divId);
 		setupItems = [
@@ -48,7 +46,7 @@
 		var divSwitch = document.createElement("div");
 		divSwitch.id = "switch";
 		var element = document.createElement("span");
-		element.innerHTML = "Switch to: ";
+		//element.innerHTML = "Switch to: ";
 		divSwitch.appendChild(element);
 		element = document.createElement("input");
 		element.id = "switchMode";
@@ -123,6 +121,7 @@
 				var br = document.createElement("br");
 				div.appendChild(br);
 				var innerDiv = document.createElement("div");
+				innerDiv.id = "instructionsbody";
 				var elementId = setupItems[key].id;
 				var select = document.createElement("select");
 				select.id = elementId+"origin";
@@ -131,28 +130,14 @@
 				select.setAttribute("multiple", true);
 				innerDiv.appendChild(select);
 				var buttonsDiv = document.createElement("div");
+				buttonsDiv.id = "instructionsbuttons";
+				buttonsDiv.style.height = "150px";
 				buttonsDiv.style.float = "left";
-				var upButton = document.createElement("input");
-				upButton.type = "button";
-				upButton.value = "^";
-				upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
-				buttonsDiv.appendChild(upButton);
-				br = document.createElement("br");
-				buttonsDiv.appendChild(br);
 				var rightButton = document.createElement("input");
 				rightButton.type = "button";
 				rightButton.value = "->";
 				rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
 				buttonsDiv.appendChild(rightButton);
-				br = document.createElement("br");
-				buttonsDiv.appendChild(br);
-				var blankButton = document.createElement("input");
-				blankButton.type = "button";
-				blankButton.value = "-----";
-				blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
-				buttonsDiv.appendChild(blankButton);
-				br = document.createElement("br");
-				buttonsDiv.appendChild(br);
 				var leftButton = document.createElement("input");
 				leftButton.type = "button";
 				leftButton.value = "<-";
@@ -161,11 +146,23 @@
 				innerDiv.appendChild(buttonsDiv);
 				br = document.createElement("br");
 				buttonsDiv.appendChild(br);
+				var upButton = document.createElement("input");
+				upButton.type = "button";
+				upButton.value = "^";
+				upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
+				buttonsDiv.appendChild(upButton);
 				var downButton = document.createElement("input");
 				downButton.type = "button";
 				downButton.value = "v";
 				downButton.addEventListener("click",function() {selectOrderMove("down",elementId);buildURL();});
 				buttonsDiv.appendChild(downButton);
+				br = document.createElement("br");
+				buttonsDiv.appendChild(br);
+				var blankButton = document.createElement("input");
+				blankButton.type = "button";
+				blankButton.value = "-----";
+				blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
+				buttonsDiv.appendChild(blankButton);
 				innerDiv.appendChild(buttonsDiv);
 				var select2 = document.createElement("select");
 				select2.id = elementId;
@@ -177,20 +174,33 @@
 				var options = setupItems[key].options;
 				var selectOrder = {};
 				var selectOptions = {};
-				for (var id in options) {
-					if (!id.match(/blank[0-9]*/)) {
-						selectOptions[options[id].name] = true;
-					}
-					var instruction = options[id].name+";";
-					for (var param in options[id].parameters) {
-						instruction += options[id].parameters[param].initial+";";
-					}
-					for (var view in options[id].show) {
-						var level = options[id].show[view];
-						if (!selectOrder[level]) {
-							selectOrder[level] = "";
+		        for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
+			        var category = $_eseecode.instructions.categories[n].name;
+					for (var id in options) {
+				        // Only show instructions in the current category
+				        if (category != $_eseecode.instructions.set[id].category) {
+					        continue;
+				        }
+						if (!id.match(/blank[0-9]*/)) {
+							selectOptions[options[id].name] = true;
 						}
-						selectOrder[level] += "<option onclick=\"changeParameters()\" value=\""+instruction+"\">"+instruction+"</option>";
+						var instructionName = options[id].name;
+						if (instructionName === "blank") {
+							instructionName = "-----";
+						}
+						var instruction = options[id].name+";";
+						for (var param in options[id].parameters) {
+							var value = options[id].parameters[param].initial;
+							value = $e_parsePredefinedConstants(value);
+							instruction += "param:"+value+";";
+						}
+						for (var view in options[id].show) {
+							var level = options[id].show[view];
+							if (!selectOrder[level]) {
+								selectOrder[level] = "";
+							}
+							selectOrder[level] += "<option ondblclick=\"changeParameters({target:this})\" value=\""+instruction+"\">"+instructionName+"</option>";
+						}
 					}
 				}
 				defaultsButton1.addEventListener("click",function() {select2.innerHTML = selectOrder["level1"];buildURL();});
@@ -267,7 +277,7 @@
 		element = document.createElement("input");
 		element.id = "prev";
 		element.setAttribute("type", "button");
-		element.setAttribute("value", "< Go back");
+		element.setAttribute("value", "< Back");
 		element.addEventListener("click",goToPrevStep);
 		divButtons.appendChild(element);
 		var element = document.createElement("select");
