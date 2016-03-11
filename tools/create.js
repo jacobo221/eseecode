@@ -191,7 +191,7 @@
 						var instruction = options[id].name+";";
 						for (var param in options[id].parameters) {
 							var value = options[id].parameters[param].initial;
-							value = $e_parsePredefinedConstants(value);
+							value = encodeURIComponent($e_parsePredefinedConstants(value));
 							instruction += "param:"+value+";";
 						}
 						for (var view in options[id].show) {
@@ -405,8 +405,11 @@
 			} else {
 				paramValue = element.value;
 			}
+			if (setupItems[i].id !== "instructions") {
+				paramValue = encodeURIComponent(paramValue);
+			}
 			if (paramValue != "undefined" && paramValue.toString().length > 0) {
-				paramsText += (firstParam?"":"&")+setupItems[i].id+"="+encodeURIComponent(paramValue);
+				paramsText += (firstParam?"":"&")+setupItems[i].id+"="+paramValue;
 				firstParam = false;
 			}
 		}
@@ -485,10 +488,10 @@
 			} else if (value.match(/^count:/)) {
 				document.getElementById("setupDivCount").value = value.split(":")[1];
 			} else if (value.match(/^param:/)) {
-				document.getElementById("setupDivParam"+countParams).value = value.split(":")[1];
+				document.getElementById("setupDivParam"+countParams).value = decodeURIComponent(value.split(":")[1]);
 				countParams++;
 			} else {
-				document.getElementById("setupDivParam"+countParams).value = value;
+				document.getElementById("setupDivParam"+countParams).value = decodeURIComponent(value);
 				countParams++;
 			}
 		}
@@ -523,7 +526,7 @@
 				if (!input.value && !foundNonUndefined) {
 					continue;
 				}
-				optionText = "param:"+input.value+";"+optionText; // Prefix
+				optionText = "param:"+encodeURIComponent(input.value)+";"+optionText; // Prefix
 				foundNonUndefined = true;
 			}
 		}
