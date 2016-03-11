@@ -39,7 +39,8 @@
 		  { id: "code", title: "Code to load (displayed to the user)", type: "textarea" },
 		  { id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea" },
 		  { id: "input", title: "Input", type: "textarea" },
-		  { id: "execute", title: "Execute the code", type: "checkbox" }
+		  { id: "execute", title: "Execute the code", type: "checkbox" },
+		  { id: "conclusion", title: "Your exercise is set up", type: "html" }
 		];
 	
 		var stepNumber = 1;
@@ -241,6 +242,10 @@
 				input.id = setupItems[key].id;
 				input.addEventListener("change", buildURL);
 				div.appendChild(input);
+			} else if (setupItems[key].type == "html") {
+				var innerDiv = document.createElement("div");
+				innerDiv.id = setupItems[key].id;
+				div.appendChild(innerDiv);
 			} else {
 				var input = document.createElement("input");
 				input.id = setupItems[key].id;
