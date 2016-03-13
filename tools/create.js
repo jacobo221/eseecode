@@ -136,12 +136,12 @@
 				buttonsDiv.style.float = "left";
 				var rightButton = document.createElement("input");
 				rightButton.type = "button";
-				rightButton.value = "->";
+				rightButton.value = ">";
 				rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
 				buttonsDiv.appendChild(rightButton);
 				var leftButton = document.createElement("input");
 				leftButton.type = "button";
-				leftButton.value = "<-";
+				leftButton.value = "<";
 				leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
 				buttonsDiv.appendChild(leftButton);
 				innerDiv.appendChild(buttonsDiv);
