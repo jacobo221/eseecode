@@ -1492,15 +1492,24 @@
 			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to Code view, copy the code and paste it into a file in your computer."));
 			return;
 		}
-		var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
-		var downloadLink = document.createElement("a");
-		downloadLink.href = codeURI;
-		downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-		downloadLink.style.display = "none";
-		document.body.appendChild(downloadLink);
-		downloadLink.click();
-		document.body.removeChild(downloadLink);
-		$_eseecode.session.lastSave = new Date().getTime();
+		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() {
+			var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
+			var downloadLink = document.createElement("a");
+			downloadLink.href = codeURI;
+			var filename = document.getElementById("filename").value;
+			filename = filename.replace("/","").replace("\\","");
+			if (filename.length > 0 && filename.indexOf(".") < 0) {
+				filename += ".esee";
+			}
+			$_eseecode.ui.codeFilename = filename;
+			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+			downloadLink.click();
+			document.body.removeChild(downloadLink);
+			$_eseecode.session.lastSave = new Date().getTime();
+			$e_msgBoxClose();
+		}, acceptName: _("Save"), cancel: true, focus: "filename" });
 	}
 
 	/**
@@ -1540,7 +1549,7 @@
 			$e_msgBox(_("%s is not a valid eSee file! (Invalid file type %s)",[file.name,file.type]));
 			return;
 		}
-      		var reader = new FileReader();
+      	var reader = new FileReader();
 		reader.onload = function(event) {
 			API_uploadCode(event.target.result)
 			$_eseecode.ui.codeFilename = file.name;

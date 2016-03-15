@@ -10,6 +10,7 @@
  *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
  *   Allow animate() to recieve functions
+ *   Allow to choose filename when downloading code
  *   Fix: API_setTimeout() didn't work when called from within the code
  *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes

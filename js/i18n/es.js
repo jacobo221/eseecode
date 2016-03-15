@@ -446,5 +446,7 @@ $_eseecode.i18n.available.es = {
 	"Name of the variable": "Nombre de la variable",
 	"Which value do you want to give the variable?": "¿Qué valor quieres dar a la variable?",
 	"Duplicate": "Duplicar",
-	"There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code.": "Existe un límite en la cantidad de veces que se pueden usar algunos bloques.\nDado que no hay manera de controlar estos límites en la vista Código, se ha deshabilitado la edición.\nPuedes ver el código aquí pero debes volver a una vista de bloques para continuar editando el código."
+	"There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code.": "Existe un límite en la cantidad de veces que se pueden usar algunos bloques.\nDado que no hay manera de controlar estos límites en la vista Código, se ha deshabilitado la edición.\nPuedes ver el código aquí pero debes volver a una vista de bloques para continuar editando el código.",
+	"Give a name to the file": "Nombre del archivo",
+	"Save": "Guardar"
 }

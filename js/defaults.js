@@ -111,7 +111,7 @@
 			]
 		},
 		ui: {
-			codeFilename: "",
+			codeFilename: "code.esee",
 			dialogWindow: null,
 			guideVisible: true,
 			gridVisible: true,
