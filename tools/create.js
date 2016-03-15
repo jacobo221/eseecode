@@ -23,24 +23,84 @@
 		}
 		var assistant = document.getElementById(divId);
 		setupItems = [
-		  { id: "lang", title: "Language", type: "select", options: ["ca", "en", "es"], help: "Set the language you want for eSeeCode's user interface. <br /><br /><b><u>Default:</u></b> <i>en (English)</i>" },
-		  { id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"] },
-		  { id: "guide", title: "Display guide?", type: "select", options: ["Yes", "No"] },
-		  { id: "grid", title: "Display grid?", type: "select", options: ["Yes", "No"] },
-		  { id: "gridstep", title: "Separation between grid lines (in pixels)?", type: "number" },
-		  { id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"] },
-		  { id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"] },
-		  { id: "timeout", title: "How long before the execution of a program is stopped?", type: "number" },
-		  { id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"] },
-		  { id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"] },
-		  { id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"] },
-		  { id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set },
-		  { id: "precode", title: "Code to preload (hidden to the user)", type: "textarea" },
-		  { id: "code", title: "Code to load (displayed to the user)", type: "textarea" },
-		  { id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea" },
-		  { id: "input", title: "Input", type: "textarea" },
-		  { id: "execute", title: "Execute the code", type: "checkbox" },
-		  { id: "conclusion", title: "Your exercise is set up", type: "html" }
+			{
+				id: "Language",
+				items: [
+					{ id: "lang", title: "Language", type: "select", options: ["ca", "en", "es"], help: "Set the language you want for eSeeCode's user interface. <br /><br /><u>Default:</u> <i>en (English)</i>" }
+				]
+			},
+			{
+				id: "Programming environment",
+				items: [
+					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], help: "Select the view which will be displayed initially. <br /><br /><u>Default:</u> <i>Touch</i>" },
+					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], help: "Decide whether the code console should be maximized initially. <br /><br /><u>Default:</u> <i>No</i>" }
+				]
+			},
+			{
+				id: "Whiteboard",
+				items: [
+					{ id: "guide", title: "Display guide?", type: "select", options: ["Yes", "No"], help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
+					{ id: "grid", title: "Display grid?", type: "select", options: ["Yes", "No"], help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
+					{ id: "gridstep", title: "Separation between grid lines (in pixels)?", type: "number", help: "Set the amount of pixels between the grid lines. <br /><br /><u>Default:</u> <i>25</i>" }
+				]
+			},
+			{
+				id: "Axis",
+				items: [
+					{ id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul><u>Default:</u> <i>Mathematical centered</i>" }
+				]
+			},
+			{
+				id: "Application settings",
+				items: [
+					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
+					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], help: "Decide whether the fullscreen button should be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
+					{ id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage). <br /><br /><u>Default:</u> <i>Yes</i>" }
+				]
+			},
+			{
+				id: "Instructions",
+				items: [
+					{ id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set, help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Move them from the left to the right column by selecting an intruction in the left column and clicking the \">\" button. You can add an instruction several times.</li><li>Double-click any instruction in the right column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the right column by selecting it and clicking the \"^\" or \"v\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"&lt;\"button.</li><li>Click the \"-----\" button to add a separator to the instructions in the right column. The separator will be added at the end, remember to move it up with the \"^\" button.</li></ul>" }
+				]
+			},
+			{
+				id: "Execution",
+				items: [
+					{ id: "timeout", title: "How long before the execution of a program is stopped?", type: "number", help: "Set the amount of seconds programs are aloud to run before stopping them. <br /><br /><u>Default:</u> <i>10</i>" }
+				]
+			},
+			{
+				id: "Precode",
+				items: [
+					{ id: "precode", title: "Code to preload (hidden to the user)", type: "textarea", help: "The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code." }
+				]
+			},
+			{
+				id: "User code",
+				items: [
+					{ id: "code", title: "Code to load (displayed to the user)", type: "textarea", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it." },
+					{ id: "execute", title: "Execute the code", type: "checkbox", help: "Decide whether or not to run the user code immediately after loading eSeeCode." }
+				]
+			},
+			{
+				id: "Postcode",
+				items: [
+					{ id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea", help: "The code you write here will be hidden to the user but will be run everytime after the user code." }
+				]
+			},
+			{
+				id: "Input",
+				items: [
+					{ id: "input", title: "Input", type: "textarea", help: "Set the input that will appear in the I/O dialog." }
+				]
+			},
+			{
+				id: "Done!",
+				items: [
+					{ id: "conclusion", title: "Your exercise is set up", type: "html" }
+				]
+			}
 		];
 	
 		var stepNumber = 1;
@@ -60,211 +120,222 @@
 		var divSteps = document.createElement("div");
 		divSteps.id = "steps";
 		divSteps.class = "steps";
-		for (var key in setupItems) {
+		for (var page=0; page<setupItems.length; page++) {
+			var setupPage = setupItems[page].items;
 			var div = document.createElement("div");
 			div.id = "step-"+stepNumber;
 			div.class = "step";
-			var title = document.createElement("span");
-			title.innerHTML = setupItems[key].title+": ";
-			div.appendChild(title);
-			if (setupItems[key].type == "select") {
-				var select = document.createElement("select");
-				select.id = setupItems[key].id;
-				var options = setupItems[key].options;
-				var selectOptions = "<option>undefined</option>";
-				for (var id in options) {
-					selectOptions += "<option>"+options[id]+"</option>";
+			var divTitle = document.createElement("div");
+			divTitle.className = "pageTitle";
+			divTitle.innerHTML = setupItems[page].id;
+			div.appendChild(divTitle);
+			for (var key=0; key<setupPage.length; key++) {
+				if (setupPage[key].help) {
+					var divHelp = document.createElement("div");
+					divHelp.className = "help";
+					divHelp.innerHTML = setupPage[key].help;
+					div.appendChild(divHelp);
 				}
-				select.innerHTML = selectOptions;
-				select.addEventListener("change", buildURL);
-				div.appendChild(select);
-			} else if (setupItems[key].type == "multiple") {
-				var br = document.createElement("br");
-				div.appendChild(br);
-				var select = document.createElement("select");
-				select.id = setupItems[key].id;
-				select.setAttribute("multiple", true);
-				var options = setupItems[key].options;
-				var selectOptions = "";
-				for (var id in options) {
-					selectOptions += "<option>"+options[id].name+"</option>";
-				}
-				select.innerHTML = selectOptions;
-				select.addEventListener("change", buildURL);
-				div.appendChild(select);
-			} else if (setupItems[key].type == "order") {
-				var br = document.createElement("br");
-				div.appendChild(br);
-				var defaultsSpan = document.createElement("span");
-				defaultsSpan.innerHTML = "Load defaults: ";
-				div.appendChild(defaultsSpan);
-				var defaultsButton1 = document.createElement("input");
-				defaultsButton1.type = "button";
-				defaultsButton1.value = "Touch";
-				div.appendChild(defaultsButton1);
-				var defaultsButton2 = document.createElement("input");
-				defaultsButton2.type = "button";
-				defaultsButton2.value = "Drag";
-				div.appendChild(defaultsButton2);
-				var defaultsButton3 = document.createElement("input");
-				defaultsButton3.type = "button";
-				defaultsButton3.value = "Build";
-				div.appendChild(defaultsButton3);
-				var defaultsButton4 = document.createElement("input");
-				defaultsButton4.type = "button";
-				defaultsButton4.value = "Code";
-				div.appendChild(defaultsButton4);
-				var br = document.createElement("br");
-				div.appendChild(br);
-				var defaultsSpan = document.createElement("span");
-				defaultsSpan.innerHTML = "(Double-click on the right pane to configure the instructions)";
-				div.appendChild(defaultsSpan);
-				var br = document.createElement("br");
-				div.appendChild(br);
-				var innerDiv = document.createElement("div");
-				innerDiv.id = "instructionsbody";
-				var elementId = setupItems[key].id;
-				var select = document.createElement("select");
-				select.id = elementId+"origin";
-				select.style.height = "150px";
-				select.style.float = "left";
-				select.setAttribute("multiple", true);
-				innerDiv.appendChild(select);
-				var buttonsDiv = document.createElement("div");
-				buttonsDiv.id = "instructionsbuttons";
-				buttonsDiv.style.height = "150px";
-				buttonsDiv.style.float = "left";
-				var rightButton = document.createElement("input");
-				rightButton.type = "button";
-				rightButton.value = ">";
-				rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
-				buttonsDiv.appendChild(rightButton);
-				var leftButton = document.createElement("input");
-				leftButton.type = "button";
-				leftButton.value = "<";
-				leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
-				buttonsDiv.appendChild(leftButton);
-				innerDiv.appendChild(buttonsDiv);
-				br = document.createElement("br");
-				buttonsDiv.appendChild(br);
-				var upButton = document.createElement("input");
-				upButton.type = "button";
-				upButton.value = "^";
-				upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
-				buttonsDiv.appendChild(upButton);
-				var downButton = document.createElement("input");
-				downButton.type = "button";
-				downButton.value = "v";
-				downButton.addEventListener("click",function() {selectOrderMove("down",elementId);buildURL();});
-				buttonsDiv.appendChild(downButton);
-				br = document.createElement("br");
-				buttonsDiv.appendChild(br);
-				var blankButton = document.createElement("input");
-				blankButton.type = "button";
-				blankButton.value = "-----";
-				blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
-				buttonsDiv.appendChild(blankButton);
-				innerDiv.appendChild(buttonsDiv);
-				var select2 = document.createElement("select");
-				select2.id = elementId;
-				select2.style.float = "left";
-				select2.style.height = "150px";
-				select2.style.minWidth = "100px";
-				select2.setAttribute("multiple", true);
-				innerDiv.appendChild(select2);
-				var options = setupItems[key].options;
-				var selectOrder = {};
-				var selectOptions = {};
-		        for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
-			        var category = $_eseecode.instructions.categories[n].name;
+				var title = document.createElement("span");
+				title.innerHTML = setupPage[key].title+": ";
+				div.appendChild(title);
+				if (setupPage[key].type == "select") {
+					var select = document.createElement("select");
+					select.id = setupPage[key].id;
+					var options = setupPage[key].options;
+					var selectOptions = "<option>default</option>";
 					for (var id in options) {
-				        // Only show instructions in the current category
-				        if (category != $_eseecode.instructions.set[id].category) {
-					        continue;
-				        }
-						if (!id.match(/blank[0-9]*/)) {
-							selectOptions[options[id].name] = true;
-						}
-						var instructionName = options[id].name;
-						if (instructionName === "blank") {
-							instructionName = "-----";
-						}
-						var instruction = options[id].name+";";
-						for (var param in options[id].parameters) {
-							var value = options[id].parameters[param].initial;
-							value = encodeURIComponent($e_parsePredefinedConstants(value));
-							instruction += "param:"+value+";";
-						}
-						for (var view in options[id].show) {
-							var level = options[id].show[view];
-							if (!selectOrder[level]) {
-								selectOrder[level] = "";
+						selectOptions += "<option>"+options[id]+"</option>";
+					}
+					select.innerHTML = selectOptions;
+					select.addEventListener("change", buildURL);
+					div.appendChild(select);
+				} else if (setupPage[key].type == "multiple") {
+					var br = document.createElement("br");
+					div.appendChild(br);
+					var select = document.createElement("select");
+					select.id = setupPage[key].id;
+					select.setAttribute("multiple", true);
+					var options = setupPage[key].options;
+					var selectOptions = "";
+					for (var id in options) {
+						selectOptions += "<option>"+options[id].name+"</option>";
+					}
+					select.innerHTML = selectOptions;
+					select.addEventListener("change", buildURL);
+					div.appendChild(select);
+				} else if (setupPage[key].type == "order") {
+					var br = document.createElement("br");
+					div.appendChild(br);
+					var defaultsSpan = document.createElement("span");
+					defaultsSpan.innerHTML = "Load defaults: ";
+					div.appendChild(defaultsSpan);
+					var defaultsButton1 = document.createElement("input");
+					defaultsButton1.type = "button";
+					defaultsButton1.value = "Touch";
+					div.appendChild(defaultsButton1);
+					var defaultsButton2 = document.createElement("input");
+					defaultsButton2.type = "button";
+					defaultsButton2.value = "Drag";
+					div.appendChild(defaultsButton2);
+					var defaultsButton3 = document.createElement("input");
+					defaultsButton3.type = "button";
+					defaultsButton3.value = "Build";
+					div.appendChild(defaultsButton3);
+					var defaultsButton4 = document.createElement("input");
+					defaultsButton4.type = "button";
+					defaultsButton4.value = "Code";
+					div.appendChild(defaultsButton4);
+					var br = document.createElement("br");
+					div.appendChild(br);
+					var defaultsSpan = document.createElement("span");
+					defaultsSpan.innerHTML = "(Double-click on the right pane to configure the instructions)";
+					div.appendChild(defaultsSpan);
+					var br = document.createElement("br");
+					div.appendChild(br);
+					var innerDiv = document.createElement("div");
+					innerDiv.id = "instructionsbody";
+					var elementId = setupPage[key].id;
+					var select = document.createElement("select");
+					select.id = elementId+"origin";
+					select.style.height = "150px";
+					select.style.float = "left";
+					select.setAttribute("multiple", true);
+					innerDiv.appendChild(select);
+					var buttonsDiv = document.createElement("div");
+					buttonsDiv.id = "instructionsbuttons";
+					buttonsDiv.style.height = "150px";
+					buttonsDiv.style.float = "left";
+					var rightButton = document.createElement("input");
+					rightButton.type = "button";
+					rightButton.value = ">";
+					rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
+					buttonsDiv.appendChild(rightButton);
+					var leftButton = document.createElement("input");
+					leftButton.type = "button";
+					leftButton.value = "<";
+					leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
+					buttonsDiv.appendChild(leftButton);
+					innerDiv.appendChild(buttonsDiv);
+					br = document.createElement("br");
+					buttonsDiv.appendChild(br);
+					var upButton = document.createElement("input");
+					upButton.type = "button";
+					upButton.style.marginBottom = "0px";
+					upButton.value = "^";
+					upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
+					buttonsDiv.appendChild(upButton);
+					br = document.createElement("br");
+					buttonsDiv.appendChild(br);
+					var downButton = document.createElement("input");
+					downButton.type = "button";
+					downButton.style.marginTop = "0px";
+					downButton.value = "v";
+					downButton.addEventListener("click",function() {selectOrderMove("down",elementId);buildURL();});
+					buttonsDiv.appendChild(downButton);
+					br = document.createElement("br");
+					buttonsDiv.appendChild(br);
+					var blankButton = document.createElement("input");
+					blankButton.type = "button";
+					blankButton.value = "-----";
+					blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
+					buttonsDiv.appendChild(blankButton);
+					innerDiv.appendChild(buttonsDiv);
+					var select2 = document.createElement("select");
+					select2.id = elementId;
+					select2.style.float = "left";
+					select2.style.height = "150px";
+					select2.style.minWidth = "100px";
+					select2.setAttribute("multiple", true);
+					innerDiv.appendChild(select2);
+					var options = setupPage[key].options;
+					var selectOrder = {};
+					var selectOptions = {};
+			        for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
+				        var category = $_eseecode.instructions.categories[n].name;
+						for (var id in options) {
+					        // Only show instructions in the current category
+					        if (category != $_eseecode.instructions.set[id].category) {
+						        continue;
+					        }
+							if (!id.match(/blank[0-9]*/)) {
+								selectOptions[options[id].name] = true;
 							}
-							selectOrder[level] += "<option ondblclick=\"changeParameters({target:this})\" value=\""+instruction+"\">"+instructionName+"</option>";
+							var instructionName = options[id].name;
+							if (instructionName === "blank") {
+								instructionName = "-----";
+							}
+							var instruction = options[id].name+";";
+							for (var param in options[id].parameters) {
+								var value = options[id].parameters[param].initial;
+								value = encodeURIComponent($e_parsePredefinedConstants(value));
+								instruction += "param:"+value+";";
+							}
+							for (var view in options[id].show) {
+								var level = options[id].show[view];
+								if (!selectOrder[level]) {
+									selectOrder[level] = "";
+								}
+								selectOrder[level] += "<option ondblclick=\"changeParameters({target:this})\" value=\""+instruction+"\">"+instructionName+"</option>";
+							}
 						}
 					}
-				}
-				defaultsButton1.addEventListener("click",function() {select2.innerHTML = selectOrder["level1"];buildURL();});
-				defaultsButton2.addEventListener("click",function() {select2.innerHTML = selectOrder["level2"];buildURL();});
-				defaultsButton3.addEventListener("click",function() {select2.innerHTML = selectOrder["level3"];buildURL();});
-				defaultsButton4.addEventListener("click",function() {select2.innerHTML = selectOrder["level4"];buildURL();});
-				var selectOptionsKeys = [];
-				for (var id in selectOptions) {
-					selectOptionsKeys.push(id);
-				}
-				selectOptionsKeys.sort();
-				var selectOptionsText = "";
-				for (var id in selectOptionsKeys) {
-					selectOptionsText += "<option ondblclick=\"selectOrderMove('right','"+elementId+"');buildURL()\" value=\""+selectOptionsKeys[id]+";\">"+selectOptionsKeys[id]+"</option>";
-				}
-				select.innerHTML = selectOptionsText;
-				var setupDiv = document.createElement("div");
-				setupDiv.id = "setupDiv";
-				setupDiv.style.display = "none";
-				setupDiv.style.float = "left";
-				setupDiv.style.width = "auto";
-				setupDiv.style.border = "1px solid black";
-				setupDiv.innerHTML = "<div id=\"setupDivTitle\"></div>";
-				setupDiv.innerHTML += "<input id=\"setupDivIndex\" type=\"hidden\" />"
-				setupDiv.innerHTML += "<input id=\"setupDivName\" type=\"hidden\" />"
-				for (var i=1; i<=6; i++) {
-					setupDiv.innerHTML += "Parameter "+i+": <input id=\"setupDivParam"+i+"\" /><br />";
-				}
-				setupDiv.innerHTML += "Max amount of instances: <input id=\"setupDivCount\" type=\"number\" min=\"0\" /><br />";
-				setupDiv.innerHTML += "Disable setup: <input id=\"setupDivNoChange\" type=\"checkbox\" /><br />";
-				setupDiv.innerHTML += "<input type=\"button\" value=\"Apply\" onclick=\"changeParametersApply('"+elementId+"')\" />";
-				innerDiv.appendChild(setupDiv);
-				div.appendChild(innerDiv);
-			} else if (setupItems[key].type == "textarea") {
-				var br = document.createElement("br");
-				div.appendChild(br);
-				var input = document.createElement("textarea");
-				input.id = setupItems[key].id;
-				input.addEventListener("change", buildURL);
-				div.appendChild(input);
-			} else if (setupItems[key].type == "html") {
-				var innerDiv = document.createElement("div");
-				innerDiv.id = setupItems[key].id;
-				div.appendChild(innerDiv);
-			} else {
-				var input = document.createElement("input");
-				input.id = setupItems[key].id;
-				if (setupItems[key].type) {
-					input.type = setupItems[key].type;
-					if (setupItems[key].type == "number") {
-						input.style.width = "50px";
+					defaultsButton1.addEventListener("click",function() {select2.innerHTML = selectOrder["level1"];buildURL();});
+					defaultsButton2.addEventListener("click",function() {select2.innerHTML = selectOrder["level2"];buildURL();});
+					defaultsButton3.addEventListener("click",function() {select2.innerHTML = selectOrder["level3"];buildURL();});
+					defaultsButton4.addEventListener("click",function() {select2.innerHTML = selectOrder["level4"];buildURL();});
+					var selectOptionsKeys = [];
+					for (var id in selectOptions) {
+						selectOptionsKeys.push(id);
 					}
+					selectOptionsKeys.sort();
+					var selectOptionsText = "";
+					for (var id in selectOptionsKeys) {
+						selectOptionsText += "<option ondblclick=\"selectOrderMove('right','"+elementId+"');buildURL()\" value=\""+selectOptionsKeys[id]+";\">"+selectOptionsKeys[id]+"</option>";
+					}
+					select.innerHTML = selectOptionsText;
+					var setupDiv = document.createElement("div");
+					setupDiv.id = "setupDiv";
+					setupDiv.style.display = "none";
+					setupDiv.style.float = "left";
+					setupDiv.style.width = "auto";
+					setupDiv.style.border = "1px solid black";
+					setupDiv.innerHTML = "<div id=\"setupDivTitle\"></div>";
+					setupDiv.innerHTML += "<input id=\"setupDivIndex\" type=\"hidden\" />"
+					setupDiv.innerHTML += "<input id=\"setupDivName\" type=\"hidden\" />"
+					for (var i=1; i<=6; i++) {
+						setupDiv.innerHTML += "Parameter "+i+": <input id=\"setupDivParam"+i+"\" /><br />";
+					}
+					setupDiv.innerHTML += "Max amount of instances: <input id=\"setupDivCount\" type=\"number\" min=\"0\" /><br />";
+					setupDiv.innerHTML += "Disable setup: <input id=\"setupDivNoChange\" type=\"checkbox\" /><br />";
+					setupDiv.innerHTML += "<input type=\"button\" value=\"Apply\" onclick=\"changeParametersApply('"+elementId+"')\" />";
+					innerDiv.appendChild(setupDiv);
+					div.appendChild(innerDiv);
+				} else if (setupPage[key].type == "textarea") {
+					var br = document.createElement("br");
+					div.appendChild(br);
+					var input = document.createElement("textarea");
+					input.id = setupPage[key].id;
+					input.addEventListener("change", buildURL);
+					div.appendChild(input);
+				} else if (setupPage[key].type == "html") {
+					var innerDiv = document.createElement("div");
+					innerDiv.id = setupPage[key].id;
+					div.appendChild(innerDiv);
+				} else {
+					var input = document.createElement("input");
+					input.id = setupPage[key].id;
+					if (setupPage[key].type) {
+						input.type = setupPage[key].type;
+						if (setupPage[key].type == "number") {
+							input.style.width = "50px";
+						}
+					}
+					input.addEventListener("change", buildURL);
+					div.appendChild(input);
 				}
-				input.addEventListener("change", buildURL);
-				div.appendChild(input);
 			}
 			div.style.clear = "left";
-			if (setupItems[key].help) {
-				var divHelp = document.createElement("div");
-				divHelp.class = "help";
-				divHelp.innerHTML = setupItems[key].help;
-				div.appendChild(divHelp);
-			}
 			divSteps.appendChild(div);
 			stepNumber++;
 		}
@@ -289,8 +360,8 @@
 		element.id = "jump";
 		stepNumber = 1;
 		var options = "";
-		for (var key in setupItems) {
-			options += "<option value=\""+stepNumber+"\">"+stepNumber+"/"+setupItems.length+": "+setupItems[key].id+"</option>"; 
+		for (var page in setupItems) {
+			options += "<option value=\""+stepNumber+"\">"+stepNumber+"/"+setupItems.length+": "+setupItems[page].id+"</option>"; 
 			stepNumber++;
 		}
 		element.innerHTML = options;
@@ -305,6 +376,7 @@
 		divNavigator.appendChild(divButtons);
 		assistant.appendChild(divNavigator);
 		goToStep();
+		buildURL(); // Initial view
 	}
 
 	function goToNextStep() {
@@ -375,50 +447,56 @@
 	
 	function buildURL(event) {
 		var url = mainURL;
-		url += "?";
 		var paramsText = "";
 		var firstParam = true;
-		for (var i in setupItems) {
-			var paramValue = "";
-			var element = document.getElementById(setupItems[i].id);
-			if (element.type == "checkbox") {
-				if (element.checked === true) {
-					paramValue = element.checked;
-				}
-			} else if (setupItems[i].type == "order") {
-				paramValue = "";
-				for (var optionId in element.options) {
-					var option = element.options[optionId];
-					if (option.value) {
-						paramValue += option.value;
+		for (var page in setupItems) {
+			var setupPage = setupItems[page].items;
+			for (var i in setupPage) {
+				var paramValue = "";
+				var element = document.getElementById(setupPage[i].id);
+				if (element.type == "checkbox") {
+					if (element.checked === true) {
+						paramValue = element.checked;
 					}
-				}
-				if (paramValue) {
-					paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
-				}
-			} else if (element.type == "select-multiple") {
-				paramValue = "";
-				for (var optionId in element.options) {
-					var option = element.options[optionId];
-					if (option.selected) {
-						paramValue += option.value;
+				} else if (setupPage[i].type == "order") {
+					paramValue = "";
+					for (var optionId in element.options) {
+						var option = element.options[optionId];
+						if (option.value) {
+							paramValue += option.value;
+						}
 					}
+					if (paramValue) {
+						paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
+					}
+				} else if (element.type == "select-multiple") {
+					paramValue = "";
+					for (var optionId in element.options) {
+						var option = element.options[optionId];
+						if (option.selected) {
+							paramValue += option.value;
+						}
+					}
+					if (paramValue) {
+						paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
+					}
+				} else if (setupPage[i].type == "html") {
+					paramValue = "default";
+				} else {
+					paramValue = element.value;
 				}
-				if (paramValue) {
-					paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
+				if (setupPage[i].id !== "instructions") {
+					paramValue = encodeURIComponent(paramValue);
 				}
-			} else {
-				paramValue = element.value;
-			}
-			if (setupItems[i].id !== "instructions") {
-				paramValue = encodeURIComponent(paramValue);
-			}
-			if (paramValue != "undefined" && paramValue.toString().length > 0) {
-				paramsText += (firstParam?"":"&")+setupItems[i].id+"="+paramValue;
-				firstParam = false;
+				if (paramValue != "default" && paramValue.toString().length > 0) {
+					paramsText += (firstParam?"":"&")+setupPage[i].id+"="+paramValue;
+					firstParam = false;
+				}
 			}
 		}
-		url += paramsText;
+		if (paramsText.length > 0) {
+			url += "?"+paramsText;
+		}
 		handle(url);
 	}
 

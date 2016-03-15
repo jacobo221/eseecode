@@ -14,6 +14,17 @@
               width: 100%;
               min-height: 200px;
             }
+            .help {
+              margin: 10px 10px 10px 10px;
+              padding: 10px 10px 10px 10px;
+              background-color: #CCCCCC;
+            }
+            .pageTitle {
+              margin: 5px 5px 5px 5px;
+              padding: 5px 5px 5px 5px;
+              border: 1px solid black;
+              font-weight: bold;
+            }
             #controls {
               width: 100%;
               text-align: center;
@@ -40,7 +51,7 @@
               width: 80px;
             }
             #instructionsbuttons input {
-              margin: 15px 5px 15px 5px;
+              margin: 12px 5px 12px 5px;
             }
             #instructionsorigin {
               width: 155px;
@@ -140,17 +151,18 @@
         <script type="text/javascript" src="../js/blocks.js"></script>
         <script type="text/javascript" src="../js/ui.js"></script>
         <script type="text/javascript">
+            var website = "https://dev.eseecode.com";
             function createExerciseHandle(url) {
                 document.getElementById("url").value = url;
-                document.getElementById("eseecode-frame").src = url+"&preventexit=false";
+                document.getElementById("eseecode-frame").src = url + ((url !== website) ? "&" : "?") + "preventexit=false";
                 if (url.length >= 2000) {
                     document.getElementById("notes").innerHTML = "The resulting URL has 2000 characters or more. This URL might not load correctly on Internet Explorer browsers!";
                 } else {
                     document.getElementById("notes").innerHTML = "";
                 }
-                document.getElementById("conclusion").innerHTML = "Use this code to embed the exercise in your website:<br /><br />"+"&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\">&lt;/iframe>";
+                document.getElementById("conclusion").innerHTML = "Use this code to embed the exercise in your website:<br /><br /><div style=\"text-align:left;\">"+"&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\">&lt;/iframe></div><br /><br />Below you can copy the URL to the exercise you have created, you can send this URL to your students.<br /><br />Underneath you can preview how the exercise will look like.";
             }
-            createExerciseTool("tool", createExerciseHandle, "https://dev.eseecode.com");
+            createExerciseTool("tool", createExerciseHandle, website);
         </script>
     </body>
 </html>
