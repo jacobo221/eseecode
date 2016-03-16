@@ -33,6 +33,7 @@
 				id: "Programming environment",
 				items: [
 					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], help: "Select the view which will be displayed initially. <br /><br /><u>Default:</u> <i>Touch</i>" },
+					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], help: "Select which views will be available. <br /><br /><u>Default:</u> <i>All</i>" },
 					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], help: "Decide whether the code console should be maximized initially. <br /><br /><u>Default:</u> <i>No</i>" }
 				]
 			},
@@ -159,7 +160,7 @@
 					var options = setupPage[key].options;
 					var selectOptions = "";
 					for (var id in options) {
-						selectOptions += "<option>"+options[id].name+"</option>";
+						selectOptions += "<option>"+options[id]+"</option>";
 					}
 					select.innerHTML = selectOptions;
 					select.addEventListener("change", buildURL);
@@ -303,9 +304,7 @@
 					setupDiv.innerHTML = "<div id=\"setupDivTitle\"></div>";
 					setupDiv.innerHTML += "<input id=\"setupDivIndex\" type=\"hidden\" />"
 					setupDiv.innerHTML += "<input id=\"setupDivName\" type=\"hidden\" />"
-					for (var i=1; i<=6; i++) {
-						setupDiv.innerHTML += "Parameter "+i+": <input id=\"setupDivParam"+i+"\" /><br />";
-					}
+					setupDiv.innerHTML += "<div id=\"setupDivParams\"></div>";
 					setupDiv.innerHTML += "Max amount of instances: <input id=\"setupDivCount\" type=\"number\" min=\"0\" /><br />";
 					setupDiv.innerHTML += "Disable setup: <input id=\"setupDivNoChange\" type=\"checkbox\" /><br />";
 					setupDiv.innerHTML += "<input type=\"button\" value=\"Apply\" onclick=\"changeParametersApply('"+elementId+"')\" />";
@@ -454,7 +453,7 @@
 			for (var i in setupPage) {
 				var paramValue = "";
 				var element = document.getElementById(setupPage[i].id);
-				if (element.type == "checkbox") {
+				if (setupPage[i].type == "checkbox") {
 					if (element.checked === true) {
 						paramValue = element.checked;
 					}
@@ -469,12 +468,12 @@
 					if (paramValue) {
 						paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
 					}
-				} else if (element.type == "select-multiple") {
+				} else if (setupPage[i].type == "multiple") {
 					paramValue = "";
 					for (var optionId in element.options) {
 						var option = element.options[optionId];
 						if (option.selected) {
-							paramValue += option.value;
+							paramValue += option.value+";";
 						}
 					}
 					if (paramValue) {
@@ -485,7 +484,7 @@
 				} else {
 					paramValue = element.value;
 				}
-				if (setupPage[i].id !== "instructions") {
+				if (setupPage[i].type !== "order" && setupPage[i].type !== "multiple") {
 					paramValue = encodeURIComponent(paramValue);
 				}
 				if (paramValue != "default" && paramValue.toString().length > 0) {
@@ -552,16 +551,17 @@
 	}
 
 	function changeParameters(event) {
-		var optionIndex = event.target.index;
-		var values = event.target.value.split(";");
-		var countParams = 1;
+		var instructionName = event.target.innerHTML;
 		document.getElementById("setupDivNoChange").checked = false;
 		document.getElementById("setupDivCount").value = "";
-		document.getElementById("setupDivTitle").innerHTML = "Parameters for '"+event.target.innerHTML+"':";
-		var countParams = 1;
-		for (var i=1; document.getElementById("setupDivParam"+i); i++) {
-			document.getElementById("setupDivParam"+i).value = "";
+		document.getElementById("setupDivTitle").innerHTML = "Setup for '"+instructionName+"':";
+		document.getElementById("setupDivParams").innerHTML = "";
+		var instructionParameters = $_eseecode.instructions.set[instructionName].parameters;
+		for (var i=0; i<instructionParameters.length; i++) {
+			document.getElementById("setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" /><br />";
 		}
+		var countParams = 1;
+		var values = event.target.value.split(";");
 		for (var i=0; i<values.length; i++) {
 			var value = values[i];
 			if (i == 0) {
@@ -573,11 +573,12 @@
 			} else if (value.match(/^param:/)) {
 				document.getElementById("setupDivParam"+countParams).value = decodeURIComponent(value.split(":")[1]);
 				countParams++;
-			} else {
+			} else if (document.getElementById("setupDivParam"+countParams)) {
 				document.getElementById("setupDivParam"+countParams).value = decodeURIComponent(value);
 				countParams++;
 			}
 		}
+		var optionIndex = event.target.index;
 		document.getElementById("setupDivIndex").value = optionIndex;
 		document.getElementById("setupDiv").style.display = "block";
 	}

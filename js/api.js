@@ -34,6 +34,8 @@
 					API_setGridStep(value, action);
 				} else if (key == "guide") {
 					API_showGuide(value, action);
+				} else if (key == "viewtabs") {
+					API_setViewTabs(value, action);
 				} else if (key == "filemenu") {
 					API_showFilemenu(value, action);
 				} else if (key == "lang") {
@@ -506,6 +508,48 @@
 		if (action !== false) {
 			$e_resetGuide();
 			$e_initializeUISetup();
+		}
+	}
+	
+	/**
+	 * Shows/Hides views tabs
+	 * @since 2.4
+	 * @public
+	 * @param {String} value List of view tabs to display, separated with colon or semi-colon
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_setViewTabs("touch,drag")
+	 */
+	function API_setViewTabs(value, action) {
+		if (value && value.length > 0) {
+			for (var i=1, tab=undefined; tab = document.getElementById("console-tabs-level"+i); i++) {
+				tab.style.display = "none";
+			}
+		}
+		value = value.toLowerCase();
+		value = value.replace(/,/g , ";");
+		var viewtabs = value.split(";");
+		for (var i=0; i < viewtabs.length; i++) {
+			var viewtab = viewtabs[i];
+			var tabToShow = undefined;
+			// Check that the level exists
+			if ($e_isNumber(viewtab,true) && $_eseecode.modes.console[viewtab]) {
+				tabToShow = viewtab;
+			} else {
+				for (var id in $_eseecode.modes.console) {
+					if (id == 0) {
+						continue;
+					}
+					var levelName = $_eseecode.modes.console[id].name.toLowerCase();
+					var levelId = $_eseecode.modes.console[id].id.toLowerCase();
+					if (levelName == viewtab || levelId == viewtab) {
+						tabToShow = id;
+						break;
+					}
+				}
+			}
+			if (tabToShow) {
+				document.getElementById("console-tabs-level"+tabToShow).style.display = "block";
+			}
 		}
 	}
 	
