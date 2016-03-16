@@ -30,6 +30,7 @@
  *   Fix: Reset code when going back to first steps in guide
  *   Fix: Guide now supports shortcuts
  *   Fix: Custom instructions in guide are now reset when reloaded
+ *   Fix: Ace wasn't suggesting eSeeCode keywords (thanks Xavier Paytubi)
  *   Fix: Debug showing statistics when only precode has been run
 
 ## 2.3 (2015-12-06)

@@ -149,24 +149,24 @@ var JavaScriptHighlightRules = function() {
             "alert",
         "constant.language.boolean": "true|false"
     };
-    for (var i=0; i<$_eseecode.instructions.set.length; i++) {
-        if ($_eseecode.instructions.set[i].category === "objects" ||
-          $_eseecode.instructions.set[i].category === "flow") {
-            keywords["keyword"] += "|"+$_eseecode.instructions.set[i].name;
+    for (var key in $_eseecode.instructions.set) {
+        if ($_eseecode.instructions.set[key].category === "objects" ||
+          $_eseecode.instructions.set[key].category === "flow") {
+            keywords["keyword"] += "|"+$_eseecode.instructions.set[key].name;
         }
     }
-    for (var i=0; i<$_eseecode.instructions.set.length; i++) {
-        if ($_eseecode.instructions.set[i].category !== "objects" &&
-          $_eseecode.instructions.set[i].category !== "flow" &&
-          $_eseecode.instructions.set[i].category !== "other" &&
-          $_eseecode.instructions.set[i].category !== "internal" &&
-          $_eseecode.instructions.set[i].category !== "userdefined" &&
-          $_eseecode.instructions.set[i].category !== "custom") {
-            keywords["variable.language"] += "|"+$_eseecode.instructions.set[i].name;
+    for (var key in $_eseecode.instructions.set) {
+        if ($_eseecode.instructions.set[key].category !== "objects" &&
+          $_eseecode.instructions.set[key].category !== "flow" &&
+          $_eseecode.instructions.set[key].category !== "other" &&
+          $_eseecode.instructions.set[key].category !== "internal" &&
+          $_eseecode.instructions.set[key].category !== "userdefined" &&
+          $_eseecode.instructions.set[key].category !== "custom") {
+            keywords["variable.language"] += "|"+$_eseecode.instructions.set[key].name;
         }
     }
-    for (var i=0; i<$_eseecode.instructions.variables.length; i++) {
-        keywords["keyword"] += "|"+$_eseecode.instructions.variables[i].name;
+    for (var key in $_eseecode.instructions.variables) {
+        keywords["variable.language"] += "|"+$_eseecode.instructions.variables[key].name;
     }
     var keywordMapper = this.createKeywordMapper(keywords, "identifier");
 

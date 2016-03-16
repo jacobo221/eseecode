@@ -153,7 +153,7 @@
         <p>URL: <input id="url" type="text" /><br></p>
         <div id="notes"></div>
         <u><b>Preview:</b></u><br />
-        <iframe height="500" id="eseecode-frame" src=""></iframe>
+        <iframe height="500" id="eseecode-frame" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
         <script type="text/javascript" src="../js/defaults.js"></script>
         <script type="text/javascript" src="../js/common.js"></script>
         <script type="text/javascript" src="../tools/create.js"></script>
@@ -172,7 +172,7 @@
                 } else {
                     document.getElementById("notes").innerHTML = "";
                 }
-                document.getElementById("conclusion").innerHTML = "Use this code to embed the exercise in your website:<br /><br /><div style=\"text-align:left;\">"+"&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\">&lt;/iframe></div><br /><br />Below you can copy the URL to the exercise you have created, you can send this URL to your students.<br /><br />Underneath you can preview how the exercise will look like.";
+                document.getElementById("conclusion").innerHTML = "Use this code to embed the exercise in your website:<br /><br /><div style=\"text-align:left;\">"+"&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\" allowfullscreen=\"true\">&lt;/iframe></div><br /><br />Below you can copy the URL to the exercise you have created, you can send this URL to your students.<br /><br />Underneath you can preview how the exercise will look like.";
             }
             createExerciseTool("tool", createExerciseHandle, website);
         </script>
