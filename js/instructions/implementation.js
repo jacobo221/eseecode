@@ -43,7 +43,8 @@
 				button.addEventListener("mousedown", function() { $e_execute(true,action); }, false);
 				button.addEventListener("touchstart", function() { $e_execute(true,action); }, false);
 			} else if (typeof action === "function") {
-				action();
+				button.addEventListener("mousedown", action, false);
+				button.addEventListener("touchstart", action, false);
 			}
 		}
 	}
@@ -147,7 +148,8 @@
 					img.addEventListener("mousedown", function() { $e_execute(true,onmouseover); }, false);
 					img.addEventListener("touchstart", function() { $e_execute(true,onmouseoveraction); }, false);
 				} else if (typeof onmouseover === "function") {
-					onmouseover();
+					img.addEventListener("mousedown", onmouseover, false);
+					img.addEventListener("touchstart", onmouseover, false);
 				}
 			}
 			if (onclick) {
@@ -155,7 +157,8 @@
 					img.addEventListener("mousedown", function() { $e_execute(true,onclick); }, false);
 					img.addEventListener("touchstart", function() { $e_execute(true,onclick); }, false);
 				} else if (typeof onclick === "function") {
-					onclick();
+					img.addEventListener("mousedown", onclick, false);
+					img.addEventListener("touchstart", onclick, false);
 				}
 			}
 			if (onmouseout) {
@@ -163,7 +166,8 @@
 					img.addEventListener("mousedown", function() { $e_execute(true,onmouseout); }, false);
 					img.addEventListener("touchstart", function() { $e_execute(true,onmouseout); }, false);
 				} else if (typeof onmouseout === "function") {
-					onmouseout();
+					img.addEventListener("mousedown", onmouseout, false);
+					img.addEventListener("touchstart", onmouseout, false);
 				}
 			}
 		}
