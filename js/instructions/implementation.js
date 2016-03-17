@@ -1552,22 +1552,23 @@
 			hide(layer.name);
 			layer = layer.layerOver;
 		}
-		animate("(function(){\
-			var layer = $_eseecode.canvasArray['bottom'];\
-			var visibleLayer = layer.name;\
-			while (layer) {\
-				if (layer.div.style.display != \"none\") { /* Find currently displaying layer */\
-					visibleLayer = layer;\
-				}\
-				hide(layer.name);\
-				layer = layer.layerOver;\
-			}\
-			visibleLayer = visibleLayer.layerOver;\
-			if (!visibleLayer) {\
-				visibleLayer = $_eseecode.canvasArray['bottom'];\
-			}\
-			show(visibleLayer.name);\
-			})()", delay);
+		animate(function(){
+			var layer = $_eseecode.canvasArray["bottom"];
+			var visibleLayer = layer.name;
+			while (layer) {
+				if (layer.div.style.display != "none") { /* Find currently displaying layer */
+					visibleLayer = layer;
+				}
+				hide(layer.name);
+				layer = layer.layerOver;
+			}
+			visibleLayer = visibleLayer.layerOver;
+			if (!visibleLayer) {
+				visibleLayer = $_eseecode.canvasArray["bottom"];
+			}
+			show(visibleLayer.name);
+			$e_resetGuide(false); // Hide the guide
+			}, delay);
 	}
 
 	/**

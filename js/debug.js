@@ -700,14 +700,6 @@
 		}
 		var targetCanvas = $e_getLayer(id);
 		context.drawImage(targetCanvas.canvas, 0, 0);
-		var xScale = $_eseecode.coordinates.xScale;
-		if (xScale < 0) {
-			xScale *= -1;
-		}
-		if (yScale < 0) {
-			yScale *= -1;
-		}
-		var yScale = $_eseecode.coordinates.yScale;
 		$e_drawDebugGuide(context, targetCanvas.guide, id);
 		div.appendChild(canvas);
 		$_eseecode.whiteboard.appendChild(div);

@@ -11,6 +11,7 @@
  *   New tool to ease creation of customized eseecode for exercises
  *   Allow animate(), windowbuttonedit/create and windowimageedit/create to recieve functions
  *   Allow to choose filename when downloading code
+ *   animateLayers() hides the guide to prevent confusion
  *   Fix: API_setTimeout() didn't work when called from within the code
  *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes

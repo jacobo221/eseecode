@@ -1011,15 +1011,16 @@
 	/**
 	 * Hides/Shows the guide layer
 	 * @private
-	 * @example $e_toggleGuide()
+	 * @param {Boolean} [visible=true] Show or hide the guide (default: show)
+	 * @example $e_resetGuide()
 	 */
-	function $e_resetGuide() {
+	function $e_resetGuide(visible) {
 		var guideCanvas = $_eseecode.canvasArray["guide"];
-		if ($_eseecode.ui.guideVisible) {
+		if (visible === false || $_eseecode.ui.guideVisible !== false) {
+			guideCanvas.div.style.display = "none";
+		} else {
 			$e_drawGuide(); // Since we weren't drawing it draw it now
 			guideCanvas.div.style.display = "block";
-		} else {
-			guideCanvas.div.style.display = "none";
 		}
 	}
 	
