@@ -10,7 +10,7 @@
 	 * @param {Number} [posy] Y coordinate to place the button in the window
 	 * @param {Number} [width] Width of the button
 	 * @param {Number} [height] Height of the button
-	 * @param {String} [action] Code to run on button click
+	 * @param {String|Function} [action] Code to run on button click
 	 * @example windowButtonEdit("b2", "turn", 170, 90, "turnRight(15)")
 	 */
 	function windowButtonEdit(id, text, posx, posy, action, width, height) {
@@ -39,9 +39,11 @@
 			var oldButton = button;
 			button = oldButton.cloneNode(true); // Clone to remove handlers
 			oldButton.parentNode.replaceChild(button, oldButton);
-			if (action !== true) {
+			if (typeof action === "string") {
 				button.addEventListener("mousedown", function() { $e_execute(true,action); }, false);
 				button.addEventListener("touchstart", function() { $e_execute(true,action); }, false);
+			} else if (typeof action === "function") {
+				action();
 			}
 		}
 	}
@@ -108,9 +110,9 @@
 	 * @param {Number} [posy] Y coordinate to place the image in the window
 	 * @param {Number} [width] Width to resize the image to
 	 * @param {Number} [height] height to resize the image to
-	 * @param {String} [onclick] Code to run when the image is clicked
-	 * @param {String} [onmouseover] Code to run when the mouse is over the image
-	 * @param {String} [onmouseout] Code to run when the mouse is moved away from being over the image
+	 * @param {String|Function} [onclick] Code to run when the image is clicked
+	 * @param {String|Function} [onmouseover] Code to run when the mouse is over the image
+	 * @param {String|Function} [onmouseout] Code to run when the mouse is moved away from being over the image
 	 * @example windowImageEdit("img1", "3", 100, 100, 60, 15)
 	 */
 	function windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
@@ -140,22 +142,28 @@
 			var oldImg = img;
 			img = oldImg.cloneNode(true); // Clone to remove handlers
  			oldImg.parentNode.replaceChild(img, oldImg);
-			if (onmouseover && onmouseover !== true) {
-				if (onmouseover) {
-				    img.addEventListener("mouseover",function() { $e_execute(true,onmouseover); }, false);
-					img.addEventListener("touchstart",function() { $e_execute(true,onmouseover); }, false);
+			if (onmouseover) {
+				if (typeof onmouseover === "string") {
+					img.addEventListener("mousedown", function() { $e_execute(true,onmouseover); }, false);
+					img.addEventListener("touchstart", function() { $e_execute(true,onmouseoveraction); }, false);
+				} else if (typeof onmouseover === "function") {
+					onmouseover();
 				}
 			}
-			if (onclick && onclick !== true) {
-				if (onclick) {
-				    img.addEventListener("mousedown",function() { $e_execute(true,onclick); }, false);
-					img.addEventListener("touchstart",function() { $e_execute(true,onclick); }, false);
+			if (onclick) {
+				if (typeof onclick === "string") {
+					img.addEventListener("mousedown", function() { $e_execute(true,onclick); }, false);
+					img.addEventListener("touchstart", function() { $e_execute(true,onclick); }, false);
+				} else if (typeof onclick === "function") {
+					onclick();
 				}
 			}
-			if (onmouseout && onmouseout !== true) {
-				if (onmouseout) {
-			   		img.addEventListener("mouseout",function() { $e_execute(true,onmouseout); }, false);
-					img.addEventListener("touchend",function() { $e_execute(true,onmouseout); }, false);
+			if (onmouseout) {
+				if (typeof onmouseout === "string") {
+					img.addEventListener("mousedown", function() { $e_execute(true,onmouseout); }, false);
+					img.addEventListener("touchstart", function() { $e_execute(true,onmouseout); }, false);
+				} else if (typeof onmouseout === "function") {
+					onmouseout();
 				}
 			}
 		}
@@ -223,7 +231,7 @@
 	 * @param {Number} [posy] Y coordinate to place the button in the window
 	 * @param {Number} [width] Width of the button
 	 * @param {Number} [height] Height of the button
-	 * @param {String} [action] Code to run on button click
+	 * @param {String|Function} [action] Code to run on button click
 	 * @example windowButtonCreate(1, "b2", "turn", 170, 90, "turnRight(15)")
 	 */
 	function windowButtonCreate(windowId, id, text, posx, posy, action, width, height) {
@@ -273,9 +281,9 @@
 	 * @param {Number} [posy] Y coordinate to place the image in the window
 	 * @param {Number} [width] Width to resize the image to
 	 * @param {Number} [height] height to resize the image to
-	 * @param {String} [onclick] Code to run when the image is clicked
-	 * @param {String} [onmouseover] Code to run when the mouse is over the image
-	 * @param {String} [onmouseout] Code to run when the mouse is moved away from being over the image
+	 * @param {String|Function} [onclick] Code to run when the image is clicked
+	 * @param {String|Function} [onmouseover] Code to run when the mouse is over the image
+	 * @param {String|Function} [onmouseout] Code to run when the mouse is moved away from being over the image
 	 * @example windowImageCreate(1, "img1", "3", 100, 100, 60, 15)
 	 */
 	function windowImageCreate(windowId, id, canvasId, posx, posy, width, height, onclick, onmouseover, onmouseout) {
