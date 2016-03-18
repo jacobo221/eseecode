@@ -1708,7 +1708,7 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
-		document.body.removeEventListener("keydown", $e_handlerKeyboard, false);
+		//document.body.removeEventListener("keydown", $e_handlerKeyboard, false); // onkeydown handler will be called from shortcuts so it is only called when no shortcut exists
 		document.body.removeEventListener("keyup", $e_handlerKeyboard, false);
 		$_eseecode.whiteboard.removeEventListener("mousemove", $e_handlerPointer, false);
 		$_eseecode.whiteboard.removeEventListener("mouseout", $e_handlerPointer, false);
@@ -1721,7 +1721,7 @@
 		$_eseecode.whiteboard.removeEventListener("touchend", $e_handlerPointer, false);
 		$_eseecode.whiteboard.removeEventListener("touchcancel", $e_handlerPointer, false);
 		$e_handlerReset();
-		document.body.addEventListener("keydown", $e_handlerKeyboard, false);
+		//document.body.addEventListener("keydown", $e_handlerKeyboard, false); // onkeydown handler will be called from shortcuts so it is only called when no shortcut exists
 		document.body.addEventListener("keyup", $e_handlerKeyboard, false);
 		$_eseecode.whiteboard.addEventListener("mousemove", $e_handlerPointer, false);
 		$_eseecode.whiteboard.addEventListener("mouseout", $e_handlerPointer, false);
@@ -1993,8 +1993,14 @@
 					$e_undo(true);
 				} else if ((event.which === 89 || event.keyCode == 89) && event.ctrlKey) { // CTRL+Y
 					$e_undo(true);
+				} else {
+					// Not a valid eSeeCode shortcut, call the keyboard handler for the user code to parse it
+					$e_handlerKeyboard(event);
 				}
 			}
+		} else {
+			// Not a valid eSeeCode shortcut, call the keyboard handler for the user code to parse it
+			$e_handlerKeyboard(event);
 		}
 	}
 
