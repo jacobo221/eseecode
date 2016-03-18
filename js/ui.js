@@ -1016,7 +1016,7 @@
 	 */
 	function $e_resetGuide(visible) {
 		var guideCanvas = $_eseecode.canvasArray["guide"];
-		if (visible === false || $_eseecode.ui.guideVisible !== false) {
+		if (visible === false || $_eseecode.ui.guideVisible === false) {
 			guideCanvas.div.style.display = "none";
 		} else {
 			$e_drawGuide(); // Since we weren't drawing it draw it now
@@ -1334,8 +1334,8 @@
 		ctx.fillText("("+coorUpperLeft.x+","+coorUpperLeft.y+")",margin,fontHeight+margin);
 		ctx.fillText("("+coorLowerRight.x+","+coorLowerRight.y+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
-		if (step < 25) {
-			step = 25;
+		if (step < 1) {
+			step = 1;
 			document.getElementById("setup-grid-step").value = step;			
 		}
 		var colorHighlight = "#DDDDDD";
@@ -1708,9 +1708,109 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
+		document.body.removeEventListener("keydown", $e_handlerKeyboard, false);
+		document.body.removeEventListener("keyup", $e_handlerKeyboard, false);
+		$_eseecode.whiteboard.removeEventListener("mousemove", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("mouseout", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchleave", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchcancel", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchmove", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("mousedown", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchstart", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("mouseup", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchend", $e_handlerPointer, false);
+		$_eseecode.whiteboard.removeEventListener("touchcancel", $e_handlerPointer, false);
+		$e_handlerReset();
+		document.body.addEventListener("keydown", $e_handlerKeyboard, false);
+		document.body.addEventListener("keyup", $e_handlerKeyboard, false);
+		$_eseecode.whiteboard.addEventListener("mousemove", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("mouseout", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchleave", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchcancel", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchmove", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("mousedown", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchstart", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("mouseup", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchend", $e_handlerPointer, false);
+		$_eseecode.whiteboard.addEventListener("touchcancel", $e_handlerPointer, false);
 		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
 		$e_loadURLParams(undefined, ["dialog"], true);
 		return;
+	}
+	
+	/**
+	 * Handles keyboard events to be able to handle them in user code
+	 * @private
+	 * @example $e_handlerKeyboard()
+	 */
+	function $e_handlerKeyboard(event) {
+		switch (event.type) {
+			case "keyup":
+				$_eseecode.session.handlers.keyboard.key = undefined;
+				break;
+			default:
+				$_eseecode.session.handlers.keyboard.key = event.which || event.keyCode;
+				$_eseecode.session.handlers.keyboard.lastKey = event.which || event.keyCode;
+		}
+	}
+	
+	/**
+	 * Handles mouse/touch events to be able to handle them in user code
+	 * @private
+	 * @example $e_handlerPointer()
+	 */
+	function $e_handlerPointer(event) {
+		var thisEvent = event;
+		if (event.targetTouches) {
+			thisEvent = event.targetTouches[0];
+		}
+		switch (thisEvent.type) {
+			case "mouseout":
+			case "touchend":
+			case "touchleave":
+			case "touchcancel":
+				$_eseecode.session.handlers.pointer.x = undefined
+				$_eseecode.session.handlers.pointer.y = undefined;
+				break;
+			default:
+				$_eseecode.session.handlers.pointer.x = event.offsetX;
+				$_eseecode.session.handlers.pointer.y = event.offsetY;
+		}
+		switch (thisEvent.type) {
+			case "mouseup":
+			case "touchend":
+			case "touchcancel":
+				$_eseecode.session.handlers.pointer.pressed = false;
+				break;
+				case "mousedown":
+					if (thisEvent.button > -1) {
+						$_eseecode.session.handlers.pointer.pressed = true;
+					}
+					break;
+				case "touchstart":
+					$_eseecode.session.handlers.pointer.pressed = true;
+					break;
+		}
+	}
+	
+	/**
+	 * Resets all the user code handlers
+	 * @private
+	 * @example $e_handlerReset()
+	 */
+	function $e_handlerReset(event) {
+		$_eseecode.session.handlers = {
+			keyboard: {
+				key: undefined,
+				lastKey: undefined
+			},
+			pointer: {
+				x: undefined,
+				y: undefined,
+				pressed: false
+				
+			}
+		}
 	}
 
 	/**
@@ -1853,7 +1953,7 @@
 	 */
 	function $e_keyboardShortcuts(event) {
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
-		if (event && event.type == "keydown" && event.keyCode == 27) {
+		if (event && event.type == "keydown" && (event.which == 27 || event.keyCode == 27)) {
 			if ($_eseecode.session.breakpointHandler) {
 				$e_addBreakpointEventCancel();
 			}
@@ -1882,16 +1982,16 @@
 					$e_msgBoxClose();
 				}
 			}
-		} else if (event.which === 82 && event.ctrlKey && !event.shiftKey) { // CTRL+R
+		} else if ((event.which === 82 || event.keyCode == 82) && event.ctrlKey && !event.shiftKey) { // CTRL+R
 			$e_execute();
 			event.preventDefault();
 		} else if (mode == "blocks") {
 			if (event && event.type == "keydown") {
-				if (event.which === 90 && event.ctrlKey && !event.shiftKey) { // CTRL+Z
+				if ((event.which === 90 || event.keyCode == 90) && event.ctrlKey && !event.shiftKey) { // CTRL+Z
 					$e_undo(false);
-				} else if (event.which === 90 && event.ctrlKey && event.shiftKey) { // CTRL+SHIFT+Z
+				} else if ((event.which === 90 || event.keyCode == 90) && event.ctrlKey && event.shiftKey) { // CTRL+SHIFT+Z
 					$e_undo(true);
-				} else if (event.which === 89 && event.ctrlKey) { // CTRL+Y
+				} else if ((event.which === 89 || event.keyCode == 89) && event.ctrlKey) { // CTRL+Y
 					$e_undo(true);
 				}
 			}

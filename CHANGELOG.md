@@ -12,6 +12,8 @@
  *   Allow animate(), windowbuttonedit/create and windowimageedit/create to recieve functions
  *   Allow to choose filename when downloading code
  *   animateLayers() hides the guide to prevent confusion
+ *   Added intructions to get date and mouse/touch/keyboard events
+ *   Allow gridStep to go down to 1
  *   Fix: API_setTimeout() didn't work when called from within the code
  *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes

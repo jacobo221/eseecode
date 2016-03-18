@@ -289,7 +289,7 @@
 	 * @example API_setGridStep(50)
 	 */
 	function API_setGridStep(value, action) {
-		if ($e_isNumber(value,true) && value >= 0) {
+		if ($e_isNumber(value,true) && value > 0) {
 			$_eseecode.ui.gridStep = value;
 		}
 		if (action !== false) {

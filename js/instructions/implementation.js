@@ -1570,6 +1570,7 @@
 			$e_resetGuide(false); // Hide the guide
 			}, delay);
 	}
+	
 
 	/**
 	 * Stops an animation
@@ -2028,7 +2029,7 @@
 	}
 
 	/**
-	 * Sets the position of the input pointer to a fixed place.
+	 * Sets the position of the input pointer to a fixed place
 	 * @since 2.3
 	 * @public
 	 * @param {Number} [position=0] Position to go to
@@ -2040,6 +2041,236 @@
 			position = 0;
 		}
 		$_eseecode.execution.inputPosition = position;
+	}
+
+	/**
+	 * Checks if a key in the keyboard is being pressed
+	 * @since 2.4
+	 * @public
+	 * @return {Boolean} Whether a key os being pressed or not
+	 * @example getKeyboardPressed()
+	 */
+	function getKeyboardPressed() {
+		var keyboard = $_eseecode.session.handlers.keyboard;
+		return (keyboard && keyboard.key !== undefined);
+	}
+	
+	/**
+	 * Returns the value of the key in the keyboard is being pressed
+	 * @since 2.4
+	 * @public
+	 * @return {String|Boolean} Value of the key being pressed, false if none is being pressed
+	 * @example getKeyboardKey()
+	 */
+	function getKeyboardKey() {
+		var keyboard = $_eseecode.session.handlers.keyboard;
+		if (keyboard) {
+			return String.fromCharCode(keyboard.key);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the code of the key in the keyboard is being pressed
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Code of the key being pressed, false if none is being pressed
+	 * @example getKeyboardKeycode()
+	 */
+	function getKeyboardKeycode() {
+		var keyboard = $_eseecode.session.handlers.keyboard;
+		if (keyboard) {
+			return keyboard.key;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the value of the last key in the keyboard that was being pressed
+	 * @since 2.4
+	 * @public
+	 * @return {String|Boolean} Value of the last key that was pressed, false if none has been pressed yet
+	 * @example getKeyboardLastKey()
+	 */
+	function getKeyboardLastKey() {
+		var keyboard = $_eseecode.session.handlers.keyboard;
+		if (keyboard) {
+			return String.fromCharCode(keyboard.lastKey);
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns the code of the last key in the keyboard that was being pressed
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Code of the last key that was pressed, false if none has been pressed yet
+	 * @example getKeyboardLastKeycode()
+	 */
+	function getKeyboardLastKeycode() {
+		var keyboard = $_eseecode.session.handlers.keyboard;
+		if (keyboard) {
+			return keyboard.lastKey;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks whether the pointer (mouse or touch panel) is being pressed (click if its a mouse, touch if its a tocuh device)
+	 * @since 2.4
+	 * @public
+	 * @return {Boolean} Whether the pointer is being pressed
+	 * @example getPointerPressed()
+	 */
+	function getPointerPressed() {
+		var pointer = $_eseecode.session.handlers.pointer;
+		return (pointer && pointer.pressed);
+	}
+	
+	/**
+	 * Checks whether the pointer (mouse or touch gesture) is over the whiteboard
+	 * @since 2.4
+	 * @public
+	 * @return {Boolean} Whether the pointer is over the whiteboard or not
+	 * @example getPointerOver()
+	 */
+	function getPointerOver() {
+		return ($_eseecode.session.handlers.pointer !== undefined);
+	}
+	
+	/**
+	 * Returns the horitzontal position of the pointer (mouse or touch gesture) in the whiteboard
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Horitzontal position of the pointer in the whiteboard, false if its not in the whiteboard
+	 * @example getPointerX()
+	 */
+	function getPointerX() {
+		var pointer = $_eseecode.session.handlers.pointer;
+		if (pointer && pointer.x) {
+			return $e_system2userCoords({x: pointer.x, y: pointer.y}).x;
+		} else {
+			return false; // Out of scope
+		}
+	}
+	
+	/**
+	 * Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Vertical position of the pointer in the whiteboard, false if its not in the whiteboard
+	 * @example getPointerY()
+	 */
+	function getPointerY() {
+		var pointer = $_eseecode.session.handlers.pointer;
+		if (pointer && pointer.y) {
+			return $e_system2userCoords({x: pointer.x, y: pointer.y}).y;
+		} else {
+			return false; // Out of scope
+		}
+	}
+	
+	/**
+	 * Returns the current milliseconds in the current second
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current milliseconds in the current second
+	 * @example getMilliseconds()
+	 */
+	function getMilliseconds() {
+		return (new Date()).getMilliseconds()
+	}
+	
+	/**
+	 * Returns the current second
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current second
+	 * @example getSeconds()
+	 */
+	function getSeconds() {
+		return (new Date()).getSeconds();
+	}
+	
+	/**
+	 * Returns the current minute
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current minute
+	 * @example getMinutes()
+	 */
+	function getMinutes() {
+		return (new Date()).getMinutes();
+	}
+	
+	/**
+	 * Returns the current hour
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current hour
+	 * @example getHours()
+	 */
+	function getHours() {
+		return (new Date()).getHours();
+	}
+	
+	/**
+	 * Returns the current day of the week
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current day of the week: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+	 * @example getWeekDay()
+	 */
+	function getWeekDay() {
+		return (new Date()).getDay();
+	}
+	
+	/**
+	 * Returns the current day of the month
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current day of the month
+	 * @example getDay()
+	 */
+	function getDay() {
+		return (new Date()).getDate();
+	}
+	
+	/**
+	 * Returns the current month
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current month
+	 * @example getMonth()
+	 */
+	function getMonth() {
+		return (new Date()).getMonth();
+	}
+	
+	/**
+	 * Returns the current year
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Current year
+	 * @example getYear()
+	 */
+	function getYear() {
+		return (new Date()).getFullYear();
+	}
+	
+	/**
+	 * Returns a timestamp of the current hour
+	 * @since 2.4
+	 * @public
+	 * @return {Number} Timestamp of the current hour, in Epoch format (milliseconds since 1970/01/01)
+	 * @example getTimestamp()
+	 */
+	function getTimestamp() {
+		return (new Date()).getTime();
 	}
 	
 	// Additional instructions
