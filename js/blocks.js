@@ -1449,7 +1449,11 @@
 		}
 		paramNumber = 1;
 		for (var i=0; i<parametersCount; i++) {
-			var value = document.getElementById("setupBlock"+paramNumber).value;
+			var inputElement = document.getElementById("setupBlock"+paramNumber);
+			var value = inputElement.value;
+			if (inputElement.className === "color") {
+				value = "#"+value;
+			}
 			var defaultValue = document.getElementById("setupBlock"+paramNumber+"Default").value;
 			if (i <= lastParameterWithValue) {
 				div.setAttribute("data-param"+paramNumber, value);

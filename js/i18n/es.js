@@ -244,7 +244,7 @@ $_eseecode.i18n.available.es = {
 	"src": "origen",
 	"Sticks an external image": "Pega una imagen externa",
 	"Stop the execution": "Detiene la ejecución",
-	"Which layer do you want to switch to?\n(Leave blank to create a new layer)": "¿A que capa quiers cambiar?\n(Deja vacío para crear una nueva)",
+	"Which layer do you want to switch to?\nIf the layer doesn't exist it will create it, unless the id is a number in which case it will get the corresponing layer in order from background to foreground so the layer has to exist in the stack of layers or it will fail.\n(Leave blank to create a new layer)": "¿A que capa quiers cambiar?\nSi la capa no existe la creará, a no ser que el id sea un número en cuyo caso tomará la correspondiente capa en orden desde la de más al fondo hasta la más superior por lo que la capa deberá existir en la pila de capas o fallará.\n(Deja vacío para crear una nueva)",
 	"Switches the active canvas, returns the name of the new current canvas": "Cambia la capa activa, devuelve el nombre de la capa actual",
 	"Runs the action every certain amount of time": "Ejecuta la acción cada cierto tiempo",
 	"Stops an animation": "Detiene una animación",

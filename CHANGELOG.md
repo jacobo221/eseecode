@@ -14,6 +14,9 @@
  *   animateLayers() hides the guide to prevent confusion
  *   Added intructions to get date and mouse/touch/keyboard events
  *   Allow gridStep to go down to 1
+ *   Fix: jsColor iputs missed the '#' at the beginning
+ *   Fix: Added jscolor support for windowInputEdit/Create which broke in IE
+ *   Fix: Updated all examples to current instruction set
  *   Fix: API_setTimeout() didn't work when called from within the code
  *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes

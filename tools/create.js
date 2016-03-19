@@ -238,9 +238,19 @@
 					buttonsDiv.appendChild(br);
 					var blankButton = document.createElement("input");
 					blankButton.type = "button";
+					blankButton.style.marginBottom = "1px";
 					blankButton.value = "-----";
 					blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
 					buttonsDiv.appendChild(blankButton);
+					br = document.createElement("br");
+					buttonsDiv.appendChild(br);
+					var setupButton = document.createElement("input");
+					setupButton.type = "button";
+					setupButton.style.marginTop = "1px";
+					setupButton.value = "Set up";
+					setupButton.setAttribute("data-elementId", elementId);
+					setupButton.addEventListener("click", changeParameters);
+					buttonsDiv.appendChild(setupButton);
 					innerDiv.appendChild(buttonsDiv);
 					var select2 = document.createElement("select");
 					select2.id = elementId;
@@ -252,13 +262,13 @@
 					var options = setupPage[key].options;
 					var selectOrder = {};
 					var selectOptions = {};
-			        for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
-				        var category = $_eseecode.instructions.categories[n].name;
+					for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
+						var category = $_eseecode.instructions.categories[n].name;
 						for (var id in options) {
-					        // Only show instructions in the current category
-					        if (category != $_eseecode.instructions.set[id].category) {
-						        continue;
-					        }
+							// Only show instructions in the current category
+							if (category != $_eseecode.instructions.set[id].category) {
+								continue;
+							}
 							if (!id.match(/blank[0-9]*/)) {
 								selectOptions[options[id].name] = true;
 							}
@@ -460,9 +470,11 @@
 				} else if (setupPage[i].type == "order") {
 					paramValue = "";
 					for (var optionId in element.options) {
-						var option = element.options[optionId];
-						if (option.value) {
-							paramValue += option.value;
+						if (optionId.match(/^[0-9]+$/)) { // IE add some options so skip them
+							var option = element.options[optionId];
+							if (option.value) {
+								paramValue += option.value;
+							}
 						}
 					}
 					if (paramValue) {
@@ -471,9 +483,11 @@
 				} else if (setupPage[i].type == "multiple") {
 					paramValue = "";
 					for (var optionId in element.options) {
-						var option = element.options[optionId];
-						if (option.selected) {
-							paramValue += option.value+";";
+						if (optionId.match(/^[0-9]+$/)) { // IE add some options so skip them
+							var option = element.options[optionId];
+							if (option.selected) {
+								paramValue += option.value+";";
+							}	
 						}
 					}
 					if (paramValue) {
@@ -551,7 +565,23 @@
 	}
 
 	function changeParameters(event) {
-		var instructionName = event.target.innerHTML;
+		var target = undefined;
+		if (event.target.getAttribute("data-elementId")) {
+			// Calling from button
+			var select = document.getElementById(event.target.getAttribute("data-elementId"));
+			for (var i = select.options.length-1; i>=0; i--) {
+				if (select.options[i].selected) {
+					target = select.options[i];
+				} 
+			}
+		} else {
+			// Calling from select option
+			target = event.target;
+		}
+		if (!target) {
+			return;
+		}
+		var instructionName = target.innerHTML;
 		document.getElementById("setupDivNoChange").checked = false;
 		document.getElementById("setupDivCount").value = "";
 		document.getElementById("setupDivTitle").innerHTML = "Setup for '"+instructionName+"':";
@@ -561,7 +591,7 @@
 			document.getElementById("setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" /><br />";
 		}
 		var countParams = 1;
-		var values = event.target.value.split(";");
+		var values = target.value.split(";");
 		for (var i=0; i<values.length; i++) {
 			var value = values[i];
 			if (i == 0) {
@@ -578,7 +608,7 @@
 				countParams++;
 			}
 		}
-		var optionIndex = event.target.index;
+		var optionIndex = target.index;
 		document.getElementById("setupDivIndex").value = optionIndex;
 		document.getElementById("setupDiv").style.display = "block";
 	}
