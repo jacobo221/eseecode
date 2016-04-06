@@ -14,6 +14,7 @@
  *   animateLayers() hides the guide to prevent confusion
  *   Added intructions to get date and mouse/touch/keyboard events
  *   Allow gridStep to go down to 1
+ *   Fix: Save code now works with all browsers (except Safari, where it will pop a window)
  *   Fix: API_setTimeout() didn't work when called from within the code
  *   Fix: Animations were not being stopped when resetting
  *   Fix: Image and Button fixes

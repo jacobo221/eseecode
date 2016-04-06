@@ -1494,27 +1494,64 @@
 			return;
 		}
 		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() {
-			var codeURI = "data:application/octet-stream," + encodeURIComponent(API_downloadCode());
-			var downloadLink = document.createElement("a");
-			downloadLink.href = codeURI;
+			var code = API_downloadCode();
 			var filename = document.getElementById("filename").value;
 			filename = filename.replace("/","").replace("\\","");
 			if (filename.length > 0 && filename.indexOf(".") < 0) {
 				filename += ".esee";
 			}
 			$_eseecode.ui.codeFilename = filename;
-			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-			downloadLink.style.display = "none";
-			document.body.appendChild(downloadLink);
-			downloadLink.click();
-			document.body.removeChild(downloadLink);
+			var mimetype = "application/octet-stream";
+			var downloadLink = document.createElement("a");
+			// Chrome / Firefox
+			var supportDownloadAttribute = 'download' in downloadLink;
+			// IE10
+			navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+			if (supportDownloadAttribute) {
+				var blob = new Blob([code], {type:mimetype});
+				var codeURI = URL.createObjectURL(blob);
+				//var codeURI = "data:"+mimetype+","+code;
+				downloadLink.href = codeURI;
+				downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
+				downloadLink.style.display = "none";
+				document.body.appendChild(downloadLink);
+				downloadLink.click();
+				document.body.removeChild(downloadLink);
+				// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+				setTimeout(function () {
+					URL.revokeObjectURL(codeURI);
+				}, 250);
+			} else if (navigator.saveBlob) {
+				var builder = new BlobBuilder();
+				builder.append(code);
+				var blob = builder.getBlob(mimetype);
+				if (window.saveAs) {
+					window.saveAs(blob, filename);
+				} else {
+					navigator.saveBlob(blob, filename);
+				}
+			} else {
+				var oWin = window.open("about:blank", "_blank");
+				oWin.document.write(code);
+				oWin.document.close();
+				// IE<10 & other
+				if (document.execCommand) {
+					var success = oWin.document.execCommand('SaveAs', true, filename);
+					if (success) {
+						oWin.close();
+					}
+				} else {
+					// Keep the window open for non-IE browsers, this is the last option
+					oWin.close();
+				}
+			}
 			$_eseecode.session.lastSave = new Date().getTime();
 			$e_msgBoxClose();
 		}, acceptName: _("Save"), cancel: true, focus: "filename" });
 	}
 
 	/**
-	 * Asks the user via the UI to upload a file which will then trigger loadCodFile()
+	 * Asks the user via the UI to upload a file which will then trigger loadCodeFile()
 	 * @private
 	 * @example $e_loadCode()
 	 */
