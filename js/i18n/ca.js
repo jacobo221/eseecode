@@ -244,7 +244,7 @@ $_eseecode.i18n.available.ca = {
 	"src": "origen",
 	"Sticks an external image": "Enganxa una imatge externa",
 	"Stop the execution": "Para l'execució",
-	"Which layer do you want to switch to?\n(Leave blank to create a new layer)": "A quina capa vols canviar?\n(Deixa buit per crear-ne una de nova)",
+	"Which layer do you want to switch to?\n(Leave blank to create a new layer)": "A quina capa vols canviar?\nSi la capa no existeix la crearà, a no ser que l'id sigui un nombre, en aquest cas prendrà la corresponent capa en ordre des de la de més al fons fins la més superior per tant aquesta haurà d'existir a la pila de capes o fallarà.\n(Deixa buit per crear-ne una de nova)",
 	"Switches the active canvas, returns the name of the new current canvas": "Canvia el dibuix actiu, torna el nom del nou dibuix",
 	"Runs the action every certain amount of time": "Executa la acció cada cert temps",
 	"Stops an animation": "Atura una animació",

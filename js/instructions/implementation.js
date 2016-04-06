@@ -188,7 +188,7 @@
 	function windowInputEdit(id, posx, posy, width, height, type) {
 		$e_parseParameterTypes("windowInputEdit", arguments);
 		var id = "element-"+id;
-    	var input = document.getElementById(id);
+	    var input = document.getElementById(id);
 		$e_resizeConsole(true); // We need this to calculate the offset of the dialog window
 		$e_switchDialogMode("window");
 		input.style.position = "absolute";
@@ -205,7 +205,18 @@
 			input.style.top = ($_eseecode.ui.dialogWindow.offsetTop+posy)+"px";
 		}
 		if (type) {
-    			input.type = type;
+			if (type === "color") {
+				try {
+					input.type = type;
+				} catch (excepion) {
+					// input.type = ... can throw exception in IE9 and below if the type is unsupported
+					// Use jsColor
+					input.className = "color";
+					jscolor.color(input, {});
+				}
+			} else {
+    				input.type = type;
+			}
 		}
 	}
 
@@ -384,8 +395,13 @@
 	function windowInputGet(id) {
 		$e_parseParameterTypes("windowInputGet", arguments);
 		var value = undefined;
-		if (document.getElementById("element-"+id) !== null) {
+		var inputElement = document.getElementById("element-"+id);
+		if (inputElement !== null) {
 			value = document.getElementById("element-"+id).value;
+			var value = inputElement.value;
+			if (inputElement.className === "color") {
+				value = "#"+value;
+			}
 		}
 		return value;
 	}
