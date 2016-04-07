@@ -1,0 +1,8 @@
+var i = 0
+repeat (60) {
+	setColor(getRGB(6 * i, 4 * i, 2 * i))
+	arc(4 * i, 60, true)
+	i++
+	snapshot()
+}
+animateLayers(0.1)

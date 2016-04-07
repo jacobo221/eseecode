@@ -1,0 +1,36 @@
+function tram(mida, nivell) {
+	if (nivell == 3) {
+		forward(mida)
+	} else {
+		tram(mida / 3, nivell + 1)
+	}
+	turnLeft(60)
+	if (nivell == 3) {
+		forward(mida)
+	} else {
+		tram(mida / 3, nivell + 1)
+	}
+	turnRight(120)
+	if (nivell == 3) {
+		forward(mida)
+	} else {
+		tram(mida / 3, nivell + 1)
+	}
+	turnLeft(60)
+	if (nivell == 3) {
+		forward(mida)
+	} else {
+		tram(mida / 3, nivell + 1)
+	}
+}
+
+unsetColor()
+goTo(-70, 120)
+setColor("black")
+repeat (6) {
+	tram(45, 0)
+	turnRight(60)
+}
+unsetColor()
+goTo(0, 0)
+setColor("black")
