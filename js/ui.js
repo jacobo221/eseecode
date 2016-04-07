@@ -1494,19 +1494,21 @@
 			return;
 		}
 		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() {
-			var code = API_downloadCode();
+			var code = encodeURIComponent(API_downloadCode());
 			var filename = document.getElementById("filename").value;
 			filename = filename.replace("/","").replace("\\","");
 			if (filename.length > 0 && filename.indexOf(".") < 0) {
 				filename += ".esee";
 			}
 			$_eseecode.ui.codeFilename = filename;
-			var mimetype = "application/octet-stream";
+			var mimetype = "text/plain";
 			var downloadLink = document.createElement("a");
 			// Chrome / Firefox
 			var supportDownloadAttribute = 'download' in downloadLink;
 			// IE10
 			navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+			// Safari
+			var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
 			if (supportDownloadAttribute) {
 				var blob;
 				var codeURI;
@@ -1545,9 +1547,22 @@
 				} else {
 					navigator.saveBlob(blob, filename);
 				}
+			} else if (isSafari) {
+				var downloadDiv = document.createElement("div");
+				downloadDiv.style.textAlign = "center";
+				downloadLink.innerHTML = "Download";
+				downloadLink.href = "data:"+mimetype+","+code;
+				downloadLink.target = "_blank";
+				downloadLink.addEventListener("click", $e_msgBoxClose);
+				downloadLink.innerHTML = _("this link");
+				var wrap = document.createElement('div');
+				wrap.appendChild(downloadLink.cloneNode(true));
+				var downloadLinkHTML = wrap.innerHTML;
+				downloadDiv.innerHTML = _("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]);
+				document.getElementById("msgBox0").appendChild(downloadDiv);
 			} else {
 				var oWin = window.open("about:blank", "_blank");
-				oWin.document.write(code);
+				oWin.document.write("data:"+mimetype+","+code);
 				oWin.document.close();
 				// IE<10 & other
 				if (document.execCommand) {
@@ -1561,7 +1576,9 @@
 				}
 			}
 			$_eseecode.session.lastSave = new Date().getTime();
-			$e_msgBoxClose();
+			if (!isSafari) {
+				$e_msgBoxClose();
+			}
 		}, acceptName: _("Save"), cancel: true, focus: "filename" });
 	}
 
@@ -1587,7 +1604,7 @@
 	/**
 	 * Completes or cancels the $e_loadCode() asynchronous event by loading the code into the console if possible
 	 * @private
-	 * @param {!Object} event Event
+	 * @param {!Object} event Eventfile.type
 	 * @example $e_loadCodeFile(event)
 	 */
 	function $e_loadCodeFile(event) {

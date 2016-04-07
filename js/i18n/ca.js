@@ -466,5 +466,7 @@ $_eseecode.i18n.available.ca = {
 	"Returns the value of the last key in the keyboard that was being pressed": "Retorna el valor de la última tecla presionada del teclat",
 	"Returns the code of the key in the keyboard is being pressed": "Retorna el código de la tecla que s'està presionant al teclado",
 	"Returns the value of the key in the keyboard is being pressed": "Retorna el valor de la tecla que s'està presionant al teclado",
-	"Checks if a key in the keyboard is being pressed": "Retorna si s'està presionant una tecla del teclat"
+	"Checks if a key in the keyboard is being pressed": "Retorna si s'està presionant una tecla del teclat",
+	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "El seu navegador no soporta la descàrrega directa d'arxius, per favor cliqui %s i desi la pàgina que se obrirà.",
+	"this link": "aquest enllaç"
 }

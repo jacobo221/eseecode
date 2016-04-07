@@ -466,5 +466,7 @@ $_eseecode.i18n.available.es = {
 	"Returns the value of the last key in the keyboard that was being pressed": "Devuelve el valor de la última tecla presionada del teclado",
 	"Returns the code of the key in the keyboard is being pressed": "Devuelve el código de la tecla que esté siendo presionada en el teclado",
 	"Returns the value of the key in the keyboard is being pressed": "Devuelve el valor de la tecla que esté siendo presionada en el teclado",
-	"Checks if a key in the keyboard is being pressed": "Devuelve si se está presionando una tecla del teclado"
+	"Checks if a key in the keyboard is being pressed": "Devuelve si se está presionando una tecla del teclado",
+	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "Su navegador no soporta la descarga directa de archivos, por favor clique %s y guarda la página que se abrirá.",
+	"this link": "este enlace"
 }
