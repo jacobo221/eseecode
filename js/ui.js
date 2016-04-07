@@ -1508,8 +1508,17 @@
 			// IE10
 			navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
 			if (supportDownloadAttribute) {
-				var blob = new Blob([code], {type:mimetype});
-				var codeURI = URL.createObjectURL(blob);
+				var blob;
+				var codeURI;
+				try {
+					blob = new Blob([code], {type:mimetype});
+				} catch(e) {
+					// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+					var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+					builder.append(code);
+					blob = builderbuilder.getBlob(mimetype);
+				}
+				codeURI = URL.createObjectURL(blob);
 				//var codeURI = "data:"+mimetype+","+code;
 				downloadLink.href = codeURI;
 				downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
@@ -1522,9 +1531,15 @@
 					URL.revokeObjectURL(codeURI);
 				}, 250);
 			} else if (navigator.saveBlob) {
-				var builder = new BlobBuilder();
-				builder.append(code);
-				var blob = builder.getBlob(mimetype);
+				var blob;
+				try {
+					blob = new Blob([code], {type:mimetype});
+				} catch(e) {
+					// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+					var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+					builder.append(code);
+					blob = builder.getBlob(mimetype);
+				}
 				if (window.saveAs) {
 					window.saveAs(blob, filename);
 				} else {
@@ -2669,6 +2684,7 @@
 		ace.require("ace/ext/language_tools");
 		editor.setTheme("ace/theme/chrome");
 		editor.getSession().setMode("ace/mode/eseecode");
+		editor.session.setNewLineMode("windows"); // Otherwise copy&paste in Windows pastes all code in a single line. Linux and Mac, on the other hand, can handle Windows newlines
 		editor.setOptions({
 			enableBasicAutocompletion: true,
 			enableSnippets: true,
