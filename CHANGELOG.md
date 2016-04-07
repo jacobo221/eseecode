@@ -14,6 +14,7 @@
  *   animateLayers() hides the guide to prevent confusion
  *   Added intructions to get date and mouse/touch/keyboard events
  *   Allow gridStep to go down to 1
+ *   More web app devices compatibility
  *   Fix: Save code now works with all browsers (except Safari, where it will pop a window)
  *   Fix: jsColor iputs missed the '#' at the beginning
  *   Fix: Added jscolor support for windowInputEdit/Create which broke in IE
