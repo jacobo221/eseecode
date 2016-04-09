@@ -129,10 +129,10 @@
 		var mousePos = $e_eventPosition(event);
 		// Try to drag the block pinned from the same position it was clicked
 		$_eseecode.session.floatingBlock.mouse.x = mousePos.x - div.getBoundingClientRect().left - window.pageXOffset;
-		if ($e_isNumber($_eseecode.session.floatingBlock.mouse.x)) {
+		if ($e_isNumber($_eseecode.session.floatingBlock.mouse.x) && $_eseecode.session.floatingBlock.mouse.x > 0) {
 			$_eseecode.session.floatingBlock.mouse.y = mousePos.y - div.getBoundingClientRect().top - window.pageYOffset;
 		} else {
-			// IE8 and earlier don't support window.pageXOffset
+			// IE8 and earlier don't support window.pageXOffset, Android WebView (for embedding in Android app), doesn't take into acount scroll in getBoundingClientRect() when zooming
 			$_eseecode.session.floatingBlock.mouse.x = undefined;
 		}
 		// Copy parameters

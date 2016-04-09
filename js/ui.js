@@ -1551,15 +1551,16 @@
 				var downloadDiv = document.createElement("div");
 				downloadDiv.style.textAlign = "center";
 				downloadLink.innerHTML = "Download";
+				downloadLink.id = "downloadLinkHTML";
 				downloadLink.href = "data:"+mimetype+","+code;
 				downloadLink.target = "_blank";
-				downloadLink.addEventListener("click", $e_msgBoxClose);
 				downloadLink.innerHTML = _("this link");
 				var wrap = document.createElement('div');
 				wrap.appendChild(downloadLink.cloneNode(true));
 				var downloadLinkHTML = wrap.innerHTML;
 				downloadDiv.innerHTML = _("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]);
 				document.getElementById("msgBox0").appendChild(downloadDiv);
+				document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
 			} else {
 				var oWin = window.open("about:blank", "_blank");
 				oWin.document.write("data:"+mimetype+","+code);
@@ -2524,7 +2525,7 @@
 	}
 
 	/**
-	 * Writes in the write console at the position where the guide is the instruction clicked in the dialgo window
+	 * Writes in the write console at the position where the guide is the instruction clicked in the dialog window
 	 * @private
 	 * @param {!Object} event Event
 	 * @example div.addEventListener("click", $e_writeText, false)
