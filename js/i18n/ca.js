@@ -468,5 +468,6 @@ $_eseecode.i18n.available.ca = {
 	"Returns the value of the key in the keyboard is being pressed": "Retorna el valor de la tecla que s'està presionant al teclado",
 	"Checks if a key in the keyboard is being pressed": "Retorna si s'està presionant una tecla del teclat",
 	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "El seu navegador no soporta la descàrrega directa d'arxius, per favor cliqui %s i desi la pàgina que se obrirà.",
-	"this link": "aquest enllaç"
+	"this link": "aquest enllaç",
+	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vol carregar un codi nou?"
 }

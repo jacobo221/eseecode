@@ -85,7 +85,7 @@ $_eseecode.i18n.available.es = {
 	"th": "º",
 	"Enter a text to use as %s. The %s should easily relate to the use you are going to give to the block": "Introduce un texto a usar como %s. El %s deberia relacionarse fácilmente con el uso del bloque",
 	"Enter the value for %s's %s parameter": "Para %s introduce el valor de su %s parámetro",
-	"Do you really want to start over?": "¿Estas seguro de que quieres volver a empezar?",
+	"Do you really want to start over?": "¿Estás seguro de que quieres volver a empezar?",
 	"Careful, any code you haven't saved will be lost if you leave this page!": "¡Atención! Perderás el código que no hayas guardado si abandonas esta página.",
 	"You don't have the eseecodeLanguage loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?": "No tienes eseecodeLanguage cargado. Si todavía quieres cambiar al modo %s no podrás volver al modo de bloques.\n¿Estás seguro de querer cambiar al modo %s?",
 	"Can't convert the code to blocks. There is the following problem in your code": "No se puede convertir el codigo a bloques. Existe el siguiente error en tu código",
@@ -468,5 +468,6 @@ $_eseecode.i18n.available.es = {
 	"Returns the value of the key in the keyboard is being pressed": "Devuelve el valor de la tecla que esté siendo presionada en el teclado",
 	"Checks if a key in the keyboard is being pressed": "Devuelve si se está presionando una tecla del teclado",
 	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "Su navegador no soporta la descarga directa de archivos, por favor clique %s y guarda la página que se abrirá.",
-	"this link": "este enlace"
+	"this link": "este enlace",
+	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Ha cambios en el código que todavía no se han guardado. ¿Estás seguro de que deseas cargar un código nuevo?"
 }

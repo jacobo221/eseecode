@@ -1486,9 +1486,9 @@
 	/**
 	 * Downloads the user code as a file to the user's device
 	 * @private
-	 * @example $e_saveCode()
+	 * @example $e_saveCodeFromUI()
 	 */
-	function $e_saveCode() {
+	function $e_saveCodeFromUI() {
 		if (navigator.userAgent.match(/MSIE/)) {
 			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to Code view, copy the code and paste it into a file in your computer."));
 			return;
@@ -1591,22 +1591,35 @@
 	}
 
 	/**
-	 * Asks the user via the UI to upload a file which will then trigger loadCodeFile()
+	 * Asks the user via the UI to upload a file which will then trigger loadCode()
+	 * @private
+	 * @example $e_loadCodeFromUI()
+	 */
+	function $e_loadCodeFromUI() {
+		if (window.File && window.FileReader && window.FileList && window.Blob) {
+			if ($_eseecode.session.changesInCode) {
+				$e_msgBox(_("You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?"), {acceptAction:function(){$e_msgBoxClose();$e_loadCode();},cancelAction:$e_msgBoxClose});
+			} else {
+				$e_loadCode();
+			}
+		} else {
+			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into Code view and then switch to the view you wish to code with."));
+		}
+	}
+	
+	/**
+	 * Uploads a file which will then trigger loadCodeFile()
 	 * @private
 	 * @example $e_loadCode()
 	 */
 	function $e_loadCode() {
-		if (window.File && window.FileReader && window.FileList && window.Blob) {
-			var uploadButton = document.createElement("input");
-			uploadButton.type = "file";
-			uploadButton.addEventListener("change", $e_loadCodeFile, false);
-			uploadButton.style.display = "none";
-			document.body.appendChild(uploadButton);
-			uploadButton.click();
-			document.body.removeChild(uploadButton);
-		} else {
-			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into Code view and then switch to the view you wish to code with."));
-		}
+		var uploadButton = document.createElement("input");
+		uploadButton.type = "file";
+		uploadButton.addEventListener("change", $e_loadCodeFile, false);
+		uploadButton.style.display = "none";
+		document.body.appendChild(uploadButton);
+		uploadButton.click();
+		document.body.removeChild(uploadButton);
 	}
 
 	/**
@@ -1631,6 +1644,7 @@
 		reader.onload = function(event) {
 			API_uploadCode(event.target.result)
 			$_eseecode.ui.codeFilename = file.name;
+			$_eseecode.session.changesInCode = false;
 		}
 		reader.readAsText(file);
 	}
@@ -1812,6 +1826,7 @@
 		$_eseecode.whiteboard.addEventListener("touchcancel", $e_handlerPointer, false);
 		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
 		$e_loadURLParams(undefined, ["dialog"], true);
+		$_eseecode.session.changesInCode = false;
 		return;
 	}
 	
