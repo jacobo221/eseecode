@@ -15,6 +15,7 @@
  *   Added intructions to get date and mouse/touch/keyboard events
  *   Allow gridStep to go down to 1
  *   More web app devices compatibility
+ *   Ask for confirmation if loading a file will delete unsaved changes
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
  *   Fix: Copy&paste in Windows now keeps newlines (thank you Jordi Losantos)
  *   Fix: Save code now works with all browsers (except Safari, where it will pop a window)
