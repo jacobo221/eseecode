@@ -16,6 +16,7 @@
  *   Allow gridStep to go down to 1
  *   More web app devices compatibility
  *   Ask for confirmation if loading a file will delete unsaved changes
+ *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
  *   Fix: Copy&paste in Windows now keeps newlines (thank you Jordi Losantos)
  *   Fix: Save code now works with all browsers (except Safari, where it will pop a window)

@@ -184,8 +184,8 @@
 	/**
 	 * Returns true if the value looks like an OK, false otherwise
 	 * @private
-	 * @paaram {String|Boolean} value Value to check
-	 * @return {Boolean} Whether the value looks liek an OK
+	 * @param {String|Boolean} value Value to check
+	 * @return {Boolean} Whether the value looks like an OK
 	 * @example $e_confirmNo("No")
 	 */
 	function $e_confirmNo(value) {
@@ -193,4 +193,213 @@
 			value = value.toLowerCase();
 		}
 		return value === false || value == "false" || value == "0" || value == "no" || value == "none" || value === 0;
+	}
+	
+	/**
+	 * Returns the binary value of a dataURL
+	 * @private
+	 * @param {String} dataURI JavaScript provided dataURL
+	 * @example $e_dataURItoBlob(canvas.toDataURL())
+	 */
+	function $e_dataURItoBlob(dataURI) {
+	    // convert base64/URLEncoded data component to raw binary data held in a string
+	    var byteString;
+	    if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+	        byteString = atob(dataURI.split(',')[1]);
+	    } else {
+	        byteString = unescape(dataURI.split(',')[1]);
+	    }
+	
+	    // separate out the mime component
+	    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+	
+	    // write the bytes of the string to a typed array
+	    var ia = new Uint8Array(byteString.length);
+	    for (var i = 0; i < byteString.length; i++) {
+	        ia[i] = byteString.charCodeAt(i);
+	    }
+	
+	    return ia;
+	}
+
+	/**
+	 * Saves data into a file
+	 * @private
+	 * @param data Data to save
+	 * @example $e_saveFile("forward(100)", "esee.code")
+	 */
+	function $e_saveFile(data, filename) {
+		if (filename.length > 0 && filename.indexOf(".") < 0) {
+			filename += ".esee";
+		}
+		$_eseecode.ui.codeFilename = filename;
+		var mimetype = "text/plain";
+		var downloadLink = document.createElement("a");
+		// Chrome / Firefox
+		var supportDownloadAttribute = 'download' in downloadLink;
+		// IE10
+		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+		// Safari
+		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		if (supportDownloadAttribute) {
+			var blob;
+			var codeURI;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builderbuilder.getBlob(mimetype);
+			}
+			codeURI = URL.createObjectURL(blob);
+			downloadLink.href = codeURI;
+			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+			downloadLink.click();
+			document.body.removeChild(downloadLink);
+			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+			setTimeout(function () {
+				URL.revokeObjectURL(codeURI);
+			}, 250);
+		} else if (navigator.saveBlob) {
+			var blob;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builder.getBlob(mimetype);
+			}
+			if (window.saveAs) {
+				window.saveAs(blob, filename);
+			} else {
+				navigator.saveBlob(blob, filename);
+			}
+		} else if (isSafari) {
+			downloadLink.innerHTML = "Download";
+			downloadLink.id = "downloadLinkHTML";
+			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
+			downloadLink.target = "_blank";
+			downloadLink.innerHTML = _("this link");
+			var wrap = document.createElement('div');
+			wrap.appendChild(downloadLink.cloneNode(true));
+			var downloadLinkHTML = wrap.innerHTML;
+			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
+			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+		} else {
+			var oWin = window.open("about:blank", "_blank");
+			oWin.document.write("data:"+mimetype+","+data);
+			oWin.document.close();
+			// IE<10 & other
+			if (document.execCommand) {
+				var success = oWin.document.execCommand('SaveAs', true, filename);
+				if (success) {
+					oWin.close();
+				}
+			} else {
+				// Keep the window open for non-IE browsers, this is the last option
+				oWin.close();
+			}
+		}
+		$_eseecode.session.lastSave = new Date().getTime();
+	}
+
+	/**
+	 * Saves data to a file
+	 * @private
+	 * @param data Data to save
+	 * @example $e_saveFile("forward(100)", "esee.code")
+	 */
+	function $e_saveFile(data, filename) {
+		if (filename.length > 0 && filename.indexOf(".") < 0) {
+			filename += ".esee";
+		}
+		$_eseecode.ui.codeFilename = filename;
+		var mimetype = "text/plain";
+		var downloadLink = document.createElement("a");
+		// Chrome / Firefox
+		var supportDownloadAttribute = 'download' in downloadLink;
+		// IE10
+		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+		// Safari
+		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		if (supportDownloadAttribute) {
+			var blob;
+			var codeURI;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builderbuilder.getBlob(mimetype);
+			}
+			codeURI = URL.createObjectURL(blob);
+			downloadLink.href = codeURI;
+			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+			downloadLink.click();
+			document.body.removeChild(downloadLink);
+			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+			setTimeout(function () {
+				URL.revokeObjectURL(codeURI);
+			}, 250);
+		} else if (navigator.saveBlob) {
+			var blob;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builder.getBlob(mimetype);
+			}
+			if (window.saveAs) {
+				window.saveAs(blob, filename);
+			} else {
+				navigator.saveBlob(blob, filename);
+			}
+		} else if (isSafari) {
+			downloadLink.innerHTML = "Download";
+			downloadLink.id = "downloadLinkHTML";
+			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
+			downloadLink.target = "_blank";
+			downloadLink.innerHTML = _("this link");
+			var wrap = document.createElement('div');
+			wrap.appendChild(downloadLink.cloneNode(true));
+			var downloadLinkHTML = wrap.innerHTML;
+			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
+			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+		} else {
+			var oWin = window.open("about:blank", "_blank");
+			oWin.document.write("data:"+mimetype+","+data);
+			oWin.document.close();
+			// IE<10 & other
+			if (document.execCommand) {
+				var success = oWin.document.execCommand('SaveAs', true, filename);
+				if (success) {
+					oWin.close();
+				}
+			} else {
+				// Keep the window open for non-IE browsers, this is the last option
+				oWin.close();
+			}
+		}
+		$_eseecode.session.lastSave = new Date().getTime();
+	}
+
+	/**
+	 * Loads data from a file
+	 * @private
+	 * @param data Data to save
+	 * @param filename File name
+	 * @param call Function to call
+	 * @example $e_loadFile("forward(100)", "esee.code", $e_loadCodeFile)
+	 */
+	function $e_loadFile(data, filename, call) {
+		call(data, filename);
 	}

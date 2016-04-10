@@ -35,9 +35,9 @@
 	 */
 	function $e_downloadWhiteboard(link) {
 		var image = $e_imagifyWhiteboard();
-		link.href = image.imageBinary;
-		var d = new Date();
-		link.download = "canvas-"+d.getTime()+"."+image.extension;
+		var data = $e_dataURItoBlob(image.imageBinary);
+		var filename = "canvas-"+(new Date()).getTime()+"."+image.extension;
+		$e_saveFile(data, filename);
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -231,10 +231,9 @@
 				link = document.getElementById("whiteboard-downloadLayers-animation");
 			}
 		}
-		var data_url = image.imageBinary;
-		link.href = data_url;
-		var d = new Date();
-		link.download = "layers-"+d.getTime()+"."+image.extension;
+		var data = $e_dataURItoBlob(image.imageBinary);
+		var filename = "layers-"+(new Date()).getTime()+"."+image.extension;
+		$e_saveFile(data, filename);
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -1504,94 +1503,8 @@
 		}, acceptName: _("Save"), cancel: true, focus: "filename" });
 	}
 
-
 	/**
-	 * Saves data into a file
-	 * @private
-	 * @param data Data to save
-	 * @example $e_saveFile("forward(100)", "esee.code")
-	 */
-	function $e_saveFile(data, filename) {
-		if (filename.length > 0 && filename.indexOf(".") < 0) {
-			filename += ".esee";
-		}
-		$_eseecode.ui.codeFilename = filename;
-		var mimetype = "text/plain";
-		var downloadLink = document.createElement("a");
-		// Chrome / Firefox
-		var supportDownloadAttribute = 'download' in downloadLink;
-		// IE10
-		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
-		// Safari
-		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-		if (supportDownloadAttribute) {
-			var blob;
-			var codeURI;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builderbuilder.getBlob(mimetype);
-			}
-			codeURI = URL.createObjectURL(blob);
-			downloadLink.href = codeURI;
-			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-			downloadLink.style.display = "none";
-			document.body.appendChild(downloadLink);
-			downloadLink.click();
-			document.body.removeChild(downloadLink);
-			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
-			setTimeout(function () {
-				URL.revokeObjectURL(codeURI);
-			}, 250);
-		} else if (navigator.saveBlob) {
-			var blob;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builder.getBlob(mimetype);
-			}
-			if (window.saveAs) {
-				window.saveAs(blob, filename);
-			} else {
-				navigator.saveBlob(blob, filename);
-			}
-		} else if (isSafari) {
-			downloadLink.innerHTML = "Download";
-			downloadLink.id = "downloadLinkHTML";
-			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
-			downloadLink.target = "_blank";
-			downloadLink.innerHTML = _("this link");
-			var wrap = document.createElement('div');
-			wrap.appendChild(downloadLink.cloneNode(true));
-			var downloadLinkHTML = wrap.innerHTML;
-			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
-			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
-		} else {
-			var oWin = window.open("about:blank", "_blank");
-			oWin.document.write("data:"+mimetype+","+data);
-			oWin.document.close();
-			// IE<10 & other
-			if (document.execCommand) {
-				var success = oWin.document.execCommand('SaveAs', true, filename);
-				if (success) {
-					oWin.close();
-				}
-			} else {
-				// Keep the window open for non-IE browsers, this is the last option
-				oWin.close();
-			}
-		}
-		$_eseecode.session.lastSave = new Date().getTime();
-	}
-
-	/**
-	 * Asks the user via the UI to upload a file which will then trigger loadCode()
+	 * Asks the user via the UI to upload a file which will then trigger $e_loadCode()
 	 * @private
 	 * @example $e_loadCodeFromUI()
 	 */
@@ -1608,14 +1521,14 @@
 	}
 	
 	/**
-	 * Uploads a file which will then trigger loadCodeFile()
+	 * Uploads a file which will then trigger $e_openCodeFile()
 	 * @private
 	 * @example $e_loadCode()
 	 */
 	function $e_loadCode() {
 		var uploadButton = document.createElement("input");
 		uploadButton.type = "file";
-		uploadButton.addEventListener("change", $e_loadCodeFile, false);
+		uploadButton.addEventListener("change", $e_openCodeFile, false);
 		uploadButton.style.display = "none";
 		document.body.appendChild(uploadButton);
 		uploadButton.click();
@@ -1626,27 +1539,36 @@
 	 * Completes or cancels the $e_loadCode() asynchronous event by loading the code into the console if possible
 	 * @private
 	 * @param {!Object} event Eventfile.type
-	 * @example $e_loadCodeFile(event)
+	 * @example $e_openCodeFile(event)
 	 */
-	function $e_loadCodeFile(event) {
+	function $e_openCodeFile(event) {
 		if (!event.target.files.length) {
 			return;
 		}
 		var file = event.target.files[0];
 		if (!file) {
-        		$e_msgBox(_("Failed to upload the file!"));
+        	$e_msgBox(_("Failed to upload the file!"));
 			return;
 		} else if (file.type && !file.type.match('text.*')) {
 			$e_msgBox(_("%s is not a valid eSee file! (Invalid file type %s)",[file.name,file.type]));
 			return;
 		}
       	var reader = new FileReader();
-		reader.onload = function(event) {
-			API_uploadCode(event.target.result)
-			$_eseecode.ui.codeFilename = file.name;
-			$_eseecode.session.changesInCode = false;
-		}
+		reader.onload = function(event) { $e_loadFile(event.target.result, file.name, $e_loadCodeFile); };
 		reader.readAsText(file);
+	}
+
+	/**
+	 * Loads a code file
+	 * @private
+	 * @param {String} code Code to load
+	 * @param {String} filename Name of the code file
+	 * @example $e_loadCodeFile("forward(100)", "esee.code")
+	 */
+	function $e_loadCodeFile(code, filename) {
+		API_uploadCode(code)
+		$_eseecode.ui.codeFilename = filename;
+		$_eseecode.session.changesInCode = false;
 	}
 
 	/**
