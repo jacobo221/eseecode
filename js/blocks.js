@@ -338,7 +338,7 @@
 	}
 	
 	/**
-	 * Returns the position where he block has been dropped
+	 * Returns the position where the block has been dropped
 	 * @private
 	 * @param {!HTMLElement} consoleDiv Blocks console div
 	 * @param {Object} coords Coordinates

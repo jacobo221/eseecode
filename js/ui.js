@@ -1493,94 +1493,101 @@
 			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to Code view, copy the code and paste it into a file in your computer."));
 			return;
 		}
-		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() {
-			var code = encodeURIComponent(API_downloadCode());
+		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() { 
 			var filename = document.getElementById("filename").value;
 			filename = filename.replace("/","").replace("\\","");
 			if (filename.length > 0 && filename.indexOf(".") < 0) {
 				filename += ".esee";
 			}
-			$_eseecode.ui.codeFilename = filename;
-			var mimetype = "text/plain";
-			var downloadLink = document.createElement("a");
-			// Chrome / Firefox
-			var supportDownloadAttribute = 'download' in downloadLink;
-			// IE10
-			navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
-			// Safari
-			var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-			if (supportDownloadAttribute) {
-				var blob;
-				var codeURI;
-				try {
-					blob = new Blob([code], {type:mimetype});
-				} catch(e) {
-					// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-					var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-					builder.append(code);
-					blob = builderbuilder.getBlob(mimetype);
-				}
-				codeURI = URL.createObjectURL(blob);
-				//var codeURI = "data:"+mimetype+","+code;
-				downloadLink.href = codeURI;
-				downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-				downloadLink.style.display = "none";
-				document.body.appendChild(downloadLink);
-				downloadLink.click();
-				document.body.removeChild(downloadLink);
-				// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
-				setTimeout(function () {
-					URL.revokeObjectURL(codeURI);
-				}, 250);
-			} else if (navigator.saveBlob) {
-				var blob;
-				try {
-					blob = new Blob([code], {type:mimetype});
-				} catch(e) {
-					// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-					var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-					builder.append(code);
-					blob = builder.getBlob(mimetype);
-				}
-				if (window.saveAs) {
-					window.saveAs(blob, filename);
-				} else {
-					navigator.saveBlob(blob, filename);
-				}
-			} else if (isSafari) {
-				var downloadDiv = document.createElement("div");
-				downloadDiv.style.textAlign = "center";
-				downloadLink.innerHTML = "Download";
-				downloadLink.id = "downloadLinkHTML";
-				downloadLink.href = "data:"+mimetype+","+code;
-				downloadLink.target = "_blank";
-				downloadLink.innerHTML = _("this link");
-				var wrap = document.createElement('div');
-				wrap.appendChild(downloadLink.cloneNode(true));
-				var downloadLinkHTML = wrap.innerHTML;
-				downloadDiv.innerHTML = _("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]);
-				document.getElementById("msgBox0").appendChild(downloadDiv);
-				document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+			$e_saveFile(API_downloadCode(), filename);
+            $e_msgBoxClose();
+		}, acceptName: _("Save"), cancel: true, focus: "filename" });
+	}
+
+
+	/**
+	 * Saves data into a file
+	 * @private
+	 * @param data Data to save
+	 * @example $e_saveFile("forward(100)", "esee.code")
+	 */
+	function $e_saveFile(data, filename) {
+		if (filename.length > 0 && filename.indexOf(".") < 0) {
+			filename += ".esee";
+		}
+		$_eseecode.ui.codeFilename = filename;
+		var mimetype = "text/plain";
+		var downloadLink = document.createElement("a");
+		// Chrome / Firefox
+		var supportDownloadAttribute = 'download' in downloadLink;
+		// IE10
+		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+		// Safari
+		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		if (supportDownloadAttribute) {
+			var blob;
+			var codeURI;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builderbuilder.getBlob(mimetype);
+			}
+			codeURI = URL.createObjectURL(blob);
+			downloadLink.href = codeURI;
+			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+			downloadLink.click();
+			document.body.removeChild(downloadLink);
+			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+			setTimeout(function () {
+				URL.revokeObjectURL(codeURI);
+			}, 250);
+		} else if (navigator.saveBlob) {
+			var blob;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builder.getBlob(mimetype);
+			}
+			if (window.saveAs) {
+				window.saveAs(blob, filename);
 			} else {
-				var oWin = window.open("about:blank", "_blank");
-				oWin.document.write("data:"+mimetype+","+code);
-				oWin.document.close();
-				// IE<10 & other
-				if (document.execCommand) {
-					var success = oWin.document.execCommand('SaveAs', true, filename);
-					if (success) {
-						oWin.close();
-					}
-				} else {
-					// Keep the window open for non-IE browsers, this is the last option
+				navigator.saveBlob(blob, filename);
+			}
+		} else if (isSafari) {
+			downloadLink.innerHTML = "Download";
+			downloadLink.id = "downloadLinkHTML";
+			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
+			downloadLink.target = "_blank";
+			downloadLink.innerHTML = _("this link");
+			var wrap = document.createElement('div');
+			wrap.appendChild(downloadLink.cloneNode(true));
+			var downloadLinkHTML = wrap.innerHTML;
+			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
+			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+		} else {
+			var oWin = window.open("about:blank", "_blank");
+			oWin.document.write("data:"+mimetype+","+data);
+			oWin.document.close();
+			// IE<10 & other
+			if (document.execCommand) {
+				var success = oWin.document.execCommand('SaveAs', true, filename);
+				if (success) {
 					oWin.close();
 				}
+			} else {
+				// Keep the window open for non-IE browsers, this is the last option
+				oWin.close();
 			}
-			$_eseecode.session.lastSave = new Date().getTime();
-			if (!isSafari) {
-				$e_msgBoxClose();
-			}
-		}, acceptName: _("Save"), cancel: true, focus: "filename" });
+		}
+		$_eseecode.session.lastSave = new Date().getTime();
 	}
 
 	/**
@@ -1984,7 +1991,7 @@
 	 * Resizes the console height based on the window's size
 	 * @private
 	 * @example $e_windowResizeHandler()
-	 */
+	 */																																																																																															
 	function $e_windowResizeHandler() {
 		if ($e_isNumber(window.innerHeight)) {
 			// The "eseecode" div resizes automatically with CSS but webview in android apps fails to set height 100% correctly so we use this hack

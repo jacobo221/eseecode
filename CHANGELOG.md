@@ -194,7 +194,7 @@
 
  * Translatable UI
  * Translations available: ca, es (by default: en)
- * Setup window to simplify UI, reduce height and make he whole app fit in Android browser
+ * Setup window to simplify UI, reduce height and make the whole app fit in Android browser
  * Get parameters from URL to set console mode and language
  * Debug now allows breakpoints and watchpoints
  * Available API to easily embed eSeeCode into other platforms
