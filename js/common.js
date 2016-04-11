@@ -224,15 +224,18 @@
 	 * @param mimetype MIME type
 	 * @example $e_saveFile("forward(100)", "esee.code", "text/plain")
 	 */
-	function $e_saveFile(data, filename, mimetype) {
+	function $e_saveFile(data64, filename, mimetype) {
 		if (mimetype.indexOf("text/") != 0) {
-			data = window.atob(data);
+			data = window.atob(data64);
 		    var rawLength = data.length;
 		    var uInt8Array = new Uint8Array(rawLength);
 		    for (var i = 0; i < rawLength; ++i) {
 		      uInt8Array[i] = data.charCodeAt(i);
 		    }
 		    data = uInt8Array;
+		} else {
+			// It is text, so the data has been passed as a String, not in base64
+			data = data64;
 		}
 		var downloadLink = document.createElement("a");
 		// Chrome / Firefox
@@ -262,6 +265,7 @@
 			setTimeout(function () {
 				URL.revokeObjectURL(codeURI);
 			}, 250);
+			$e_msgBoxClose();
 		} else if (navigator.saveBlob || window.saveAs) {
 			var blob;
 			try {
@@ -277,20 +281,26 @@
 			} else {
 				navigator.saveBlob(blob, filename);
 			}
+			$e_msgBoxClose();
 		} else if (isSafari) {
-			downloadLink.innerHTML = "Download";
-			downloadLink.id = "downloadLinkHTML";
-			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
-			downloadLink.target = "_blank";
-			downloadLink.innerHTML = _("this link");
-			var wrap = document.createElement('div');
-			wrap.appendChild(downloadLink.cloneNode(true));
-			var downloadLinkHTML = wrap.innerHTML;
-			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
-			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+			$e_msgBoxClose(); // We cannot close the msgBox later because we would be closing the new msgBox where the link is going to be create it, so close it now
+			setTimeout(function() {
+				$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",["<a id='msgBoxDw' target='_blank'>"+_("this link")+"</a>"]),{acceptName:_("Close")});
+				var downloadLinkElement = document.getElementById("msgBoxDw");
+				if (mimetype.indexOf("text/") != 0) {
+					downloadLinkElement.href = "data:"+mimetype+";base64,"+data64;
+				} else {
+					downloadLinkElement.href = "data:"+mimetype+","+encodeURIComponent(data64);
+				}
+				downloadLinkElement.addEventListener("click", $e_msgBoxClose);
+			},100);
 		} else {
 			var oWin = window.open("about:blank", "_blank");
-			oWin.document.write("data:"+mimetype+","+data);
+			if (mimetype.indexOf("text/") != 0) {
+				oWin.document.write("data:"+mimetype+";base64,"+data64);
+			} else {
+				oWin.document.write("data:"+mimetype+","+encodeURIComponent(data64));
+			}
 			oWin.document.close();
 			// IE<10 & other
 			if (document.execCommand) {
@@ -302,6 +312,7 @@
 				// Keep the window open for non-IE browsers, this is the last option
 				oWin.close();
 			}
+			$e_msgBoxClose();
 		}
 		$_eseecode.session.lastSave = new Date().getTime();
 	}

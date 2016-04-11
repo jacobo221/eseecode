@@ -236,7 +236,6 @@
 		var filename = "layers-"+(new Date()).getTime()+"."+dataTuple.mimetype.split("/")[1];
 		var mimetype = dataTuple.mimetype;
 		$e_saveFile(data, filename, mimetype);
-		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
 	/**
