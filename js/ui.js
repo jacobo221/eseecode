@@ -1521,7 +1521,7 @@
 			if ($_eseecode.session.changesInCode) {
 				$e_msgBox(_("You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?"), {acceptAction:function(){$e_msgBoxClose();$e_loadCode();},cancelAction:$e_msgBoxClose});
 			} else {
-				$e_loadCode();
+				$e_openCodeFile();
 			}
 		} else {
 			$e_msgBox(_("Sorry, your browser doesn't support uploading files directly. Paste your code into Code view and then switch to the view you wish to code with."));
@@ -1529,14 +1529,14 @@
 	}
 	
 	/**
-	 * Uploads a file which will then trigger $e_openCodeFile()
+	 * Uploads a file which will then trigger $e_openCodeFileHandler()
 	 * @private
-	 * @example $e_loadCode()
+	 * @example $e_openCodeFile()
 	 */
-	function $e_loadCode() {
+	function $e_openCodeFile() {
 		var uploadButton = document.createElement("input");
 		uploadButton.type = "file";
-		uploadButton.addEventListener("change", $e_openCodeFile, false);
+		uploadButton.addEventListener("change", $e_openCodeFileHandler, false);
 		uploadButton.style.display = "none";
 		document.body.appendChild(uploadButton);
 		uploadButton.click();
@@ -1544,12 +1544,12 @@
 	}
 
 	/**
-	 * Completes or cancels the $e_loadCode() asynchronous event by loading the code into the console if possible
+	 * Completes or cancels the $e_openCodeFile() asynchronous event by loading the code into the console if possible
 	 * @private
 	 * @param {!Object} event Eventfile.type
-	 * @example $e_openCodeFile(event)
+	 * @example $e_openCodeFileHandler(event)
 	 */
-	function $e_openCodeFile(event) {
+	function $e_openCodeFileHandler(event) {
 		if (!event.target.files.length) {
 			return;
 		}
@@ -1577,6 +1577,10 @@
 		API_uploadCode(code)
 		$_eseecode.ui.codeFilename = filename;
 		$_eseecode.session.changesInCode = false;
+		// If on level1 show Run button so it can be run
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
+			document.getElementById("button-execute").style.display = "inline";
+		}
 	}
 
 	/**
