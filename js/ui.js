@@ -1518,7 +1518,7 @@
 	function $e_loadCodeFromUI() {
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			if ($_eseecode.session.changesInCode) {
-				$e_msgBox(_("You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?"), {acceptAction:function(){$e_msgBoxClose();$e_loadCode();},cancelAction:$e_msgBoxClose});
+				$e_msgBox(_("You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?"), {acceptAction:function(){$e_msgBoxClose();$e_openCodeFile();},cancelAction:$e_msgBoxClose});
 			} else {
 				$e_openCodeFile();
 			}
@@ -1794,7 +1794,7 @@
 			case "touchend":
 			case "touchleave":
 			case "touchcancel":
-				$_eseecode.session.handlers.pointer.x = undefined
+				$_eseecode.session.handlers.pointer.x = undefined;
 				$_eseecode.session.handlers.pointer.y = undefined;
 				break;
 			default:

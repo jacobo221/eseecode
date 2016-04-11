@@ -2155,7 +2155,7 @@
 	 * @example getPointerOver()
 	 */
 	function getPointerOver() {
-		return ($_eseecode.session.handlers.pointer !== undefined);
+		return ($_eseecode.session.handlers.pointer.x !== undefined);
 	}
 	
 	/**
