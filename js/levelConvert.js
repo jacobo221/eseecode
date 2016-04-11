@@ -41,7 +41,7 @@
 			if (instruction.code && instruction.code.unindent) {
 				thisIndentation = thisIndentation.substr(0,thisIndentation.length-1);
 			}
-			code += thisIndentation + $e_loadParameters("level4",blockDiv).text + "\n";
+			code += thisIndentation + $e_loadParameters("level4",blockDiv).text + "\r\n"; // Use Windows newlines since it can't handle other newlines and Linux and Mac instead can
 			if (blockDiv.firstChild.nextSibling) { // if it has a child it is a nested div/block
 				code += $e_blocks2code(blockDiv.firstChild.nextSibling,indentation+"\t");
 			}

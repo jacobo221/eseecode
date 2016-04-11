@@ -19,7 +19,7 @@
  *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
  *   Fix: If opening code on Touch mode show Run button
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
- *   Fix: Copy&paste in Windows now keeps newlines (thank you Jordi Losantos)
+ *   Fix: Copy&paste and code save in Windows now keeps newlines (thank you Jordi Losantos)
  *   Fix: Save code now works with all browsers (except Safari, where it will pop a window)
  *   Fix: jsColor iputs missed the '#' at the beginning
  *   Fix: Added jscolor support for windowInputEdit/Create which broke in IE
