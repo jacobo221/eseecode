@@ -196,210 +196,213 @@
 	}
 	
 	/**
-	 * Returns the binary value of a dataURL
+	 * Returns the base64 value of a dataURL
 	 * @private
 	 * @param {String} dataURI JavaScript provided dataURL
-	 * @example $e_dataURItoBlob(canvas.toDataURL())
+	 * @example $e_dataURItoB64(canvas.toDataURL())
 	 */
-	function $e_dataURItoBlob(dataURI) {
-	    // convert base64/URLEncoded data component to raw binary data held in a string
-	    var byteString;
-	    if (dataURI.split(',')[0].indexOf('base64') >= 0) {
-	        byteString = atob(dataURI.split(',')[1]);
+	function $e_dataURItoB64(dataURI) {
+	    var data;
+	    if (dataURI.split(',')[0].indexOf(';base64') >= 0) {
+	    	data = dataURI.split(',')[1];
 	    } else {
-	        byteString = unescape(dataURI.split(',')[1]);
+	        data = unescape(dataURI.split(',')[1]);
+	        data = window.btoa(data);
 	    }
 	
 	    // separate out the mime component
-	    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+	    var mimetype = dataURI.split(',')[0].split(':')[1].split(';')[0];
 	
-	    // write the bytes of the string to a typed array
-	    var ia = new Uint8Array(byteString.length);
-	    for (var i = 0; i < byteString.length; i++) {
-	        ia[i] = byteString.charCodeAt(i);
-	    }
-	
-	    return ia;
+	    return { data: data, mimetype: mimetype };
 	}
 
 	/**
-	 * Saves data into a file
+	 * Saves data to a file. This function can be replaced by embedding apps such as Android's webview or iOS's uiwebview
 	 * @private
-	 * @param data Data to save
-	 * @example $e_saveFile("forward(100)", "esee.code")
-	 */
-	function $e_saveFile(data, filename) {
-		if (filename.length > 0 && filename.indexOf(".") < 0) {
-			filename += ".esee";
-		}
-		$_eseecode.ui.codeFilename = filename;
-		var mimetype = "text/plain";
-		var downloadLink = document.createElement("a");
-		// Chrome / Firefox
-		var supportDownloadAttribute = 'download' in downloadLink;
-		// IE10
-		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
-		// Safari
-		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-		if (supportDownloadAttribute) {
-			var blob;
-			var codeURI;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builderbuilder.getBlob(mimetype);
-			}
-			codeURI = URL.createObjectURL(blob);
-			downloadLink.href = codeURI;
-			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-			downloadLink.style.display = "none";
-			document.body.appendChild(downloadLink);
-			downloadLink.click();
-			document.body.removeChild(downloadLink);
-			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
-			setTimeout(function () {
-				URL.revokeObjectURL(codeURI);
-			}, 250);
-		} else if (navigator.saveBlob) {
-			var blob;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builder.getBlob(mimetype);
-			}
-			if (window.saveAs) {
-				window.saveAs(blob, filename);
-			} else {
-				navigator.saveBlob(blob, filename);
-			}
-		} else if (isSafari) {
-			downloadLink.innerHTML = "Download";
-			downloadLink.id = "downloadLinkHTML";
-			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
-			downloadLink.target = "_blank";
-			downloadLink.innerHTML = _("this link");
-			var wrap = document.createElement('div');
-			wrap.appendChild(downloadLink.cloneNode(true));
-			var downloadLinkHTML = wrap.innerHTML;
-			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
-			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
-		} else {
-			var oWin = window.open("about:blank", "_blank");
-			oWin.document.write("data:"+mimetype+","+data);
-			oWin.document.close();
-			// IE<10 & other
-			if (document.execCommand) {
-				var success = oWin.document.execCommand('SaveAs', true, filename);
-				if (success) {
-					oWin.close();
-				}
-			} else {
-				// Keep the window open for non-IE browsers, this is the last option
-				oWin.close();
-			}
-		}
-		$_eseecode.session.lastSave = new Date().getTime();
-	}
-
-	/**
-	 * Saves data to a file
-	 * @private
-	 * @param data Data to save
-	 * @example $e_saveFile("forward(100)", "esee.code")
-	 */
-	function $e_saveFile(data, filename) {
-		if (filename.length > 0 && filename.indexOf(".") < 0) {
-			filename += ".esee";
-		}
-		$_eseecode.ui.codeFilename = filename;
-		var mimetype = "text/plain";
-		var downloadLink = document.createElement("a");
-		// Chrome / Firefox
-		var supportDownloadAttribute = 'download' in downloadLink;
-		// IE10
-		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
-		// Safari
-		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-		if (supportDownloadAttribute) {
-			var blob;
-			var codeURI;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builderbuilder.getBlob(mimetype);
-			}
-			codeURI = URL.createObjectURL(blob);
-			downloadLink.href = codeURI;
-			downloadLink.download = (($_eseecode.ui.codeFilename && $_eseecode.ui.codeFilename.length > 0)?$_eseecode.ui.codeFilename:"code.esee");
-			downloadLink.style.display = "none";
-			document.body.appendChild(downloadLink);
-			downloadLink.click();
-			document.body.removeChild(downloadLink);
-			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
-			setTimeout(function () {
-				URL.revokeObjectURL(codeURI);
-			}, 250);
-		} else if (navigator.saveBlob) {
-			var blob;
-			try {
-				blob = new Blob([data], {type:mimetype});
-			} catch(e) {
-				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
-				builder.append(data);
-				blob = builder.getBlob(mimetype);
-			}
-			if (window.saveAs) {
-				window.saveAs(blob, filename);
-			} else {
-				navigator.saveBlob(blob, filename);
-			}
-		} else if (isSafari) {
-			downloadLink.innerHTML = "Download";
-			downloadLink.id = "downloadLinkHTML";
-			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
-			downloadLink.target = "_blank";
-			downloadLink.innerHTML = _("this link");
-			var wrap = document.createElement('div');
-			wrap.appendChild(downloadLink.cloneNode(true));
-			var downloadLinkHTML = wrap.innerHTML;
-			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
-			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
-		} else {
-			var oWin = window.open("about:blank", "_blank");
-			oWin.document.write("data:"+mimetype+","+data);
-			oWin.document.close();
-			// IE<10 & other
-			if (document.execCommand) {
-				var success = oWin.document.execCommand('SaveAs', true, filename);
-				if (success) {
-					oWin.close();
-				}
-			} else {
-				// Keep the window open for non-IE browsers, this is the last option
-				oWin.close();
-			}
-		}
-		$_eseecode.session.lastSave = new Date().getTime();
-	}
-
-	/**
-	 * Loads data from a file
-	 * @private
-	 * @param data Data to save
+	 * @param data Data to save, encoded in base64 if it is not text
 	 * @param filename File name
+	 * @param mimetype MIME type
+	 * @example $e_saveFile("forward(100)", "esee.code", "text/plain")
+	 */
+	function $e_saveFile(data, filename, mimetype) {
+		if (mimetype.indexOf("text/") != 0) {
+			data = window.atob(data);
+		    var rawLength = data.length;
+		    var uInt8Array = new Uint8Array(rawLength);
+		    for (var i = 0; i < rawLength; ++i) {
+		      uInt8Array[i] = data.charCodeAt(i);
+		    }
+		    data = uInt8Array;
+		}
+		var downloadLink = document.createElement("a");
+		// Chrome / Firefox
+		var supportDownloadAttribute = 'download' in downloadLink;
+		// IE10
+		navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob;
+		// Safari
+		var isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		if (supportDownloadAttribute) {
+			var blob;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builderbuilder.getBlob(mimetype);
+			}
+			var codeURI = URL.createObjectURL(blob);
+			downloadLink.href = codeURI;
+			downloadLink.download = filename;
+			downloadLink.style.display = "none";
+			document.body.appendChild(downloadLink);
+			downloadLink.click();
+			document.body.removeChild(downloadLink);
+			// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+			setTimeout(function () {
+				URL.revokeObjectURL(codeURI);
+			}, 250);
+		} else if (navigator.saveBlob || window.saveAs) {
+			var blob;
+			try {
+				blob = new Blob([data], {type:mimetype});
+			} catch(e) {
+				// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+				var builder = new (window.BlobBuilder || window.MSBlobBuilder || window.MozBlobBuilder || window.WebKitBlobBuilder)();
+				builder.append(data);
+				blob = builder.getBlob(mimetype);
+			}
+			if (window.saveAs) {
+				window.saveAs(blob, filename);
+			} else {
+				navigator.saveBlob(blob, filename);
+			}
+		} else if (isSafari) {
+			downloadLink.innerHTML = "Download";
+			downloadLink.id = "downloadLinkHTML";
+			downloadLink.href = "data:"+mimetype+","+encodeURIComponent(data);
+			downloadLink.target = "_blank";
+			downloadLink.innerHTML = _("this link");
+			var wrap = document.createElement('div');
+			wrap.appendChild(downloadLink.cloneNode(true));
+			var downloadLinkHTML = wrap.innerHTML;
+			$e_msgBox(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.",[downloadLinkHTML]),{acceptName:_("Close")});
+			document.getElementById("downloadLinkHTML").addEventListener("click", $e_msgBoxClose);
+		} else {
+			var oWin = window.open("about:blank", "_blank");
+			oWin.document.write("data:"+mimetype+","+data);
+			oWin.document.close();
+			// IE<10 & other
+			if (document.execCommand) {
+				var success = oWin.document.execCommand('SaveAs', true, filename);
+				if (success) {
+					oWin.close();
+				}
+			} else {
+				// Keep the window open for non-IE browsers, this is the last option
+				oWin.close();
+			}
+		}
+		$_eseecode.session.lastSave = new Date().getTime();
+	}
+
+	/**
+	 * Loads data from a file. This function can be call by embedding apps such as Android's webview or iOS's uiwebview, for example they could replace $e_openCodeFile() and then call $e_loadFile
+	 * @private
+	 * @param data Data to load
+	 * @param filename File name where the data was read from
 	 * @param call Function to call
 	 * @example $e_loadFile("forward(100)", "esee.code", $e_loadCodeFile)
 	 */
 	function $e_loadFile(data, filename, call) {
-		call(data, filename);
+		return call(data, filename);
 	}
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+/*  Base64 class: Base 64 encoding / decoding (c) Chris Veness 2002-2011                          */
+/*    note: depends on Utf8 class                                                                 */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+/**
+ * Encode string into Base64, as defined by RFC 4648 [http://tools.ietf.org/html/rfc4648]
+ * (instance method extending String object). As per RFC 4648, no newlines are added.
+ *
+ * @param {String} str The string to be encoded as base-64
+ * @param {Boolean} [utf8encode=false] Flag to indicate whether str is Unicode string to be encoded 
+ *   to UTF8 before conversion to base64; otherwise string is assumed to be 8-bit characters
+ * @returns {String} Base64-encoded string
+ */ 
+ if (!window.btoa) {
+  window.btoa = function(str, utf8encode) {  // http://tools.ietf.org/html/rfc4648
+    utf8encode =  (typeof utf8encode == 'undefined') ? false : utf8encode;
+    var o1, o2, o3, bits, h1, h2, h3, h4, e=[], pad = '', c, plain, coded;
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+     
+    plain = utf8encode ? Utf8.encode(str) : str;
+    
+    c = plain.length % 3;  // pad string to length of multiple of 3
+    if (c > 0) { while (c++ < 3) { pad += '='; plain += '\0'; } }
+    // note: doing padding here saves us doing special-case packing for trailing 1 or 2 chars
+     
+    for (c=0; c<plain.length; c+=3) {  // pack three octets into four hexets
+      o1 = plain.charCodeAt(c);
+      o2 = plain.charCodeAt(c+1);
+      o3 = plain.charCodeAt(c+2);
+        
+      bits = o1<<16 | o2<<8 | o3;
+        
+      h1 = bits>>18 & 0x3f;
+      h2 = bits>>12 & 0x3f;
+      h3 = bits>>6 & 0x3f;
+      h4 = bits & 0x3f;
+  
+      // use hextets to index into code string
+      e[c/3] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+    }
+    coded = e.join('');  // join() is far faster than repeated string concatenation in IE
+    
+    // replace 'A's from padded nulls with '='s
+    coded = coded.slice(0, coded.length-pad.length) + pad;
+     
+    return coded;
+  }
+}
+
+/**
+ * Decode string from Base64, as defined by RFC 4648 [http://tools.ietf.org/html/rfc4648]
+ * (instance method extending String object). As per RFC 4648, newlines are not catered for.
+ *
+ * @param {String} str The string to be decoded from base-64
+ * @param {Boolean} [utf8decode=false] Flag to indicate whether str is Unicode string to be decoded 
+ *   from UTF8 after conversion from base64
+ * @returns {String} decoded string
+ */ 
+ if (!window.atob) {
+  window.atob = function(str, utf8decode) {
+    utf8decode =  (typeof utf8decode == 'undefined') ? false : utf8decode;
+    var o1, o2, o3, h1, h2, h3, h4, bits, d=[], plain, coded;
+    var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  
+    coded = utf8decode ? Utf8.decode(str) : str;
+    
+    for (var c=0; c<coded.length; c+=4) {  // unpack four hexets into three octets
+      h1 = b64.indexOf(coded.charAt(c));
+      h2 = b64.indexOf(coded.charAt(c+1));
+      h3 = b64.indexOf(coded.charAt(c+2));
+      h4 = b64.indexOf(coded.charAt(c+3));
+        
+      bits = h1<<18 | h2<<12 | h3<<6 | h4;
+        
+      o1 = bits>>>16 & 0xff;
+      o2 = bits>>>8 & 0xff;
+      o3 = bits & 0xff;
+      
+      d[c/4] = String.fromCharCode(o1, o2, o3);
+      // check for padding
+      if (h4 == 0x40) d[c/4] = String.fromCharCode(o1, o2);
+      if (h3 == 0x40) d[c/4] = String.fromCharCode(o1);
+    }
+    plain = d.join('');  // join() is far faster than repeated string concatenation in IE
+    
+    return utf8decode ? Utf8.decode(plain) : plain; 
+  }
+}

@@ -3,7 +3,7 @@
 	/**
 	 * Returns an image of to the current whiteboard
 	 * @private
-	 * @return {Array<*>} Set containing the 'imageBinary' and the recomended 'extension' name
+	 * @return {String} Binary of the image
 	 * @example $e_imagifyWhiteboard(document.body.createElement("a"))
 	 */
 	function $e_imagifyWhiteboard() {
@@ -24,21 +24,21 @@
 		if ($_eseecode.ui.guideVisible) {
 			$e_drawDebugGuide(ctx, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.name, undefined, undefined, true);
 		}
-		return { imageBinary: canvas.toDataURL(), extension: "png" };
+		return canvas.toDataURL();
 	}
 	
 	/**
 	 * Links an A HTML element to the current whiteboard export drawing
 	 * @private
-	 * @param {!HTMLElement} link HTML A element to add the link to
-	 * @example $e_downloadWhiteboard(document.body.createElement("a"))
+	 * @example $e_downloadWhiteboard()
 	 */
-	function $e_downloadWhiteboard(link) {
+	function $e_downloadWhiteboard() {
 		var image = $e_imagifyWhiteboard();
-		var data = $e_dataURItoBlob(image.imageBinary);
-		var filename = "canvas-"+(new Date()).getTime()+"."+image.extension;
-		$e_saveFile(data, filename);
-		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
+		var dataTuple = $e_dataURItoB64(image);
+		var data = dataTuple.data;
+		var filename = "canvas-"+(new Date()).getTime()+"."+dataTuple.mimetype.split("/")[1];
+		var mimetype = dataTuple.mimetype;
+		$e_saveFile(data, filename, mimetype);
 	}
 
 	/**
@@ -87,7 +87,7 @@
 		if ($_eseecode.session.lastChange > $_eseecode.session.lastRun) {
 			msgBoxContent += "<div style=\"text-align:center;margin-top:20px;color:#882222;\">"+_("You have made changes to your code but you haven't run it yet.\nTherefore the whiteboard might not reflect your current code.")+"</div>";
 		}
-		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadWhiteboard(this)\">"+_("Download whiteboard image")+"</a></div><br /><br />"
+		msgBoxContent += "<div style=\"text-align:center;margin-top:20px\"><a id=\"whiteboard-downloadImage\" class=\"tab-button\" onclick=\"$e_downloadWhiteboard();$e_msgBoxClose();\">"+_("Download whiteboard image")+"</a></div><br /><br />"
 		// If there is more than one layer offer to download animation/grid
 		var msgClass = "";
 		var linkSrc = "";
@@ -113,7 +113,7 @@
 	 * @private
 	 * @param {Boolean} [grid=false] Set to true to download as a grid
 	 * @param {Number} [setup] If defined, sets the interval in ms (when grid=false) or the amount of columns (when grid=true). If undefined it gets the value from the UI
-	 * @return {Array<*>} Set containing the 'imageBinary' and the recomended 'extension' name
+	 * @return {String} Binary of the image
 	 * @example $e_imagifyLayers(true, 5)
 	 */
 	function $e_imagifyLayers(grid, setup) {
@@ -206,13 +206,13 @@
 		var extension;
 		if (!grid) {
 			encoder.finish();
-			imageBinary = 'data:image/gif;base64,'+encode64(encoder.stream().getData());
+			imageBinary = 'data:image/gif;base64,'+window.btoa(encoder.stream().getData());
 			extension = "gif"
 		} else {
 			imageBinary = canvas.toDataURL();
 			extension = "png"
 		}
-		return { imageBinary: imageBinary, extension: extension };
+		return imageBinary;
 	}
 
 	/**
@@ -231,9 +231,11 @@
 				link = document.getElementById("whiteboard-downloadLayers-animation");
 			}
 		}
-		var data = $e_dataURItoBlob(image.imageBinary);
-		var filename = "layers-"+(new Date()).getTime()+"."+image.extension;
-		$e_saveFile(data, filename);
+		var dataTuple = $e_dataURItoB64(image);
+		var data = dataTuple.data;
+		var filename = "layers-"+(new Date()).getTime()+"."+dataTuple.mimetype.split("/")[1];
+		var mimetype = dataTuple.mimetype;
+		$e_saveFile(data, filename, mimetype);
 		$e_msgBoxClose(); // It might have been called from a msgBox confirmation message
 	}
 
@@ -1498,7 +1500,13 @@
 			if (filename.length > 0 && filename.indexOf(".") < 0) {
 				filename += ".esee";
 			}
-			$e_saveFile(API_downloadCode(), filename);
+			if (filename.length > 0) {
+				$_eseecode.ui.codeFilename = filename;
+			} else {
+				filename = $_eseecode.ui.codeFilename;
+			}
+			var mimetype = "text/plain";
+			$e_saveFile(API_downloadCode(), filename, mimetype);
             $e_msgBoxClose();
 		}, acceptName: _("Save"), cancel: true, focus: "filename" });
 	}
