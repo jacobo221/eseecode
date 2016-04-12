@@ -1489,10 +1489,6 @@
 	 * @example $e_saveCodeFromUI()
 	 */
 	function $e_saveCodeFromUI() {
-		if (navigator.userAgent.match(/MSIE/)) {
-			$e_msgBox(_("Sorry, your browser doesn't support downloading the code directly. Switch to Code view, copy the code and paste it into a file in your computer."));
-			return;
-		}
 		$e_msgBox(_("Give a name to the file")+": <input id=\"filename\" value=\""+$_eseecode.ui.codeFilename+"\">", { acceptAction: function() { 
 			var filename = document.getElementById("filename").value;
 			filename = filename.replace("/","").replace("\\","");
