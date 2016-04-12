@@ -102,7 +102,6 @@
 			var code;
 			code = ace.edit("console-write").getValue();
 		}
-		$_eseecode.session.lastSave = new Date().getTime();
 		return code;
 	}
 
@@ -680,4 +679,15 @@
 	function API_runCode(code) {
 		$e_execute(true, code);
 	}
+
+	/**
+	 * Marks the code as saved now
+	 * @since 2.4
+	 * @public
+	 * @example API_updateSavedTime()
+	 */
+	function API_updateSavedTime() {
+		$_eseecode.session.lastSave = new Date().getTime();
+	}
+
 

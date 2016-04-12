@@ -199,6 +199,7 @@
 	 * Returns the base64 value of a dataURL
 	 * @private
 	 * @param {String} dataURI JavaScript provided dataURL
+	 * @return {Array<String,String>} The data and mimetype
 	 * @example $e_dataURItoB64(canvas.toDataURL())
 	 */
 	function $e_dataURItoB64(dataURI) {
