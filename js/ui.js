@@ -1766,6 +1766,7 @@
 		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
 		$e_loadURLParams(undefined, ["dialog"], true);
 		$_eseecode.session.changesInCode = false;
+		$_eseecode.session.lastChange = 0;
 		return;
 	}
 	
