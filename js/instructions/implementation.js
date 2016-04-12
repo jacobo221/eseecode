@@ -2113,14 +2113,16 @@
 	function getKeyboardLastKey() {
 		var keyboard = $_eseecode.session.handlers.keyboard;
 		if (keyboard) {
-			return String.fromCharCode(keyboard.lastKey);
+			var value = String.fromCharCode(keyboard.lastKeycode);
+			$_eseecode.session.handlers.keyboard.lastKeycode = undefined;
+			return value;
 		} else {
 			return false;
 		}
 	}
 	
 	/**
-	 * Returns the code of the last key in the keyboard that was being pressed
+	 * Returns the code of the last key in the keyboard that was being pressed and reset
 	 * @since 2.4
 	 * @public
 	 * @return {Number|Boolean} Code of the last key that was pressed, false if none has been pressed yet
@@ -2129,7 +2131,10 @@
 	function getKeyboardLastKeycode() {
 		var keyboard = $_eseecode.session.handlers.keyboard;
 		if (keyboard) {
-			return keyboard.lastKey;
+			return keyboard.lastKeycode;
+			var value = keyboard.lastKeycode;
+			$_eseecode.session.handlers.keyboard.lastKeycode = undefined;
+			return value;
 		} else {
 			return false;
 		}
@@ -2188,6 +2193,70 @@
 		} else {
 			return false; // Out of scope
 		}
+	}
+	
+	/**
+	 * Returns the horitzontal position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Horitzontal position of the pointer in the whiteboard, false if its not in the whiteboard
+	 * @example getPointerLastX()
+	 */
+	function getPointerLastX() {
+		var pointer = $_eseecode.session.handlers.pointer;
+		if (pointer && pointer.lastX) {
+			var value = $e_system2userCoords({x: pointer.lastX, y: pointer.lastY}).x;
+			$_eseecode.session.handlers.pointer.lastX = undefined;
+			return value;
+		} else {
+			return false; // Out of scope
+		}
+	}
+	
+	/**
+	 * Returns the vertical position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard
+	 * @since 2.4
+	 * @public
+	 * @return {Number|Boolean} Vertical position of the pointer in the whiteboard, false if its not in the whiteboard
+	 * @example getPointerLastY()
+	 */
+	function getPointerLastY() {
+		var pointer = $_eseecode.session.handlers.pointer;
+		if (pointer && pointer.lastY) {
+			var value = $e_system2userCoords({x: pointer.lastX, y: pointer.lastY}).y;
+			$_eseecode.session.handlers.pointer.lastY = undefined;
+			return value;
+		} else {
+			return false; // Out of scope
+		}
+	}
+	
+	/**
+	 * Returns the color in a certain coordinate in the current layer
+	 * @since 2.4
+	 * @public
+	 * @param {Number} x Coordinate x of the position to check the color
+	 * @param {Number} y Coordinate y of the position to check the color
+	 * @param {Number|String} [id] Id of the layer to affect
+	 * @return {String} Color in the specified position
+	 * @example getPixelColor(100,100)
+	 */
+	function getPixelColor(x, y, layer) {
+		if (id === undefined) {
+			layer = $_eseecode.currentCanvas;
+		} else {
+			layer = $e_getLayer(id);
+		}
+		var coords = $e_user2systemCoords({x: x, y: y});
+		console.log(coords)
+	    var p = layer.context.getImageData(coords.x, coords.y, 1, 1).data;
+	    var r = p[0], g = p[1], b = p[2];
+    	if (r > 255 || g > 255 || b > 255) {
+        	// Invalid color component
+        	return undefined;
+    	}
+	    var bytes = ((r << 16) | (g << 8) | b).toString(16);
+	    return "#" + ("000000" + bytes).slice(-6);
 	}
 	
 	/**

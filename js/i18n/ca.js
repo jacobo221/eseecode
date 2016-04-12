@@ -458,8 +458,10 @@ $_eseecode.i18n.available.ca = {
 	"Returns the current minute": "Retorna el minut actual",
 	"Returns the current second": "Retorna el segon actual",
 	"Returns the current milliseconds in the current second": "Retorna els milisegundos del segon actual",
-	"Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard": "Retorna la posició vertical del punter",
 	"Returns the horitzontal position of the pointer (mouse or touch gesture) in the whiteboard": "Retorna la posició horitzontal del punter",
+	"Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard": "Retorna la posició vertical del punter",
+	"Returns the horitzontal position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard": "Retorna la posició horitzontal del punter el darrer cop que s'ha clicat",
+	"Returns the vertical position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard": "Retorna la posició vertical del punter el darrer cop que s'ha clicat",
 	"Checks whether the pointer (mouse or touch gesture) is over the whiteboard": "Retorna si el punter està sobre la pissarra o no",
 	"Checks whether the pointer (mouse or touch panel) is being pressed (click if its a mouse, touch if its a tocuh device)": "Retorna si el punter està sent presionat (clicat si és un ratolí, tocat si és un panell tàcil)",
 	"Returns the code of the last key in the keyboard that was being pressed": "Retorna el código de la última tecla presionada del teclat",
@@ -469,5 +471,8 @@ $_eseecode.i18n.available.ca = {
 	"Checks if a key in the keyboard is being pressed": "Retorna si s'està presionant una tecla del teclat",
 	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "El seu navegador no soporta la descàrrega directa d'arxius, per favor cliqui %s i desi la pàgina que se obrirà.",
 	"this link": "aquest enllaç",
-	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vol carregar un codi nou?"
+	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vol carregar un codi nou?",
+	"Returns the color in a certain coordinate in the current layer": "Retorna el color d'un píxel específic",
+	"Coordinate x of the position to check the color": "Coordenada x del píxel a comprovar",
+	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprovar"
 }

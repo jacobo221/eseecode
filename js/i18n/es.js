@@ -458,8 +458,10 @@ $_eseecode.i18n.available.es = {
 	"Returns the current minute": "Devuelve el minuto actual",
 	"Returns the current second": "Devuelve el segundo actual",
 	"Returns the current milliseconds in the current second": "Devuelve los milisegundos del segundo actual",
-	"Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard": "Devuelve la posición vertical del puntero",
 	"Returns the horitzontal position of the pointer (mouse or touch gesture) in the whiteboard": "Devuelve la posición horizontal del puntero",
+	"Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard": "Devuelve la posición vertical del puntero",
+	"Returns the horitzontal position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard": "Devuelve la posición horizontal del puntero la última vez que se clicó",
+	"Returns the vertical position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard": "Devuelve la posición vertical del puntero la última vez que se clicó",
 	"Checks whether the pointer (mouse or touch gesture) is over the whiteboard": "Devuelve si el puntero está sobre la pizarra o no",
 	"Checks whether the pointer (mouse or touch panel) is being pressed (click if its a mouse, touch if its a tocuh device)": "Devuelve si el puntero está siendo presionado (clicado si es un ratón, tocado si es un panel tácil)",
 	"Returns the code of the last key in the keyboard that was being pressed": "Devuelve el código de la última tecla presionada del teclado",
@@ -469,5 +471,8 @@ $_eseecode.i18n.available.es = {
 	"Checks if a key in the keyboard is being pressed": "Devuelve si se está presionando una tecla del teclado",
 	"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "Su navegador no soporta la descarga directa de archivos, por favor clique %s y guarda la página que se abrirá.",
 	"this link": "este enlace",
-	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Ha cambios en el código que todavía no se han guardado. ¿Estás seguro de que deseas cargar un código nuevo?"
+	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Ha cambios en el código que todavía no se han guardado. ¿Estás seguro de que deseas cargar un código nuevo?",
+	"Returns the color in a certain coordinate in the current layer": "Devuelve el color de píxel específico",
+	"Coordinate x of the position to check the color": "Coordenada x del píxel a comprobar",
+	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprobar"
 }

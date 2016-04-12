@@ -1536,6 +1536,8 @@
 		var uploadButton = document.createElement("input");
 		uploadButton.type = "file";
 		uploadButton.addEventListener("change", $e_openCodeFileHandler, false);
+		uploadButton.addEventListener("click", $e_openCodeFileHandler, false);
+		uploadButton.addEventListener("touchstart", $e_openCodeFileHandler, false);
 		uploadButton.style.display = "none";
 		document.body.appendChild(uploadButton);
 		uploadButton.click();
@@ -1549,6 +1551,10 @@
 	 * @example $e_openCodeFileHandler(event)
 	 */
 	function $e_openCodeFileHandler(event) {
+		if (event.type == "click" || event.type == "touchstart") {
+			// This is just a handler for embedding apps to be able to use their own fileChooser dialogs
+			return;
+		}
 		if (!event.target.files.length) {
 			return;
 		}
@@ -1775,7 +1781,7 @@
 				break;
 			default:
 				$_eseecode.session.handlers.keyboard.key = event.which || event.keyCode;
-				$_eseecode.session.handlers.keyboard.lastKey = event.which || event.keyCode;
+				$_eseecode.session.handlers.keyboard.lastKeycode = event.which || event.keyCode;
 		}
 	}
 	
@@ -1786,7 +1792,7 @@
 	 */
 	function $e_handlerPointer(event) {
 		var thisEvent = event;
-		if (event.targetTouches) {
+		if (event.targetTouches && event.targetTouches[0] !== undefined) {
 			thisEvent = event.targetTouches[0];
 		}
 		switch (thisEvent.type) {
@@ -1807,14 +1813,18 @@
 			case "touchcancel":
 				$_eseecode.session.handlers.pointer.pressed = false;
 				break;
-				case "mousedown":
-					if (thisEvent.button > -1) {
-						$_eseecode.session.handlers.pointer.pressed = true;
-					}
-					break;
-				case "touchstart":
+			case "mousedown":
+				if (thisEvent.button > -1) {
 					$_eseecode.session.handlers.pointer.pressed = true;
-					break;
+					$_eseecode.session.handlers.pointer.lastX = $_eseecode.session.handlers.pointer.x;
+					$_eseecode.session.handlers.pointer.lastY = $_eseecode.session.handlers.pointer.y;
+				}
+				break;
+			case "touchstart":
+				$_eseecode.session.handlers.pointer.pressed = true;
+				$_eseecode.session.handlers.pointer.lastX = $_eseecode.session.handlers.pointer.x;
+				$_eseecode.session.handlers.pointer.lastY = $_eseecode.session.handlers.pointer.y;
+				break;
 		}
 	}
 	
@@ -1827,11 +1837,13 @@
 		$_eseecode.session.handlers = {
 			keyboard: {
 				key: undefined,
-				lastKey: undefined
+				lastKeycode: undefined
 			},
 			pointer: {
 				x: undefined,
 				y: undefined,
+				lastX: undefined,
+				lastY: undefined,
 				pressed: false
 				
 			}
@@ -2593,6 +2605,7 @@
 		$e_stopPreviousAnimations();
 		$e_resetBreakpointWatches();
 		$e_resetWatchpoints();
+		$e_handlerReset();
 		delete $_eseecode.canvasArray;
 		$_eseecode.canvasArray = [];
 		$e_initGuide();
