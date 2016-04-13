@@ -301,7 +301,7 @@
 		if (action == "cancel") {
 			$_eseecode.session.blocksUndo.pop();
 		} else {
-			$_eseecode.session.changesInCode = "blocks";
+			$_eseecode.session.updateOnConsoleSwitch = "blocks";
 			$_eseecode.session.blocksUndo[0] = blocksUndoIndex;
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {

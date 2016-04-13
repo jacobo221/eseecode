@@ -18,6 +18,7 @@
  *   Ask for confirmation if loading a file will delete unsaved changes
  *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
  *   Warn before loading a file if there are unsaved changes
+ *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
  *   Fix: Copy&paste and code save in Windows now keeps newlines (thank you Jordi Losantos)

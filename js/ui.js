@@ -460,7 +460,7 @@
 		var level = $_eseecode.modes.console[id].id;
 		if ($_eseecode.modes.console[oldMode].div == "blocks") {
 			if ($_eseecode.modes.console[id].div == "write") {
-				if ($_eseecode.session.changesInCode && $_eseecode.session.changesInCode !== "write") {
+				if ($_eseecode.session.updateOnConsoleSwitch && $_eseecode.session.updateOnConsoleSwitch !== "write") {
 					// Only reset the write console if changes were made in the blocks, this preserves the undo's
 					if (document.getElementById("console-blocks").firstChild.id == "console-blocks-tip") {
 						$e_resetWriteConsole("");
@@ -476,7 +476,7 @@
 		} else if ($_eseecode.modes.console[oldMode].div == "write") {
 			if ($_eseecode.modes.console[id].div == "blocks") {
 				var consoleDiv = document.getElementById("console-blocks");
-				if ($_eseecode.session.changesInCode && $_eseecode.session.changesInCode != "blocks") {
+				if ($_eseecode.session.updateOnConsoleSwitch && $_eseecode.session.updateOnConsoleSwitch != "blocks") {
 					// Only reset the blocks console if changes were made in the code, this preserves the undo's
 					$e_resetUndoBlocks();
 					$e_resetBlocksConsole(consoleDiv);
@@ -518,8 +518,8 @@
 			document.getElementById("console-tabs-resize").style.display = "none";
 			$e_checkAndAddBlocksTips(); // force to recheck since until now "console-blocks" div had display:none so height:0px and so the tip couldn't define to max height
 		}
-		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.changesInCode) {
-			$_eseecode.session.changesInCode = false;
+		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.updateOnConsoleSwitch) {
+			$_eseecode.session.updateOnConsoleSwitch = false;
 		}
 		if (level == "level1") {
 			document.getElementById("button-execute").style.display = "none";
@@ -1577,7 +1577,6 @@
 	function $e_loadCodeFile(code, filename) {
 		API_uploadCode(code)
 		$_eseecode.ui.codeFilename = filename;
-		$_eseecode.session.changesInCode = false;
 		// If on level1 show Run button so it can be run
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
 			document.getElementById("button-execute").style.display = "inline";
@@ -1761,7 +1760,7 @@
 		$_eseecode.whiteboard.addEventListener("touchcancel", $e_handlerPointer, false);
 		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
 		$e_loadURLParams(undefined, ["dialog"], true);
-		$_eseecode.session.changesInCode = false;
+		$_eseecode.session.updateOnConsoleSwitch = false;
 		$_eseecode.session.lastChange = 0;
 		return;
 	}
@@ -2695,13 +2694,13 @@
 	}
 
 	/**
-	 * Added as a listener it informs $_eseecode.session.changesInCode that the code in write console changed
+	 * Added as a listener it informs $_eseecode.session.updateOnConsoleSwitch that the code in write console changed
 	 * @private
 	 * @param {!Object} event Ace editor change event object
 	 * @example $e_writeChanged()
 	 */
 	function $e_writeChanged(event) {
-		$_eseecode.session.changesInCode = "write";
+		$_eseecode.session.updateOnConsoleSwitch = "write";
 		$_eseecode.session.lastChange = new Date().getTime();
 		$e_unhighlight();
 		$e_updateWriteBreakpoints(event);

@@ -454,14 +454,16 @@
 		} else if (type === "postcode") {
 			$_eseecode.execution.postcode.code = code;
 		} else {
-			$_eseecode.session.changesInCode = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
+			$_eseecode.session.updateOnConsoleSwitch = true; // Mark the code as changed, otherwise if starting in Code mode and changing to blocks console all code would be lost
 			if (codeParseable) {
 				if (mode == "blocks") {
 					var consoleDiv = document.getElementById("console-blocks");
 					$e_resetBlocksConsole(consoleDiv);
 					program.makeBlocks(level, consoleDiv);
+					$_eseecode.session.updateOnConsoleSwitch = "blocks";
 		        } else if (mode == "write") {
 			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
+					$_eseecode.session.updateOnConsoleSwitch = "write";
 		        }
 			} else {
 				$e_switchConsoleMode("code");
