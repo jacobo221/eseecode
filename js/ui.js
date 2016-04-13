@@ -1035,34 +1035,6 @@
 	}
 	
 	/**
-	 * Converts user coordinates to system coordinates
-	 * @private
-	 * @param {Array} pos System coordinates with Array elements x and y
-	 * @return System value which refers to the same user position
-	 * @example $e_user2systemCoords({x: 150, y: 250})
-	 */
-	function $e_user2systemCoords(pos) {
-		var value = {};
-		value.x = pos.x*$_eseecode.coordinates.scale.x+$_eseecode.coordinates.position.x;
-		value.y = pos.y*$_eseecode.coordinates.scale.y+$_eseecode.coordinates.position.y;
-		return value;
-	}
-	
-	/**
-	 * Converts system coordinates to user coordinates
-	 * @private
-	 * @param {Array} pos System coordinates with Array elements x and y
-	 * @return User value which refers to the same system position
-	 * @example $e_system2userCoords({x: 100, y: 200})
-	 */
-	function $e_system2userCoords(pos) {
-		var value = {};
-		value.x = (pos.x-$_eseecode.coordinates.position.x)/$_eseecode.coordinates.scale.x;
-		value.y = (pos.y-$_eseecode.coordinates.position.y)/$_eseecode.coordinates.scale.y;
-		return value;
-	}
-	
-	/**
 	 * Converts user angle to system angle
 	 * @private
 	 * @param {Number} angle User angle
@@ -1532,8 +1504,8 @@
 		var uploadButton = document.createElement("input");
 		uploadButton.type = "file";
 		uploadButton.addEventListener("change", $e_openCodeFileHandler, false);
-		uploadButton.addEventListener("click", $e_openCodeFileHandler, false);
-		uploadButton.addEventListener("touchstart", $e_openCodeFileHandler, false);
+		uploadButton.addEventListener("click", $e_openCodeFileHandler, false); // To help fix Android 4.4 webview bug not calling openFileChooser
+		uploadButton.addEventListener("touchstart", $e_openCodeFileHandler, false); // To help fix Android 4.4 webview bug not calling openFileChooser
 		uploadButton.style.display = "none";
 		document.body.appendChild(uploadButton);
 		uploadButton.click();

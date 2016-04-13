@@ -329,6 +329,62 @@
 	function $e_loadFile(data, filename, call) {
 		return call(data, filename);
 	}
+	
+	/*
+	 * Returns the value corresponding to the name provied, or the original value otherwise
+	 * @param {Object} value Value to parse
+	 * @return Real value
+	 * @example {Object} $e_parsePredefinedConstants("maxX")
+	 */
+	function $e_parsePredefinedConstants(value) {
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
+		if (value == "minX") {
+			value = -$_eseecode.coordinates.position.x;
+		} else if (value == "maxX") {
+			value = canvasSize-$_eseecode.coordinates.position.x;
+		} else if (value == "minY") {
+			value = -$_eseecode.coordinates.position.y;
+		} else if (value == "maxY") {
+			value = canvasSize-$_eseecode.coordinates.position.y;
+		} else if (value == "centerX") {
+			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).x;
+		} else if (value == "centerY") {
+			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).y;
+		} else if (value == "originX") {
+			value = $e_user2systemCoords({x: 0, y: 0}).x;
+		} else if (value == "originY") {
+			value = $e_user2systemCoords({x: 0, y: 0}).y;
+		}
+		return value;
+	}
+	
+	/**
+	 * Converts user coordinates to system coordinates
+	 * @private
+	 * @param {Array} pos System coordinates with Array elements x and y
+	 * @return System value which refers to the same user position
+	 * @example $e_user2systemCoords({x: 150, y: 250})
+	 */
+	function $e_user2systemCoords(pos) {
+		var value = {};
+		value.x = pos.x*$_eseecode.coordinates.scale.x+$_eseecode.coordinates.position.x;
+		value.y = pos.y*$_eseecode.coordinates.scale.y+$_eseecode.coordinates.position.y;
+		return value;
+	}
+	
+	/**
+	 * Converts system coordinates to user coordinates
+	 * @private
+	 * @param {Array} pos System coordinates with Array elements x and y
+	 * @return User value which refers to the same system position
+	 * @example $e_system2userCoords({x: 100, y: 200})
+	 */
+	function $e_system2userCoords(pos) {
+		var value = {};
+		value.x = (pos.x-$_eseecode.coordinates.position.x)/$_eseecode.coordinates.scale.x;
+		value.y = (pos.y-$_eseecode.coordinates.position.y)/$_eseecode.coordinates.scale.y;
+		return value;
+	}
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 /*  Base64 class: Base 64 encoding / decoding (c) Chris Veness 2002-2011                          */

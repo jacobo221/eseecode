@@ -1303,34 +1303,6 @@
 		updateIcon();
 	}
 	
-	/*
-	 * Returns the value corresponding to the name provied, or the original value otherwise
-	 * @param {Object} value Value to parse
-	 * @return Real value
-	 * @example {Object} $e_parsePredefinedConstants("maxX")
-	 */
-	function $e_parsePredefinedConstants(value) {
-		var canvasSize = $_eseecode.whiteboard.offsetWidth;
-		if (value == "minX") {
-			value = -$_eseecode.coordinates.position.x;
-		} else if (value == "maxX") {
-			value = canvasSize-$_eseecode.coordinates.position.x;
-		} else if (value == "minY") {
-			value = -$_eseecode.coordinates.position.y;
-		} else if (value == "maxY") {
-			value = canvasSize-$_eseecode.coordinates.position.y;
-		} else if (value == "centerX") {
-			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).x;
-		} else if (value == "centerY") {
-			value = $e_system2userCoords({x: canvasSize/2, y: canvasSize/2}).y;
-		} else if (value == "originX") {
-			value = $e_user2systemCoords({x: 0, y: 0}).x;
-		} else if (value == "originY") {
-			value = $e_user2systemCoords({x: 0, y: 0}).y;
-		}
-		return value;
-	}
-	
 	function $e_roundBlockCorners(div) {
 		if (!div || div.tagName != "DIV") {
 			return;
