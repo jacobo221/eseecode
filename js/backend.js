@@ -419,6 +419,40 @@
 	}
 
 	/**
+	 * Change whiteboard axis setup
+	 * @private
+	 * @param {Number} pos Position of the axis, origin us upperleft corner
+	 * @param {Number} scale Scale by which to multiply the coordinates, originaly increasing downwards
+	 * @example $e_changeAxisCoordinates({x: 200, y: 200}, {x: 1, y: -1})
+	 */
+	function $e_changeAxisCoordinates(pos, scale) {
+		$_eseecode.coordinates.position = pos;
+		$_eseecode.coordinates.scale = scale;
+		$e_resetGrid();
+		var element = document.getElementById("setup-grid-coordinates");
+		var gridModes = $_eseecode.coordinates.predefined;
+		var gridIsPredefined = $e_getGridPredefined(pos, scale);
+		if (gridIsPredefined >= 0) {
+			// Only change if it is not the one already selected, otherwise we enter a infinite loop
+			if (element.value != gridIsPredefined) {
+				element.value = gridIsPredefined;
+			}
+			if (element.options.length > gridModes.length) {
+				// Remove the Custom option
+				element.remove(gridModes.length);
+			}
+		} else {
+			if (element.options.length == gridModes.length) {
+				var option = document.createElement("option");
+				option.value = gridModes.length;
+				option.text = _("Custom");
+				element.add(option);
+			}
+			element.value = gridModes.length;
+		}
+	}
+
+	/**
 	 * Loads code into the console
 	 * @private
 	 * @param {String} code Code to upload

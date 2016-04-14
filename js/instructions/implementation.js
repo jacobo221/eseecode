@@ -1917,6 +1917,7 @@
 	/**
 	 * Changes the axis of the whiteboard
 	 * @since 2.1
+	 * @deprecated since version 2.4
 	 * @public
 	 * @param {Number} [posx=0] X position of the vertical axis, origin us upperleft corner
 	 * @param {Number} [posy=0] Y position of the horizontal axis, origin us upperleft corner
@@ -1938,6 +1939,26 @@
 		if (yScale === undefined) {
 			yScale = 1;
 		}
+		$e_changeAxisCoordinates({x: posx, y: posy}, {x: xScale, y: yScale});
+	}
+
+	/**
+	 * Changes the axis of the whiteboard
+	 * @since 2.1
+	 * @public
+	 * @param {Number} firstX First value in the horizontal axis (left)
+	 * @param {Number} lastX Last value in the horizontal axis (right)
+	 * @param {Number} firstY First value in the vertical axis (down)
+	 * @param {Number} lastY Last value in the vertical axis (up)
+	 * @example fixAxis(-200, 200, -200, 200);
+	 */
+	function setAxis(firstX, lastX, firstY, lastY) {
+		$e_parseParameterTypes("setAxis", arguments);
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
+		var posx = -firstX*(canvasSize/(lastX-firstX));
+		var posy =  -lastY*(-canvasSize)/(lastY-firstY);
+		var xScale = canvasSize/(lastX-firstX);
+		var yScale = -canvasSize/(lastY-firstY);
 		$e_changeAxisCoordinates({x: posx, y: posy}, {x: xScale, y: yScale});
 	}
 

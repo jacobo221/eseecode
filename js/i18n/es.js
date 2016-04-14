@@ -276,8 +276,8 @@ $_eseecode.i18n.available.es = {
 	"Cancel": "Cancelar",
 	"true": "verdadero",
 	"false": "falso",
-	"Basic": "Básico",
-	"Advanced": "Avanzado",
+	"Switch to basic setup": "Cambia a configuración básica",
+	"Switch to advanced setup": "Cambia a configuración avanzada",
 	"The value for parameter \"%s\" is invalid!": "¡El valor del parámetro \"%s\" es inválido!",
 	"How many pixels do you want to move forward?": "¿Cuantos píxeles moverte hacia adelante?",
 	"How many degrees do you want to turn?": "¿Cuantos grados quieres girar?",
@@ -445,7 +445,7 @@ $_eseecode.i18n.available.es = {
 	"No layer exists in this position": "No existe ninguna capa en esta posición",
 	"Name of the variable": "Nombre de la variable",
 	"Which value do you want to give the variable?": "¿Qué valor quieres dar a la variable?",
-	"Duplicate": "Duplicar",
+	"Duplicate block": "Duplicar el bloque",
 	"There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code.": "Existe un límite en la cantidad de veces que se pueden usar algunos bloques.\nDado que no hay manera de controlar estos límites en la vista Código, se ha deshabilitado la edición.\nPuedes ver el código aquí pero debes volver a una vista de bloques para continuar editando el código.",
 	"Give a name to the file": "Nombre del archivo",
 	"Save": "Guardar",
@@ -474,5 +474,9 @@ $_eseecode.i18n.available.es = {
 	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Ha cambios en el código que todavía no se han guardado. ¿Estás seguro de que deseas cargar un código nuevo?",
 	"Returns the color in a certain coordinate in the current layer": "Devuelve el color de píxel específico",
 	"Coordinate x of the position to check the color": "Coordenada x del píxel a comprobar",
-	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprobar"
+	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprobar",
+	"First value in the horizontal axis (left)": "Primer valor en el eje horizontal (izquierda)",
+	"Last value in the horizontal axis (right)": "Último valor en el eje horizontal (derecha)",
+	"First value in the vertical axis (bottom)": "Primer valor en el eje vertical (abajo)",
+	"Last value in the vertical axis (up)": "Último valor en el eje vertical (arriba)"
 }

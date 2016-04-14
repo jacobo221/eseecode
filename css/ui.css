@@ -50,6 +50,9 @@
 		color: #AAAAAA;
 		font-style: italic;
 	}
+	.hide {
+		display: none;
+	}
 	.link {
 		cursor: pointer;
 		text-decoration: underline;
@@ -76,6 +79,9 @@
 		white-space: pre-line;
 		font-family: "Courier New", Courier, monospace;
 	}
+	.msgBox-tab {
+		position: relative;
+	}
 	.msgBox .msgBox-tabs {
 		clear: both;
 		text-align: left;
@@ -92,11 +98,17 @@
 		border: 2px solid #123456;
 	}
 	.msgBox .msgBox-tabs a.outsider {
+		position: absolute; 
+		bottom: 5px;
+		right: 5px;
 		background-color: #89900A;
 		float: right;
 	}
+	.msgBox .msgBox-tabs a.headerButton {
+		display: block;
+	}
 	.msgBox .msgBox-tabs a:hover {
-		margin: 0px 0px 0px 0px;
+		margin: 2px 0px 0px 0px;
 		background-color: #789ABC;
 		color: inherit;
 		font-weight: bold;

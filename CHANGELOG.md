@@ -13,6 +13,7 @@
  *   Allow to choose filename when downloading code
  *   animateLayers() hides the guide to prevent confusion
  *   Added instructions to get date, mouse/touch/keyboard events and query color in a pixel as requested by Jordi Losantos and Xavier Paytubi
+ *   Added setAxis() instruction which deprecates changeAxis()
  *   Allow gridStep to go down to 1
  *   More web app devices compatibility
  *   Ask for confirmation if loading a file will delete unsaved changes

@@ -819,7 +819,10 @@
 			}
 			var msgTab = document.createElement("div");
 			msgTab.className = "msgBox-tabs";
-			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Basic")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Advanced")+"</a> <a id=\"setupBlockTabsDuplicate\" href=\"#\" onclick=\"$e_duplicateBlock();\" class=\"outsider\">"+_("Duplicate")+"</a></div>";
+			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Switch to basic setup")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Switch to advanced setup")+"</a>";
+			if (!blockAdd) {
+				msgTab.innerHTML += " <a id=\"setupBlockTabsDuplicate\" href=\"#\" onclick=\"$e_duplicateBlock();\" class=\"outsider\">"+_("Duplicate block")+"</a></div>";
+			}
 			msgDiv.appendChild(msgTab);
 			var msgContent = document.createElement("div");
 			var iconDiv = document.createElement("div");
@@ -893,14 +896,16 @@
 	 * @example $e_duplicateBlock()
 	 */
 	function $e_duplicateBlock() {
+		// Duplicate the block
 		var divId = document.getElementById("setupBlockDiv").value;
-		$e_setupBlockAccept();
 		var div = document.getElementById(divId);
 		var newDiv = div.cloneNode(true);
 		newDiv.id = $e_newDivId();
+		div.parentNode.insertBefore(newDiv, div.nextSibling); // Insert after current block
 		$e_addBlockEventListeners($_eseecode.modes.console[$_eseecode.modes.console[0]].id, newDiv, undefined, false, true);
-		div.parentNode.insertBefore(newDiv, div);
-		$e_paintBlock(newDiv);
+		// Swap the id in setup dialog so the new setup is applied to the new block, not to the original block
+		document.getElementById("setupBlockDiv").value = newDiv.id;
+		$e_setupBlockAccept();
 		var blocksUndoIndex = ++$_eseecode.session.blocksUndo[0];
 		$_eseecode.session.blocksUndo[blocksUndoIndex] = {};
 		$_eseecode.session.blocksUndo[blocksUndoIndex].div = newDiv;
@@ -1300,11 +1305,27 @@
 				}
 			}
 		}
+		if (visualMode) {
+			document.getElementById("setupBlockTabsBasic").className = "hide";
+			document.getElementById("setupBlockTabsAdvanced").className = "headerButton";
+		} else {
+			document.getElementById("setupBlockTabsBasic").className = "headerButton";
+			document.getElementById("setupBlockTabsAdvanced").className = "hide";
+		}
 		updateIcon();
 	}
 	
+	/**
+	 * Round the corners of a block according to its context
+	 * @private
+	 * @param {!HTMLElement} div Block div
+	 * @example $e_roundBlockCorners(document.getElementById("div-123523423434"))
+	 */
 	function $e_roundBlockCorners(div) {
 		if (!div || div.tagName != "DIV") {
+			return;
+		}
+		if (div.id === "setupBlockIcon") {
 			return;
 		}
 		var width = div.getBoundingClientRect().width;

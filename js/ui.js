@@ -1303,8 +1303,8 @@
 		var margin=2, fontHeight=7, fontWidth=5;
 		var coorUpperLeft = $e_system2userCoords({x: 0, y: 0});
 		var coorLowerRight = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
-		ctx.fillText("("+coorUpperLeft.x+","+coorUpperLeft.y+")",margin,fontHeight+margin);
-		ctx.fillText("("+coorLowerRight.x+","+coorLowerRight.y+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
+		ctx.fillText("("+parseInt(coorUpperLeft.x)+","+parseInt(coorUpperLeft.y)+")",margin,fontHeight+margin);
+		ctx.fillText("("+parseInt(coorLowerRight.x)+","+parseInt(coorLowerRight.y)+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
 		var step = parseInt(document.getElementById("setup-grid-step").value);
 		if (step < 1) {
 			step = 1;
@@ -2706,40 +2706,6 @@
 			i = -1;
 		}
 		return i;
-	}
-
-	/**
-	 * Change whiteboard axis setup
-	 * @private
-	 * @param {Number} pos Position of the axis, origin us upperleft corner
-	 * @param {Number} scale Scale by which to multiply the coordinates, originaly increasing downwards
-	 * @example $e_changeAxisCoordinates({x: 200, y: 200}, {x: 1, y: -1})
-	 */
-	function $e_changeAxisCoordinates(pos, scale) {
-		$_eseecode.coordinates.position = pos;
-		$_eseecode.coordinates.scale = scale;
-		$e_resetGrid();
-		var element = document.getElementById("setup-grid-coordinates");
-		var gridModes = $_eseecode.coordinates.predefined;
-		var gridIsPredefined = $e_getGridPredefined(pos, scale);
-		if (gridIsPredefined >= 0) {
-			// Only change if it is not the one already selected, otherwise we enter a infinite loop
-			if (element.value != gridIsPredefined) {
-				element.value = gridIsPredefined;
-			}
-			if (element.options.length > gridModes.length) {
-				// Remove the Custom option
-				element.remove(gridModes.length);
-			}
-		} else {
-			if (element.options.length == gridModes.length) {
-				var option = document.createElement("option");
-				option.value = gridModes.length;
-				option.text = _("Custom");
-				element.add(option);
-			}
-			element.value = gridModes.length;
-		}
 	}
 	
 	/**

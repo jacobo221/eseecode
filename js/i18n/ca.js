@@ -276,8 +276,8 @@ $_eseecode.i18n.available.ca = {
 	"Cancel": "Cancel·lar",
 	"true": "cert",
 	"false": "fals",
-	"Basic": "Bàsic",
-	"Advanced": "Avançat",
+	"Switch to basic setup": "Canvia a configuració bàsica",
+	"Switch to advanced setup": "Canvia a configuració avançada",
 	"The value for parameter \"%s\" is invalid!": "El valor del paràmetre \"%s\" és invàlid!",
 	"How many pixels do you want to move forward?": "Quants píxels vols moure't endavant?",
 	"How many degrees do you want to turn?": "Quants graus vols girar?",
@@ -445,7 +445,7 @@ $_eseecode.i18n.available.ca = {
 	"No layer exists in this position": "No existeix cap capa en aquesta possició",
 	"Name of the variable": "Nom de la variable",
 	"Which value do you want to give the variable?": "Quin valor vols donar a la variable?",
-	"Duplicate": "Duplicar",
+	"Duplicate block": "Duplicar el bloc",
 	"There is a limit on the amount of times you can use some blocks.\nSince there is no way to control these limits in Code view, editting has been disabled.\nYou can view the code here but you must go back to any other view that uses blocks to continue editting your code.": "ExisteIX un límit en la quantitat de vegades que es poden fer servir alguns blocs.\nDonat que no és possible controlar aquests límits a la vista Codi, s'ha deshabilitat l'edició.\nPots veure el codi aquí però hauràs de tornar a una vista amb blocs per continuar editant el codi..",
 	"Give a name to the file": "Nom de l'arxiu",
 	"Save": "Desar",
@@ -474,5 +474,9 @@ $_eseecode.i18n.available.ca = {
 	"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vol carregar un codi nou?",
 	"Returns the color in a certain coordinate in the current layer": "Retorna el color d'un píxel específic",
 	"Coordinate x of the position to check the color": "Coordenada x del píxel a comprovar",
-	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprovar"
+	"Coordinate y of the position to check the color": "Coordenada y del píxel a comprovar",
+	"First value in the horizontal axis (left)": "Primer valor a l'eix horizontal (esquerra)",
+	"Last value in the horizontal axis (right)": "Darrer valor a l'eix horizontal (dreta)",
+	"First value in the vertical axis (bottom)": "Primer valor a l'eix vertical (abaix)",
+	"Last value in the vertical axis (up)": "Darrer valor a l'eix vertical (amunt)"
 }
