@@ -1768,7 +1768,7 @@
 			if (redo) {
 				newDiv = undo.div;
 				oldDiv = undo.fromDiv;
-				newPosition = undo.divPosition;
+				newPosition = undo.divPosition+1;
 				oldPosition = undo.fromDivPosition;
 				if (newPosition > oldPosition) {
 					// Since we'll be deleting the old block from above the new position we need to shift the position
