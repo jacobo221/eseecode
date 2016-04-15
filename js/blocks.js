@@ -1088,14 +1088,14 @@
 						var elementInput = document.createElement("input");
 						elementInput.id = parameterInputId+"VisualInput";
 						elementInput.setAttribute("type", "range");
-						elementInput.step = stepValue*valueEscalation;
+						elementInput.setAttribute("step", stepValue*valueEscalation);
 						if (defaultValue !== undefined && defaultValue !== "") {
 							elementInput.value = defaultValue*valueEscalation;
 						} else if (parameter.initial !== undefined) {
 							elementInput.value = parameter.initial*valueEscalation;
 						}
-						elementInput.min = minValue*valueEscalation;
-						elementInput.max = maxValue*valueEscalation;
+						elementInput.setAttribute("min", (minValue<maxValue?minValue:maxValue)*valueEscalation);
+						elementInput.setAttribute("max", (minValue>maxValue?minValue:maxValue)*valueEscalation);
 						elementInput.setAttribute("data-valueescalation", valueEscalation);
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
@@ -1122,13 +1122,13 @@
 							elementInput.value = parameter.initial;
 						}
 						if (minValue !== undefined) {
-							elementInput.min = minValue;
+							elementInput.setAttribute("min", (minValue<maxValue?minValue:maxValue)*valueEscalation);
 						}
 						if (maxValue !== undefined) {
-							elementInput.max = maxValue;
+							elementInput.setAttribute("max", (minValue>maxValue?minValue:maxValue)*valueEscalation);
 						}
 						elementInput.setAttribute("data-valueescalation", valueEscalation);
-						elementInput.step = stepValue;
+						elementInput.setAttribute("step", stepValue);
 						elementInput.addEventListener("change", function() {
 							var parameterInputId = this.parentNode.parentNode.id.match(/setupBlock[0-9]+/)[0];
 							document.getElementById(parameterInputId).value = this.value;

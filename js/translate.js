@@ -117,8 +117,8 @@
 		document.getElementById("dialog-io-input-title").innerHTML = _("Input");
 		document.getElementById("dialog-io-output-title").innerHTML = _("Output");
 		document.getElementById("setup-grid-enable").title = _("Toggle grid");
-		document.getElementById("setup-grid-step-title").innerHTML = _("Grid")+": ";
-		document.getElementById("setup-grid-step").title = _("Grid inter-line space");
+		document.getElementById("setup-grid-divisions-title").innerHTML = _("Grid divisions")+": ";
+		document.getElementById("setup-grid-divisions").title = _("Grid inter-line space");
 		document.getElementById("setup-guide-enable-title").innerHTML = _("Guide")+":";
 		document.getElementById("setup-guide-enable-label").innerHTML = _("Toggle guide");
 		document.getElementById("setup-guide-enable").title = _("Toggle guide");

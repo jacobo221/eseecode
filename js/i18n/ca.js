@@ -51,6 +51,7 @@ $_eseecode.i18n.available.ca = {
 	"Remove": "Eliminar",
 	"Line": "Línia",
 	"Grid": "Malla",
+	"Grid divisions": "Divisions de malla",
 	"Computer console": "Consola d'ordinador",
 	"Mathematical simple": "Matemàtic simple",
 	"Mathematical centered": "Matemàtic centrat",

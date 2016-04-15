@@ -1265,9 +1265,15 @@
 	 * @private
 	 * @example $e_updateGridStepFromUI()
 	 */
-	function $e_updateGridStepFromUI() {
-		$_eseecode.ui.gridStep = document.getElementById("setup-grid-step").value;
-		$e_resetGrid();
+	function $e_updateGridDivisionsFromUI() {
+		var value = parseInt(document.getElementById("setup-grid-divisions").value);
+		if (value > 0 && value < $_eseecode.whiteboard.offsetWidth/2) {
+			$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
+			console.log($_eseecode.ui.gridStep+" = "+$_eseecode.whiteboard.offsetWidth+" / ("+value+" + 1)");
+			$e_resetGrid();
+		} else {
+			document.getElementById("setup-grid-divisions").value = ($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1
+		}
 	}
 
 	/**
@@ -1303,9 +1309,11 @@
 		var margin=2, fontHeight=7, fontWidth=5;
 		var coorUpperLeft = $e_system2userCoords({x: 0, y: 0});
 		var coorLowerRight = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
-		ctx.fillText("("+parseInt(coorUpperLeft.x)+","+parseInt(coorUpperLeft.y)+")",margin,fontHeight+margin);
-		ctx.fillText("("+parseInt(coorLowerRight.x)+","+parseInt(coorLowerRight.y)+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
-		var step = parseInt(document.getElementById("setup-grid-step").value);
+		var roundXCoords = (Math.abs(coorUpperLeft.x - coorLowerRight.x) > 20);
+		var roundYCoords = (Math.abs(coorUpperLeft.y - coorLowerRight.y) > 20);
+		ctx.fillText("("+(roundXCoords?parseInt(coorUpperLeft.x*100):coorUpperLeft.x)+","+(roundYCoords?parseInt(coorUpperLeft.y):coorUpperLeft.y)+")",margin,fontHeight+margin);
+		ctx.fillText("("+(roundXCoords?parseInt(coorLowerRight.x*100):coorLowerRight.x)+","+(roundYCoords?parseInt(coorLowerRight.y):coorLowerRight.y)+")",canvasSize-(canvasSize.toString().length*2+3)*fontWidth-margin,canvasSize-2-margin);
+		var step = parseFloat($_eseecode.ui.gridStep);
 		if (step < 1) {
 			step = 1;
 			document.getElementById("setup-grid-step").value = step;			
@@ -1317,7 +1325,7 @@
 		ctx.lineWidth = 1;
 		var xUserStep = step/$_eseecode.coordinates.scale.x;
 		for (var i=step, text=coorUpperLeft.x+xUserStep; i<canvasSize; i+=step, text+=xUserStep) {
-			ctx.fillText(parseInt(text),i,7);
+			ctx.fillText(roundXCoords?parseInt(text):text,i,7);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
 			} else {
@@ -1332,7 +1340,7 @@
 		}
 		var yUserStep = step/$_eseecode.coordinates.scale.y;
 		for (var i=step, text=coorUpperLeft.y+yUserStep; i<canvasSize; i+=step, text+=yUserStep) {
-			ctx.fillText(parseInt(text),0,i);
+			ctx.fillText(roundYCoords?parseInt(text):text,0,i);
 			if (text == 0) {
 				ctx.strokeStyle = colorHighlight;
 			} else {
@@ -1826,7 +1834,7 @@
 	function $e_initializeUISetup() {
 		document.getElementById("setup-guide-enable").checked = $_eseecode.ui.guideVisible;
 		document.getElementById("setup-grid-enable").checked = $_eseecode.ui.gridVisible;
-		document.getElementById("setup-grid-step").value = $_eseecode.ui.gridStep;
+		document.getElementById("setup-grid-divisions").value = ($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1;
 		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
 
@@ -2690,14 +2698,14 @@
 	 */
 	function $e_getGridPredefined(pos, scale) {
 		if (pos === undefined) {
-			pos = $_eseecode.coordinates.position;
+			pos = $_eseecode.coordinates.origin;
 			scale = $_eseecode.coordinates.scale;
 		}
 		var gridModes = $_eseecode.coordinates.predefined;
 		var foundPredefined = false;
 		var i = 0;
 		for (i=0; i<gridModes.length; i++) {
-			if (pos.x == gridModes[i].position.x && pos.y == gridModes[i].position.y && scale.x == gridModes[i].scale.x && scale.y == gridModes[i].scale.y) {
+			if (pos.x == gridModes[i].origin.x && pos.y == gridModes[i].origin.y && scale.x == gridModes[i].scale.x && scale.y == gridModes[i].scale.y) {
 				foundPredefined = true;
 				break;
 			}
@@ -2737,7 +2745,7 @@
 			}
 		}
 		$_eseecode.coordinates.userSelection = newUserSelection;
-		$e_changeAxisCoordinates(gridModes[newUserSelection].position, gridModes[newUserSelection].scale);
+		$e_changeAxisCoordinates(gridModes[newUserSelection].origin, gridModes[newUserSelection].scale);
 	}
 	
 	/**

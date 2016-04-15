@@ -421,12 +421,12 @@
 	/**
 	 * Change whiteboard axis setup
 	 * @private
-	 * @param {Number} pos Position of the axis, origin us upperleft corner
+	 * @param {Number} pos Position of the axis, origin is upperleft corner
 	 * @param {Number} scale Scale by which to multiply the coordinates, originaly increasing downwards
 	 * @example $e_changeAxisCoordinates({x: 200, y: 200}, {x: 1, y: -1})
 	 */
 	function $e_changeAxisCoordinates(pos, scale) {
-		$_eseecode.coordinates.position = pos;
+		$_eseecode.coordinates.origin = pos;
 		$_eseecode.coordinates.scale = scale;
 		$e_resetGrid();
 		var element = document.getElementById("setup-grid-coordinates");

@@ -19,6 +19,7 @@
  *   Ask for confirmation if loading a file will delete unsaved changes
  *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
  *   Warn before loading a file if there are unsaved changes
+ *   Now grid lines are configured by number of divisions instead of pixels between divisions
  *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
@@ -48,6 +49,7 @@
  *   Fix: Custom instructions in guide are now reset when reloaded
  *   Fix: Ace wasn't suggesting eSeeCode keywords (thanks Xavier Paytubi)
  *   Fix: Debug showing statistics when only precode has been run
+ *   ...and many other bugfixes
 
 ## 2.3 (2015-12-06)
 

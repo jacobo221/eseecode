@@ -32,6 +32,8 @@
 					API_showGrid(value, action);
 				} else if (key == "gridstep") {
 					API_setGridStep(value, action);
+				} else if (key == "griddivisions") {
+					API_setGridDivisions(value, action);
 				} else if (key == "guide") {
 					API_showGuide(value, action);
 				} else if (key == "viewtabs") {
@@ -282,6 +284,7 @@
 	/**
 	 * Sets the separation of the lines in the grid
 	 * @since 2.3
+	 * @deprecated since version 2.4
 	 * @public
 	 * @param {Number|String} value Pixels between each line in the grid
 	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
@@ -290,6 +293,26 @@
 	function API_setGridStep(value, action) {
 		if ($e_isNumber(value,true) && value > 0) {
 			$_eseecode.ui.gridStep = value;
+		}
+		if (action !== false) {
+			$e_resetGrid();
+			$e_initializeUISetup();
+		}
+	}
+	
+	/**
+	 * Sets the number of the lines in the grid
+	 * @since 2.4
+	 * @public
+	 * @param {Number|String} value Number of lines in the grid
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_setGridDivisions(10)
+	 */
+	function API_setGridDivisions(value, action) {
+		if ($e_isNumber(value,true)) {
+			if (value > 0 && value < $_eseecode.whiteboard.offsetWidth/2) {
+				$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
+			}
 		}
 		if (action !== false) {
 			$e_resetGrid();
