@@ -1303,7 +1303,7 @@
 	 * @example $e_drawGrid(ctx)
 	 */
 	function $e_drawGrid(ctx) {
-		var canvasSize = window.getComputedStyle(document.querySelector('#whiteboard')).getPropertyValue('width').replace("px","");
+		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		ctx.font = "bold 10px Arial";
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;

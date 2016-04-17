@@ -1246,6 +1246,132 @@
 					updateIcon();
 				}, false);
 				element.appendChild(input);
+			} else if (parameter.type == "parameters") {
+				visualTypeSupportedByBrowser = true;
+				element = document.createElement("div");
+				element.id = parameterInputId+"Block";
+				div.appendChild(element); // We need to add the element earlier to access subelements wih getElementById
+				var input = document.createElement("input");
+				input.id = parameterInputId+"VisualInput";
+				input.style.display = "none";
+				element.appendChild(input);
+				// Parse parameters
+				var subelement, subinput;
+				// This function is called when generating the div and also when clicking the Add button
+				var functionParameterAdd = function(defaultParamValue) {
+					if ((typeof defaultParamValue) !== "string") {
+						// When it is called from an event, parameterInputId has no value and defaultParamValue contains the event
+						parameterInputId = defaultParamValue.target.id.match(/setupBlock[0-9]+/)[0];
+						defaultParamValue = "";
+					}
+					var numParam;
+					for (numParam=0; document.getElementById(parameterInputId+"BlockParm"+numParam); numParam++);
+					var element = document.getElementById(parameterInputId+"Block");
+					var subelement = document.createElement("div");
+					var subparameterId = parameterInputId+"BlockParm"+numParam;
+					subelement.id = subparameterId;
+					element.appendChild(subelement);
+					var subinput = document.createElement("input");
+					subinput.id = subparameterId+"Input";
+					subinput.value = defaultParamValue;
+					var updateFunction = function(parameterInputId) {
+						var paramValue = document.getElementById(parameterInputId+"BlockParm0Input").value;
+						for (var k=1; document.getElementById(parameterInputId+"BlockParm"+k+"Input"); k++) {
+							var subparameterValue = document.getElementById(parameterInputId+"BlockParm"+k+"Input").value;
+							if (subparameterValue.length > 0) {
+								paramValue += ", " + subparameterValue;
+							}
+						}
+						document.getElementById(parameterInputId).value = paramValue;
+						updateIcon();
+					};
+					var changeFunction = function(event) {
+						var subparameterId = event.target.id.match(/setupBlock[0-9]+BlockParm[0-9]+/)[0];
+						var parameterInputId = subparameterId.match(/setupBlock[0-9]+/)[0];
+						var paramNum = subparameterId.match(/BlockParm[0-9]+/)[0].match(/[0-9]+/)[0];
+						paramNum = paramNum;
+						var paramInput = document.getElementById(subparameterId+"Input");
+						var paramValue = paramInput.value.replace(",",""); // Do not accept ","
+						paramInput.value = paramValue;
+						var lastParameter;
+						for (lastParameter=1; document.getElementById(parameterInputId+"BlockParm"+lastParameter); lastParameter++); // Param0 exists for sure
+						lastParameter--;
+						if (paramNum == lastParameter) { // One is string the other int, so check with ==
+							if (paramValue !== "") {
+								document.getElementById(parameterInputId+"BlockAddButton").style.visibility = "visible";
+							} else {
+								document.getElementById(parameterInputId+"BlockAddButton").style.visibility = "hidden";
+							}
+						}
+						updateFunction(parameterInputId);
+					};
+					var clickFunctionParameterRemove = function(event) {
+						var removeDiv = event.target.parentNode;
+						var removeDivId = removeDiv.id;
+						var parameterInputId = removeDivId.match(/setupBlock[0-9]+/)[0];
+						var paramNum = removeDivId.match(/BlockParm[0-9]+/)[0].match(/[0-9]+/)[0];
+						removeDiv.parentNode.removeChild(removeDiv);
+						var k;
+						for (k=parseInt(paramNum)+1; document.getElementById(parameterInputId+"BlockParm"+k); k++) {
+						console.log(k)
+							document.getElementById(parameterInputId+"BlockParm"+k).id = parameterInputId+"BlockParm"+(k-1);
+							document.getElementById(parameterInputId+"BlockParm"+k+"Input").id = parameterInputId+"BlockParm"+(k-1)+"Input";
+						}
+						var lastParm = k - 2;
+						if (lastParm === 0) {
+							document.getElementById(parameterInputId+"BlockParm0").getElementsByClassName("buttonRemove")[0].style.visibility = "hidden";
+						}
+						updateFunction(parameterInputId);
+					};
+					subinput.addEventListener("change", changeFunction, false);
+					subinput.addEventListener("keyup", changeFunction, false);
+					subelement.appendChild(subinput);
+					var removeIcon = document.createElement("span");
+					removeIcon.innerHTML = "-";
+					removeIcon.className = "buttonRemove";
+					removeIcon.addEventListener("click", clickFunctionParameterRemove, false);
+					removeIcon.addEventListener("touchstart", clickFunctionParameterRemove, false);
+					subelement.appendChild(removeIcon);
+					if (numParam === 0) { // If there's only one parameter it can't be removed
+						removeIcon.style.visibility = "hidden";
+					} else {
+						// There are two or more parameters so the first parameter can be removed
+						document.getElementById(parameterInputId+"BlockParm0").getElementsByClassName("buttonRemove")[0].style.visibility = "visible";
+					}
+					var blockAddDiv = document.getElementById(parameterInputId+"BlockAddButton");
+					if (blockAddDiv) {
+						blockAddDiv.style.visibility = "hidden";
+					}
+					updateFunction(parameterInputId);
+				};
+				// Generate parameter inputs from value
+				var value = "";
+				if (defaultValue !== undefined && defaultValue !== "") {
+					value = defaultValue;
+				} else if (parameter.initial !== undefined) {
+					value = parameter.initial;
+				}
+				input.value = value;
+				value = value.split(",");
+				var j;
+				for (j=0; j<value.length; j++) {
+					functionParameterAdd(value[j].trim());
+				}
+				// Create the Add button
+				subelement = document.createElement("div");
+				subelement.id = parameterInputId+"BlockAdd";
+				div.appendChild(subelement);
+				subinput = document.createElement("input"); // This input is just to add up the space to align the Remove and the Add icons
+				subinput.style.visibility = "hidden";
+				subelement.appendChild(subinput);
+				var addIcon = document.createElement("span");
+				addIcon.id = parameterInputId+"BlockAddButton";
+				addIcon.innerHTML = "+";
+				addIcon.className = "buttonAdd";
+				addIcon.style.visibility = "hidden"; // Use visibility:hidden instead of display:none so it will position correctly when shown
+				addIcon.addEventListener("click", functionParameterAdd, false);
+				addIcon.addEventListener("touchstart", functionParameterAdd, false);
+				subelement.appendChild(addIcon);
 			} else if (parameter.type == "var") {
 				visualTypeSupportedByBrowser = true;
 				element = document.createElement("div");
@@ -1276,7 +1402,10 @@
 					updateIcon();
 				}, false);
 			}
-			div.appendChild(element);
+			if (!element.parentNode) {
+				// In some cases we need to add the element earlier to access subelements wih getElementById
+				div.appendChild(element);
+			}
 			if (parameter.optional) {
 				element = document.createElement("div");
 				element.id = parameterInputId+"Toggle";
@@ -1768,7 +1897,7 @@
 			if (redo) {
 				newDiv = undo.div;
 				oldDiv = undo.fromDiv;
-				newPosition = undo.divPosition+1;
+				newPosition = undo.divPosition + 1;
 				oldPosition = undo.fromDivPosition;
 				if (newPosition > oldPosition) {
 					// Since we'll be deleting the old block from above the new position we need to shift the position

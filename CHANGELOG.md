@@ -20,6 +20,8 @@
  *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
  *   Warn before loading a file if there are unsaved changes
  *   Now grid lines are configured by number of divisions instead of pixels between divisions
+ *   Basic setup of Function eases the creation of parameters
+ *   Fix: Redo block add after undo
  *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button
  *   Fix: Dragging now works in Android WebView (for embedding in an app)
