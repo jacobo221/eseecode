@@ -329,6 +329,7 @@
 	 */
 	function API_setGridDivisions(value, action) {
 		if ($e_isNumber(value,true)) {
+			value = parseInt(value);
 			if (value > 0 && value < $_eseecode.whiteboard.offsetWidth/2) {
 				$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
 			}
