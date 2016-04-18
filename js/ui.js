@@ -1271,7 +1271,7 @@
 			$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
 			$e_resetGrid();
 		} else {
-			document.getElementById("setup-grid-divisions").value = ($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1
+			document.getElementById("setup-grid-divisions").value = Math.round($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1
 		}
 	}
 
@@ -1833,7 +1833,7 @@
 	function $e_initializeUISetup() {
 		document.getElementById("setup-guide-enable").checked = $_eseecode.ui.guideVisible;
 		document.getElementById("setup-grid-enable").checked = $_eseecode.ui.gridVisible;
-		document.getElementById("setup-grid-divisions").value = ($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1;
+		document.getElementById("setup-grid-divisions").value = Math.round($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1;
 		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
 
