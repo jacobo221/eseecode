@@ -2269,7 +2269,6 @@
 			layer = $e_getLayer(id);
 		}
 		var coords = $e_user2systemCoords({x: x, y: y});
-		console.log(coords)
 	    var p = layer.context.getImageData(coords.x, coords.y, 1, 1).data;
 	    var r = p[0], g = p[1], b = p[2];
     	if (r > 255 || g > 255 || b > 255) {

@@ -1342,7 +1342,6 @@
 						removeDiv.parentNode.removeChild(removeDiv);
 						var k;
 						for (k=parseInt(paramNum)+1; document.getElementById(parameterInputId+"BlockParm"+k); k++) {
-						console.log(k)
 							document.getElementById(parameterInputId+"BlockParm"+k).id = parameterInputId+"BlockParm"+(k-1);
 							document.getElementById(parameterInputId+"BlockParm"+k+"Input").id = parameterInputId+"BlockParm"+(k-1)+"Input";
 						}

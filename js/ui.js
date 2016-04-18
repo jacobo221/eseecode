@@ -1269,7 +1269,6 @@
 		var value = parseInt(document.getElementById("setup-grid-divisions").value);
 		if (value > 0 && value < $_eseecode.whiteboard.offsetWidth/2) {
 			$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
-			console.log($_eseecode.ui.gridStep+" = "+$_eseecode.whiteboard.offsetWidth+" / ("+value+" + 1)");
 			$e_resetGrid();
 		} else {
 			document.getElementById("setup-grid-divisions").value = ($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1
