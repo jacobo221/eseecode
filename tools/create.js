@@ -26,75 +26,75 @@
 			{
 				id: "Language",
 				items: [
-					{ id: "lang", title: "Language", type: "select", options: ["ca", "en", "es"], help: "Set the language you want for eSeeCode's user interface. <br /><br /><u>Default:</u> <i>en (English)</i>" }
+					{ id: "lang", title: "Language", type: "select", options: ["ca", "en", "es"], initial: "en", help: "Set the language you want for eSeeCode's user interface." }
 				]
 			},
 			{
 				id: "Programming environment",
 				items: [
-					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], help: "Select the view which will be displayed initially. <br /><br /><u>Default:</u> <i>Touch</i>" },
-					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], help: "Select which views will be available. <br /><br /><u>Default:</u> <i>All</i>" },
-					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], help: "Select how to view the setup of blocks. In Drag view blocks are always setup in a visual interace, but in Build view you can decide whether to show te text of the visual interface by default.<br /><br /><u>Default:</u> <i>Advanced</i>" },
-					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], help: "Decide whether the code console should be maximized initially. <br /><br /><u>Default:</u> <i>No</i>" }
+					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially." },
+					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available." },
+					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in a visual interace, but in Build view you can decide whether to show te text of the visual interface by default." },
+					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." }
 				]
 			},
 			{
 				id: "Whiteboard",
 				items: [
-					{ id: "guide", title: "Display guide?", type: "select", options: ["Yes", "No"], help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
-					{ id: "grid", title: "Display grid?", type: "select", options: ["Yes", "No"], help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
-					{ id: "gridstep", title: "Separation between grid lines (in pixels)?", type: "number", help: "Set the amount of pixels between the grid lines. <br /><br /><u>Default:</u> <i>25</i>" }
+					{ id: "guide", title: "Display guide?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden." },
+					{ id: "grid", title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden." },
+					{ id: "griddivisions", title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." }
 				]
 			},
 			{
 				id: "Axis",
 				items: [
-					{ id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul><u>Default:</u> <i>Mathematical centered</i>" }
+					{ id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" }
 				]
 			},
 			{
 				id: "Application settings",
 				items: [
-					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
-					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], help: "Decide whether the fullscreen button should be visible or hidden. <br /><br /><u>Default:</u> <i>Yes</i>" },
-					{ id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage). <br /><br /><u>Default:</u> <i>Yes</i>" }
+					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden." },
+					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden." },
+					{ id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage)." }
 				]
 			},
 			{
 				id: "Instructions",
 				items: [
-					{ id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set, help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Move them from the left to the right column by selecting an intruction in the left column and clicking the \">\" button. You can add an instruction several times.</li><li>Double-click any instruction in the right column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the right column by selecting it and clicking the \"^\" or \"v\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"&lt;\"button.</li><li>Click the \"-----\" button to add a separator to the instructions in the right column. The separator will be added at the end, remember to move it up with the \"^\" button.</li></ul>" }
+					{ id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Move them from the left to the right column by selecting an intruction in the left column and clicking the \">\" button. You can add an instruction several times.</li><li>Double-click any instruction in the right column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the right column by selecting it and clicking the \"^\" or \"v\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"&lt;\"button.</li><li>Click the \"-----\" button to add a separator to the instructions in the right column. The separator will be added at the end, remember to move it up with the \"^\" button.</li></ul>" }
 				]
 			},
 			{
 				id: "Execution",
 				items: [
-					{ id: "timeout", title: "How long before the execution of a program is stopped?", type: "number", help: "Set the amount of seconds programs are aloud to run before stopping them. <br /><br /><u>Default:</u> <i>10</i>" }
+					{ id: "timeout", title: "How long before the execution of a program is stopped?", type: "number", initial: "10", help: "Set the amount of seconds programs are aloud to run before stopping them." }
 				]
 			},
 			{
 				id: "Precode",
 				items: [
-					{ id: "precode", title: "Code to preload (hidden to the user)", type: "textarea", help: "The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code." }
+					{ id: "precode", title: "Code to preload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code." }
 				]
 			},
 			{
 				id: "User code",
 				items: [
-					{ id: "code", title: "Code to load (displayed to the user)", type: "textarea", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it." },
-					{ id: "execute", title: "Execute the code", type: "checkbox", help: "Decide whether or not to run the user code immediately after loading eSeeCode." }
+					{ id: "code", title: "Code to load (displayed to the user)", type: "textarea", initial: "", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it." },
+					{ id: "execute", title: "Execute the code", type: "checkbox", initial: "false", help: "Decide whether or not to run the user code immediately after loading eSeeCode." }
 				]
 			},
 			{
 				id: "Postcode",
 				items: [
-					{ id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea", help: "The code you write here will be hidden to the user but will be run everytime after the user code." }
+					{ id: "postcode", title: "Code to postload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run everytime after the user code." }
 				]
 			},
 			{
 				id: "Input",
 				items: [
-					{ id: "input", title: "Input", type: "textarea", help: "Set the input that will appear in the I/O dialog." }
+					{ id: "input", title: "Input", type: "textarea", initial: "", help: "Set the input that will appear in the I/O dialog." }
 				]
 			},
 			{
@@ -136,18 +136,29 @@
 					var divHelp = document.createElement("div");
 					divHelp.className = "help";
 					divHelp.innerHTML = setupPage[key].help;
+					if (setupPage[key].initial) {
+						divHelp.innerHTML += "<br /><br /><u>Default:</u> <i>"+setupPage[key].initial+"</i>";
+					}
 					div.appendChild(divHelp);
 				}
 				var title = document.createElement("span");
-				title.innerHTML = setupPage[key].title+": ";
+				title.innerHTML = setupPage[key].title;
+				if (setupPage[key].title.substring(setupPage[key].title.length-1) != "?") {
+					title.innerHTML += ":";
+				}
+				title.innerHTML += " ";
 				div.appendChild(title);
 				if (setupPage[key].type == "select") {
 					var select = document.createElement("select");
 					select.id = setupPage[key].id;
 					var options = setupPage[key].options;
-					var selectOptions = "<option>default</option>";
+					var selectOptions = "";
 					for (var id in options) {
-						selectOptions += "<option>"+options[id]+"</option>";
+						var selected = "";
+						if (setupPage[key].initial && (options[id].toLocaleLowerCase() === setupPage[key].initial.toLocaleLowerCase())) {
+							selected = " selected";
+						}
+						selectOptions += "<option"+selected+">"+options[id]+"</option>";
 					}
 					select.innerHTML = selectOptions;
 					select.addEventListener("change", buildURL);
@@ -161,7 +172,16 @@
 					var options = setupPage[key].options;
 					var selectOptions = "";
 					for (var id in options) {
-						selectOptions += "<option>"+options[id]+"</option>";
+						var selected = "";
+						if (setupPage[key].initial) {
+							var defaultOptions = setupPage[key].initial.split(";");
+							for (var defaultOption in defaultOptions) {
+								if (options[id].toLocaleLowerCase() === defaultOptions[defaultOption].toLocaleLowerCase()) {
+									selected = " selected";
+								}
+							}
+						}
+						selectOptions += "<option"+selected+">"+options[id]+"</option>";
 					}
 					select.innerHTML = selectOptions;
 					select.addEventListener("change", buildURL);
@@ -326,6 +346,9 @@
 					div.appendChild(br);
 					var input = document.createElement("textarea");
 					input.id = setupPage[key].id;
+					if (setupPage[key].initial) {
+						input.innerHTML = setupPage[key].initial;
+					}
 					input.addEventListener("change", buildURL);
 					div.appendChild(input);
 				} else if (setupPage[key].type == "html") {
@@ -339,6 +362,13 @@
 						input.type = setupPage[key].type;
 						if (setupPage[key].type == "number") {
 							input.style.width = "50px";
+						}
+					}
+					if (setupPage[key].initial) {
+						if (setupPage[key].type == "checkbox") {
+							input.checked = (setupPage[key].initial=="true"?true:false);
+						} else {
+							input.value = setupPage[key].initial;
 						}
 					}
 					input.addEventListener("change", buildURL);
@@ -458,10 +488,12 @@
 	function buildURL(event) {
 		var url = mainURL;
 		var paramsText = "";
-		var firstParam = true;
 		for (var page in setupItems) {
 			var setupPage = setupItems[page].items;
 			for (var i in setupPage) {
+				if (setupPage[i].type == "html") {
+					continue;
+				}
 				var paramValue = "";
 				var element = document.getElementById(setupPage[i].id);
 				if (setupPage[i].type == "checkbox") {
@@ -494,21 +526,19 @@
 					if (paramValue) {
 						paramValue = paramValue.substring(0,paramValue.length-1); // Remove last ";"
 					}
-				} else if (setupPage[i].type == "html") {
-					paramValue = "default";
 				} else {
 					paramValue = element.value;
 				}
-				if (setupPage[i].type !== "order" && setupPage[i].type !== "multiple") {
+				if (setupPage[i].type !== "order" && setupPage[i].type !== "multiple" && setupPage[i].type !== "select") {
 					paramValue = encodeURIComponent(paramValue);
 				}
-				if (paramValue != "default" && paramValue.toString().length > 0) {
-					paramsText += (firstParam?"":"&")+setupPage[i].id+"="+paramValue;
-					firstParam = false;
+				if (paramValue != setupPage[i].initial && paramValue.toString().length > 0) {
+					paramsText += "&"+setupPage[i].id+"="+paramValue;
 				}
 			}
 		}
 		if (paramsText.length > 0) {
+			paramsText = paramsText.substring(1); // Remove the first "&" from the URL
 			url += "?"+paramsText;
 		}
 		handle(url);
