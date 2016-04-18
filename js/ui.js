@@ -16,7 +16,7 @@
 		if ($_eseecode.ui.gridVisible) {
 			ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0);
 		}
-		var layer = $_eseecode.canvasArray["bottom"];
+		var layer = $_eseecode.canvasArray["$e_bottom"];
 		while (layer) {
 			ctx.drawImage(layer.canvas,0,0);
 			layer = layer.layerOver;
@@ -93,7 +93,7 @@
 		var linkSrc = "";
 		var textStyle = "";
 		var inputType = "";
-		if ($_eseecode.canvasArray["bottom"].layerOver) {
+		if ($_eseecode.canvasArray["$e_bottom"].layerOver) {
 			msgClass = "tab-button";
 			linkSrc = ["$e_downloadLayersFromUI(false)", "$e_downloadLayersFromUI(true)"];
 			textStyle = "";
@@ -142,14 +142,14 @@
 			encoder.setDelay(interval); //go to next frame every n milliseconds 
 			encoder.start();
 		}
-		var layer = $_eseecode.canvasArray["bottom"]; // We skip first frame which is the grid
+		var layer = $_eseecode.canvasArray["$e_bottom"]; // We skip first frame which is the grid
 		var canvas = document.createElement('canvas');
 		if (!grid) {
 			canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
 			canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
 		} else {
 			var count = 0;
-			var currentLayer = $_eseecode.canvasArray["bottom"];
+			var currentLayer = $_eseecode.canvasArray["$e_bottom"];
 			while (currentLayer) {
 				currentLayer = currentLayer.layerOver;
 				count++;
@@ -2571,8 +2571,8 @@
 	function $e_resetCanvas(noPrecode) {
 		document.getElementById("dialog-debug-execute-stats").innerHTML = "";
 		// First delete bottom and top references so their layers aren't deleted twice in the for()
-		delete $_eseecode.canvasArray["bottom"];
-		delete $_eseecode.canvasArray["top"];
+		delete $_eseecode.canvasArray["$e_bottom"];
+		delete $_eseecode.canvasArray["$e_top"];
 		// reset canvas
   		for(key in $_eseecode.canvasArray) {
 			$e_removeCanvas(key);

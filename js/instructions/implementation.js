@@ -903,6 +903,22 @@
 	}
 
 	/**
+	 * Returns whether the layer exists
+	 * @since 2.4
+	 * @return {String|Number} layerId Layer id of the layer to check
+	 * @public
+	 * @return {Boolean} Whether a layer with the provided id exists
+	 * @example getLayerExists("character")
+	 */
+	function getLayerExists(layerId) {
+		$e_parseParameterTypes("getLayerExists", arguments);
+		if ($e_getLayer(layerId)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the layer's guide's position's X coordinate
 	 * @since 1.0
 	 * @public
@@ -1375,8 +1391,8 @@
 		} else {
 			layer = $e_getLayer(id);
 		}
-		if ($_eseecode.canvasArray["top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
-			$_eseecode.canvasArray["top"] = layer.layerUnder;
+		if ($_eseecode.canvasArray["$e_top"] == layer && layer.layerUnder) { // We must check if layer.layerUnder exists because it could just be reduntant push() calls
+			$_eseecode.canvasArray["$e_top"] = layer.layerUnder;
 		}
 		while (layer.layerUnder && levels > 0) {
 			var oldLayerOver = layer.layerOver;
@@ -1397,7 +1413,7 @@
 			levels--;
 		}
 		if (!layer.layerUnder) {
-			$_eseecode.canvasArray["bottom"] = layer;
+			$_eseecode.canvasArray["$e_bottom"] = layer;
 		}
 	}
 
@@ -1428,8 +1444,8 @@
 		} else {
 			layer = $e_getLayer(id);
 		}
-		if ($_eseecode.canvasArray["bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
-			$_eseecode.canvasArray["bottom"] = layer.layerOver;
+		if ($_eseecode.canvasArray["$e_bottom"] == layer && layer.layerOver) { // We must check if layer.layerOver exists because it could just be reduntant pull() calls
+			$_eseecode.canvasArray["$e_bottom"] = layer.layerOver;
 		}
 		while (layer.layerOver && levels > 0) {
 			var oldLayerOver = layer.layerOver;
@@ -1450,7 +1466,7 @@
 			levels--;
 		}
 		if (!layer.layerOver) {
-			$_eseecode.canvasArray["top"] = layer;
+			$_eseecode.canvasArray["$e_top"] = layer;
 		}
 	}
 
@@ -1458,7 +1474,7 @@
 	 * Deletes a layer
 	 * @since 2.3
 	 * @public
-	 * @param {String|Number} [id="top"] Id of the layer to affect
+	 * @param {String|Number} [id="$e_top"] Id of the layer to affect
 	 * @throws codeError
 	 * @example pop(3)
 	 */
@@ -1466,7 +1482,7 @@
 		$e_parseParameterTypes("pop", arguments);
 		var layer;
 		if (id === undefined) {
-			layer = $_eseecode.canvasArray["top"];
+			layer = $_eseecode.canvasArray["$e_top"];
 		} else {
 			layer = $e_getLayer(id);
 		}
@@ -1477,15 +1493,15 @@
 		if (layer.layerOver) {
 			layer.layerOver.layerUnder = layer.layerUnder;
 		} else {
-			$_eseecode.canvasArray["top"] = layer.layerUnder;
+			$_eseecode.canvasArray["$e_top"] = layer.layerUnder;
 		}
 		if (layer.layerUnder) {
 			layer.layerUnder.layerOver = layer.layerOver;
 		} else {
-			$_eseecode.canvasArray["bottom"] = layer.layerOver;
+			$_eseecode.canvasArray["$e_bottom"] = layer.layerOver;
 		}
 		if ($_eseecode.currentCanvas == layer) {
-			$_eseecode.currentCanvas = $_eseecode.canvasArray["top"];
+			$_eseecode.currentCanvas = $_eseecode.canvasArray["$e_top"];
 		}
 	}
 	
@@ -1563,13 +1579,13 @@
 		if (delay === undefined) {
 			delay = 0.5;
 		}
-		var layer = $_eseecode.canvasArray["bottom"];
+		var layer = $_eseecode.canvasArray["$e_bottom"];
 		while (layer) {
 			hide(layer.name);
 			layer = layer.layerOver;
 		}
 		animate(function(){
-			var layer = $_eseecode.canvasArray["bottom"];
+			var layer = $_eseecode.canvasArray["$e_bottom"];
 			var visibleLayer = layer.name;
 			while (layer) {
 				if (layer.div.style.display != "none") { /* Find currently displaying layer */
@@ -1580,7 +1596,7 @@
 			}
 			visibleLayer = visibleLayer.layerOver;
 			if (!visibleLayer) {
-				visibleLayer = $_eseecode.canvasArray["bottom"];
+				visibleLayer = $_eseecode.canvasArray["$e_bottom"];
 			}
 			show(visibleLayer.name);
 			$e_resetGuide(false); // Hide the guide
@@ -2280,7 +2296,7 @@
 	}
 	
 	/**
-	 * Returns the current milliseconds in the current second
+	 * Returns the character represented by a key code
 	 * @since 2.4
 	 * @public
 	 * @return {Number} Current milliseconds in the current second
@@ -2288,6 +2304,19 @@
 	 */
 	function getMilliseconds() {
 		return (new Date()).getMilliseconds()
+	}
+	
+	/**
+	 * Returns the character corresponding to a key code
+	 * @since 2.4
+	 * @public
+	 * @param {String} keyCode Key code to convert
+	 * @return {Number} The character corresponding to the key code
+	 * @example getCharFromCode(110)
+	 */
+	function getCharFromCode(keyCode) {
+		$e_parseParameterTypes("keyCode", arguments);
+		return String.fromCharCode(keyCode);
 	}
 	
 	/**

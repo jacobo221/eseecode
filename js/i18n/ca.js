@@ -479,5 +479,8 @@ $_eseecode.i18n.available.ca = {
 	"First value in the horizontal axis (left)": "Primer valor a l'eix horizontal (esquerra)",
 	"Last value in the horizontal axis (right)": "Darrer valor a l'eix horizontal (dreta)",
 	"First value in the vertical axis (bottom)": "Primer valor a l'eix vertical (abaix)",
-	"Last value in the vertical axis (up)": "Darrer valor a l'eix vertical (amunt)"
+	"Last value in the vertical axis (up)": "Darrer valor a l'eix vertical (amunt)",
+	"Returns whether the layer exists or not": "Retorna si la capa existeix o no",
+	"Which key code do you want to convert?": "Quin codi vols convertir?",
+	"Returns the character corresponding to a key code": "Retorna el caràcter corresponent a un codi de teclat"
 }

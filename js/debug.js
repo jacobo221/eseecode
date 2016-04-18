@@ -9,7 +9,7 @@
 	function $e_debugLayers() {
 		var list = [];
 		var listReverse = [];
-		var layer = $_eseecode.canvasArray["top"];
+		var layer = $_eseecode.canvasArray["$e_top"];
 		var oldLayer = null;
 		for (var i=0; layer; i++) {
 			listReverse[i] = {name: layer.name, position: i};
@@ -17,7 +17,7 @@
 			layer = layer.layerUnder;
 		}
 		// Check that the list is equal downwards and upwards
-		var layer = $_eseecode.canvasArray["bottom"];
+		var layer = $_eseecode.canvasArray["$e_bottom"];
 		for (var i=0; layer; i++) {
 			list[i] = {name: layer.name, position: i};
 			oldLayer = layer;

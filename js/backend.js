@@ -29,8 +29,8 @@
 			div.style.top = $_eseecode.whiteboard.offsetTop;
 			div.style.width = canvasSize+"px";
 			div.style.height = canvasSize+"px";
-			if ($_eseecode.canvasArray["top"]) {
-				div.style.zIndex = Number($_eseecode.canvasArray["top"].div.style.zIndex)+1;
+			if ($_eseecode.canvasArray["$e_top"]) {
+				div.style.zIndex = Number($_eseecode.canvasArray["$e_top"].div.style.zIndex)+1;
 			} else if ($_eseecode.canvasArray["grid"]) {
 				div.style.zIndex = Number($_eseecode.canvasArray["grid"].div.style.zIndex)+1;
 			} else {
@@ -53,7 +53,7 @@
 				style: {color: "#000000", font: "sans-serif", size: 2, alpha: 1, bold: false, italic: false},
 				shaping: false,
 				layerOver: null,
-				layerUnder: $_eseecode.canvasArray["top"]
+				layerUnder: $_eseecode.canvasArray["$e_top"]
 			};
 			layer = $_eseecode.canvasArray[id];
 			layer.context.lineWidth = layer.style.size;
@@ -72,12 +72,12 @@
 			layer.context.font = font;
 			layer.context.globalAlpha = layer.style.alpha;
 			if (id != "grid" && id != "guide") { // grid/guide canvas don't count as top or bottom
-				if ($_eseecode.canvasArray["top"]) {
-					$_eseecode.canvasArray["top"].layerOver = layer;
+				if ($_eseecode.canvasArray["$e_top"]) {
+					$_eseecode.canvasArray["$e_top"].layerOver = layer;
 				}
-				$_eseecode.canvasArray["top"] = layer; // newest canvas is always on top
-				if (!$_eseecode.canvasArray["bottom"]) {
-					$_eseecode.canvasArray["bottom"] = layer;
+				$_eseecode.canvasArray["$e_top"] = layer; // newest canvas is always on top
+				if (!$_eseecode.canvasArray["$e_bottom"]) {
+					$_eseecode.canvasArray["$e_bottom"] = layer;
 				}
 			}
 			div.appendChild(canvas);
@@ -95,9 +95,13 @@
 	function $e_getLayer(layerId) {
 		var layer = undefined;
 		if ($e_isNumber(layerId, true)) {
-			layer = $_eseecode.canvasArray["bottom"];
-			for (var count=0; count < parseInt(layerId) && layer; count++) {
-				layer = layer.layerOver;
+			if (layerId >= 0) {
+				layer = $_eseecode.canvasArray["$e_bottom"];
+				for (var count=0; count < parseInt(layerId) && layer; count++) {
+					layer = layer.layerOver;
+				}
+			} else {
+				return undefined;
 			}
 		} else {
 			layer = $_eseecode.canvasArray[layerId];
@@ -153,8 +157,8 @@
 		var layer = $e_getLayer(id);
 		if (layer) {
 			$_eseecode.whiteboard.removeChild(layer.div);
-			if ($_eseecode.canvasArray["top"] == layer) {
-				$_eseecode.canvasArray["top"] = layer.layerUnder;
+			if ($_eseecode.canvasArray["$e_top"] == layer) {
+				$_eseecode.canvasArray["$e_top"] = layer.layerUnder;
 			}
 			delete $_eseecode.canvasArray[layer.name];
 		}

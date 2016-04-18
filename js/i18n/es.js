@@ -479,5 +479,8 @@ $_eseecode.i18n.available.es = {
 	"First value in the horizontal axis (left)": "Primer valor en el eje horizontal (izquierda)",
 	"Last value in the horizontal axis (right)": "Último valor en el eje horizontal (derecha)",
 	"First value in the vertical axis (bottom)": "Primer valor en el eje vertical (abajo)",
-	"Last value in the vertical axis (up)": "Último valor en el eje vertical (arriba)"
+	"Last value in the vertical axis (up)": "Último valor en el eje vertical (arriba)",
+	"Returns whether the layer exists or not": "Devuelve si la capa existe o no",
+	"Which key code do you want to convert?": "¿Qué código quieres convertir?",
+	"Returns the character corresponding to a key code": "Devuelve el carácter correspondiente a un código de teclado"
 }

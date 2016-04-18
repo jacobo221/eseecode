@@ -2,7 +2,7 @@
  *Milestone reached: Enpower guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
- *   Now Layers can be called by name or position in the stack
+ *   Now Layers can be called by name or position in the stack and you can check if a layer exists with getLayerExists()
  *   Debug shows the position and name of every layer
  *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
  *   Allow code, precode, postcode, execute, set dialog mode, hide view tabs, etc from URL
