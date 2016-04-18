@@ -1308,7 +1308,7 @@
 		ctx.fillStyle = "#AAAAAA";
 		var margin=2, fontHeight=7, fontWidth=5;
 		var coorUpperLeft = $e_system2userCoords({x: 0, y: 0});
-		var coorLowerRight = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()});
+		var coorLowerRight = $e_system2userCoords({x: $_eseecode.whiteboard.clientWidth, y: $_eseecode.whiteboard.clientHeight});
 		var roundXCoords = (Math.abs(coorUpperLeft.x - coorLowerRight.x) > 20);
 		var roundYCoords = (Math.abs(coorUpperLeft.y - coorLowerRight.y) > 20);
 		ctx.fillText("("+(roundXCoords?parseInt(coorUpperLeft.x*100):coorUpperLeft.x)+","+(roundYCoords?parseInt(coorUpperLeft.y):coorUpperLeft.y)+")",margin,fontHeight+margin);

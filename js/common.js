@@ -340,15 +340,15 @@
 		if (value == "minX") {
 			value = $e_system2userCoords({x: 0, y: 0}).x;
 		} else if (value == "maxX") {
-			value = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()}).x;
+			value = $e_system2userCoords({x: $_eseecode.whiteboard.clientWidth, y: $_eseecode.whiteboard.clientHeight}).x;
 		} else if (value == "minY") {
 			value = $e_system2userCoords({x: 0, y: 0}).y;
 		} else if (value == "maxY") {
-			value = $e_system2userCoords({x: getLayerWidth(), y: getLayerHeight()}).y;
+			value = $e_system2userCoords({x: $_eseecode.whiteboard.clientWidth, y: $_eseecode.whiteboard.clientHeight}).y;
 		} else if (value == "centerX") {
-			value = $e_system2userCoords({x: getLayerWidth()/2, y: getLayerHeight()/2}).x;
+			value = $e_system2userCoords({x: $_eseecode.whiteboard.clientWidth/2, y: $_eseecode.whiteboard.clientHeight/2}).x;
 		} else if (value == "centerY") {
-			value = $e_system2userCoords({x: getLayerWidth()/2, y: getLayerHeight()/2}).y;
+			value = $e_system2userCoords({x: $_eseecode.whiteboard.clientWidth/2, y: $_eseecode.whiteboard.clientHeight/2}).y;
 		}
 		return value;
 	}
