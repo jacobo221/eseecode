@@ -34,7 +34,7 @@
 				items: [
 					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially." },
 					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available." },
-					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in a visual interace, but in Build view you can decide whether to show te text of the visual interface by default." },
+					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default." },
 					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." }
 				]
 			},
@@ -487,6 +487,7 @@
 	
 	function buildURL(event) {
 		var url = mainURL;
+		var components = [];
 		var paramsText = "";
 		for (var page in setupItems) {
 			var setupPage = setupItems[page].items;
@@ -533,7 +534,9 @@
 					paramValue = encodeURIComponent(paramValue);
 				}
 				if (paramValue != setupPage[i].initial && paramValue.toString().length > 0) {
-					paramsText += "&"+setupPage[i].id+"="+paramValue;
+					var component = setupPage[i].id+"="+paramValue;
+					components.push(component);
+					paramsText += "&"+component;
 				}
 			}
 		}
@@ -541,7 +544,7 @@
 			paramsText = paramsText.substring(1); // Remove the first "&" from the URL
 			url += "?"+paramsText;
 		}
-		handle(url);
+		handle(url, components);
 	}
 
 	function selectOrderMove(sens, id) {
