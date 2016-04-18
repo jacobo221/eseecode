@@ -34,6 +34,7 @@
 				items: [
 					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], help: "Select the view which will be displayed initially. <br /><br /><u>Default:</u> <i>Touch</i>" },
 					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], help: "Select which views will be available. <br /><br /><u>Default:</u> <i>All</i>" },
+					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], help: "Select how to view the setup of blocks. In Drag view blocks are always setup in a visual interace, but in Build view you can decide whether to show te text of the visual interface by default.<br /><br /><u>Default:</u> <i>Advanced</i>" },
 					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], help: "Decide whether the code console should be maximized initially. <br /><br /><u>Default:</u> <i>No</i>" }
 				]
 			},

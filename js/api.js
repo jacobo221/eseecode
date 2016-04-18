@@ -58,6 +58,8 @@
 				} else if (key == "instructions") {
 					value = decodeURIComponent(value);
 					API_setInstructions(value, action);
+				} else if (key == "blocksetup") {
+					API_setBlockSetup(value, action);
 				} else if (key == "fullscreenmenu") {
 					API_showFullscreenmenu(value, action);
 				} else if (key == "preventexit") {
@@ -278,6 +280,23 @@
 		if (action !== false) {
 			$e_resetGridModeSelect();
 			$e_changeAxisBasedOnUISettings();
+		}
+	}
+	
+	/**
+	 * Sets the default block setup style
+	 * @since 2.4
+	 * @public
+	 * @param {String} value Pixels between each line in the grid
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_setBlockSetup("basic")
+	 */
+	function API_setBlockSetup(value, action) {
+		if (value) {
+			value = value.toLocaleLowerCase();
+			if (value === "visual" || value === "text") {
+				$_eseecode.ui.setupType = value;
+			}
 		}
 	}
 	

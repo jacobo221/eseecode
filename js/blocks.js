@@ -819,9 +819,9 @@
 			}
 			var msgTab = document.createElement("div");
 			msgTab.className = "msgBox-tabs";
-			msgTab.innerHTML = "<a id=\"setupBlockTabsBasic\" href=\"#\" onclick=\"$e_setupBlockVisual(true);\">"+_("Switch to basic setup")+"</a> <a id=\"setupBlockTabsAdvanced\" href=\"#\" onclick=\"$e_setupBlockVisual(false);\">"+_("Switch to advanced setup")+"</a>";
+			msgTab.innerHTML = "<a id=\"setupBlockTabsVisual\" href=\"#\" onclick=\"$e_setupBlockVisualFromUI();\">"+_("Switch to visual setup")+"</a> <a id=\"setupBlockTabsText\" href=\"#\" onclick=\"$e_setupBlockTextFromUI();\">"+_("Switch to text setup")+"</a>";
 			if (!blockAdd) {
-				msgTab.innerHTML += " <a id=\"setupBlockTabsDuplicate\" href=\"#\" onclick=\"$e_duplicateBlock();\" class=\"outsider\">"+_("Duplicate block")+"</a></div>";
+				msgTab.innerHTML += " <a id=\"setupBlockTabsDuplicate\" href=\"#\" onclick=\"$e_duplicateBlockFromUI();\" class=\"outsider\">"+_("Duplicate block")+"</a></div>";
 			}
 			msgDiv.appendChild(msgTab);
 			var msgContent = document.createElement("div");
@@ -876,7 +876,7 @@
 			msgContent.appendChild(input);
 			msgDiv.appendChild(msgContent);
 			$e_msgBox(msgDiv, {acceptAction:$e_setupBlockAccept,cancelAction:$e_setupBlockCancel,focus:"setupBlock"+parameterInputs[0].id});
-			if (level === "level2") {
+			if (level === "level2" || $_eseecode.ui.setupType == "visual") {
 				$e_setupBlockVisual(true, instruction.parameters);
 			} else {
 				$e_setupBlockVisual(false, instruction.parameters);
@@ -890,6 +890,15 @@
 		return returnVal;
 	}
 
+	/**
+	 * Duplicates a block in the code, called from UI
+	 * @private
+	 * @example $e_duplicateBlockFromUI()
+	 */
+	function $e_duplicateBlockFromUI() {
+		$e_duplicateBlock();
+	}
+	
 	/**
 	 * Duplicates a block in the code
 	 * @private
@@ -910,6 +919,26 @@
 		$_eseecode.session.blocksUndo[blocksUndoIndex] = {};
 		$_eseecode.session.blocksUndo[blocksUndoIndex].div = newDiv;
 		$_eseecode.session.blocksUndo[blocksUndoIndex].divPosition = $e_recursiveCount(document.getElementById("console-blocks").firstChild, newDiv).count;
+	}
+	
+	/**
+	 * Opens the block setup with visual parameters setup
+	 * @private
+	 * @example $e_setupBlockVisualFromUI()
+	 */
+	function $e_setupBlockVisualFromUI() {
+		$_eseecode.ui.setupType = "visual";
+		$e_setupBlockVisual(true);
+	}
+	
+	/**
+	 * Opens the block setup with text parameters setup
+	 * @private
+	 * @example $e_setupBlockTextFromUI()
+	 */
+	function $e_setupBlockTextFromUI() {
+		$_eseecode.ui.setupType = "text";
+		$e_setupBlockVisual(false);
 	}
 	
 	/**
@@ -1435,11 +1464,11 @@
 			}
 		}
 		if (visualMode) {
-			document.getElementById("setupBlockTabsBasic").className = "hide";
-			document.getElementById("setupBlockTabsAdvanced").className = "headerButton";
+			document.getElementById("setupBlockTabsVisual").className = "hide";
+			document.getElementById("setupBlockTabsText").className = "headerButton";
 		} else {
-			document.getElementById("setupBlockTabsBasic").className = "headerButton";
-			document.getElementById("setupBlockTabsAdvanced").className = "hide";
+			document.getElementById("setupBlockTabsVisual").className = "headerButton";
+			document.getElementById("setupBlockTabsText").className = "hide";
 		}
 		updateIcon();
 	}
