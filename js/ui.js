@@ -1741,6 +1741,9 @@
 		$e_loadURLParams(undefined, ["dialog"], true);
 		$_eseecode.session.updateOnConsoleSwitch = false;
 		$_eseecode.session.lastChange = 0;
+		if (!$_eseecode.session.ready) {
+			$_eseecode.session.ready = (new Date()).getTime();
+		}
 		return;
 	}
 	

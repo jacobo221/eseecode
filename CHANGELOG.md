@@ -22,6 +22,7 @@
  *   Now grid lines are configured by number of divisions instead of pixels between divisions
  *   Basic setup of Function eases the creation of parameters
  *   Now remembers setup type (basic/advanced) in Build view
+ *   API_isReady allows to know if the plaform is ready for use in parent windows
  *   Fix: Redo block add after undo
  *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button

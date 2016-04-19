@@ -8,21 +8,7 @@
 	}
 	var handle;
 	var mainURL;
-	var setupItems;
-
-	function createExerciseTool(divId, createExerciseHandle, src) {
-		handle = createExerciseHandle;
-		if (!handle) {
-			// default handle is to display url in alert
-			handle = alert;
-		}
-		mainURL = src;
-		if (!mainURL) {
-			// default handle is to display url in alert
-			mainURL = "https://play.eseecode.com";
-		}
-		var assistant = document.getElementById(divId);
-		setupItems = [
+	var setupItems = [
 			{
 				id: "Language",
 				items: [
@@ -104,6 +90,21 @@
 				]
 			}
 		];
+	var parametersCalledFromAPI;
+
+	function createExerciseTool(divId, createExerciseHandle, src, skipURL) {
+		handle = createExerciseHandle;
+		if (!handle) {
+			// default handle is to display url in alert
+			handle = alert;
+		}
+		mainURL = src;
+		if (!mainURL) {
+			// default handle is to display url in alert
+			mainURL = "https://play.eseecode.com";
+		}
+		parametersCalledFromAPI = skipURL;
+		var assistant = document.getElementById(divId);
 	
 		var stepNumber = 1;
 		var divSwitch = document.createElement("div");
@@ -136,8 +137,14 @@
 					var divHelp = document.createElement("div");
 					divHelp.className = "help";
 					divHelp.innerHTML = setupPage[key].help;
-					if (setupPage[key].initial) {
-						divHelp.innerHTML += "<br /><br /><u>Default:</u> <i>"+setupPage[key].initial+"</i>";
+					if (setupPage[key].initial || setupPage[key].userValue) {
+						divHelp.innerHTML += "<br />";
+						if (setupPage[key].initial) {
+							divHelp.innerHTML += "<br /><u>Default:</u> <i>"+decodeURIComponent(setupPage[key].initial)+"</i>";
+						}
+						if (setupPage[key].userValue) {
+							divHelp.innerHTML += "<br /><u>Your saved value:</u> <i>"+decodeURIComponent(setupPage[key].userValue)+"</i>";
+						}
 					}
 					div.appendChild(divHelp);
 				}
@@ -148,6 +155,7 @@
 				}
 				title.innerHTML += " ";
 				div.appendChild(title);
+				var defaultValue = (setupPage[key].userValue?setupPage[key].userValue:setupPage[key].initial);
 				if (setupPage[key].type == "select") {
 					var select = document.createElement("select");
 					select.id = setupPage[key].id;
@@ -155,7 +163,7 @@
 					var selectOptions = "";
 					for (var id in options) {
 						var selected = "";
-						if (setupPage[key].initial && (options[id].toLocaleLowerCase() === setupPage[key].initial.toLocaleLowerCase())) {
+						if (defaultValue && (options[id].toLocaleLowerCase() === defaultValue.toLocaleLowerCase())) {
 							selected = " selected";
 						}
 						selectOptions += "<option"+selected+">"+options[id]+"</option>";
@@ -173,8 +181,8 @@
 					var selectOptions = "";
 					for (var id in options) {
 						var selected = "";
-						if (setupPage[key].initial) {
-							var defaultOptions = setupPage[key].initial.split(";");
+						if (defaultValue) {
+							var defaultOptions = defaultValue.split(";");
 							for (var defaultOption in defaultOptions) {
 								if (options[id].toLocaleLowerCase() === defaultOptions[defaultOption].toLocaleLowerCase()) {
 									selected = " selected";
@@ -208,6 +216,11 @@
 					defaultsButton4.type = "button";
 					defaultsButton4.value = "Code";
 					div.appendChild(defaultsButton4);
+					var defaultsButton5 = document.createElement("input");
+					defaultsButton5.type = "button";
+					defaultsButton5.value = "Restore";
+					defaultsButton5.style.display = "none";
+					div.appendChild(defaultsButton5);
 					var br = document.createElement("br");
 					div.appendChild(br);
 					var defaultsSpan = document.createElement("span");
@@ -280,9 +293,50 @@
 					select2.style.minWidth = "100px";
 					select2.setAttribute("multiple", true);
 					innerDiv.appendChild(select2);
-					var options = setupPage[key].options;
 					var selectOrder = {};
 					var selectOptions = {};
+					// Read default values
+					defaultValue = defaultValue.split(";");
+					for (var j=0; j<defaultValue.length; j++) {
+						var instructionName = defaultValue[j].trim();
+						if ($_eseecode.instructions.set[instructionName]) {
+							var defaultInstruction = instructionName+";"
+							var k = 0;
+							while (j+1+k < defaultValue.length && (
+							  $e_isNumber(defaultValue[j+1+k],true) ||
+							  $e_isBoolean(defaultValue[j+1+k],true) ||
+							  decodeURIComponent(defaultValue[j+1+k]).charAt(0) == '"' ||
+							  decodeURIComponent(defaultValue[j+1+k]).charAt(0) == "'" ||
+							  defaultValue[j+1+k] == "noChange" ||
+							  defaultValue[j+1+k].indexOf("param:") == 0 ||
+							  defaultValue[j+1+k].indexOf("count:") == 0)) {
+			                    if (defaultValue[j+1+k] == "noChange") {
+			                    	defaultInstruction += "noChange;";
+			                    } else if (defaultValue[j+1+k].indexOf("count:") == 0) {
+			                    	var maxCount = parseInt(defaultValue[j+1+k].split(":")[1]);
+			                    	defaultInstruction += "count:"+maxCount+";";
+			                    } else if ($_eseecode.instructions.set[instructionName].parameters[k]) {
+					            	var param = defaultValue[j+1+k];
+			                    	if (param.indexOf("param:") == 0) {
+			                    		param = param.split(":")[1];
+			                    	}
+			                    	defaultInstruction += "param:"+param+";";
+						        } else {
+									console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+defaultValue[j]+". You tried to set it to: "+defaultValue[j+1+k])
+						        }
+						        k++;
+							}
+							j += k;
+							if (!selectOrder["lastSave"]) {
+								selectOrder["lastSave"] = "";
+							}
+							selectOrder["lastSave"] += "<option ondblclick=\"changeParameters({target:this})\" value=\""+defaultInstruction+"\">"+instructionName+"</option>";
+						} else {
+							console.warn("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
+						}
+					}
+					// Create options
+					var options = setupPage[key].options;
 					for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
 						var category = $_eseecode.instructions.categories[n].name;
 						for (var id in options) {
@@ -312,10 +366,15 @@
 							}
 						}
 					}
-					defaultsButton1.addEventListener("click",function() {select2.innerHTML = selectOrder["level1"];buildURL();});
-					defaultsButton2.addEventListener("click",function() {select2.innerHTML = selectOrder["level2"];buildURL();});
-					defaultsButton3.addEventListener("click",function() {select2.innerHTML = selectOrder["level3"];buildURL();});
-					defaultsButton4.addEventListener("click",function() {select2.innerHTML = selectOrder["level4"];buildURL();});
+					defaultsButton1.addEventListener("click",function() {select2.innerHTML = selectOrder["level1"];changeParametersClose();buildURL();});
+					defaultsButton2.addEventListener("click",function() {select2.innerHTML = selectOrder["level2"];changeParametersClose();buildURL();});
+					defaultsButton3.addEventListener("click",function() {select2.innerHTML = selectOrder["level3"];changeParametersClose();buildURL();});
+					defaultsButton4.addEventListener("click",function() {select2.innerHTML = selectOrder["level4"];changeParametersClose();buildURL();});
+					if (selectOrder["lastSave"]) {
+						select2.innerHTML = selectOrder["lastSave"];
+						defaultsButton5.addEventListener("click",function() {select2.innerHTML = selectOrder["lastSave"];changeParametersClose();buildURL();});
+						defaultsButton5.style.display = "inline-block";
+					}
 					var selectOptionsKeys = [];
 					for (var id in selectOptions) {
 						selectOptionsKeys.push(id);
@@ -326,12 +385,10 @@
 						selectOptionsText += "<option ondblclick=\"selectOrderMove('right','"+elementId+"');buildURL()\" value=\""+selectOptionsKeys[id]+";\">"+selectOptionsKeys[id]+"</option>";
 					}
 					select.innerHTML = selectOptionsText;
+					div.appendChild(innerDiv);
 					var setupDiv = document.createElement("div");
 					setupDiv.id = "setupDiv";
 					setupDiv.style.display = "none";
-					setupDiv.style.float = "left";
-					setupDiv.style.width = "auto";
-					setupDiv.style.border = "1px solid black";
 					setupDiv.innerHTML = "<div id=\"setupDivTitle\"></div>";
 					setupDiv.innerHTML += "<input id=\"setupDivIndex\" type=\"hidden\" />"
 					setupDiv.innerHTML += "<input id=\"setupDivName\" type=\"hidden\" />"
@@ -339,15 +396,15 @@
 					setupDiv.innerHTML += "Max amount of instances: <input id=\"setupDivCount\" type=\"number\" min=\"0\" /><br />";
 					setupDiv.innerHTML += "Disable setup: <input id=\"setupDivNoChange\" type=\"checkbox\" /><br />";
 					setupDiv.innerHTML += "<input type=\"button\" value=\"Apply\" onclick=\"changeParametersApply('"+elementId+"')\" />";
-					innerDiv.appendChild(setupDiv);
-					div.appendChild(innerDiv);
+					setupDiv.innerHTML += "<input type=\"button\" value=\"Cancel\" onclick=\"changeParametersClose()\" />";
+					div.appendChild(setupDiv);
 				} else if (setupPage[key].type == "textarea") {
 					var br = document.createElement("br");
 					div.appendChild(br);
 					var input = document.createElement("textarea");
 					input.id = setupPage[key].id;
-					if (setupPage[key].initial) {
-						input.innerHTML = setupPage[key].initial;
+					if (defaultValue) {
+						input.innerHTML = defaultValue;
 					}
 					input.addEventListener("change", buildURL);
 					div.appendChild(input);
@@ -364,11 +421,11 @@
 							input.style.width = "50px";
 						}
 					}
-					if (setupPage[key].initial) {
+					if (defaultValue) {
 						if (setupPage[key].type == "checkbox") {
-							input.checked = (setupPage[key].initial=="true"?true:false);
+							input.checked = (defaultValue=="true"?true:false);
 						} else {
-							input.value = setupPage[key].initial;
+							input.value = defaultValue;
 						}
 					}
 					input.addEventListener("change", buildURL);
@@ -416,7 +473,7 @@
 		divNavigator.appendChild(divButtons);
 		assistant.appendChild(divNavigator);
 		goToStep();
-		buildURL(); // Initial view
+		buildURL();
 	}
 
 	function goToNextStep() {
@@ -536,7 +593,15 @@
 				if (paramValue != setupPage[i].initial && paramValue.toString().length > 0) {
 					var component = setupPage[i].id+"="+paramValue;
 					components.push(component);
-					paramsText += "&"+component;
+					var skipParameterInURL = false;
+					for (var j in parametersCalledFromAPI) {
+                        if (component.indexOf(parametersCalledFromAPI[j]+"=") == 0) {
+                            skipParameterInURL = true;
+                        }
+					}
+					if (!skipParameterInURL) {
+						paramsText += "&"+component;
+					}
 				}
 			}
 		}
@@ -622,7 +687,8 @@
 		document.getElementById("setupDivParams").innerHTML = "";
 		var instructionParameters = $_eseecode.instructions.set[instructionName].parameters;
 		for (var i=0; i<instructionParameters.length; i++) {
-			document.getElementById("setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" /><br />";
+			var initialHelper = ((!instructionParameters[i].optional || instructionParameters[i].optional === false) && instructionParameters[i].initial)?" Default: "+instructionParameters[i].initial:"";
+			document.getElementById("setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" />"+initialHelper+"<br />";
 		}
 		var countParams = 1;
 		var values = target.value.split(";");
@@ -644,6 +710,7 @@
 		}
 		var optionIndex = target.index;
 		document.getElementById("setupDivIndex").value = optionIndex;
+		document.getElementById("instructionsbody").style.display = "none";
 		document.getElementById("setupDiv").style.display = "block";
 	}
 
@@ -681,7 +748,12 @@
 		var optionText = name+";"+optionText;
 		select.options[optionIndex].innerHTML = name;
 		select.options[optionIndex].value = optionText;
-		setupDiv.style.display = "none";
+		changeParametersClose();
 		buildURL();
 	}
-
+	
+	function changeParametersClose() {
+		var setupDiv = document.getElementById("setupDiv");
+		document.getElementById("instructionsbody").style.display = "block";
+		setupDiv.style.display = "none";
+	}

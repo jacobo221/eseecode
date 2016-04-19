@@ -733,4 +733,13 @@
 		$_eseecode.session.lastSave = new Date().getTime();
 	}
 
-
+	/**
+	 * Returns if the eSeeCode is ready
+	 * @since 2.4
+	 * @public
+	 * @return {String} The date since it is ready, undefined otherwise
+	 * @example API_isReady()
+	 */
+	function API_isReady() {
+		return $_eseecode.session.ready;
+	}
