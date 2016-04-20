@@ -75,6 +75,8 @@
 					API_uploadCode(value);
 				} else if (key == "execute") {
 					API_execute(value);
+				} else if (key == "theme") {
+					API_setTheme(value, action);
 				}
 			}
 		}
@@ -731,6 +733,22 @@
 	 */
 	function API_updateSavedTime() {
 		$_eseecode.session.lastSave = new Date().getTime();
+	}
+
+	/**
+	 * Switches the active theme
+	 * @since 2.4
+	 * @public
+	 * @param {String} theme Name of the theme to use
+	 * @param {Boolean} [run=true] If true, applies the theme immediately
+	 * @example API_setTheme("sharp")
+	 */
+	function API_setTheme(theme, run) {
+		if (!$_eseecode.session.ready && !run) {
+			return;
+		}
+		$e_setTheme(theme, true);
+		
 	}
 
 	/**

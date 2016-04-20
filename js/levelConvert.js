@@ -63,6 +63,6 @@
 			if (div.id == "console-blocks-tip") {
 				continue;
 			}
-			$e_createBlock(level,div);
+			$e_createBlock(level, div);
 		}
 	}

@@ -1,0 +1,87 @@
+	.block {
+		background-repeat: no-repeat;
+		background-color: #AAAAAA;
+		border-left: 1px solid #AAAAAA;
+		clear: both;
+		float: left;
+		border: 1px solid #AAAAAA;
+		margin-left: 10px;
+		margin-right: 5px;
+		box-shadow: 5px 5px 5px #888888;
+		width: auto;
+	}
+	.blockTitle {
+		display: block;
+		white-space: nowrap;
+	}
+	.blockCount {
+		position: absolute;
+		bottom: -5px;
+		right: -5px;
+		display: inline-block;
+		min-width: 12px;
+		height: 12px;
+		font-size: 12px;
+		text-align: center;
+		vertical-align: middle;
+		font-weight: bold;
+		color: #FFFFFF;
+		background-color: #FF0000;
+	}
+	.dummyBlock {
+		background-image: none;
+		background-color: transparent;
+		border: none;
+		box-shadow: none !important;
+	}
+	.floatingBlock {
+		border: 3px solid #555555 !important;
+		box-shadow: 5px 5px 10px #AAAAAA !important;
+	}
+	.floatingBlock canvas {
+	}
+	.level1 {
+		margin-top: 7px;
+	}
+	.level2, .level3 {
+		border-top-width: 0px;
+		margin-bottom: 0px;
+		margin-top: 0px;
+	}
+	.level2:first-child, .level3:first-child {
+		border-top-width: 1px;
+	}
+	.level2:hover, .level3:hover {
+		box-shadow: 7px 5px 5px #4444AA;
+	}
+	.function {
+		border-top-width: 2px !important;
+	}
+	div.function:before {
+	}
+	div.function:after {
+	}
+	#console-blocks>div:first-child {
+		margin-top: 5px;
+	}
+	#console-blocks>div:last-child {
+		margin-bottom: 10px;
+	}
+	#console-blocks span, #dialog-blocks span {
+		cursor: default;
+	}
+	#console-blocks.breakpointHandler span {
+		cursor: crosshair !important;
+	}
+	#dialog .block {
+		position: relative;
+		border: 1px solid #AAAAAA;
+		margin: 2px;
+		float: left;
+		clear: none;
+		box-shadow: 4px 3px 10px #888888;
+		width: initial;
+	}
+	#dialog-blocks div:hover {
+		box-shadow: 0px 0px 20px #000000;
+	}

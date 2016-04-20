@@ -1482,64 +1482,9 @@
 		if (!div || div.tagName != "DIV") {
 			return;
 		}
-		if (div.id === "setupBlockIcon") {
+		if ($_eseecode.ui.theme.functions && $_eseecode.ui.theme.functions.roundBlockCorners) {
+			$_eseecode.ui.theme.functions.roundBlockCorners(div);
 			return;
-		}
-		var width = div.getBoundingClientRect().width;
-		if (width) {
-			var borderRadius = 10;
-			var previous = div.previousElementSibling;
-			var next = div.nextSibling;
-			var isFunction;
-			if (div.className.match(/\bfunction\b/)) {
-				isFunction = true;
-			} else {
-				isFunction = false;
-			}
-			if (!previous || previous.tagName != "DIV" || isFunction ) {
-				if (previous && isFunction) {
-					previous.style.borderBottomRightRadius = borderRadius+"px";
-					previous.style.borderBottomLeftRadius = borderRadius+"px";
-				}
-				div.style.borderTopRightRadius = borderRadius+"px";
-				div.style.borderTopLeftRadius = borderRadius+"px";
-			} else {
-				var previousWidth = previous.getBoundingClientRect().width;
-				if (previousWidth > width) {
-					previous.style.borderBottomRightRadius = Math.min(previousWidth-width,borderRadius)+"px";
-					div.style.borderTopRightRadius = "";
-				} else if (width > previousWidth) {
-					previous.style.borderBottomRightRadius = "";
-					div.style.borderTopRightRadius = Math.min(width-previousWidth,borderRadius)+"px";
-				} else {
-					previous.style.borderBottomRightRadius = "";
-					div.style.borderTopRightRadius = "";
-				}
-				previous.style.borderBottomLeftRadius = "";
-				div.style.borderTopLeftRadius = "";
-			}
-			if (!next || next.className.match(/\bdummyBlock\b/) || isFunction) {
-				div.style.borderBottomRightRadius = borderRadius+"px";
-				div.style.borderBottomLeftRadius = borderRadius+"px";
-				if (next && isFunction) {
-					next.style.borderTopRightRadius = borderRadius+"px";
-					next.style.borderTopLeftRadius = borderRadius+"px";
-				}
-			} else {
-				var nextWidth = next.getBoundingClientRect().width;
-				if (nextWidth > width) {
-					div.style.borderBottomRightRadius = "";
-					next.style.borderTopRightRadius = Math.min(nextWidth-width,borderRadius)+"px";;
-				} else if (width > nextWidth) {
-					div.style.borderBottomRightRadius = Math.min(width-nextWidth,borderRadius)+"px";
-					next.style.borderTopRightRadius = "";
-				} else {
-					div.style.borderBottomRightRadius = "";
-					next.style.borderTopRightRadius = "";
-				}
-				div.style.borderBottomLeftRadius = "";
-				next.style.borderTopLeftRadius = "";
-			}
 		}
 	}
 
@@ -1767,7 +1712,9 @@
 		var text = output.text;
 		// We must first creat the inner text so the div expands its width if necessary
 		var span = document.createElement("span");
-		span.style.color = $e_readableText(color);
+		if ($_eseecode.ui.theme && $_eseecode.ui.theme.functions && $_eseecode.ui.theme.functions.blockTextColor) {
+			span.style.color = $_eseecode.ui.theme.functions.blockTextColor(color);
+		}
 		if (!instruction.dummy) {
 			span.style.minHeight = $_eseecode.setup.blockHeight[level]+"px";
 		} else {
@@ -1814,51 +1761,8 @@
 			var bgCtx = bgCanvas.getContext("2d");
 			bgCtx.fillStyle = color;
 			bgCtx.fillRect(0,0,bgWidth,bgHeight);
-			if (!!navigator.userAgent.match(/Trident.*rv[ :]*11\./)) {
-				// There is a bug in IE11 where it fails to show transparent gradients on canvas. See https://connect.microsoft.com/IE/feedback/details/828441 . This hack works around the bug
-				if (color.charAt(0) == "#") {
-					var r = color.substr(1,2);
-					var g = color.substr(3,2);
-					var b = color.substr(5,2);
-					if (level == "level1" || level == "level2") {
-						var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight,bgWidth/3,bgHeight/3,bgHeight/4);
-						gradient.addColorStop(0,'rgb(150,150,150)');
-						gradient.addColorStop(1,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
-						bgCtx.fillStyle = gradient;
-						bgCtx.beginPath();
-						bgCtx.fillRect(0,0,bgWidth,bgHeight);
-						bgCtx.closePath();
-						bgCtx.fill();
-					} else if (level == "level3") {
-						var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);
-						gradient.addColorStop(0,'rgb(120,120,120)');
-						gradient.addColorStop(0.5,'rgb('+parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)+')');
-						gradient.addColorStop(1,'rgb(120,120,120)');
-						bgCtx.fillStyle = gradient;
-						bgCtx.fillRect(0,0,bgWidth,bgHeight);
-					}
-				} else {
-						bgCtx.fillStyle = color;
-						bgCtx.fillRect(0,0,bgWidth,bgHeight);
-				}
-			} else {
-				if (level == "level1" || level == "level2") {
-					var gradient = bgCtx.createRadialGradient(bgWidth/2,bgHeight/2,bgHeight*1.5,bgWidth/3,bgHeight/3,bgHeight/4);
-					gradient.addColorStop(0.0,'rgba(0,0,0,1)');
-					gradient.addColorStop(1.0,'rgba(0,0,0,0)');
-					bgCtx.fillStyle = gradient;
-					bgCtx.beginPath();
-					bgCtx.arc(bgWidth/2,bgHeight/2,bgHeight,2*Math.PI,0,false);
-					bgCtx.closePath();
-					bgCtx.fill();
-				} else if (level == "level3") {
-					var gradient = bgCtx.createLinearGradient(0,0,0,bgHeight);	
-					gradient.addColorStop(0.0,'rgba(0,0,0,0.25)');
-					gradient.addColorStop(0.5,'rgba(0,0,0,0)');
-					gradient.addColorStop(1.0,'rgba(0,0,0,0.25)');
-					bgCtx.fillStyle = gradient;
-					bgCtx.fillRect(0,-bgHeight*2,bgWidth,bgHeight*3);
-				}
+			if ($_eseecode.ui.theme && $_eseecode.ui.theme.functions && $_eseecode.ui.theme.functions.blockBackground) {
+				$_eseecode.ui.theme.functions.blockBackground(color, bgCtx, bgWidth, bgHeight);
 			}
 			var height = parseInt(div.style.minHeight.replace("px",""));
 			var width = parseInt(div.style.minWidth.replace("px",""));
