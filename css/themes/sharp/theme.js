@@ -147,6 +147,138 @@ $_eseecode.ui.theme = {
 				div.style.backgroundImage = "url("+src+")";
 				div.style.backgroundRepeat = "repeat";
 			},
+			"button-undo": function() {
+				// Undo button
+				var canvas, ctx, div, width, height, src;
+				canvas = document.getElementById("button-undo").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				height = canvas.height;
+				var margin = 2;
+				var marginX = (width-margin*2)/3;
+				ctx.strokeStyle = "#997755";
+				ctx.beginPath();
+				ctx.lineWidth = 10;
+				ctx.arc(width-marginX*2, height-margin, (height-margin*2)/2, 0, -90*Math.PI/180, true);
+				ctx.lineTo(marginX,height/2);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.fillStyle = "#997755";
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.lineTo(margin,height/2);
+				ctx.lineTo(marginX,margin);
+				ctx.lineTo(marginX,height-margin);
+				ctx.fill();
+				ctx.closePath();
+			},
+			"button-execute": function() {
+				// Execute console button
+				var canvas, ctx, div, width, height, src;
+				var margin = 2;
+				canvas = document.getElementById("button-execute").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				height = canvas.height;
+				ctx.fillStyle = "#55FF55";
+				ctx.strokeStyle = "#55FF55";
+				ctx.beginPath();
+				ctx.moveTo(margin,margin);
+				ctx.lineTo(width-margin,height/2);
+				ctx.lineTo(margin,height-margin);
+				ctx.lineTo(margin,margin);
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+				var gradient = ctx.createLinearGradient(0,(height-margin)/2,0,-margin);	
+				gradient.addColorStop(0.5,'rgba(0,0,0,0)');
+				gradient.addColorStop(1.0,'rgba(0,0,0,1)');
+				ctx.fillStyle = gradient;
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.moveTo(margin,margin);
+				ctx.lineTo(width-margin,height/2);
+				ctx.lineTo(margin,height/2);
+				ctx.lineTo(margin,margin);
+				ctx.fill();
+				ctx.closePath();
+				gradient = ctx.createLinearGradient(0,(height-margin)/2,0,height+margin);	
+				gradient.addColorStop(0.5,'rgba(0,0,0,0)');
+				gradient.addColorStop(1.0,'rgba(0,0,0,1)');
+				ctx.fillStyle = gradient;
+				ctx.beginPath();
+				ctx.moveTo(margin,height/2);
+				ctx.lineTo(width-margin,height/2);
+				ctx.lineTo(margin,height-margin);
+				ctx.lineTo(margin,height/2);
+				ctx.fill();
+				ctx.closePath();
+			},
+			"button-clear": function() {
+				// Clear console button
+				var canvas, ctx, div, width, height, src;
+				canvas = document.getElementById("button-clear").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				height = canvas.height;
+				var lineWidth = width/8;
+				var margin = width/8;
+				ctx.fillStyle = "#FF5555";
+				ctx.beginPath();
+				ctx.arc(width/2, height/2+margin/8, height/2-margin/2, 0, 270*Math.PI/180, false);
+				ctx.arc(width/2, height/2+margin/8, (height-margin)/2-lineWidth, 270*Math.PI/180, 0, true);
+				ctx.fill();
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.moveTo(width/2,margin/4);
+				ctx.lineTo(width/2+lineWidth*1.3,(margin+lineWidth)/1.7);
+				ctx.lineTo(width/2,lineWidth+margin);
+				ctx.fill();
+				ctx.closePath();
+			},
+			"button-reset": function() {
+				// Reset console button
+				var canvas, ctx, div, width, height, src;
+				canvas = document.getElementById("button-reset").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				var lineWidth = width / 8;
+				width = canvas.width;
+				height = canvas.height;
+				var margin = width/8;
+				ctx.strokeStyle = "#555588";
+				ctx.lineWidth = lineWidth;
+				ctx.moveTo(margin,margin);
+				ctx.lineTo(width-margin,height-margin);
+				ctx.moveTo(width-margin,margin);
+				ctx.lineTo(margin,height-margin);
+				ctx.stroke();
+			},
+			"button-redo": function() {
+				// Redo button
+				var canvas, ctx, div, width, height, src;
+				canvas = document.getElementById("button-redo").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				height = canvas.height;
+				var margin = 2;
+				var marginX = (width-margin*2)/3;
+				ctx.strokeStyle = "#997755";
+				ctx.beginPath();
+				ctx.lineWidth = 10;
+				ctx.arc(marginX*2, height-margin, (height-margin*2)/2, 180*Math.PI/180, -90*Math.PI/180, false);
+				ctx.lineTo(width-marginX,height/2);
+				ctx.stroke();
+				ctx.closePath();
+				ctx.fillStyle = "#997755";
+				ctx.lineWidth = 1;
+				ctx.beginPath();
+				ctx.lineTo(width-margin,height/2);
+				ctx.lineTo(width-marginX,margin);
+				ctx.lineTo(width-marginX,height-margin);
+				ctx.fill();
+				ctx.closePath();
+			},
 			"dialog-blocks": function() {
 				// Dialog background
 				var canvas, ctx, div, width, height, src;
@@ -187,6 +319,25 @@ $_eseecode.ui.theme = {
 				src = canvas.toDataURL();
 				div.style.backgroundImage = "url("+src+")";
 				div.style.backgroundRepeat = "repeat";
+			},
+			"dialog-debug-command-button": function() {
+				// Debug run button
+				var canvas, ctx, div, width, height, src;
+				canvas = document.getElementById("dialog-debug-command-button").firstChild;
+				ctx = canvas.getContext("2d");
+				width = canvas.width;
+				height = canvas.height;
+				var margin = 2;
+				ctx.fillStyle = "#CCCCCC";
+				ctx.strokeStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.moveTo(margin,margin);
+				ctx.lineTo(width-margin,height/2);
+				ctx.lineTo(margin,height-margin);
+				ctx.lineTo(margin,margin);
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
 			}
 		},
 		blockBackground: function(color, ctx, width, height) {
