@@ -42,6 +42,12 @@
 					API_showFilemenu(value, action);
 				} else if (key == "lang") {
 					API_switchLanguage(value, action);
+				} else if (key == "translations") {
+					API_showTranslations(value, action);
+				} else if (key == "theme") {
+					API_setTheme(value, action);
+				} else if (key == "themes") {
+					API_showThemes(value);
 				} else if (key == "maximize") {
 					API_maximize(value, action);
 				} else if (key == "input") {
@@ -75,8 +81,6 @@
 					API_uploadCode(value);
 				} else if (key == "execute") {
 					API_execute(value);
-				} else if (key == "theme") {
-					API_setTheme(value, action);
 				}
 			}
 		}
@@ -637,10 +641,8 @@
 	 * @example API_switchLanguage("ca")
 	 */
 	function API_switchLanguage(value, action) {
-		$_eseecode.i18n.current = value;
-		if (action !== false) {
-			$e_switchLanguage();
-		}
+		$e_switchTranslation(value, action);
+
 	}
 	
 	/**
@@ -734,6 +736,26 @@
 	function API_updateSavedTime() {
 		$_eseecode.session.lastSave = new Date().getTime();
 	}
+	
+	/**
+	 * Shows/Hides the translations menu
+	 * @since 2.4
+	 * @public
+	 * @param {Boolean|String} value Whether to show it (true) or hide it (false)
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_showTranslations(false)
+	 */
+	function API_showTranslations(value, action) {
+		value = value.toLowerCase();
+		if ($e_confirmNo(value)) {
+			$_eseecode.ui.translationsmenuVisible = false;
+		} else {
+			$_eseecode.ui.translationsmenuVisible = true;
+		}
+		if (action !== false) {
+			$e_resetTranslationsmenu();
+		}
+	}
 
 	/**
 	 * Switches the active theme
@@ -747,8 +769,27 @@
 		if (!$_eseecode.session.ready && !run) {
 			return;
 		}
-		$e_setTheme(theme, true);
-		
+		$e_switchTheme(theme, true);
+	}
+	
+	/**
+	 * Shows/Hides the themes menu
+	 * @since 2.4
+	 * @public
+	 * @param {Boolean|String} value Whether to show it (true) or hide it (false)
+	 * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+	 * @example API_showThemes(false)
+	 */
+	function API_showThemes(value, action) {
+		value = value.toLowerCase();
+		if ($e_confirmNo(value)) {
+			$_eseecode.ui.themesmenuVisible = false;
+		} else {
+			$_eseecode.ui.themesmenuVisible = true;
+		}
+		if (action !== false) {
+			$e_resetThemesmenu();
+		}
 	}
 
 	/**

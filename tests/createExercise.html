@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <title>Build your own eSeeCode exercise</title>
         <style type="text/css">
             body {
@@ -161,9 +162,11 @@
         <script type="text/javascript" src="../js/translate.js"></script>
         <script type="text/javascript" src="../js/instructions/categories.js"></script>
         <script type="text/javascript" src="../js/instructions/set.js"></script>
+        <script type="text/javascript" src="../translations/installed.js"></script>
+        <script type="text/javascript" src="../themes/installed.js"></script>
         <script type="text/javascript" src="../tools/create.js"></script>
         <script type="text/javascript">
-            var website = "https://dev.eseecode.com";
+            var website = "../index.html";
             function createExerciseHandle(url) {
                 document.getElementById("url").value = url;
                 document.getElementById("eseecode-frame").src = url + ((url !== website) ? "&" : "?") + "preventexit=false";

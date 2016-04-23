@@ -17,13 +17,15 @@
  *   Allow gridStep to go down to 1
  *   More web app devices compatibility
  *   Ask for confirmation if loading a file will delete unsaved changes
- *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile())
+ *   New API for embedding in mobile platforms using same UI (saveFile() and loadFile(), and other new functions)
+ *   Easier to embed: just call eseecode.js from your page
  *   Warn before loading a file if there are unsaved changes
  *   Now grid lines are configured by number of divisions instead of pixels between divisions
  *   Basic setup of Function eases the creation of parameters
  *   Now remembers setup type (basic/advanced) in Build view
  *   API_isReady allows to know if the plaform is ready for use in parent windows
  *   Support themes
+ *   Translations format reworked to load dynamically
  *   Fix: Redo block add after undo
  *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button

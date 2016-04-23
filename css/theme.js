@@ -1,4 +1,5 @@
 $_eseecode.ui.theme = {
+	id: "default",
 	name: "Default",
 	version: "1.0",
 	compatible: "2.4",
@@ -7,8 +8,7 @@ $_eseecode.ui.theme = {
 	email: "jvilella@eseecode.com",
 	website: "https://www.eseecode.com",
 	
-	path: "css/themes/default",
-	files: ["common.css", "ui.css", "blocks.css"],
+	files: ["theme.css", "common.css", "blocks.css"],
 	
 	functions: {
 		drawGuide: function(canvas, targetCanvas) {

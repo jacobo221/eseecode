@@ -414,7 +414,7 @@
 		}
 		if (!$e_isNumber(id, true)) {
 			for (var i=1; i<$_eseecode.modes.console.length; i++) {
-				if ($_eseecode.modes.console[i].id == id || $_eseecode.modes.console[i].name.toLocaleLowerCase() == id.toLocaleLowerCase()) {
+				if ($_eseecode.modes.console[i].id == id || $_eseecode.modes.console[i].name.toLowerCase() == id.toLowerCase()) {
 					id = i;
 					break;
 				}
@@ -1306,7 +1306,7 @@
 	 * @example $e_resetFilemenu()
 	 */
 	function $e_resetFilemenu() {
-		if ($_eseecode.ui.filemenuVisible) {
+		if ($_eseecode.ui.filemenuVisible && $_eseecode.ui.translations.length > 1) {
 			document.getElementById("filemenu").style.display = "block";
 		} else {
 			document.getElementById("filemenu").style.display = "none";
@@ -1327,6 +1327,7 @@
 			$e_initializeUISetup();
 		}
 		$e_initUIElements();
+		$e_resetThemesmenu();
 		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.platform.logo.text+'" title="" /></a>';
 		$e_resetGridModeSelect();
 		$e_resetUndoBlocks();
@@ -1357,8 +1358,8 @@
 		$e_refreshUndoUI();
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		$e_initSetup();
-		$e_resetLanguageSelect();
-		$e_switchLanguage($_eseecode.i18n.current);
+		$e_resetTranslationsmenu();
+		$e_switchTranslation();
 		document.body.removeEventListener("keydown", $e_keyboardShortcuts, false);
 		document.body.addEventListener("keydown", $e_keyboardShortcuts, false);
 		window.removeEventListener("beforeunload", $e_windowRefresh, false);
@@ -2461,98 +2462,234 @@
 	}
 
 	/**
+	 * Switch translation
+	 * @private
+	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new translation, it takes "default"
+	 * @param {Boolean} [run=true] Switch language in already visible UI elements
+	 * @example $e_switchTranslation("ca")
+	 */
+	function $e_switchTranslation(lang, run) {
+		if (!lang || lang == "default") {
+			$_eseecode.ui.translation = { id: "default", name: "English", code: "en", strings: {} };
+			lang = "default";
+		}
+		lang = lang.toLowerCase();
+		var translation = $_eseecode.ui.translation;
+	    	var headElement = document.getElementsByTagName("head")[0];
+		var translationsPath = "translations";
+		var translationPath = $_eseecode.basepath+"/"+translationsPath+"/"+lang+".js";
+		// Remove the previous theme
+		var headElements = headElement.children;
+		for (var i=0; i < headElements.length; i++) {
+			var element = headElements[i];
+			if (element.tagName === "SCRIPT" && element.src && element.src.indexOf(translationsPath+"/") >= 0) {
+				element.parentNode.removeChild(element);
+			}
+		}
+		// Add translation file
+		var runWhenTranslationLoaded = function() {};
+		if (!run || run !== false) {
+			runWhenTranslationLoaded = function() {
+				var translation = $_eseecode.ui.translation;
+				$e_addStaticText();
+				$e_switchDialogMode();
+				$e_resetGridModeSelect();
+				$e_resetTranslationsmenu();
+				$e_resetThemesmenu();
+				$e_switchConsoleMode();
+				var select = document.getElementById("translations-select");
+				var elementTranslator = document.getElementById("translations-translator");
+				if (translation._translator && elementTranslator) {
+					var translatorHTML = translation._translator;
+					if (translator._translatorLink) {
+						translatorHTML = "<span class=\"link\" onclick=\"window.open('"+translation._translatorLink+"','_blank')\">"+translatorHTML+"</span>";
+					}
+					elementTranslator.innerHTML = _("Translated to %s by %s",[translation.name,translatorHTML]);
+				}
+				select.value = lang;
+				document.getElementById("eseecode").setAttribute("lang",translation.code);
+	 		};
+		}
+		if (lang === "default") {
+			runWhenTranslationLoaded();
+		} else {
+			var elementJS = document.createElement("script");
+			elementJS.setAttribute("type", "text/javascript");
+			elementJS.setAttribute("src", translationPath);
+			elementJS.onload = runWhenTranslationLoaded;
+			headElement.appendChild(elementJS);
+		}
+	}
+
+	/**
+	 * Initializes/Resets the translations menu UI element
+	 * @private
+	 * @example $e_resetThemesmenu()
+	 */
+	function $e_resetTranslationsmenu() {
+		if ($_eseecode.ui.translationsmenuVisible && $_eseecode.ui.translations.length > 1) {
+			$e_resetTranslationsSelect();
+			document.getElementById("translations").style.display = "block";
+		} else {
+			document.getElementById("translations").style.display = "none";
+		}
+	}
+
+	/**
+	 * Initializes/Resets the translation selection element to provide all available translations
+	 * @private
+	 * @example $e_resetTranslationsSelect()
+	 */
+	function $e_resetTranslationsSelect() {
+		var select = document.getElementById("translations-select");
+		// Reset translations in dropdown menu
+		select.options.length = 0;
+		// Get available translations
+		var translations = $_eseecode.ui.translations;
+		// Sort by name
+		translations = translations.sort(function(a,b) {
+			return a.name > b.name;
+		});
+		// Add translations to dropdown menu
+		for (var i=0; i<translations.length; i++) {
+			var translation = $_eseecode.ui.translations[i]
+			var option = document.createElement("option");
+			option.value = translation.id;
+			option.text = translation.name;
+			select.add(option, null);
+		}
+		select.value = $_eseecode.ui.translation.id;
+	}
+
+	/**
+	 * Initializes/Resets the themes menu UI element
+	 * @private
+	 * @example $e_resetThemesmenu()
+	 */
+	function $e_resetThemesmenu() {
+		if ($_eseecode.ui.themesmenuVisible && $_eseecode.ui.themes.length > 1) {
+			$e_resetThemesSelect();
+			document.getElementById("themes").style.display = "block";
+		} else {
+			document.getElementById("themes").style.display = "none";
+		}
+	}
+
+	/**
+	 * Populate list of installed themes
+	 * @since 2.4
+	 * @private
+	 * @example $e_resetThemesSelect()
+	 */
+	function $e_resetThemesSelect() {
+		var themes = $_eseecode.ui.themes;
+		var select = document.getElementById("themes-select");
+		// Reset themes in dropdown menu
+		select.options.length = 0;
+		// Sort by name
+		themes = themes.sort(function(a,b) {
+			return a.name > b.name;
+		});
+		// Add themes to dropdown menu
+		for (var i=0; i<themes.length; i++) {
+			var theme = themes[i];
+			var option = document.createElement("option");
+			option.text = theme.name;
+			option.value = theme.id;
+			select.add(option, null);
+		}
+		select.value = $_eseecode.ui.theme.id;
+	}
+
+	/**
 	 * Switches the active theme
 	 * @since 2.4
 	 * @private
 	 * @param {String} theme Name of the theme to use
 	 * @param {Boolean} [redrawBlocks=false] Redraw the blocks
-	 * @example $e_setTheme("default")
+	 * @example $e_switchTheme("default")
 	 */
-	function $e_setTheme(theme, redrawBlocks) {
-		if (!theme) {
-			theme = "default";
+	function $e_switchTheme(newTheme, redrawBlocks) {
+		if (!newTheme || newTheme === "") {
+			newTheme = "default";
 		}
-		var baseCSSFiles = [ "common.css", "ui.css", "blocks.css" ];
-		var defaultThemePath = "css"
-		var themesPath = "css/themes/";
-	    var headElement = document.getElementsByTagName("head")[0];
-		var themePath;
-		if (!$_eseecode.ui.theme || $_eseecode.ui.theme.name.toLocaleLowerCase() == "default") {
-			themePath = defaultThemePath;
+		newTheme = newTheme.toLowerCase();
+		var defaultThemePath = $_eseecode.basepath+"/css"
+		var themesPath = $_eseecode.basepath+"/themes";
+	    	var headElement = document.getElementsByTagName("head")[0];
+		var oldTheme = $_eseecode.ui.theme.id.toLowerCase();
+		var oldThemePath;
+		if (oldTheme == "default") {
+			oldThemePath = defaultThemePath;
 		} else {
-			themePath = themesPath+$_eseecode.ui.theme.name.toLocaleLowerCase();
+			oldThemePath = themesPath+"/"+oldTheme;
 		}
-		var newThemePath = themesPath+theme.toLocaleLowerCase();
-		if (theme == "default") {
+		var newThemePath = themesPath+"/"+newTheme;
+		if (newTheme == "default") {
 			newThemePath = defaultThemePath;
 		}
 		var createCSSElement = function(filepath) {
-	        var elementCSS = document.createElement("link");
-	        elementCSS.setAttribute("rel", "stylesheet");
-	        elementCSS.setAttribute("type", "text/css");
-	        elementCSS.setAttribute("href", filepath);
-	        return elementCSS;
+			var elementCSS = document.createElement("link");
+			elementCSS.setAttribute("rel", "stylesheet");
+			elementCSS.setAttribute("type", "text/css");
+			elementCSS.setAttribute("href", filepath);
+			return elementCSS;
 		}
 		// Replace/remove the previous theme
-		// We cannot first remove and then add because for some reason Chrome is unable to find ui.css if you are going to remove it
-        var headElements = headElement.children;
-        $_eseecode.session.semaphor = 0;
-        for (var i=0; i < headElements.length; i++) {
-        	var element = headElements[i];
-        	if (element.tagName === "LINK" && element.rel === "stylesheet" && element.href && element.href.indexOf(themePath) >= 0) {
-        		var basename = element.href.substring(element.href.lastIndexOf("/")+1);
-        		var found = false;
-        		for (var j=0; j<baseCSSFiles.length; j++) {
-        			if (basename == baseCSSFiles[j]) {
-        				var newElement = createCSSElement(newThemePath+"/"+basename);
-        				newElement.onload = function() { $_eseecode.session.semaphor++; };
-        				element.parentNode.replaceChild(newElement, element);
-        				found = true;
-        			}
-        		}
-        		if (!found) {
-        			element.parentNode.removeChild(element);
-        		}
-        	}
-        	var themeJSPath = themePath+"/theme.js";
-        	if (element.tagName === "SCRIPT" && element.src == themeJSPath) {
-        		element.parentNode.removeChild(element);
-        	}
-        }
-        // Add files
+		// We cannot first remove and then add because for some reason Chrome is unable to find theme.css if you are going to remove it
+		var headElements = headElement.children;
+		$_eseecode.session.semaphor = 0;
+		var elementsToRemove = [];
+		for (var i=0; i < headElements.length; i++) {
+			var element = headElements[i];
+			if (element.tagName === "LINK" && element.rel === "stylesheet" && element.href && element.href.indexOf(oldThemePath+"/") >= 0) {
+				// We don't remove them yet, instead we add them to an array of elements to remove and we remove them all at once, otherwise they are reordered while looping and some are left behind
+				elementsToRemove.push(element);
+			}
+			var themeJSPath = oldThemePath+"/theme.js";
+			if (element.tagName === "SCRIPT" && element.src == themeJSPath) {
+				element.parentNode.removeChild(element);
+			}
+		}
+		for (var i=0; i < elementsToRemove.length; i++) {
+			// We remove them now, in reverse order so that remval doesn't affect the order
+			elementsToRemove[i].parentNode.removeChild(elementsToRemove[i]);
+		}
+		// Add files
 		var newThemeJSPath = newThemePath+"/theme.js";
-        var elementJS = document.createElement("script");
-        elementJS.setAttribute("type", "text/javascript");
-        elementJS.setAttribute("src", newThemeJSPath);
-        elementJS.onload = function() {
-        	var redrawBlocks = function() {
-        		if ($_eseecode.session.semaphor >= numCSSFiles) {
-			    	var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
-			    	if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].div == "blocks") {
-						$e_initDialogBlocks(level, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
-			    	}
-			    	if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "blocks") {
-						$e_blocks2blocks(level);
-			    	}
-			    	$e_initUIElements();
-			    	$e_resetGuide();
-        		} else {
-        			// Wait for all the CSS file to be uploaded
-        			setTimeout(redrawBlocks, 100);
-        		}
-        	}
-        	var numCSSFiles = baseCSSFiles.length;
-        	if ($_eseecode.ui.theme.files) {
-        		numCSSFiles += $_eseecode.ui.theme.files.length
-		        for (var i=0; i<$_eseecode.ui.theme.files.length; i++) {
-		        	var basename = $_eseecode.ui.theme.files[i];
-		           	var filepath = newThemePath+"/"+basename;
-		           	var newElement = createCSSElement(filepath);
-        			newElement.onload = function() { $_eseecode.session.semaphor++; };
-    				headElement.appendChild(newElement);
-		        }
-        	}
-        	redrawBlocks();
-        }
-        headElement.appendChild(elementJS);
+		var elementJS = document.createElement("script");
+		elementJS.setAttribute("type", "text/javascript");
+		elementJS.setAttribute("src", newThemeJSPath);
+		elementJS.onload = function() {
+			var redrawBlocks = function() {
+				if ($_eseecode.session.semaphor >= numCSSFiles) {
+				    	var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
+				    	if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].div == "blocks") {
+							$e_initDialogBlocks(level, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
+				    	}
+				    	if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div == "blocks") {
+							$e_blocks2blocks(level);
+				    	}
+				    	$e_initUIElements();
+				    	$e_resetGuide();
+					document.getElementById("themes-select").value = newTheme;
+				} else {
+					// Wait for all the CSS files to be uploaded
+					setTimeout(redrawBlocks, 100);
+				}
+			}
+			var numCSSFiles = 0; // theme.css is already loaded
+			if ($_eseecode.ui.theme.files) {
+				numCSSFiles += $_eseecode.ui.theme.files.length
+				for (var i=0; i<$_eseecode.ui.theme.files.length; i++) {
+					var basename = $_eseecode.ui.theme.files[i];
+				   	var filepath = newThemePath+"/"+basename;
+				   	var newElement = createCSSElement(filepath);
+					newElement.onload = function() { $_eseecode.session.semaphor++; };
+	    				headElement.appendChild(newElement);
+				}
+			}
+			redrawBlocks();
+		}
+		headElement.appendChild(elementJS);
 	}

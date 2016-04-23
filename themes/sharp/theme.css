@@ -3,7 +3,6 @@
 		background: rgb(255, 100, 100) !important;
 	}
 	.ace-breakpoint { 
-    	border-radius: 20px 0px 0px 20px; 
     	box-shadow: 0px 0px 1px 1px red inset; 
 	}
 	.button {
@@ -11,11 +10,9 @@
 	}
 	.button canvas:hover {
 		box-shadow: 0px 0px 7px #000000;
-		border-radius: 10px;
 	}
 	.button canvas:active {
 		box-shadow: 0px 0px 4px #000000;
-		border-radius: 10px;
 	}
 	.buttonAdd {
 		display: inline-block;
@@ -26,7 +23,6 @@
 		vertical-align: middle;
 		background-color: olive;
 		font-weight: bolder;
-		border-radius: 10px;
 	}
 	.buttonRemove {
 		display: inline-block;
@@ -37,7 +33,6 @@
 		vertical-align: middle;
 		background-color: #D00000;
 		font-weight: bolder;
-		border-radius: 10px;
 	}
 	.column {
 		height: 100%;
@@ -65,11 +60,11 @@
 		border-bottom: 1px solid #000000;
 		text-align: center;
 		font-weight: bold;
-		background-color: #CCCCCC;
+		background-color: #AAAAAA;
 		color: inherit;
 	}
 	.helpNote {
-		color: #AAAAAA;
+		color: #6A6A6A;
 		font-style: italic;
 	}
 	.hide {
@@ -79,14 +74,13 @@
 		cursor: pointer;
 		text-decoration: underline;
 		/*font-weight: normal;*/
-		color: blue;
+		color: #000000;
 	}
 	.link:hover {
 		text-decoration: none;
 		font-weight: bold;
 	}
 	.maximized #console-buttons {
-		border-bottom-left-radius: 10px !important;
 	}
 	.msgBox {
 		position: relative;
@@ -112,12 +106,12 @@
 	.msgBox .msgBox-tabs a {
 		margin: 2px 0px 0px 0px;
 		padding: 2px 3px 0px 3px;
-		background-color: #456789;
+		background-color: #999999;
 		color: #FFFFFF;
 		text-align: center;
 		text-decoration: none;
 		font-weight: bold;
-		border: 2px solid #123456;
+		border: 2px solid #CCCCCC;
 	}
 	.msgBox .msgBox-tabs a.outsider {
 		position: absolute; 
@@ -131,7 +125,7 @@
 	}
 	.msgBox .msgBox-tabs a:hover {
 		margin: 2px 0px 0px 0px;
-		background-color: #789ABC;
+		background-color: #666666;
 		color: inherit;
 		font-weight: bold;
 	}
@@ -152,9 +146,6 @@
 		background-color: #FFFFFF;
 		color: inherit;
 		overflow-x: hidden;
-		border: 1px solid #666666;
-		border-top-width: 0px;
-		border-bottom-width: 0px;
 	}
 	.separator {
 		border-bottom: 1px solid #FFFFFF;
@@ -168,50 +159,45 @@
 		margin: 2px 0px 0px 0px;
 		padding: 2px 3px 0px 3px;
 		border: 1px solid #FFFFFF;
-		background-color: #456789;
+		background-color: #999999;
 		color: #FFFFFF;
 		text-align: center;
-		border-top-left-radius: 10px;
-		border-top-right-radius: 10px;
 		text-decoration: none;
 		cursor: pointer;
 	}
 	.tab:hover {
 		height: 20px;
 		margin: 0px 0px 0px 0px;
-		background-color: #789ABC;
+		background-color: #666666;
 		color: #FFFFFF;
 		font-weight: bold;
 	}
 	.tab-active, .tab-active:hover {
 		height: 20px;
 		margin: 0px 0px 0px 0px;
-		background-color: #FFFFFF;
-		color: #123456;
+		background-color: #EEEEEE;
+		color: #333333;
 		font-weight: bold;
 	}
 	.tab-active a {
 		background-color: inherit;
-		color: #123456;
+		color: #CCCCCC;
 	}
 	.tab-button {
 		height: 20px;
 		display: inline-block;
 		padding: 0px 3px 0px 3px;
 		border: 1px solid #FFFFFF;
-		background-color: #456789;
-		color: #FFFFFF;
+		background-color: #999999;
+		color: #333333;
 		text-align: center;
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
-		border-bottom-left-radius: 5px;
-		border-bottom-right-radius: 5px;
 		text-decoration: none;
+		font-weight: bold;
 		cursor: default;
 	}
 	.tab-button:hover {
-		background-color: #789ABC;
-		color: #FFFFFF;
+		background-color: #666666;
+		color: #000000;
 	}
 	.tab-button-disabled {
 		height: 20px;
@@ -219,12 +205,8 @@
 		padding: 0px 3px 0px 3px;
 		border: 1px solid #FFFFFF;
 		background-color: #BBBBBB;
-		color: #666666;
+		color: #FFFFFF;
 		text-align: center;
-		border-top-left-radius: 5px;
-		border-top-right-radius: 5px;
-		border-bottom-left-radius: 5px;
-		border-bottom-right-radius: 5px;
 		text-decoration: none;
 		cursor: default;
 	}
@@ -232,15 +214,15 @@
 		text-align: center;
 		padding: 0px 20px 0px 20px;
 	}
-	.text-disabled {
-		color: #666666;
+	.text-disabled, .text-disabled input {
+		color: #AAAAAA;
 	}
 	.text-disabled input:hover {
 		box-shadow: none;
 	}
 	span.tab-title {
 		float: left;
-		color: #FFFFFF;
+		color: #666666;
 		font-weight: bold;
 		padding: 5px 5px 0px 10px;
 	}
@@ -259,14 +241,12 @@
 	#console-buttons, #dialog-debug-command {
 		padding-top: 3px;
 		display: table;
-		background-color: #AAAAAA;
+		background-color: #B0B0B0;
 		color: inherit;
-		border: 1px solid #666666;
 		width: 100%;
 		height: 28px;
 	}
 	#console-buttons {
-		border-bottom-right-radius: 10px;
 	}
 	#console-buttons div {
 		display: table-cell;
@@ -279,7 +259,6 @@
 		width: 150px;
 	}
 	#console-blocks-tip {
-		border-radius: 0px !important;
 		background-color: transparent !important;
 	}
 	#console-tabs {
@@ -290,7 +269,6 @@
 		clear: both;
 	}
 	#console-tabdiv .program {
-		border-top-right-radius: 10px;
 	}
 	#console-write {
 		position: relative;
@@ -301,16 +279,12 @@
 	#dialog {
 		width: 250px;
 		float: left;
-		border-top-left-radius: 10px;
-		border-bottom-left-radius: 10px;
-		border-bottom-right-radius: 10px;
 	}
 	#dialog>div {
 		width: inherit;
 	}
 	#dialog .program {
 		background-color: #E9E9E9;
-		border-top-left-radius: 10px;
 	}
 	#dialog-debug {
 		position: relative;
@@ -325,7 +299,6 @@
 		clear: both;
 		text-align: left;
 		vertical-align: top;
-		border-bottom-left-radius: 10px;
 	}
 	#dialog-debug-command-form {
 		display: none;
@@ -392,8 +365,7 @@
 		height: 100%;
 		min-height: 500px;
 		color: inherit;
-		background-color: #123456;
-		/*border-radius: 30px;*/
+		background-color: #C0C0C0;
 		position: relative;
 	}
 	#filemenu {
@@ -432,7 +404,6 @@
 		box-shadow: 0px 0px 5px #FFFFFF;
 		background-color: inherit;
 		color: #DDEECC;
-		border-radius: 5px;
 	}
 	#header div {
 		display: inline;
@@ -452,6 +423,9 @@
 		width: 150px;
 		margin: 10px 0px 0px 0px;
 	}
+	#translations-translator {
+		display: none;
+	}
 	#whiteboard-wrapper {
 		float: right;
 	}
@@ -463,13 +437,10 @@
 		height: 400px;
 		background-color: #FFFFFF;
 		color: inherit;
-		border-radius: 10px;
 		margin-left: 3px;
 	}
 	#whiteboard canvas {
-		border-radius: 10px;
 	}
 	#whiteboard div {
 		position: absolute;
-		border-radius: 10px;
 	}

@@ -1,4 +1,5 @@
 $_eseecode.ui.theme = {
+	id: "sharp",
 	name: "Sharp",
 	version: "0.1",
 	compatible: "2.4",
@@ -6,6 +7,8 @@ $_eseecode.ui.theme = {
 	copyright: "GPLv3",
 	email: "jvilella@eseecode.com",
 	website: "https://www.eseecode.com",
+
+	files: ["theme.css", "common.css", "blocks.css"],
 
 	functions: {
 		drawGuide: function(canvas, targetCanvas) {

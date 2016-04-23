@@ -2,7 +2,7 @@
 
 	/**
 	 * Translate the string
-	 * Translation strings must be available at $_eseecode.i18n.available[language_code][text]
+	 * Translation strings must be available at $_eseecode.ui.translation[text]
 	 * @private
 	 * @param {String} text Text to translate
 	 * @param {Array<String>} [params] Parameters to instert into the text replacing '%s'
@@ -10,14 +10,10 @@
 	 * @example _("text")
 	 */
 	function _(text, params) {
-		var langCurrent = $_eseecode.i18n.current;
-		var lang = $_eseecode.i18n.available[langCurrent];
-		if (!lang) {
-			lang = $_eseecode.i18n.available["initial"];
-		}
+		var strings = $_eseecode.ui.translation.strings;
 		var translated;
-		if (lang[text]) {
-			translated = lang[text];
+		if (strings[text]) {
+			translated = strings[text];
 		} else {
 			translated = text;
 		}
@@ -27,39 +23,6 @@
 			}
 		}
 		return translated;
-	}
-
-	/**
-	 * Switch translation
-	 * @private
-	 * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new language, it takes "initial"
-	 * @example $e_switchLanguage("ca")
-	 */
-	function $e_switchLanguage(lang) {
-		if (lang === undefined) {
-			lang = $_eseecode.i18n.current;
-		}
-		// Check the translation is available
-		if (!$_eseecode.i18n.available[lang]) {
-			lang = "initial";
-		}
-		$_eseecode.i18n.current = lang;
-		$e_addStaticText();
-		$e_switchDialogMode();
-		$e_resetGridModeSelect();
-		$e_switchConsoleMode();
-		document.getElementById("language-select").value = lang;
-		var translator = "";
-		if ($_eseecode.i18n.available[lang].translator) {
-			translator = $_eseecode.i18n.available[lang].translator;
-			if ($_eseecode.i18n.available[lang].translatorLink) {
-				translator = "<span class=\"link\" onclick=\"window.open('"+$_eseecode.i18n.available[lang].translatorLink+"','_blank')\">"+translator+"</span>";
-			}
-			translator = _("Translated to %s by %s",[$_eseecode.i18n.available[lang].name,translator]);
-		}
-		if (document.getElementById("language-translator")) {
-			document.getElementById("language-translator").innerHTML = translator;
-		}
 	}
 
 	/**
@@ -74,8 +37,10 @@
 			document.getElementById("console-tabs-"+levelId).innerHTML = _(levelText);
 			document.getElementById("console-tabs-"+levelId).title = _("Double click to maximize/restore");
 		}
-		document.getElementById("language-title").innerHTML = _("Select language")+": ";
-		document.getElementById("language-select").title = _("Select language");
+		document.getElementById("translations-title").innerHTML = _("Select language")+": ";
+		document.getElementById("translations-select").title = _("Select language");
+		document.getElementById("themes-title").innerHTML = _("Select theme")+": ";
+		document.getElementById("themes-select").title = _("Select theme");
 		document.getElementById("title-logo").title = _($_eseecode.platform.name.text);
 		document.getElementById("dialog-setup-author").innerHTML = _("v")+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.version.link)+"','_blank')\"\">"+_($_eseecode.platform.version.text)+"</span><br />"
 		//+_("Author")+": "+"<span class=\"link\" onclick=\"window.open('"+_($_eseecode.platform.author.link)+"','_blank')\">"+_($_eseecode.platform.author.text)+"</span><br />"
@@ -126,32 +91,4 @@
 		document.getElementById("setup-execute-time").title = _("Number of seconds to run");
 		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");
 		document.getElementById("whiteboard-tabs-download-button").title = _("Download as an image");
-	}
-
-	/**
-	 * Initializes/Resets the language selection element to provide all available translations
-	 * @private
-	 * @example $e_resetLanguageSelect("ca")
-	 */
-	function $e_resetLanguageSelect() {
-		var select = document.getElementById("language-select");
-		// Reset languages in dropdown menu
-		select.options.length = 0;
-		// Get available translations
-		var languages = [];
-		for (var langKey in $_eseecode.i18n.available) {
-			languages.push([langKey, $_eseecode.i18n.available[langKey].name]);
-		}
-		// Sort by name
-		languages = languages.sort(function(a,b) {
-			return a[1] > b[1];
-		});
-		// Add languages to dropdown menu
-		for (var i=0; i<languages.length; i++) {
-			var langKey = languages[i][0];
-			var option = document.createElement("option");
-			option.text = $_eseecode.i18n.available[langKey].name;
-			option.value = langKey;
-			select.add(option, null);
-		}
 	}

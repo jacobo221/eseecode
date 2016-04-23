@@ -2,17 +2,32 @@
 	
 	if (!$_eseecode) {
 		var $_eseecode = {};
-		if (!$_eseecode.instructions) {
-			$_eseecode.instructions = {};
-		}
+	}
+	if (!$_eseecode.instructions) {
+		$_eseecode.instructions = {};
+	}
+	if (!$_eseecode.ui) {
+		$_eseecode.ui = {};
+	}
+	if (!$_eseecode.ui.translations) {
+		$_eseecode.ui.translations = {};
+	}
+	if (!$_eseecode.ui.themes) {
+		$_eseecode.ui.themes = {};
 	}
 	var handle;
 	var mainURL;
 	var setupItems = [
 			{
-				id: "Language",
+				id: "Application settings",
 				items: [
-					{ id: "lang", title: "Language", type: "select", options: ["ca", "en", "es"], initial: "en", help: "Set the language you want for eSeeCode's user interface." }
+					{ id: "lang", title: "Language", type: "select", options: $_eseecode.ui.translations, initial: "default", help: "Set the language you want for eSeeCode's user interface." },
+					{ id: "translations", title: "Display translations menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the translations should be visible or hidden." },
+					{ id: "theme", title: "Theme", type: "select", options: $_eseecode.ui.themes, initial: "default", help: "Set the theme you want for eSeeCode's user interface." },
+					{ id: "themes", title: "Display themes menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the themes should be visible or hidden." },
+					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden." },
+					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden." },
+					{ id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage)." }
 				]
 			},
 			{
@@ -21,7 +36,8 @@
 					{ id: "view", title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially." },
 					{ id: "viewtabs", title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available." },
 					{ id: "blocksetup", title: "Block setup", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default." },
-					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." }
+					{ id: "maximize", title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." },
+					{ id: "timeout", title: "How long before the execution of a program is stopped?", type: "number", initial: "10", help: "Set the amount of seconds programs are aloud to run before stopping them." }
 				]
 			},
 			{
@@ -29,33 +45,14 @@
 				items: [
 					{ id: "guide", title: "Display guide?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden." },
 					{ id: "grid", title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden." },
-					{ id: "griddivisions", title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." }
-				]
-			},
-			{
-				id: "Axis",
-				items: [
+					{ id: "griddivisions", title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." },
 					{ id: "axis", title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" }
-				]
-			},
-			{
-				id: "Application settings",
-				items: [
-					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden." },
-					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden." },
-					{ id: "preventexit", title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage)." }
 				]
 			},
 			{
 				id: "Instructions",
 				items: [
 					{ id: "instructions", title: "Instructions to show (leave blank to use default)", type: "order", options: $_eseecode.instructions.set, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Move them from the left to the right column by selecting an intruction in the left column and clicking the \">\" button. You can add an instruction several times.</li><li>Double-click any instruction in the right column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the right column by selecting it and clicking the \"^\" or \"v\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"&lt;\"button.</li><li>Click the \"-----\" button to add a separator to the instructions in the right column. The separator will be added at the end, remember to move it up with the \"^\" button.</li></ul>" }
-				]
-			},
-			{
-				id: "Execution",
-				items: [
-					{ id: "timeout", title: "How long before the execution of a program is stopped?", type: "number", initial: "10", help: "Set the amount of seconds programs are aloud to run before stopping them." }
 				]
 			},
 			{
@@ -161,12 +158,21 @@
 					select.id = setupPage[key].id;
 					var options = setupPage[key].options;
 					var selectOptions = "";
-					for (var id in options) {
-						var selected = "";
-						if (defaultValue && (options[id].toLocaleLowerCase() === defaultValue.toLocaleLowerCase())) {
+					for (var optionsKey in options) {
+						var selected = "", selectId = "";
+						var id, value;
+						if ((typeof options[optionsKey]) === "object") {
+							id = options[optionsKey].id;
+							value = options[optionsKey].name;
+							selectId = " value=\""+id+"\"";
+						} else {
+							value = options[optionsKey];
+							id = value;
+						}
+						if (defaultValue && (id.toLowerCase() === defaultValue.toLowerCase())) {
 							selected = " selected";
 						}
-						selectOptions += "<option"+selected+">"+options[id]+"</option>";
+						selectOptions += "<option"+selectId+selected+">"+value+"</option>";
 					}
 					select.innerHTML = selectOptions;
 					select.addEventListener("change", buildURL);
@@ -184,7 +190,7 @@
 						if (defaultValue) {
 							var defaultOptions = defaultValue.split(";");
 							for (var defaultOption in defaultOptions) {
-								if (options[id].toLocaleLowerCase() === defaultOptions[defaultOption].toLocaleLowerCase()) {
+								if (options[id].toLowerCase() === defaultOptions[defaultOption].toLowerCase()) {
 									selected = " selected";
 								}
 							}
