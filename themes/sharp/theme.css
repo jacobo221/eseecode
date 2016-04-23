@@ -146,6 +146,9 @@
 		background-color: #FFFFFF;
 		color: inherit;
 		overflow-x: hidden;
+		border: 1px solid #666666;
+		border-top: none;
+		border-bottom: none;
 	}
 	.separator {
 		border-bottom: 1px solid #FFFFFF;
@@ -245,6 +248,7 @@
 		color: inherit;
 		width: 100%;
 		height: 28px;
+		border: 1px solid #666666;
 	}
 	#console-buttons {
 	}
