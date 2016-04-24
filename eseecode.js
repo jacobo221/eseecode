@@ -4,10 +4,11 @@
 	 * @license GPL-3.0
 	 */
 
-	var scripts = document.getElementsByTagName("script");
-	var scriptPath = scripts[scripts.length-1].src
-	var eseecodePath = scriptPath.substring(0,scriptPath.lastIndexOf("/"));
-	scripts = undefined, scriptPath = undefined;
+	var $_eseecodePath = (function(){
+			var scripts = document.getElementsByTagName("script");
+			var scriptPath = scripts[scripts.length-1].src;
+			return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
+		})();
 	// Make sure the browser supports the minimum to run the platform
 	var browserNotSupportedErrorMessage = "Your browser is incompatible with eSeeCode. It is probably too old!";
 	if (!document || !document.getElementById || !document.createElement || !document.addEventListener || !document.appendChild) {
@@ -25,7 +26,7 @@
 					eseecodeDiv.id = "eseecode";
 					document.body.appendChild(eseecodeDiv);
 				}
-				eseecode.style.visibility = "hidden";
+				eseecodeDiv.style.visibility = "hidden";
 				var progressDiv = document.createElement("div");
 				progressDiv.style.textAlign = "center";
 				progressDiv.style.fontWeight = "center";
@@ -70,11 +71,11 @@
 					"js/jsgif/NeuQuant.js",
 					"js/jsgif/GIFEncoder.js" ];
 				var jsFilesLoadedCount = 0;
-	    			var headElement = document.getElementsByTagName("head")[0];
+	    		var headElement = document.getElementsByTagName("head")[0];
 				var jsFilesLoad = function(jsFilesLoadedCount) {
 					progressDiv.firstChild.nextSibling.innerHTML = jsFilesLoadedCount+"/"+jsFiles.length;
 					if (jsFilesLoadedCount < jsFiles.length) {
-						var filepath = eseecodePath+"/"+jsFiles[jsFilesLoadedCount];
+						var filepath = $_eseecodePath+"/"+jsFiles[jsFilesLoadedCount];
 						var elementJS = document.createElement("script");
 						elementJS.setAttribute("type", "text/javascript");
 						elementJS.setAttribute("src", filepath);
@@ -96,7 +97,7 @@
 								elementCSS.onload = function() { cssFilesLoad(cssFilesLoadedCount+1); };
 								headElement.appendChild(elementCSS);
 							} else {
-								eseecode.style.visibility = "visible";
+								eseecodeDiv.style.visibility = "visible";
 								// Init application
 								$e_resetUI();
 								progressDiv.parentNode.removeChild(progressDiv);
