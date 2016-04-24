@@ -89,7 +89,7 @@
 						var cssFilesLoad = function(cssFilesLoadedCount) {
 							progressDiv.firstChild.nextSibling.innerHTML = (jsFilesLoadedCount+cssFilesLoadedCount)+"/"+(jsFiles.length+cssFiles.length);
 							if (cssFilesLoadedCount < cssFiles.length) {
-								var filepath = eseecodePath+"/"+defaultThemePath+"/"+cssFiles[cssFilesLoadedCount];
+								var filepath = $_eseecodePath+"/"+defaultThemePath+"/"+cssFiles[cssFilesLoadedCount];
 								var elementCSS = document.createElement("link");
 								elementCSS.setAttribute("rel", "stylesheet");
 								elementCSS.setAttribute("type", "text/css");
