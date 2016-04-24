@@ -1328,7 +1328,7 @@
 		}
 		$e_initUIElements();
 		$e_resetThemesmenu();
-		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.platform.logo.text+'" title="" /></a>';
+		document.getElementById("title").innerHTML = '<a href="'+$_eseecode.platform.logo.link+'" target="_blank"><img id="title-logo" src="'+$_eseecode.basepath+$_eseecode.platform.logo.text+'" title="" /></a>';
 		$e_resetGridModeSelect();
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();

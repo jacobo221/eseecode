@@ -4,22 +4,21 @@
 	 * @license GPL-3.0
 	 */
 
-	var $_eseecodePath = (function(){
-			var scripts = document.getElementsByTagName("script");
-			var scriptPath = scripts[scripts.length-1].src;
-			return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
-		})();
 	// Make sure the browser supports the minimum to run the platform
-	var browserNotSupportedErrorMessage = "Your browser is incompatible with eSeeCode. It is probably too old!";
 	if (!document || !document.getElementById || !document.createElement || !document.addEventListener || !document.appendChild) {
 		// Can't event support msgBox()
-		alert(browserNotSupportedErrorMessage);
+		alert("Your browser is incompatible with eSeeCode. It is probably too old!");
 	} else {
 		var testCanvas = document.createElement('canvas');
 		if (!window.addEventListener || !(testCanvas.getContext && testCanvas.getContext('2d')) || !document.querySelector) {
-			alert(browserNotSupportedErrorMessage+"!!");
+			alert("Your browser is incompatible with eSeeCode. It is probably too old!!!");
 		} else {
 			window.addEventListener("load", function() {
+				var eseecodePath = (function(){
+						var scripts = document.getElementsByTagName("script");
+						var scriptPath = scripts[scripts.length-1].src;
+						return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
+					})();
 				var eseecodeDiv = document.getElementById("eseecode");
 				if (!eseecodeDiv) {
 					eseecodeDiv = document.createElement("div");
@@ -75,7 +74,7 @@
 				var jsFilesLoad = function(jsFilesLoadedCount) {
 					progressDiv.firstChild.nextSibling.innerHTML = jsFilesLoadedCount+"/"+jsFiles.length;
 					if (jsFilesLoadedCount < jsFiles.length) {
-						var filepath = $_eseecodePath+"/"+jsFiles[jsFilesLoadedCount];
+						var filepath = eseecodePath+"/"+jsFiles[jsFilesLoadedCount];
 						var elementJS = document.createElement("script");
 						elementJS.setAttribute("type", "text/javascript");
 						elementJS.setAttribute("src", filepath);
@@ -89,7 +88,7 @@
 						var cssFilesLoad = function(cssFilesLoadedCount) {
 							progressDiv.firstChild.nextSibling.innerHTML = (jsFilesLoadedCount+cssFilesLoadedCount)+"/"+(jsFiles.length+cssFiles.length);
 							if (cssFilesLoadedCount < cssFiles.length) {
-								var filepath = $_eseecodePath+"/"+defaultThemePath+"/"+cssFiles[cssFilesLoadedCount];
+								var filepath = eseecodePath+"/"+defaultThemePath+"/"+cssFiles[cssFilesLoadedCount];
 								var elementCSS = document.createElement("link");
 								elementCSS.setAttribute("rel", "stylesheet");
 								elementCSS.setAttribute("type", "text/css");
