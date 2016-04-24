@@ -126,7 +126,6 @@
 					numFilesLoaded += filesLoadedCount;
 					var percentageLoaded = parseInt(numFilesLoaded*100/numFilesToLoad);
 					progressDiv.firstChild.nextSibling.innerHTML = (percentageLoaded<10?"0"+percentageLoaded:percentageLoaded)+"%";
-					console.log(progressDiv.firstChild.nextSibling.innerHTML);
 					// If all files in this batch have been loaded, move to next level
 					if (filesLoadedCount >= filesToLoad[filesIndex].length) {
 						filesIndex++;
