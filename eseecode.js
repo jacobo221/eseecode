@@ -13,12 +13,12 @@
 		if (!window.addEventListener || !(testCanvas.getContext && testCanvas.getContext('2d')) || !document.querySelector) {
 			alert("Your browser is incompatible with eSeeCode. It is probably too old!!!");
 		} else {
+			var eseecodePath = (function(){
+					var scripts = document.getElementsByTagName("script");
+					var scriptPath = scripts[scripts.length-1].src;
+					return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
+				})();
 			window.addEventListener("load", function() {
-				var eseecodePath = (function(){
-						var scripts = document.getElementsByTagName("script");
-						var scriptPath = scripts[scripts.length-1].src;
-						return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
-					})();
 				var eseecodeDiv = document.getElementById("eseecode");
 				if (!eseecodeDiv) {
 					eseecodeDiv = document.createElement("div");
@@ -39,74 +39,109 @@
 				progressDiv.style.height = eseecodeDiv.offsetHeight+"px";
 				progressDiv.innerHTML = "<span>Loading... </span><span></span>";
 				eseecodeDiv.parentNode.insertBefore(progressDiv, eseecodeDiv);
-				// Load files, in this order
-				var jsFiles = [
-					"js/dom.js",
-					"js/defaults.js",
-					"themes/installed.js",
-					"css/theme.js",
-					"translations/installed.js",
-					"js/common.js",
-					"js/backend.js",
-					"js/execution.js",
-					"js/blocks.js",
-					"js/levelConvert.js",
-					"js/debug.js",
-					"js/ui.js",
-					"js/translate.js",
-					"js/api.js",
-					"js/instructions/set.js",
-					"js/instructions/categories.js",
-					"js/instructions/implementation.js",
-					"js/instructions/icons.js",
-					"js/jison/eseecodeLanguage.js",
-					"js/jison/makeBlocks.js",
-					"js/jison/makeWrite.js",
-					"js/ace/ace.js",
-					"js/ace/ext-language_tools.js",
-					"js/fontdetect/fontdetect.js",
-					"js/jscolor/jscolor.js",
-					"js/jsgif/LZWEncoder.js",
-					"js/jsgif/NeuQuant.js",
-					"js/jsgif/GIFEncoder.js" ];
-				var jsFilesLoadedCount = 0;
-	    		var headElement = document.getElementsByTagName("head")[0];
-				var jsFilesLoad = function(jsFilesLoadedCount) {
-					progressDiv.firstChild.nextSibling.innerHTML = jsFilesLoadedCount+"/"+jsFiles.length;
-					if (jsFilesLoadedCount < jsFiles.length) {
-						var filepath = eseecodePath+"/"+jsFiles[jsFilesLoadedCount];
-						var elementJS = document.createElement("script");
-						elementJS.setAttribute("type", "text/javascript");
-						elementJS.setAttribute("src", filepath);
-						elementJS.onload = function() { jsFilesLoad(jsFilesLoadedCount+1); };
-						headElement.appendChild(elementJS);
-					} else {
-						// Now load CSS files
-						var defaultThemePath = "css"
-						var cssFiles = $_eseecode.ui.theme.files;
-						var cssFilesLoadedCount = 0;
-						var cssFilesLoad = function(cssFilesLoadedCount) {
-							progressDiv.firstChild.nextSibling.innerHTML = (jsFilesLoadedCount+cssFilesLoadedCount)+"/"+(jsFiles.length+cssFiles.length);
-							if (cssFilesLoadedCount < cssFiles.length) {
-								var filepath = eseecodePath+"/"+defaultThemePath+"/"+cssFiles[cssFilesLoadedCount];
-								var elementCSS = document.createElement("link");
-								elementCSS.setAttribute("rel", "stylesheet");
-								elementCSS.setAttribute("type", "text/css");
-								elementCSS.setAttribute("href", filepath);
-								elementCSS.onload = function() { cssFilesLoad(cssFilesLoadedCount+1); };
-								headElement.appendChild(elementCSS);
-							} else {
-								eseecodeDiv.style.visibility = "visible";
-								// Init application
-								$e_resetUI();
-								progressDiv.parentNode.removeChild(progressDiv);
+				// Load files, when order does matter:
+				// File batches are divided in arrays to separate dependencies, so all files in same array are loaded in parallel
+				// Functions can be called to add more files
+				var filesToLoad = [
+					[
+						"js/defaults.js"
+					], [
+						// Depends on js/defaults.js
+						"js/dom.js",
+						"themes/installed.js",
+						"css/theme.js",
+						"translations/installed.js",
+						"js/common.js",
+						"js/backend.js",
+						"js/execution.js",
+						"js/blocks.js",
+						"js/levelConvert.js",
+						"js/ui.js",
+						"js/translate.js",
+						"js/api.js",
+						"js/instructions/set.js",
+						"js/instructions/categories.js",
+						"js/instructions/implementation.js",
+						"js/instructions/icons.js",
+						"js/jison/eseecodeLanguage.js",
+						"js/ace/ace.js",
+						"js/fontdetect/fontdetect.js",
+						"js/jscolor/jscolor.js",
+						"js/jsgif/LZWEncoder.js",
+						"js/jsgif/NeuQuant.js",
+						"js/jsgif/GIFEncoder.js"
+					], [
+						// Depends on theme.js
+						function() { return $_eseecode.ui.theme.files; },
+						// Depends on js/ace/ace.js
+						"js/debug.js",
+						"js/ace/ext-language_tools.js",
+						// Depends on js/jison/eseecodeLanguage.js
+						"js/jison/makeBlocks.js",
+						"js/jison/makeWrite.js"
+						]
+					];
+				var filesLoadedCount = 0;
+				var filesLoad = function(filesToLoad, filesIndex) {
+					if (filesIndex === undefined) {
+						filesIndex = 0;
+					}
+					var batch = filesToLoad[filesIndex];
+					for (var i=0; i < batch.length; i++) {
+						if (typeof batch[i] == "function") {
+							var newFilesToAdd = batch[i]();
+							filesToLoad.push(newFilesToAdd);
+							fileLoaded(filesToLoad, filesIndex);
+						} else {
+	    					var headElement = document.getElementsByTagName("head")[0];
+							var fileType = batch[i].substring(batch[i].lastIndexOf(".")+1);
+							var newElement;
+							if (fileType == "js") {
+								var filepath = eseecodePath+"/"+batch[i];
+								newElement = document.createElement("script");
+								newElement.setAttribute("type", "text/javascript");
+								newElement.setAttribute("src", filepath);
+							} else if (fileType == "css") {
+								var filepath = eseecodePath+"/css/"+batch[i];
+								newElement = document.createElement("link");
+								newElement.setAttribute("rel", "stylesheet");
+								newElement.setAttribute("type", "text/css");
+								newElement.setAttribute("href", filepath);
 							}
-						};
-						cssFilesLoad(0);
+							newElement.onload = function(event) { fileLoaded(filesToLoad, filesIndex); };
+							headElement.appendChild(newElement);
+						}
 					}
 				}
-				jsFilesLoad(0);
+				var fileLoaded = function(filesToLoad, filesIndex) {
+					filesLoadedCount++;
+					// Calculate percentage loaded
+					var numFilesToLoad = 0, numFilesLoaded = 0;
+					for (var i=0; i < filesToLoad.length; i++) {
+						numFilesToLoad += filesToLoad[i].length;
+						if (i < filesIndex) {
+							numFilesLoaded = numFilesToLoad;
+						}
+					}
+					numFilesLoaded += filesLoadedCount;
+					var percentageLoaded = parseInt(numFilesLoaded*100/numFilesToLoad);
+					progressDiv.firstChild.nextSibling.innerHTML = (percentageLoaded<10?"0"+percentageLoaded:percentageLoaded)+"%";
+					console.log(progressDiv.firstChild.nextSibling.innerHTML);
+					// If all files in this batch have been loaded, move to next level
+					if (filesLoadedCount >= filesToLoad[filesIndex].length) {
+						filesIndex++;
+						if (filesIndex < filesToLoad.length) {
+							filesLoadedCount = 0;
+							filesLoad(filesToLoad, filesIndex);  // Recursive call
+						} else {
+							// All files loaded, start application
+							eseecodeDiv.style.visibility = "visible";
+							$e_resetUI();
+							progressDiv.parentNode.removeChild(progressDiv);
+						}
+					}
+				};
+				filesLoad(filesToLoad);
 			}, false);
 		}
 	}
-
