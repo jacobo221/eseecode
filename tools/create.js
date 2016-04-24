@@ -21,9 +21,9 @@
 			{
 				id: "Application settings",
 				items: [
-					{ id: "lang", title: "Language", type: "select", options: $_eseecode.ui.translations, initial: "default", help: "Set the language you want for eSeeCode's user interface." },
+					{ id: "lang", title: "Language", type: "select", options: $_eseecode.ui.translations, sort: true, initial: "default", help: "Set the language you want for eSeeCode's user interface." },
 					{ id: "translations", title: "Display translations menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the translations should be visible or hidden." },
-					{ id: "theme", title: "Theme", type: "select", options: $_eseecode.ui.themes, initial: "default", help: "Set the theme you want for eSeeCode's user interface." },
+					{ id: "theme", title: "Theme", type: "select", options: $_eseecode.ui.themes, initial: "default", sort: true, help: "Set the theme you want for eSeeCode's user interface." },
 					{ id: "themes", title: "Display themes menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the themes should be visible or hidden." },
 					{ id: "filemenu", title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden." },
 					{ id: "fullscreenmenu", title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden." },
@@ -157,6 +157,16 @@
 					var select = document.createElement("select");
 					select.id = setupPage[key].id;
 					var options = setupPage[key].options;
+					// Sort the items alphabetically
+					if (setupPage[key].sort && options) {
+						if ((typeof options[0]) === "object") {
+							options = options.sort(function(a,b) {
+								return a.name > b.name;
+							});
+						} else {
+							options.sort();
+						}
+					}
 					var selectOptions = "";
 					for (var optionsKey in options) {
 						var selected = "", selectId = "";
