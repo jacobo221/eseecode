@@ -1418,9 +1418,14 @@
 		$e_loadURLParams(undefined, ["dialog","theme"], true);
 		$_eseecode.session.updateOnConsoleSwitch = false;
 		$_eseecode.session.lastChange = 0;
-		if (!$_eseecode.session.ready) {
-			$_eseecode.session.ready = (new Date()).getTime();
+		var testUntilReady = function() {
+			if ($_eseecode.ui.translation.loaded && $_eseecode.ui.theme.loaded) {
+				$_eseecode.session.ready = (new Date()).getTime();
+			} else {
+				setTimeout(testUntilReady, 100);
+			}
 		}
+		testUntilReady();
 		return;
 	}
 	
@@ -2469,6 +2474,8 @@
 	 * @example $e_switchTranslation("ca")
 	 */
 	function $e_switchTranslation(lang, run) {
+		$_eseecode.ui.translation.loaded = false;
+		run = (!run || run !== false);
 		if (!lang || lang == "default") {
 			$_eseecode.ui.translation = { id: "default", name: "English", code: "en", strings: {} };
 			lang = "default";
@@ -2487,9 +2494,8 @@
 			}
 		}
 		// Add translation file
-		var runWhenTranslationLoaded = function() {};
-		if (!run || run !== false) {
-			runWhenTranslationLoaded = function() {
+		var runWhenTranslationLoaded = function(run) {
+			if (run) {
 				var translation = $_eseecode.ui.translation;
 				$e_addStaticText();
 				$e_switchDialogMode();
@@ -2497,7 +2503,6 @@
 				$e_resetTranslationsmenu();
 				$e_resetThemesmenu();
 				$e_switchConsoleMode();
-				var select = document.getElementById("translations-select");
 				var elementTranslator = document.getElementById("translations-translator");
 				if (translation._translator && elementTranslator) {
 					var translatorHTML = translation._translator;
@@ -2506,17 +2511,19 @@
 					}
 					elementTranslator.innerHTML = _("Translated to %s by %s",[translation.name,translatorHTML]);
 				}
-				select.value = lang;
-				document.getElementById("eseecode").setAttribute("lang",translation.code);
-	 		};
-		}
+			}
+			var select = document.getElementById("translations-select");
+			select.value = lang;
+			document.getElementById("eseecode").setAttribute("lang",translation.code);
+			$_eseecode.ui.translation.loaded = true;
+		};
 		if (lang === "default") {
-			runWhenTranslationLoaded();
+			runWhenTranslationLoaded(run);
 		} else {
 			var elementJS = document.createElement("script");
 			elementJS.setAttribute("type", "text/javascript");
 			elementJS.setAttribute("src", translationPath);
-			elementJS.onload = runWhenTranslationLoaded;
+			elementJS.onload = function() { runWhenTranslationLoaded(run); };
 			headElement.appendChild(elementJS);
 		}
 	}
@@ -2610,6 +2617,7 @@
 	 * @example $e_switchTheme("default")
 	 */
 	function $e_switchTheme(newTheme, redrawBlocks) {
+		$_eseecode.ui.theme.loaded = false;
 		if (!newTheme || newTheme === "") {
 			newTheme = "default";
 		}
@@ -2661,8 +2669,9 @@
 		elementJS.setAttribute("type", "text/javascript");
 		elementJS.setAttribute("src", newThemeJSPath);
 		elementJS.onload = function() {
-			var redrawBlocks = function() {
+			var informLoaded = function(redrawBlocks) {
 				if ($_eseecode.session.semaphor >= numCSSFiles) {
+					if (redrawBlocks) {
 				    	var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 				    	if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].div == "blocks") {
 							$e_initDialogBlocks(level, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
@@ -2672,10 +2681,12 @@
 				    	}
 				    	$e_initUIElements();
 				    	$e_resetGuide();
+					}
+					$_eseecode.ui.theme.loaded = true;
 					document.getElementById("themes-select").value = newTheme;
 				} else {
 					// Wait for all the CSS files to be uploaded
-					setTimeout(redrawBlocks, 100);
+					setTimeout(function(){informLoaded(redrawBlocks);}, 100);
 				}
 			}
 			var numCSSFiles = 0; // theme.css is already loaded
@@ -2686,10 +2697,10 @@
 				   	var filepath = newThemePath+"/"+basename;
 				   	var newElement = createCSSElement(filepath);
 					newElement.onload = function() { $_eseecode.session.semaphor++; };
-	    				headElement.appendChild(newElement);
+	    			headElement.appendChild(newElement);
 				}
 			}
-			redrawBlocks();
+			informLoaded(redrawBlocks);
 		}
 		headElement.appendChild(elementJS);
 	}
