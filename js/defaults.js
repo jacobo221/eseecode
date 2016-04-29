@@ -12,7 +12,11 @@
 		basepath: (function(){
 				var scripts = document.getElementsByTagName("script");
 				var scriptPath = scripts[scripts.length-1].src;
-				return scriptPath.substring(0,scriptPath.lastIndexOf("/js/"));
+				var result = scriptPath.substring(0,scriptPath.lastIndexOf("/js/"));
+				if (result.length == 0) {
+					result = ".";
+				}
+				return result;
 			})(),
 		platform: {
 			name: {
