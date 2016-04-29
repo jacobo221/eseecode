@@ -2275,6 +2275,16 @@
 	}
 
 	/**
+	 * Runs the code, triggered by the user
+	 * @private
+	 * @example $e_executeFromUI()
+	 */
+	function $e_executeFromUI() {
+		$e_stopPreviousAnimations();
+		$e_execute();
+	}
+
+	/**
 	 * Initializes/Resets the dialog window
 	 * @private
 	 * @param {!HTMLElement} dialog Dialog div element
