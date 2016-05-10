@@ -425,7 +425,7 @@ $_eseecode.ui.translation = {
 		"Output": "Sortida",
 		"Read an input from the I/O area": "Llegir una entrada de l'àrea I/O",
 		"Output a text in the I/O area": "Escriure un text al l'àrea I/O",
-		"Could not read a number, instead read:": "No s'ha pogut llegir un nombre, en el seu lloc s'ha llegit:",
+		"Could not read %s, instead read:": "No s'ha pogut llegir el valor %s, en el seu lloc s'ha llegit:",
 		"doesn't have a valid value:": "no te un valor vàlid:",
 		"Error found during execution at line %s in %s": "Error detectat a la linia %s executant %s",
 		"follow": "segueix",

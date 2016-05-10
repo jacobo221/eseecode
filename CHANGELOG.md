@@ -1,5 +1,5 @@
 ## 2.4 (ongoing work)
- *Milestone reached: Enpower guided exercises and challanges*
+ *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
  *   Now Layers can be called by name or position in the stack and you can check if a layer exists with getLayerExists()
@@ -26,6 +26,7 @@
  *   API_isReady allows to know if the plaform is ready for use in parent windows
  *   Support themes
  *   Translations format reworked to load dynamically
+ *   input() now supports "integer" type to read between chars in a string
  *   Fix: Redo block add after undo
  *   Fix: Changing mode right after loading a file showed a blank code
  *   Fix: If opening code on Touch mode show Run button

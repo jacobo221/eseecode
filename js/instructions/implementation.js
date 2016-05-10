@@ -2016,7 +2016,7 @@
 	 * Reads from the input area
 	 * @since 2.3
 	 * @public
-	 * @param {String} [type="guess"] How to read the input. Possible values: "char", "word", "number", "line", "guess"
+	 * @param {String} [type="guess"] How to read the input. Possible values: "char", "word", "number", "integer", "line", "guess"
 	 * @throws codeError
 	 * @example input("line")
 	 */
@@ -2032,7 +2032,7 @@
 		if (type == "char") {
 			result = $_eseecode.execution.inputRaw[$_eseecode.execution.inputPosition];
 			$_eseecode.execution.inputPosition++;
-		} else if (type=="word" || type=="number" || type=="guess") {
+		} else if (type == "word" || type == "number" || type == "integer" || type == "guess") {
 			var firstLetter = $_eseecode.execution.inputPosition;
 			while ((firstLetter < $_eseecode.execution.inputRaw.length) && ($_eseecode.execution.inputRaw[firstLetter] == " " || $_eseecode.execution.inputRaw[firstLetter] == "\t" || $_eseecode.execution.inputRaw[firstLetter] == "\n")) {
 				firstLetter++;
@@ -2040,32 +2040,41 @@
 			if (firstLetter >= $_eseecode.execution.inputRaw.length) {
 				return undefined;
 			}
-			var firstWhiteSpace = firstLetter;
-			while ((firstWhiteSpace < $_eseecode.execution.inputRaw.length) && ($_eseecode.execution.inputRaw[firstWhiteSpace] != " " && $_eseecode.execution.inputRaw[firstWhiteSpace] != "\t" && $_eseecode.execution.inputRaw[firstWhiteSpace] != "\n")) {
-				firstWhiteSpace++;
+			var lastLetter = firstLetter;
+			while ((lastLetter < $_eseecode.execution.inputRaw.length) && ($_eseecode.execution.inputRaw[lastLetter] != " " && $_eseecode.execution.inputRaw[lastLetter] != "\t" && $_eseecode.execution.inputRaw[lastLetter] != "\n")) {
+				lastLetter++;
 			}
-			var wordAsString = $_eseecode.execution.inputRaw.substring(firstLetter,firstWhiteSpace);
+			var wordAsString = $_eseecode.execution.inputRaw.substring(firstLetter, lastLetter);
 			if (type == "word") {
 				result = wordAsString;
-			} else {
-				var wordAsNumber = parseInt(wordAsString);
-				if (isNaN(wordAsNumber)) {
-					result = wordAsString;
-					if (type == "number") {
-						throw new $e_codeError("input",_("Could not read a number, instead read:")+" "+wordAsString);
-					}
+			} else if (type == "integer" || type == "number") {
+				var matchNumber;
+				if (type == "integer") {
+					matchNumber = wordAsString.match(/^[+-]?[0-9]+/);
 				} else {
-					result = wordAsNumber;
+					matchNumber = wordAsString.match(/^[+-]?[0-9]*\.?[0-9]+([eE][+-]?[0-9]+)?/);
+				}
+				if (!matchNumber) {
+					throw new $e_codeError("input", _("Could not read %s, instead read:", [type])+" "+wordAsString);
+				}
+				lastLetter = firstLetter+matchNumber[0].length;
+				wordAsString = $_eseecode.execution.inputRaw.substring(firstLetter, lastLetter);
+				result = parseFloat(wordAsString);
+			} else {
+				if (isFinite(wordAsString) && wordAsString.length > 0) {
+					result = parseFloat(wordAsString);
+				} else {
+					result = wordAsString;
 				}
 			}
-			$_eseecode.execution.inputPosition = firstWhiteSpace;
+			$_eseecode.execution.inputPosition = lastLetter;
 		} else if (type == "line") {
 			var endOfLine = $_eseecode.execution.inputPosition;
 			while (endOfLine < $_eseecode.execution.inputRaw.length && $_eseecode.execution.inputRaw[endOfLine] != "\n") {
 				endOfLine++;
 			}
 			result = $_eseecode.execution.inputRaw.substring($_eseecode.execution.inputPosition,endOfLine);
-			$_eseecode.execution.inputPosition = endOfLine+1;
+			$_eseecode.execution.inputPosition = endOfLine + 1;
 		}
 		return result;
 	}
