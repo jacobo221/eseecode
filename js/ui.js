@@ -1415,6 +1415,7 @@
 		$_eseecode.whiteboard.addEventListener("touchend", $e_handlerPointer, false);
 		$_eseecode.whiteboard.addEventListener("touchcancel", $e_handlerPointer, false);
 		$e_loadURLParams(undefined,["precode","code","postcode","execute","maximize"]);
+		$_eseecode.ui.theme.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
 		$e_loadURLParams(undefined, ["dialog","theme"], true);
 		$_eseecode.session.updateOnConsoleSwitch = false;
 		$_eseecode.session.lastChange = 0;

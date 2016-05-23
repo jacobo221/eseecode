@@ -1942,7 +1942,7 @@
 	 * @example changeAxis(200, 200)
 	 */
 	function changeAxis(posx, posy, xScale, yScale) {
-		$e_parseParameterTypes("changeAxis", arguments);
+		//$e_parseParameterTypes("changeAxis", arguments);
 		if (posx === undefined) {
 			posx = 0;
 		}
