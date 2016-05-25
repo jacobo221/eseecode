@@ -373,7 +373,7 @@
 	 * @example API_setInstructions("turnLeft;90;forward")
 	 */
 	function API_setInstructions(value, action) {
-		$_eseecode.session.disableCode = false; // By default enable code, but if there's a block with maxInstances enabled we must disable code
+		//$_eseecode.session.disableCode = false; // By default enable code, but if there's a block with maxInstances enabled we must disable code
 		var instructions = value.split(";");
 		var customNameCount = {};
 		$_eseecode.instructions.custom = [];
@@ -386,50 +386,58 @@
 			}
 			var baseInstructionId = instructionName;
 			var newInstructionId = baseInstructionId+"-custom"+customNameCount[instructionName];
-			if ($_eseecode.instructions.set[baseInstructionId]) {
-		        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
-		        $_eseecode.instructions.set[newInstructionId].show = [];
-		        var customInstructionsNum = 0;
-		        if ($_eseecode.instructions.custom) {
-		        	customInstructionsNum = $_eseecode.instructions.custom.length;
-		        }
-				$_eseecode.instructions.custom[customInstructionsNum] = newInstructionId;
-				var k = 0;
-				while (j+1+k < instructions.length && (
-				  $e_isNumber(instructions[j+1+k],true) ||
-				  $e_isBoolean(instructions[j+1+k],true) ||
-				  decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' ||
-				  decodeURIComponent(instructions[j+1+k]).charAt(0) == "'" ||
-				  instructions[j+1+k] == "noChange" ||
-				  instructions[j+1+k].indexOf("param:") == 0 ||
-				  instructions[j+1+k].indexOf("count:") == 0)) {
-                    // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
-                    if (instructions[j+1+k] == "noChange") {
-                    	$_eseecode.instructions.set[newInstructionId].noChange = true;
-                    } else if (instructions[j+1+k].indexOf("count:") == 0) {
-                    	var maxCount = parseInt(instructions[j+1+k].split(":")[1]);
-                    	if ($e_isNumber(maxCount)) {
-                    		$_eseecode.session.disableCode = true; // Disable Code view since we cannot count blocks usage there
-                    		$_eseecode.instructions.set[newInstructionId].maxInstances = maxCount;
-                    		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
-                    	}
-                    } else if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
-		            	var param = instructions[j+1+k];
-                    	if (param.indexOf("param:") == 0) {
-                    		param = param.split(":")[1];
-                    	}
-		            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = param;
-			        	$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
-			        } else {
-						console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
-			        }
-			        k++;
-				}
-				j += k;
-				newInstructionId++;
-			} else {
+			if ($_eseecode.instructions.set[baseInstructionId] === undefined) {
+				$_eseecode.instructions.set[baseInstructionId] = {parameters: []};
 				console.warn("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
 			}
+	        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
+	        $_eseecode.instructions.set[newInstructionId].show = [];
+	        var customInstructionsNum = 0;
+	        if ($_eseecode.instructions.custom) {
+	        	customInstructionsNum = $_eseecode.instructions.custom.length;
+	        }
+			$_eseecode.instructions.custom[customInstructionsNum] = newInstructionId;
+			var k = 0;
+			while (j+1+k < instructions.length && (
+			  $e_isNumber(instructions[j+1+k],true) ||
+			  $e_isBoolean(instructions[j+1+k],true) ||
+			  decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' ||
+			  decodeURIComponent(instructions[j+1+k]).charAt(0) == "'" ||
+			  instructions[j+1+k] == "noChange" ||
+			  instructions[j+1+k].indexOf("param:") == 0 ||
+			  instructions[j+1+k].indexOf("count:") == 0)) {
+                // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
+                if (instructions[j+1+k] == "noChange") {
+                	$_eseecode.instructions.set[newInstructionId].noChange = true;
+                } else if (instructions[j+1+k].indexOf("count:") == 0) {
+                	var maxCount = parseInt(instructions[j+1+k].split(":")[1]);
+                	if ($e_isNumber(maxCount)) {
+                		$_eseecode.instructions.set[newInstructionId].maxInstances = maxCount;
+                		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
+                		//$_eseecode.session.disableCode = true; // Disable Code view since we cannot count blocks usage there
+                		if ($_eseecode.instructions.instructionsLimited === undefined) {
+                			$_eseecode.instructions.instructionsLimited = {};
+                		}
+                		if ($_eseecode.instructions.instructionsLimited[baseInstructionId] === undefined) {
+                			$_eseecode.instructions.instructionsLimited[baseInstructionId] = [];
+                		}
+                		var instructionLimitedNum = $_eseecode.instructions.instructionsLimited[baseInstructionId].length;
+                		$_eseecode.instructions.instructionsLimited[baseInstructionId][instructionLimitedNum] = $_eseecode.instructions.set[newInstructionId];
+                	}
+                } else if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
+	            	var param = instructions[j+1+k];
+                	if (param.indexOf("param:") == 0) {
+                		param = param.split(":")[1];
+					}
+	            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = param;
+					$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
+		        } else {
+					console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
+		        }
+		        k++;
+			}
+			j += k;
+			newInstructionId++;
 		}
 		if (action !== false) {
 			$e_initDialogBlocks($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);

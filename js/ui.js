@@ -1333,7 +1333,7 @@
 		$e_resetUndoBlocks();
 		$e_resetBreakpoints();
 		$e_resetWatchpoints(true);
-		$e_resetInstructionsCount();
+		$e_resetInstructionLimits();
 		$e_resetFilemenu();
 		// init $_eseecode.modes array with div objects
 		for (var i=1;i<$_eseecode.modes.console.length;i++) {

@@ -639,7 +639,7 @@
 	}
 
 	/**
-	 * Enables/Disabled dialog blocks when their count reaches maxInstances
+	 * Enables/Disables dialog blocks when their count reaches maxInstances
 	 * @private
 	 * @param {!String|!HTMLElement} instruction Instruction id or dialog block
 	 * @example $e_updateBlockCount("forward1")
@@ -677,26 +677,14 @@
 				blockCountSpan.innerHTML = instruction.maxInstances;
 				dialogBlock.appendChild(blockCountSpan);
 			}
-			blockCountSpan.innerHTML = instruction.maxInstances - instruction.countInstances;
-			if (instruction.countInstances >= instruction.maxInstances) {
+			var instancesRemaining = instruction.maxInstances - instruction.countInstances;
+			if (instancesRemaining <= 0) {
+				instancesRemaining = 0;
 				dialogBlock.style.opacity = "0.4";
 			} else {
 				dialogBlock.style.opacity = "1";
 			}
-		}
-	}
-
-	/**
-	 * Resets the instances count for all instructions
-	 * @private
-	 * @example $e_resetInstructionsCount()
-	 */
-	function $e_resetInstructionsCount() {
-		for (var key in $_eseecode.instructions.set) {
-			var instruction = $_eseecode.instructions.set[key];
-			if ($e_isNumber(instruction.maxInstances)) {
-				instruction.countInstances = 0;
-			}
+			blockCountSpan.innerHTML = instancesRemaining;
 		}
 	}
 	
@@ -1853,6 +1841,7 @@
 		} else {
 			$_eseecode.session.blocksUndo[0]--;
 		}
+		$_eseecode.session.updateOnConsoleSwitch = "blocks";
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
 			$e_executeFromUI();
 		}

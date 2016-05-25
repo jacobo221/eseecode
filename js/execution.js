@@ -205,6 +205,22 @@
 			 window[$_eseecode.execution.sandboxProperties[i]] = undefined;
 		}
 	}
+	
+	/**
+	 * Reset the instruction limits counters
+	 * @private
+	 * @example $e_resetInstructionLimits()
+	 */
+	function $e_resetInstructionLimits() {
+		if ($_eseecode.instructions.instructionsLimited) {
+			for (var key in $_eseecode.instructions.instructionsLimited) {
+				var instructionLimits = $_eseecode.instructions.instructionsLimited[key];
+				for (var limitsCount=0; limitsCount < instructionLimits.length; limitsCount++) {
+					instructionLimits[limitsCount].countInstances = 0;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Checks and takes note of which variables where created during the last execution
@@ -286,6 +302,7 @@
 			$e_resetIO();
 			$e_resetBreakpointWatches();
 			$e_resetWatchpoints();
+			$e_resetInstructionLimits();
 		}
 		try {
 			var jsCode = "";

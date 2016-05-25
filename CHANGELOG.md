@@ -1,7 +1,12 @@
-## 2.4 (ongoing work)
+## 3.0 (ongoing work) Serekunda
+ *Milestone: Go big, go mainstream*
+ *   Maximum amount of uses per instruction is now applicable also in Code view
+ *   Fix: Undo/Redo and switching to Code view didn't update the code
+
+## 2.4 (ongoing work) Rum
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
- *   Instructions can now have a maximum amount of uses (only in blocks modes)
+ *   Instructions can now have a maximum amount of uses (in blocks views only)
  *   Now Layers can be called by name or position in the stack and you can check if a layer exists with getLayerExists()
  *   Debug shows the position and name of every layer
  *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
@@ -59,7 +64,7 @@
  *   Fix: Debug showing statistics when only precode has been run
  *   ...and many other bugfixes
 
-## 2.3 (2015-12-06)
+## 2.3 (2015-12-06) Qadah
 
  *Milestone reached: Easy input/output methods*
  *   New input and output instructions and panels
@@ -96,7 +101,7 @@
  *   Fix: Fixed initial value overwriting even without forceInitial in layer/number parameters
  *   Fix: Renamed custom attributes to HTML5 "data-" prefixes
 
-## 2.2 (2015-10-31)
+## 2.2 (2015-10-31) Porto
 
  *Milestone reached: Easily understandable runtime errors*
  *   Detect runtime call errors and show easily understandable explanations of such errors
@@ -125,7 +130,7 @@
  *   Fix: line() was missing minValue/maxValue definition
  *   Fix: setSize(1) made lines 2px wide
 
-## 2.1 (2015-10-06)
+## 2.1 (2015-10-06) Oslo
 
  *Milestone reached: Better design to make it easy to be used by teachers and students*
  * This is a major update with so many new features we had to split them into categories to list them all
@@ -195,7 +200,7 @@
  * Fix: unhilighting breakpoints in Code view when moving mouse out
  * Fix: several fixes in breakpoint position handing in write mode and when converting to blocks mode
 
-## 2.0 (2015-01-29)
+## 2.0 (2015-01-29) Nuuk
 
  *Milestone reached: Purely graphical programming in levels 1 and 2*
  * Setup blocks with a friendly interface
@@ -206,7 +211,7 @@
  * Highlight breakpoint in debug windows when execution reaches it
  * Highlight breakpoint in code onmouseover
 
-## 1.7 (2014-06-18)
+## 1.7 (2014-06-18) Mir
 
  * Translatable UI
  * Translations available: ca, es (by default: en)
@@ -216,7 +221,7 @@
  * Available API to easily embed eSeeCode into other platforms
  * Ace editor is now mandatory, makes no sense to keep compatibility with textarea
 
-## 1.6 (2014-06-10)
+## 1.6 (2014-06-10) Lausanne
 
  * Clean up of variables before execution, so executions are now independent from one another
  * Code must comply with "use strict"
@@ -225,7 +230,7 @@
  * Keep undo/redo list when changing modes, except if unavoidable
  * Most code reworked and reorganized
 
-## 1.5 (2014-06-01)
+## 1.5 (2014-06-01) Kathmandu
 
  *Milestone reached: Allow interactive developments*
  * Synthax and execution errors handling and highlighting
@@ -233,31 +238,31 @@
  * Code now is run in persistive state so real interactive applications can now be developped
  * Debug can highlight a single layer. Debug also points where the guide is in a layer if it is outbouds
 
-## 1.2 (2014-05-23)
+## 1.2 (2014-05-23) Jersusalem
 
  * Can now setup the blocks (parameters)
 
-## 1.1 (2014-05-12)
+## 1.1 (2014-05-12) Itsukushima
 
  * Allow to undo and redo
  * Highlight step by step in blocks
  * Random backgrounds
 
-## 1.0 (2014-04-20)
+## 1.0 (2014-04-20) Habana
 
  *Milestone reached: 4 interchangable levels of development*
  * Can change between all levels indistinctively
  * Now uses Jison http://zaach.github.io/jison/ to parse the code. Thanks to C. J. Ihrig for his jsparser! http://cjihrig.com/blog/creating-a-javascript-parser/
  * Beautify user's code in level4
 
-## 0.7 (2014-04-08)
+## 0.7 (2014-04-08) Gali
 
  * Icons change dynamically depending on the value of the parameters
  * Level4 can now use Ace http://ace.c9.io/#nav=about
  * It is now possible to load and save codes, and download the canvas image
  * Lots of beautifying
 
-## 0.6 (2014-03-15)
+## 0.6 (2014-03-15) Fez
 
  * Level2 working
  * Levels 2 and 3 now allow to reorder their blocks
@@ -265,27 +270,27 @@
  * Tips for system help
  * Instructions definition reworked
 
-## 0.5 (2014-02-17)
+## 0.5 (2014-02-17) Edmonton
 
  * Level3 working
  * Introduced instruction categories
 
-## 0.4 (2014-02-10)
+## 0.4 (2014-02-10) Djem
 
  * Level1 working
 
-## 0.3 (2014-02-03)
+## 0.3 (2014-02-03) Cairo
 
  * Debug system to list layers, their order, show their guide and run commands (independently of the code)
  * New Window API to create interactive applications
  * Can now maximize/restore the console
 
-## 0.2 (2014-01-31)
+## 0.2 (2014-01-31) Barcelona
 
  * Ability to run step by step
  * A customizable grid is available to help measure
 
-## 0.1 (2013-12-05)
+## 0.1 (2013-12-05) Athos
 
  *Milestone reached: Prototype*
  * Level 4 working
