@@ -1535,34 +1535,42 @@
 	 */
 	function animate(command, seconds, count, timeoutHandlersIndex) {
 		$e_parseParameterTypes("animate", arguments);
-		var returnValue;
-		if (typeof command === "string") {
-			try {
-				returnValue = eval(command);
-			} catch(event) {
-				// TODO: delays should reset timeout timestamp to avoid infinite loops but don't stop the animation with general timeout
-				if (event === "executionTimeout") {
-					if (timeoutHandlersIndex !== undefined) {
-						unanimate(timeoutHandlersIndex);
-					}
-					return false;
-				} else {
-					throw event;
-				}
-			}
-		} else if (typeof command === "function"){
-			command();
-		}
 		if (seconds === undefined) {
 			seconds = 0.5;
 		}
 		if (timeoutHandlersIndex === undefined) {
-			timeoutHandlersIndex = $_eseecode.session.timeoutHandlers.length;
-		} else {
-			clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
+			timeoutHandlersIndex = $_eseecode.execution.timeoutHandlers.length;
 		}
-		if (count > 1 || (count === undefined && returnValue !== false)) {
-			$_eseecode.session.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() { animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex); },seconds*1000);
+		var myscript = function(timeoutHandlersIndex) { // We encolse the call so we can add global variables that are only seen in this context
+				if (typeof command === "string") {
+					eval(command);
+				} else if (typeof command === "function"){
+					command();
+				}
+			};
+		try {
+			myscript(timeoutHandlersIndex);
+		} catch(event) {
+			if (event === "executionTimeout") {
+				if ($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]) {
+					unanimate(timeoutHandlersIndex);
+				}
+				return false;
+			} else {
+				throw event;
+			}
+		}
+		if ($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]) {
+			clearTimeout($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]);
+		}
+		if (count > 1 || count === undefined) {
+			$_eseecode.execution.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() {
+					var animationCountdownHandle = setTimeout(function() {
+							$_eseecode.execution.endLimit = 1; // This forces all code to stop
+						}, $_eseecode.execution.timeLimit);
+					animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex);
+					clearTimeout(animationCountdownHandle); // The animation finished running before the countdown so clear the countdown
+				}, seconds*1000);
 		}
 		return timeoutHandlersIndex;
 	}
@@ -1602,7 +1610,6 @@
 			$e_resetGuide(false); // Hide the guide
 			}, delay);
 	}
-	
 
 	/**
 	 * Stops an animation
@@ -1614,13 +1621,10 @@
 	function unanimate(timeoutHandlersIndex) {
 		$e_parseParameterTypes("unanimate", arguments);
 		if (timeoutHandlersIndex === undefined) {
-			for (var key in $_eseecode.session.timeoutHandlers) {
-				clearTimeout($_eseecode.session.timeoutHandlers[key]);
-				delete $_eseecode.session.timeoutHandlers[key];
-			}
+			$e_stopPreviousAnimations();
 		} else {
-			clearTimeout($_eseecode.session.timeoutHandlers[timeoutHandlersIndex]);
-			delete $_eseecode.session.timeoutHandlers[timeoutHandlersIndex];
+			clearTimeout($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]);
+			$_eseecode.execution.timeoutHandlers.splice(timeoutHandlersIndex, 1);
 		}
 	}
 

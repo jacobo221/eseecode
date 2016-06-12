@@ -1,6 +1,8 @@
 ## 3.0 (ongoing work) Serekunda
  *Milestone: Go big, go mainstream*
  *   Maximum amount of uses per instruction is now applicable also in Code view
+ *   Time limit now affects main thread and each iteration in an animation separately
+ *   Better code-style for inline functions and objects
  *   Fix: Undo/Redo and switching to Code view didn't update the code
 
 ## 2.4 (ongoing work) Rum

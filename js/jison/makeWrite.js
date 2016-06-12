@@ -135,6 +135,13 @@
 		}
 		return itIs;
 	}
+	
+	function addInlineIndention(indent, text) {
+		if (typeof text === "string") {
+			text = text.replace(/\n/g,"\n"+indent);
+		}
+		return text;
+	}
 
 	ast.ProgramNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var elements = this.body;
@@ -190,7 +197,7 @@
 		if (realCode) {
 			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
 		}
-		var ifTest = this.test.makeWrite(level, "", "", realCode);
+		var ifTest = addInlineIndention(indent, this.test.makeWrite(level, "", "", realCode));
 		if (realCode) {
 			checkInstructionLimits("if", [ifTest]);
 		}
@@ -232,7 +239,7 @@
 	};
 
 	ast.LabeledStatementNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		return indent + this.label.makeWrite(level, "", "", realCode) + ": " + this.body.makeWrite(level, "", "", realCode);
+		return indent + addInlineIndention(indent, this.label.makeWrite(level, "", "", realCode)) + ": " + addInlineIndention(indent, this.body.makeWrite(level, "", "", realCode));
 	};
 
 	ast.BreakStatementNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
@@ -241,7 +248,7 @@
 
 		var labelText = "";
 		if (label !== null) {
-			labelText += " " + label.makeWrite(level, "", "", realCode);
+			labelText += " " + addInlineIndention(indent, label.makeWrite(level, "", "", realCode));
 		}
 		str += " " + labelText;
 		
@@ -258,7 +265,7 @@
 		
 		var labelText = "";
 		if (label !== null) {
-			labelText += " " + label.makeWrite(level, "", "", realCode);
+			labelText += " " + addInlineIndention(indent, label.makeWrite(level, "", "", realCode));
 		}
 		str += " " + labelText;
 		
@@ -270,7 +277,7 @@
 	};
 
 	ast.WithStatementNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var str = indent + "with (" + this.object.makeWrite(level, "", "", realCode) + ") {\n";
+		var str = indent + "with (" + addInlineIndention(indent, this.object.makeWrite(level, "", "", realCode)) + ") {\n";
 		if (this.body.type === "BlockStatement") {
 			str += this.body.makeWrite(level, indent, indentChar, realCode);
 		} else {
@@ -285,7 +292,7 @@
 		if (realCode) {
 			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
 		}
-		str += this.discriminant.makeWrite(level, "", "", realCode);
+		str += addInlineIndention(indent, this.discriminant.makeWrite(level, "", "", realCode));
 		if (realCode) {
 			str += ")";
 		}
@@ -308,7 +315,7 @@
 
 		var argText = "";
 		if (argument !== null) {
-			argText = argument.makeWrite(level, "", "", realCode);
+			argText = addInlineIndention(indent, argument.makeWrite(level, "", "", realCode));
 		}
 		str += " " + argText;
 		
@@ -324,7 +331,7 @@
 		var argument = this.argument;
 
 		if (argument !== null) {
-			str += " " + argument.makeWrite(level, "", "", realCode);
+			str += " " + addInlineIndention(indent, argument.makeWrite(level, "", "", realCode));
 		}
 
 		return str;
@@ -359,7 +366,7 @@
 		if (realCode) {
 			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
 		}
-		var testText = this.test.makeWrite(level, "", "", realCode);
+		var testText = addInlineIndention(indent, this.test.makeWrite(level, "", "", realCode));
 		str += testText;
 		if (realCode) {
 			checkInstructionLimits("while", [testText]);
@@ -381,7 +388,7 @@
 
 	ast.RepeatStatementNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var str = indent;
-		var condition = this.test.makeWrite(level, "", "", realCode);
+		var condition = addInlineIndention(indent, this.test.makeWrite(level, "", "", realCode));
 		if (realCode) {
 			checkInstructionLimits("repeat", [condition]);
 			var internalCounter = "repeatCount"+(Math.floor(Math.random()*1000000000));
@@ -418,7 +425,7 @@
 	};
 
 	ast.DoWhileStatementNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var testText = this.test.makeWrite(level, "", "", realCode);
+		var testText = addInlineIndention(indent, this.test.makeWrite(level, "", "", realCode));
 		if (realCode) {
 			checkInstructionLimits("while", [testText]);
 		}
@@ -455,38 +462,44 @@
 					if (i !== 0)
 						testText += ", ";
 
-					testText += init[i].makeWrite(level, "", "", realCode);
+					testText += addInlineIndention(indent, init[i].makeWrite(level, "", "", realCode));
 				}
 			} else {
-				testText += init.makeWrite(level, "", "", realCode);
+				testText += addInlineIndention(indent, init.makeWrite(level, "", "", realCode));
 			}
 		}
 
 		testText += "; ";
+		str += testText;
 		if (realCode) {
-			testText += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
+			str += realCodeAddition(realCode,this.loc.start.line,true)+" || (";
 		}
 
 		if (test !== null) {
-			testText += test.makeWrite(level, "", "", realCode);
+			var testUserCode = addInlineIndention(indent, test.makeWrite(level, "", "", realCode));
+			testText += testUserCode;
+			str += testUserCode;
 		}
 
 		if (realCode) {
 			str += ")";
 		}
+		testText += "; ";
 		str += "; ";
 
 		if (update != null) {
-			str += update.makeWrite(level, "", "", realCode);
+			var updateUserCode = addInlineIndention(indent, update.makeWrite(level, "", "", realCode));
+			testText += updateUserCode;
+			str += updateUserCode;
 		}
 
 		if (realCode) {
 			checkInstructionLimits("for", [testText]);
 		}
 
-		str += testText + ") {";
+		str += ") {";
 		str += "\n";
-		str += body.makeWrite(level, indent + indentChar, indentChar, realCode);
+		str += body.makeWrite(level, indent, indentChar, realCode);
 		str += indent + "}";
 
 		return str;
@@ -499,12 +512,12 @@
 		var testText = "";
 		if (left !== null) {
 			if (left.type === "VariableDeclarator") {
-				testText += "var " + left.makeWrite(level, "", "", realCode);
+				testText += "var " + addInlineIndention(indent, left.makeWrite(level, "", "", realCode));
 			} else {
-				testText += left.makeWrite(level, "", "", realCode);
+				testText += addInlineIndention(indent, left.makeWrite(level, "", "", realCode));
 			}
 		}
-		testText += " in " + this.right.makeWrite(level, "", "", realCode);
+		testText += " in " + addInlineIndention(indent, this.right.makeWrite(level, "", "", realCode));
 		
 		if (realCode) {
 			checkInstructionLimits("for", [testText]);
@@ -524,7 +537,7 @@
 
 	ast.FunctionDeclarationNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var str = indent;
-		var name = this.id.makeWrite(level, "", "", realCode);
+		var name = addInlineIndention(indent, this.id.makeWrite(level, "", "", realCode));
 		if (realCode) {
 			// This change makes it work with "strict use" inside a try {}
 			str += "var "+name+" = function(";
@@ -575,7 +588,7 @@
 				str += ", ";
 			}
 
-			var declaration = declarations[i].makeWrite(level, "", "", realCode);
+			var declaration = addInlineIndention(indent, declarations[i].makeWrite(level, "", "", realCode));
 			
 			if (realCode) {
 				if (type === "array") {
@@ -595,13 +608,13 @@
 	};
 
 	ast.VariableDeclaratorNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var varName = this.id.makeWrite(level, "", "", realCode);
+		var varName = addInlineIndention(indent, this.id.makeWrite(level, "", "", realCode));
 		var str = varName;
 		var init = this.init;
 
 		var initText = undefined;
 		if (init !== null) {
-			initText = init.makeWrite(level, "", "", realCode);
+			initText = addInlineIndention(indent, init.makeWrite(level, "", "", realCode));
 			str += " = " + initText;
 		}
 		
@@ -625,7 +638,7 @@
 				str += ", ";
 			}
 
-			str += elements[i].makeWrite(level, "", "", realCode);
+			str += addInlineIndention(indent, elements[i].makeWrite(level, "", "", realCode));
 		}
 
 		return str + "]";
@@ -646,25 +659,25 @@
 			}
 
 			if (kind === "init") {
-				str += key.makeWrite(level, "", "") + ": " + value.makeWrite(level, "", "", realCode);
+				str += addInlineIndention(indent, key.makeWrite(level, "", "")) + ": " + addInlineIndention(indent, value.makeWrite(level, "", "", realCode));
 			} else {
 				var params = value.params;
 				var body = value.body;
 
-				str += kind + " " + key.makeWrite(level, "", "", realCode) + "(";
+				str += kind + " " + addInlineIndention(indent, key.makeWrite(level, "", "", realCode)) + "(";
 
 				for (var j = 0, plen = params.length; j < plen; j++) {
 					if (j !== 0) {
 						str += ", ";
 					}
 
-					str += params[j].makeWrite(level, "", "", realCode);
+					str += addInlineIndention(indent, params[j].makeWrite(level, "", "", realCode));
 				}
 
 				str += ") { ";
 
 				for (var j = 0, blen = body.length; j < blen; j++) {
-					str += body[j].makeWrite(level, "", "", realCode) + " ";
+					str += addInlineIndention(indent, body[j].makeWrite(level, "", "", realCode)) + " ";
 				}
 
 				str += "}";
@@ -679,11 +692,11 @@
 		var id = this.id;
 		var params = this.params;
 		var body = this.body;
-		indentChar = "\t";
+		var indentChar = "\t";
 		var newIndent = indent + indentChar;
-
+		
 		if (id !== null) {
-			str += " " + id.makeWrite(level, "", "", realCode);
+			str += " " + addInlineIndention(indent, id.makeWrite(level, "", "", realCode));
 		}
 
 		str += "(";
@@ -705,7 +718,7 @@
 			str += "\n";
 		}
 
-		return str + "})";
+		return str + indent + "})";
 	};
 
 	ast.SequenceExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
@@ -717,7 +730,7 @@
 				str += ", ";
 			}
 
-			str += expressions[i].makeWrite(level, "", "", realCode);
+			str += addInlineIndention(indent, expressions[i].makeWrite(level, "", "", realCode));
 		}
 
 		return str;
@@ -727,17 +740,17 @@
 		var str = this.operator;
 		if ((this.operator === "delete" || this.operator === "void" || this.operator === "typeof") ||
 		     (needBrackets(this, this.argument))) {
-			str += "(" + this.argument.makeWrite(level, "", "", realCode) + ")";
+			str += "(" + addInlineIndention(indent, this.argument.makeWrite(level, "", "", realCode)) + ")";
 		} else {
-			str += this.argument.makeWrite(level, "", "", realCode);
+			str += addInlineIndention(indent, this.argument.makeWrite(level, "", "", realCode));
 		}
 		return str;
 	};
 
 	ast.BinaryExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var str = "";
-		var firstOperandText = this.left.makeWrite(level, "", "", realCode);
-		var secondOperandText = this.right.makeWrite(level, "", "", realCode);
+		var firstOperandText = addInlineIndention(indent, this.left.makeWrite(level, "", "", realCode));
+		var secondOperandText = addInlineIndention(indent, this.right.makeWrite(level, "", "", realCode));
 		var operatorText = this.operator;
 		
 		if (realCode) {
@@ -759,9 +772,9 @@
 	};
 
 	ast.AssignmentExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var varName = this.left.makeWrite(level, "", "", realCode);
+		var varName = addInlineIndention(indent, this.left.makeWrite(level, "", "", realCode));
 		var operatorText = this.operator;
-		var valueText = this.right.makeWrite(level, "", "", realCode);
+		var valueText = addInlineIndention(indent, this.right.makeWrite(level, "", "", realCode));
 		
 		if (realCode) {
 			checkInstructionLimits(operatorText, [varName, valueText]);
@@ -778,7 +791,7 @@
 
 	ast.UpdateExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		var operatorText = this.operator;
-		var varName = this.argument.makeWrite(level, "", "", realCode);
+		var varName = addInlineIndention(indent, this.argument.makeWrite(level, "", "", realCode));
 		
 		if (realCode) {
 			checkInstructionLimits(operatorText, [varName]);
@@ -797,8 +810,8 @@
 	};
 
 	ast.LogicalExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var firstOperandText = this.left.makeWrite(level, "", "", realCode);
-		var secondOperandText = this.right.makeWrite(level, "", "", realCode);
+		var firstOperandText = addInlineIndention(indent, this.left.makeWrite(level, "", "", realCode));
+		var secondOperandText = addInlineIndention(indent, this.right.makeWrite(level, "", "", realCode));
 		var operatorText = this.operator;
 		
 		if (realCode) {
@@ -826,17 +839,17 @@
 	};
 
 	ast.ConditionalExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var testText = this.test.makeWrite(level, "", "", realCode);
+		var testText = addInlineIndention(indent, this.test.makeWrite(level, "", "", realCode));
 		
 		if (realCode) {
 			checkInstructionLimits("if", [testText]);
 		}
 		
-		return testText + " ? " + this.consequent.makeWrite(level, "", "", realCode) + " : " + this.alternate.makeWrite(level, "", "", realCode);
+		return testText + " ? " + addInlineIndention(indent, this.consequent.makeWrite(level, "", "", realCode)) + " : " + addInlineIndention(indent, this.alternate.makeWrite(level, "", "", realCode));
 	};
 
 	ast.NewExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var str = "new " + this.callee.makeWrite(level, "", "", realCode);
+		var str = "new " + addInlineIndention(indent, this.callee.makeWrite(level, "", "", realCode));
 		var args = this.arguments;
 
 		if (args !== null) {
@@ -847,7 +860,7 @@
 					str += ", ";
 				}
 
-				str += args[i].makeWrite(level, "", "", realCode);
+				str += addInlineIndention(indent, args[i].makeWrite(level, "", "", realCode));
 			}
 
 			str += ")";
@@ -857,13 +870,13 @@
 	};
 
 	ast.CallExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var functionName = this.callee.makeWrite(level, "", "", realCode);
+		var functionName = addInlineIndention(indent, this.callee.makeWrite(level, "", "", realCode));
 		var args = this.arguments;
 
 		var str = functionName+"(";
 		var argsText = [];
 		for (var i = 0, len = args.length; i < len; i++) {
-			argsText[i] = args[i].makeWrite(level, "", "", realCode);
+			argsText[i] = addInlineIndention(indent, args[i].makeWrite(level, "", "", realCode));
 		}
 		str += argsText.join(",");
 		
@@ -876,9 +889,9 @@
 
 	ast.MemberExpressionNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
 		if (this.computed) {
-			return this.object.makeWrite(level, "", "", realCode) + "[" + this.property.makeWrite(level, "", "", realCode) + "]";
+			return addInlineIndention(indent, this.object.makeWrite(level, "", "", realCode)) + "[" + addInlineIndention(indent, this.property.makeWrite(level, "", "", realCode)) + "]";
 		} else {
-			return this.object.makeWrite(level, "", "", realCode) + "." + this.property.makeWrite(level, "", "", realCode);
+			return addInlineIndention(indent, this.object.makeWrite(level, "", "", realCode)) + "." + addInlineIndention(indent, this.property.makeWrite(level, "", "", realCode));
 		}
 	};
 
@@ -889,7 +902,7 @@
 		var newIndent = indent + indentChar;
 
 		if (test !== null) {
-			str += "case " + test.makeWrite(level, "", "", realCode) + ":\n";
+			str += "case " + addInlineIndention(indent, test.makeWrite(level, "", "", realCode)) + ":\n";
 		} else {
 			str += "default:\n";
 		}
@@ -902,7 +915,7 @@
 	};
 
 	ast.CatchClauseNode.prototype.makeWrite = function(level, indent, indentChar, realCode) {
-		var name = this.param.makeWrite(level, "", "", realCode);
+		var name = addInlineIndention(indent, this.param.makeWrite(level, "", "", realCode));
 		var str = "";
 		if (realCode) {
 			str += "catch (" + name + ") { if ("+name+".indexOf(\"$_eseecode_\") === 0) { throw "+name+";};";

@@ -87,7 +87,7 @@
 				}
 			}
 		}
-		if (executionTime > $_eseecode.execution.endLimit) {
+		if ($_eseecode.execution.endLimit !== undefined && executionTime > $_eseecode.execution.endLimit) {
 			throw "executionTimeout";
 		}
 		if ($_eseecode.execution.stepped && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
@@ -107,9 +107,12 @@
 	 */
 	function $e_stopPreviousAnimations() {	
 		// Stop previous execution remaining animations
-		for (var i=0; i<$_eseecode.session.timeoutHandlers.length; i++) {
-			clearTimeout($_eseecode.session.timeoutHandlers[i]);
+		console.log($_eseecode.execution.timeoutHandlers.length)
+		for (var i=0; i<$_eseecode.execution.timeoutHandlers.length; i++) {
+			clearTimeout($_eseecode.execution.timeoutHandlers[i]);
+			console.log($_eseecode.execution.timeoutHandlers[i])
 		}
+		$_eseecode.execution.timeoutHandlers.length = 0;
 	}
 
 	/**
@@ -332,6 +335,7 @@
 			oldWindowProperties = Object.getOwnPropertyNames(window);
 		}
 		document.getElementById("eseecode").appendChild(script);
+		$_eseecode.execution.endLimit = undefined; // Main thread finished, set endLimit to undefined so remaining animations aren't stopped
 		var newWindowProperties;
 		if (Object.getOwnPropertyNames) {
 			newWindowProperties = Object.getOwnPropertyNames(window);
@@ -436,7 +440,7 @@
 	 * @example $e_endExecution();
 	 */
 	function $e_endExecution() {
-		if ($_eseecode.execution.startTime !== undefined) { // When running precode initially startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
+		if ($_eseecode.execution.startTime !== undefined) { // When running precode startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
 			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
 			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 		}
