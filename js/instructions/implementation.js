@@ -1527,52 +1527,18 @@
 	 * @public
 	 * @param {String|Function} command Code to run on every 
 	 * @param {Number} [seconds=0.5] Seconds between each code run
-	 * @param {Number} [count] Maximum amount of times to run the animation
+	 * @param {Number} [maxTimes] Maximum amount of times to run the animation
 	 * @param {Number} [timeoutHandlersIndex] Animation handler to use
 	 * @return {Number} Animation handler or false if the animation stopped
 	 * @throws Code execution exception
 	 * @example animate("stepForward()", 0.25)
 	 */
-	function animate(command, seconds, count, timeoutHandlersIndex) {
+	function animate(command, seconds, maxTimes, timeoutHandlersIndex) {
 		$e_parseParameterTypes("animate", arguments);
 		if (seconds === undefined) {
 			seconds = 0.5;
 		}
-		if (timeoutHandlersIndex === undefined) {
-			timeoutHandlersIndex = $_eseecode.execution.timeoutHandlers.length;
-		}
-		var myscript = function(timeoutHandlersIndex) { // We encolse the call so we can add global variables that are only seen in this context
-				if (typeof command === "string") {
-					eval(command);
-				} else if (typeof command === "function"){
-					command();
-				}
-			};
-		try {
-			myscript(timeoutHandlersIndex);
-		} catch(event) {
-			if (event === "executionTimeout") {
-				if ($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]) {
-					unanimate(timeoutHandlersIndex);
-				}
-				return false;
-			} else {
-				throw event;
-			}
-		}
-		if ($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]) {
-			clearTimeout($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]);
-		}
-		if (count > 1 || count === undefined) {
-			$_eseecode.execution.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() {
-					var animationCountdownHandle = setTimeout(function() {
-							$_eseecode.execution.endLimit = 1; // This forces all code to stop
-						}, $_eseecode.execution.timeLimit);
-					animate(command, seconds, (count !== undefined)?count-1:count, timeoutHandlersIndex);
-					clearTimeout(animationCountdownHandle); // The animation finished running before the countdown so clear the countdown
-				}, seconds*1000);
-		}
-		return timeoutHandlersIndex;
+		return $e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex);
 	}
 	
 	/**

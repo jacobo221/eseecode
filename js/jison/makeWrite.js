@@ -499,7 +499,11 @@
 
 		str += ") {";
 		str += "\n";
-		str += body.makeWrite(level, indent, indentChar, realCode);
+		if (body.type === "BlockStatement") {
+			str += body.makeWrite(level, indent, indentChar, realCode);
+		} else {
+			str += body.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
+		}
 		str += indent + "}";
 
 		return str;
@@ -526,7 +530,11 @@
 		str += testText + ") {";
 		str += realCodeAddition(realCode,this.loc.start.line);
 		str += "\n";
-		str += body.makeWrite(level, indent + indentChar, indentChar, realCode) + "\n";
+		if (body.type === "BlockStatement") {
+			str += body.makeWrite(level, indent, indentChar, realCode);
+		} else {
+			str += body.makeWrite(level, indent + indentChar, indentChar, realCode)+"\n";
+		}
 		str += indent + "}";
 		return str;
 	};

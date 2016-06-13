@@ -33,6 +33,7 @@
 	 * @param {Number} lineNumber Code line number currently running
 	 * @param {Object} variables This parameter is ignored but is necessary to be able to run an inline function uppon call to obtain the watchpoint variable values
 	 * @param {Boolean} [inline] Set to true if it is being called inline (as part of the parameters of a call or inside a condition)
+	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_eseeCodeInjection(123)
 	 */
 	function $e_eseeCodeInjection(lineNumber, variables, inline) {
@@ -107,10 +108,8 @@
 	 */
 	function $e_stopPreviousAnimations() {	
 		// Stop previous execution remaining animations
-		console.log($_eseecode.execution.timeoutHandlers.length)
 		for (var i=0; i<$_eseecode.execution.timeoutHandlers.length; i++) {
 			clearTimeout($_eseecode.execution.timeoutHandlers[i]);
-			console.log($_eseecode.execution.timeoutHandlers[i])
 		}
 		$_eseecode.execution.timeoutHandlers.length = 0;
 	}
@@ -250,7 +249,58 @@
 			found = false;
 		}
 	}
-
+	
+	/*
+	 * Runs an animation code, returns an animation handler
+	 * Prepares the execution context for the animation and runs the animation
+	 * @since 3.0
+	 * @public
+	 * @param {Function} command Code to run on every 
+	 * @param {Number} seconds Seconds between each code run
+	 * @param {Number} maxTimes Maximum amount of times to run the animation
+	 * @param {Number} timeoutHandlersIndex Animation handler to use
+	 * @param {Number} [countTimes=1] Number of iterations the animation has gone through
+	 * @return {Number} Animation handler or false if the animation stopped
+	 * @throws Code execution exception
+	 * @example $e_executeAnimation("stepForward()", 0.25)
+	 */
+	function $e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex, countTimes) {
+		if (timeoutHandlersIndex === undefined) {
+			timeoutHandlersIndex = $_eseecode.execution.timeoutHandlers.length;
+		}
+		if (countTimes === undefined) {
+			countTimes = 0;
+		}
+		if ($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]) {
+			clearTimeout($_eseecode.execution.timeoutHandlers[timeoutHandlersIndex]);
+		}
+		if (maxTimes > countTimes || maxTimes === undefined) {
+			if (typeof command === "string") {
+				var userCode = command;
+				command = function() {
+					// If we run user code directly we need to add limit checks sicne this is not going through the jison parser, so lets force checking this limits
+					$_eseecode.execution.forceCheckLimits = true;
+					eval(userCode);
+					$_eseecode.execution.forceCheckLimits = false;
+				}
+			}
+			try {
+				command(); // The first iteration of the animation is run immediately as part of the main thread
+				// If no exception was thrown, create next setTimeout
+				$_eseecode.execution.timeoutHandlers[timeoutHandlersIndex] = setTimeout(function() {
+						// Control of the time limit with animations works as follows:
+						// JavaScript engines (at least Chrome, Safari, Firefox and IE, Opera might not) will first run the main thread of the user code,
+						// then queue the setTimeout calls and run them as a whole one after the other, so we don't have to worry about simultaneous codes
+						// So each animation iteration call resets the time endLimit to its own interest to limit its execution time
+						$_eseecode.execution.endLimit = (new Date().getTime())+$_eseecode.execution.timeLimit*1000; // We reset the time deadline to allow this animation iteration to run, but startTime is not modified
+						$e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex, countTimes+1);
+					}, seconds*1000);
+			} catch(err) {
+				$e_showExecutionResults(err); // Subsequent iterations are run as part of a setTimeout so we must catch the exceptions and handle them
+			}
+		}
+		return timeoutHandlersIndex;
+	}
 	/**
 	 * Runs code
 	 * @private
@@ -335,7 +385,6 @@
 			oldWindowProperties = Object.getOwnPropertyNames(window);
 		}
 		document.getElementById("eseecode").appendChild(script);
-		$_eseecode.execution.endLimit = undefined; // Main thread finished, set endLimit to undefined so remaining animations aren't stopped
 		var newWindowProperties;
 		if (Object.getOwnPropertyNames) {
 			newWindowProperties = Object.getOwnPropertyNames(window);
@@ -416,6 +465,7 @@
 		if (err !== undefined) {
 			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
 			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed so far")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time so far")+": "+executionTime+" "+_("secs");
+			$e_stopPreviousAnimations(); // Stop pending animations
 		}
 	}
 
@@ -502,5 +552,9 @@
 				header += "\n";
 			}
 			throw new $e_codeError(instructionName,header+msg);
+		}
+		// Enable this when running user code directly without going through the jison parser
+		if ($_eseecode.execution.forceCheckLimits) {
+			$e_checkExecutionLimits($_eseecode.session.highlight.lineNumber);
 		}
 	}
