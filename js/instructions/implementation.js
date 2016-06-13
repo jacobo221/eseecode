@@ -1538,7 +1538,7 @@
 		if (seconds === undefined) {
 			seconds = 0.5;
 		}
-		return $e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex);
+		return $e_animationControl(command, seconds, maxTimes, timeoutHandlersIndex);
 	}
 	
 	/**

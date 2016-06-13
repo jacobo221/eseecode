@@ -421,6 +421,24 @@
 		tempCtx.translate(-pos.x, -pos.y);
 		$_eseecode.currentCanvas.context.drawImage(tempCanvas,0,0,canvasSize,canvasSize);
 	}
+	
+	/*
+	 * Prepares the environment for an animation
+	 * @since 3.0
+	 * @private
+	 * @param {Function} command Code to run on every 
+	 * @param {Number} seconds Seconds between each code run
+	 * @param {Number} maxTimes Maximum amount of times to run the animation
+	 * @param {Number} timeoutHandlersIndex Animation handler to use
+	 * @return {Number} Animation handler or false if the animation stopped
+	 * @throws Code execution exception
+	 * @example $e_animationControl("stepForward()", 0.25)
+	 */
+	function $e_animationControl(command, seconds, maxTimes, timeoutHandlersIndex) {
+		var returnValue = $e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex, 0);
+		$e_switchResetStopCanvas();
+		return returnValue;
+	}
 
 	/**
 	 * Change whiteboard axis setup

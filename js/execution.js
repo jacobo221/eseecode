@@ -100,19 +100,6 @@
 			throw "executionStepped";
 		}
 	}
-	
-	/**
-	 * Stops previous execution animations
-	 * @private
-	 * @example $e_stopPreviousAnimations()
-	 */
-	function $e_stopPreviousAnimations() {	
-		// Stop previous execution remaining animations
-		for (var i=0; i<$_eseecode.execution.timeoutHandlers.length; i++) {
-			clearTimeout($_eseecode.execution.timeoutHandlers[i]);
-		}
-		$_eseecode.execution.timeoutHandlers.length = 0;
-	}
 
 	/**
 	 * Resets and sets up internal configuration for a new code execution
@@ -250,11 +237,35 @@
 		}
 	}
 	
+	/**
+	 * Stops previous execution animations
+	 * @private
+	 * @example $e_stopPreviousAnimations()
+	 */
+	function $e_stopPreviousAnimations() {	
+		// Stop previous execution remaining animations
+		for (var i=0; i<$_eseecode.execution.timeoutHandlers.length; i++) {
+			clearTimeout($_eseecode.execution.timeoutHandlers[i]);
+		}
+		$_eseecode.execution.timeoutHandlers.length = 0;
+	}
+	
+	/**
+	 * Checks if animations are running
+	 * @since 3.0
+	 * @private
+	 * @return {Boolean} Whether or not an animation is running
+	 * @example $e_checkAnimationsRunning()
+	 */
+	function $e_checkAnimationsRunning() {
+		return $_eseecode.execution.timeoutHandlers.length > 0;
+	}
+	
 	/*
 	 * Runs an animation code, returns an animation handler
 	 * Prepares the execution context for the animation and runs the animation
 	 * @since 3.0
-	 * @public
+	 * @private
 	 * @param {Function} command Code to run on every 
 	 * @param {Number} seconds Seconds between each code run
 	 * @param {Number} maxTimes Maximum amount of times to run the animation

@@ -2,6 +2,7 @@
  *Milestone: Go big, go mainstream*
  *   Maximum amount of uses per instruction is now applicable also in Code view
  *   Time limit now affects main thread and each iteration in an animation separately
+ *   Can now stop animations
  *   Better code-style for inline functions and objects
  *   Fix: Undo/Redo and switching to Code view didn't update the code
 

@@ -52,6 +52,7 @@
 		document.getElementById("console-write").title = _("Console Write");
 		document.getElementById("button-undo").title = _("Undo");
 		document.getElementById("button-execute").title = _("Run");
+		document.getElementById("button-stop").title = _("Stop animations");
 		document.getElementById("button-clear").title = _("Clear");
 		document.getElementById("button-reset").title = _("Reset");
 		document.getElementById("button-redo").title = _("Redo");

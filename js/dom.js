@@ -111,6 +111,7 @@
 					<div id="button-undo" class="button" onclick="$e_undoFromUI()"><canvas width="40" height="20"></canvas></div>\
 					<div>\
 						<span id="button-execute" class="button" onclick="$e_executeFromUI()"><canvas width="20" height="20"></canvas></span>\
+						<span id="button-stop" class="button" onclick="$e_stopAnimationsFromUI()"><canvas width="20" height="20"></canvas></span>\
 						<span id="button-clear" class="button" onclick="$e_resetCanvasFromUI()"><canvas width="20" height="20"></canvas></span>\
 						<span id="button-reset" class="button" onclick="$e_resetUIFromUI()"><canvas width="20" height="20"></canvas></span>\
 					</div>\
