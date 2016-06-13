@@ -2709,7 +2709,7 @@
 			elementsToRemove[i].parentNode.removeChild(elementsToRemove[i]);
 		}
 		// Add files
-		var newThemeJSPath = newThemePath+"/theme.js";
+		var newThemeJSPath = newThemePath+"/theme.js?"+$e_REVISION;
 		var elementJS = document.createElement("script");
 		elementJS.setAttribute("type", "text/javascript");
 		elementJS.setAttribute("src", newThemeJSPath);
@@ -2739,7 +2739,7 @@
 				numCSSFiles += $_eseecode.ui.theme.files.length
 				for (var i=0; i<$_eseecode.ui.theme.files.length; i++) {
 					var basename = $_eseecode.ui.theme.files[i];
-				   	var filepath = newThemePath+"/"+basename;
+				   	var filepath = newThemePath+"/"+basename+"?"+$e_REVISION;
 				   	var newElement = createCSSElement(filepath);
 					newElement.onload = function() { $_eseecode.session.semaphor++; };
 	    			headElement.appendChild(newElement);

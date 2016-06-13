@@ -18,7 +18,7 @@
 					var scriptPath = scripts[scripts.length-1].src;
 					return scriptPath.substring(0,scriptPath.lastIndexOf("/"));
 				})();
-			window.addEventListener("load", function() {
+				window.addEventListener("load", function() {
 				var eseecodeDiv = document.getElementById("eseecode");
 				if (!eseecodeDiv) {
 					eseecodeDiv = document.createElement("div");
@@ -42,9 +42,9 @@
 				// Load files, when order does matter:
 				// File batches are divided in arrays to separate dependencies, so all files in same array are loaded in parallel
 				// Functions can be called to add more files
-				if (typeof $e_REVISION === "undefined") {
+				if (window.$e_REVISION === "undefined") {
 					// This is used in online releases to make sure browsers don't use cached copies
-					var $e_REVISION = "default";
+					window.$e_REVISION = "default";
 				}
 				var filesToLoad = [
 					[
