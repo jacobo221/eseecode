@@ -436,7 +436,7 @@
 	 */
 	function $e_animationControl(command, seconds, maxTimes, timeoutHandlersIndex) {
 		var returnValue = $e_executeAnimation(command, seconds, maxTimes, timeoutHandlersIndex, 0);
-		$e_switchResetStopCanvas();
+		$e_toggleConsoleButtons();
 		return returnValue;
 	}
 

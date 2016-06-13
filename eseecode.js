@@ -42,6 +42,10 @@
 				// Load files, when order does matter:
 				// File batches are divided in arrays to separate dependencies, so all files in same array are loaded in parallel
 				// Functions can be called to add more files
+				if (typeof $e_REVISION === "undefined") {
+					// This is used in online releases to make sure browsers don't use cached copies
+					var $e_REVISION = "default";
+				}
 				var filesToLoad = [
 					[
 						"js/defaults.js"
@@ -97,12 +101,12 @@
 							var fileType = batch[i].substring(batch[i].lastIndexOf(".")+1);
 							var newElement;
 							if (fileType == "js") {
-								var filepath = eseecodePath+"/"+batch[i];
+								var filepath = eseecodePath+"/"+batch[i]+"?"+$e_REVISION;
 								newElement = document.createElement("script");
 								newElement.setAttribute("type", "text/javascript");
 								newElement.setAttribute("src", filepath);
 							} else if (fileType == "css") {
-								var filepath = eseecodePath+"/css/"+batch[i];
+								var filepath = eseecodePath+"/css/"+batch[i]+"?"+$e_REVISION;
 								newElement = document.createElement("link");
 								newElement.setAttribute("rel", "stylesheet");
 								newElement.setAttribute("type", "text/css");

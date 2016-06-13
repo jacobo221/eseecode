@@ -521,15 +521,37 @@
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.updateOnConsoleSwitch) {
 			$_eseecode.session.updateOnConsoleSwitch = false;
 		}
+		$e_toggleConsoleButtons();
+		$e_refreshUndoUI();
+		$e_highlight();
+	}
+	
+	/**
+	 * Display Run button, Clear button or Stop button depending on whether an animation is still running
+	 * @private
+	 * @example $e_toggleConsoleButtons()
+	 */
+	function $e_toggleConsoleButtons() {
+			var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		if (level == "level1") {
 			document.getElementById("button-execute").style.display = "none";
+			document.getElementById("button-stop").style.display = "none";
 			document.getElementById("button-clear").style.display = "none";
 		} else {
 			document.getElementById("button-execute").style.display = "inline";
-			document.getElementById("button-clear").style.display = "inline";
+			if ($e_checkAnimationsRunning()) {
+				document.getElementById("button-stop").style.display = "inline";
+				document.getElementById("button-clear").style.display = "none";
+			} else {
+				document.getElementById("button-stop").style.display = "none";
+				if ($_eseecode.execution.isReset !== false) {
+					document.getElementById("button-clear").style.display = "none";
+				} else {
+					// Code was run but hasn't been reset yet
+					document.getElementById("button-clear").style.display = "inline";
+				}
+			}
 		}
-		$e_refreshUndoUI();
-		$e_highlight();
 	}
 
 	/**
@@ -2218,6 +2240,16 @@
 	}
 
 	/**
+	 * Stops all running animations
+	 * @private
+	 * @example $e_stopAnimationsFromUI()
+	 */
+	function $e_stopAnimationsFromUI() {
+		$e_stopPreviousAnimations();
+		$e_toggleConsoleButtons();
+	}
+
+	/**
 	 * Initializes/Resets all the drawing elements including execution
 	 * @private
 	 * @example $e_resetCanvasFromUI()
@@ -2273,6 +2305,8 @@
 		if (!noPrecode && !$_eseecode.execution.precode.standby) {
 			$e_execute("disabled", null, true);
 		}
+		$_eseecode.execution.isReset = true;
+		$e_toggleConsoleButtons();
 	}
 
 	/**

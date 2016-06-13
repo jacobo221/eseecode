@@ -406,6 +406,8 @@
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebugLayers();
 		}
+		$_eseecode.execution.isReset = false;
+		$e_toggleConsoleButtons();
 	}
 
 	/**
