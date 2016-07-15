@@ -24,7 +24,7 @@
 				link: undefined
 			},
 			version: {
-				text: "2.4-dev",
+				text: "2.4",
 				link: "CHANGELOG.md"
 			},
 			logo: {

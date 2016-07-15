@@ -1,4 +1,4 @@
-## 2.4 (ongoing work)
+## 2.4
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
