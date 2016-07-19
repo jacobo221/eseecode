@@ -94,7 +94,8 @@
 							fileLoaded(filesToLoad, filesIndex);
 						} else {
 	    					var headElement = document.getElementsByTagName("head")[0];
-							var fileType = batch[i].substring(batch[i].lastIndexOf(".")+1);
+							var basename = batch[i].substring(0, batch[i].indexOf("?"));
+							var fileType = basename.substring(basename.lastIndexOf(".")+1);
 							var newElement;
 							if (fileType == "js") {
 								var filepath = eseecodePath+"/"+batch[i];
