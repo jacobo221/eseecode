@@ -94,7 +94,11 @@
 							fileLoaded(filesToLoad, filesIndex);
 						} else {
 	    					var headElement = document.getElementsByTagName("head")[0];
-							var basename = batch[i].substring(0, batch[i].indexOf("?"));
+							var basename = batch[i];
+							var basenameLength = batch[i].indexOf("?");
+							if (basenameLength > 0) {
+								basename = batch[i].substring(0, basenameLength);
+							}
 							var fileType = basename.substring(basename.lastIndexOf(".")+1);
 							var newElement;
 							if (fileType == "js") {

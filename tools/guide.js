@@ -749,7 +749,15 @@
                     doc.getElementsByTagName("html")[0].style.height = "100%";
                     doc.body.style.height = "100%";
                     createMouseClickHandler();
-                    guideRestart();
+                    // Wait for the API to be ready
+                    var waitForAPIReady = function() {
+                        if (iframe.contentWindow.API_isReady && iframe.contentWindow.API_isReady()) {
+                            guideRestart();
+                        } else {
+                            setTimeout(waitForAPIReady, 200);
+                        }
+                    }
+                    setTimeout(waitForAPIReady, 200);
                 }, false);
                 iframe.src = src; // Reload the iframe so the iframe's onload trigger is run
             }, false);
@@ -858,4 +866,4 @@
                 color: #FFFFFF;\
                 padding: 0px 5px 0px 5px;\
             }\
-            "
+            ";
