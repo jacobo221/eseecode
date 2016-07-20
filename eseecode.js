@@ -103,7 +103,6 @@
 							if (basenameLength > 0) {
 								basename = batch[i].substring(0, basenameLength);
 							}
-							console.log("base: "+basename);
 							var fileType = basename.substring(basename.lastIndexOf(".")+1);
 							var newElement;
 							if (fileType == "js") {
