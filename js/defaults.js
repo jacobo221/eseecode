@@ -28,7 +28,7 @@
 				link: "CHANGELOG.md"
 			},
 			logo: {
-				text: "/images/eSeeCode_logo.png?"+$e_REVISION,
+				text: "/images/eSeeCode_logo.png",
 				link: "http://www.eseecode.com"
 			},
 			author: {

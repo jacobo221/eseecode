@@ -97,17 +97,22 @@
 							filesToLoad.push(newFilesToAdd);
 							fileLoaded(filesToLoad, filesIndex);
 						} else {
-	    						var headElement = document.getElementsByTagName("head")[0];
-							var basename = batch[i].substring(0, batch[i].indexOf("?"));
+							var headElement = document.getElementsByTagName("head")[0];
+							var basename = batch[i];
+							var basenameLength = batch[i].indexOf("?");
+							if (basenameLength > 0) {
+								basename = batch[i].substring(0, basenameLength);
+							}
+							console.log("base: "+basename);
 							var fileType = basename.substring(basename.lastIndexOf(".")+1);
 							var newElement;
 							if (fileType == "js") {
-								var filepath = eseecodePath+"/"+batch[i]+"?"+$e_REVISION;
+								var filepath = eseecodePath+"/"+batch[i];
 								newElement = document.createElement("script");
 								newElement.setAttribute("type", "text/javascript");
 								newElement.setAttribute("src", filepath);
 							} else if (fileType == "css") {
-								var filepath = eseecodePath+"/css/"+batch[i]+"?"+$e_REVISION;
+								var filepath = eseecodePath+"/css/"+batch[i];
 								newElement = document.createElement("link");
 								newElement.setAttribute("rel", "stylesheet");
 								newElement.setAttribute("type", "text/css");
