@@ -1,3 +1,6 @@
+## 2.5 (ongoing work)
+ *   Fix: getPixelColor() was broken. Thanks to Jordi Losantos for reporting
+
 ## 2.4
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
