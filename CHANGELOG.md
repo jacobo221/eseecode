@@ -5,8 +5,9 @@
  *   Can now stop animations
  *   Better code-style for inline functions and objects
  *   Fix: Undo/Redo and switching to Code view didn't update the code
+ *   Fix: getPixelColor() was broken. Thanks to Jordi Losantos for reporting
 
-## 2.4 (ongoing work) Rum
+## 2.4 Rum
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (in blocks views only)
