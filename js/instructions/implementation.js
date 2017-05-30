@@ -2253,15 +2253,15 @@
 	 * @public
 	 * @param {Number} x Coordinate x of the position to check the color
 	 * @param {Number} y Coordinate y of the position to check the color
-	 * @param {Number|String} [id] Id of the layer to affect
+	 * @param {Number|String} [layer] Id of the layer to affect
 	 * @return {String} Color in the specified position
 	 * @example getPixelColor(100,100)
 	 */
 	function getPixelColor(x, y, layer) {
-		if (id === undefined) {
+		if (layer === undefined) {
 			layer = $_eseecode.currentCanvas;
 		} else {
-			layer = $e_getLayer(id);
+			layer = $e_getLayer(layer);
 		}
 		var coords = $e_user2systemCoords({x: x, y: y});
 	    var p = layer.context.getImageData(coords.x, coords.y, 1, 1).data;
