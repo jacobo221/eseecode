@@ -1966,10 +1966,16 @@
 	 * @param {Number} lastX Last value in the horizontal axis (right)
 	 * @param {Number} firstY First value in the vertical axis (down)
 	 * @param {Number} lastY Last value in the vertical axis (up)
+	 * @throws codeError
 	 * @example fixAxis(-200, 200, -200, 200);
 	 */
 	function setAxis(firstX, lastX, firstY, lastY) {
 		$e_parseParameterTypes("setAxis", arguments);
+		if (firstX == lastX)
+			throw new $e_codeError("setAxis",_("firstX and lastX must be different"));
+		} else if (firstY or lastY) {
+			throw new $e_codeError("setAxis",_("firstY and lastY must be different"));
+		}
 		var canvasSize = $_eseecode.whiteboard.offsetWidth;
 		var posx = -firstX*(canvasSize/(lastX-firstX));
 		var posy =  -lastY*(-canvasSize)/(lastY-firstY);

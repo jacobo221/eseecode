@@ -486,6 +486,8 @@ $_eseecode.ui.translation = {
 		"Last value in the vertical axis (up)": "Darrer valor a l'eix vertical (amunt)",
 		"Returns whether the layer exists or not": "Retorna si la capa existeix o no",
 		"Which key code do you want to convert?": "Quin codi vols convertir?",
-		"Returns the character corresponding to a key code": "Retorna el caràcter corresponent a un codi de teclat"
+		"Returns the character corresponding to a key code": "Retorna el caràcter corresponent a un codi de teclat",
+		"firstX and lastX must be different": "firstX i lastX han de tenir valor diferent",
+		"firstY and lastY must be different": "firstY i lastY han de tenir valor diferent"
 	}
 }
