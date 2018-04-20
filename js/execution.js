@@ -288,7 +288,7 @@
 			$e_resetWatchpoints();
 		}
 		try {
-			var jsCode = "";
+			var jsCode = "\"use strict\";";
 			if (!inCode && $_eseecode.execution.precode.code) { // Don't load precode again when running the code of an event
 				// We want to run precode inline so it shares the same context, so we don't use $e_executePrecode()
 				jsCode += "$_eseecode.execution.precode.running=true;"+$e_code2run($_eseecode.execution.precode.code)+";$_eseecode.execution.precode.running=false;\n";
