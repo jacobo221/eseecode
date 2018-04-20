@@ -993,8 +993,8 @@
 			step = 1;
 			document.getElementById("setup-grid-step").value = step;			
 		}
-		var colorHighlight = "#DDDDDD";
-		var colorNormal = "#EEEEEE";
+		var colorHighlight = "#A0A0A0";
+		var colorNormal = "#B0B0B0";
 		ctx.fillStyle = colorHighlight;
 		ctx.strokeStyle = colorNormal;
 		ctx.lineWidth = 1;
