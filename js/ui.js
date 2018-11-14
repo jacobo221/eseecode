@@ -2063,8 +2063,16 @@
 		$e_resetDialog(dialog);
 		// First, let's sort the instructions alphabetically
 		var keys = [];
-		for (var key in $_eseecode.instructions.set) {
-			keys[keys.length] = key;
+		var customInstructionSet = false;
+		if ($_eseecode.instructions.custom && $_eseecode.instructions.custom.length > 0) {
+			customInstructionSet = true;
+			for (var key in $_eseecode.instructions.custom) {
+				keys[keys.length] = $_eseecode.instructions.custom[key];
+			}
+		} else {
+			for (var key in $_eseecode.instructions.set) {
+				keys[keys.length] = key;
+			}
 		}
 		keys = keys.sort();
 		// Now let's do the rest
@@ -2076,10 +2084,14 @@
 				var instruction = $_eseecode.instructions.set[keys[i]];
 				if (category == instruction.category) {
 					var show = false;
-					for (var j=0; j<instruction.show.length; j++) {
-						if (instruction.show[j] == level) {
-							show = true;
-							break;
+					if (customInstructionSet) {
+						show = true;
+					} else {
+						for (var j=0; j<instruction.show.length; j++) {
+							if (instruction.show[j] == level) {
+								show = true;
+								break;
+							}
 						}
 					}
 					if (show) {
