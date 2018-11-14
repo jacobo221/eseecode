@@ -1,4 +1,5 @@
 ## 2.5 (ongoing work)
+ *   Code view now only shows custom instruction set in dialog when custom instruction set is set
  *   Fix: getPixelColor() was broken. Thanks to Jordi Losantos for reporting
 
 ## 2.4
