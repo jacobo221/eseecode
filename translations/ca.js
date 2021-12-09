@@ -430,7 +430,7 @@ $_eseecode.ui.translation = {
 		"Error found during execution at line %s in %s": "Error detectat a la linia %s executant %s",
 		"follow": "segueix",
 		"Should the arc follow the guide's position and angle and move the guide to the end of the arc?": "Hauria de seguir la guia la possició i angle del final de l'arc?",
-		"Draw the arc clockwise?": "Dibuixar l'arc en sentit antihorari?",
+		"Draw the arc counterclockwise?": "Dibuixar l'arc en sentit antihorari?",
 		"Value to output": "Valor a escriure a la sortida",
 		"Do you want a new line?": "En acabar saltar de linia?",
 		"How to read the input. Possible values: \"char\", \"word\", \"number\", \"line\", \"guess\"": "Com llegir l'entrada. Possibles valors: \"char\", \"word\", \"number\", \"line\", \"guess\"",
