@@ -526,6 +526,61 @@
 	}
 
 	/**
+	 * Gets the size of the future draw lines and text in the currently active layer
+	 * @since 3.0
+	 * @public
+	 * @example getSize()
+	 */
+	function getSize() {
+		$e_parseParameterTypes("getSize", arguments);
+		return $_eseecode.currentCanvas.style.size;
+	}
+
+	/**
+	 * Gets the color of the future draw lines and text in the currently active layer
+	 * @since 3.0
+	 * @public
+	 * @example getColor()
+	 */
+	function getColor() {
+		$e_parseParameterTypes("getColor", arguments);
+		return $_eseecode.currentCanvas.style.color;
+	}
+
+	/**
+	 * Gets whether the future text will be bold in the currently active layer
+	 * @since 3.0
+	 * @public
+	 * @example getBold()
+	 */
+	function getBold() {
+		$e_parseParameterTypes("getBold", arguments);
+		return $_eseecode.currentCanvas.style.bold;
+	}
+
+	/**
+	 * Gets whether the future text will be italic in the currently active layer
+	 * @since 3.0
+	 * @public
+	 * @example getItalic()
+	 */
+	function getItalic() {
+		$e_parseParameterTypes("getItalic", arguments);
+		return $_eseecode.currentCanvas.style.italic;
+	}
+
+	/**
+	 * Gets the font name of the future text in the currently active layer
+	 * @since 3.0
+	 * @public
+	 * @example getFont()
+	 */
+	function getFont() {
+		$e_parseParameterTypes("getFont", arguments);
+		return $_eseecode.currentCanvas.style.font;
+	}
+
+	/**
 	 * Moves the current layer
 	 * Any part of the image left outside the whiteboard will be lost
 	 * @since 1.0
@@ -1254,8 +1309,12 @@
 			} else {
 				canvas.context.drawImage(tempCanvas, 0, 0);
 			}
+			// Restore the canvas position and orientation for future image() calls
+			canvas.context.translate(-systemPos.x, -systemPos.y);
+			canvas.context.rotate(-rotation*Math.PI/180);
 		}
 		if (src) {
+			if (!src.startsWith("http://") && !src.startsWith("https://")) src = $_eseecode.execution.basepath + src;
 			img.src = src;
 		}
 	}
@@ -1665,6 +1724,54 @@
 	}
 
 	/**
+	 * Play an audio file and wait
+	 * @since 3.0
+	 * @public
+	 * @param {Text} source Source file to play
+	 * @param {Boolean} [background] Play sound in the background, without stopping the execution of the code
+	 * @param {Boolean} [repeat=false] Loop the sound
+	 * @param {Number} [audioHandlersIndex] Animation handler to use
+	 * @return {Number} Sound handler or undefined if it is not a background sound
+	 * @example sound("sound.mp3")
+	 */
+	async function sound(source, background, loop, audioHandlersIndex) {
+		$e_parseParameterTypes("sound", arguments);
+		const audio = new Audio(source);
+		if (background) {
+			if (audioHandlersIndex === undefined) {
+				audioHandlersIndex = $_eseecode.session.audioHandlers.length;
+			} else {
+				$e_stopSound($_eseecode.session.audioHandlers[audioHandlersIndex]);
+			}
+			audio.loop = loop;
+			$_eseecode.session.audioHandlers[audioHandlersIndex] = audio;
+			audio.load;
+			audio.play();
+			return audioHandlersIndex;
+		} else {
+			await (function() {
+				return new Promise(function(res) {
+						audio.play();
+						audio.addEventListener("ended", res);
+					});
+				})();
+			return undefined;
+		}
+	}
+
+	/**
+	 * Stop playing an audio file in the background
+	 * @since 3.0
+	 * @public
+	 * @param {Text} audioHandlersIndex Handle id of the audio to stop, as returned by sound()
+	 * @example stopSound()
+	 */
+	function stopSound(audioHandlersIndex) {
+		$e_stopSound($_eseecode.session.audioHandlers[audioHandlersIndex]);
+		delete $_eseecode.session.audioHandlers[audioHandlersIndex];
+	}
+
+	/**
 	 * Sets the size of the future draw lines and text in the currently active layer
 	 * @since 1.0
 	 * @public
@@ -1967,7 +2074,7 @@
 	 * @param {Number} firstY First value in the vertical axis (down)
 	 * @param {Number} lastY Last value in the vertical axis (up)
 	 * @throws codeError
-	 * @example fixAxis(-200, 200, -200, 200);
+	 * @example setAxis(-200, 200, -200, 200);
 	 */
 	function setAxis(firstX, lastX, firstY, lastY) {
 		$e_parseParameterTypes("setAxis", arguments);
@@ -2183,7 +2290,6 @@
 	function getKeyboardLastKeycode() {
 		var keyboard = $_eseecode.session.handlers.keyboard;
 		if (keyboard) {
-			return keyboard.lastKeycode;
 			var value = keyboard.lastKeycode;
 			$_eseecode.session.handlers.keyboard.lastKeycode = undefined;
 			return value;
@@ -2420,6 +2526,49 @@
 	 */
 	function getTimestamp() {
 		return (new Date()).getTime();
+	}
+	
+	/**
+	 * Stops execution and waits for the user to answer a question
+	 * @since 3.0
+	 * @public
+	 * @param {String} message Message to display to the user in the prompt
+	 * @param {String} initial_value Initial value in the input field
+	 * @param {Boolean} timeout Milliseconds to wait before cancelling the prompt
+	 * @return {String} User's answer
+	 * @example ask("Age")
+	 */
+	async function ask(message, initial_value, timeout) {
+		return await new Promise(r => {
+			var ask_timeout_handle;
+			if (timeout) ask_timeout_handle = setTimeout($e_msgBoxClose, timeout);
+			$e_msgBox((message ? message + "<br>" : "") + "<input id=\"ask_answer\"" + (initial_value ? " value=\"" + initial_value + "\"" : "") + ">", {
+				acceptAction: function(e) {
+					clearTimeout(ask_timeout_handle);
+					r(document.getElementById("ask_answer").value);
+					$e_msgBoxClose();
+				},
+				acceptName: _("Submit"),
+				cancelAction: function(e) {
+					clearTimeout(ask_timeout_handle);
+					$e_msgBoxClose();
+					r(false);
+				},
+				focus: "ask_answer"
+			});
+		});
+	}
+	
+	/**
+	 * Stops execution for the specified time (in milliseconds)
+	 * @since 3.0
+	 * @public
+	 * @return {Number} Milliseconds to wait
+	 * @example wait(2000)
+	 */
+	async function wait(milliseconds) {
+		if (milliseconds === undefined) milliseconds = 1000;
+		return await new Promise(r => setTimeout(() => r(), milliseconds));
 	}
 	
 	// Additional instructions

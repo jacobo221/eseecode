@@ -8,7 +8,7 @@
 	/**
 	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean},precode:{code:String,running:Boolean},watchpointsChanged:Array<String>,inputDefault:String,inputRaw:String,inputPosition:Number},session:{highlight:{lineNumber:Number,reason:String},handlers:{keyboard:{key:Number,lastKeycode:Number},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnConsoleSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>, disableCode:Boolean},whiteboard:HTMLElement,coordinates:Array<{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>}>,ui:Array<{translations: Array<{id:String,name:String}>translation:Array<*>,themes: Array<{id:String,name:String}>theme:Array<*>,minWindowHeight:Number,codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean,translationsmenuVisible:Boolean,themesmenuVisible:Boolean}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
 	 */
-	var $_eseecode = {
+	$_eseecode = Object.assign($_eseecode, {
 		basepath: (function(){
 				var scripts = document.getElementsByTagName("script");
 				var scriptPath = scripts[scripts.length-1].src;
@@ -24,16 +24,16 @@
 				link: undefined
 			},
 			version: {
-				text: "2.4",
+				text: "3.0",
 				link: "CHANGELOG.md"
 			},
 			logo: {
 				text: "/images/eSeeCode_logo.png",
-				link: "http://www.eseecode.com"
+				link: "http://eseecode.com"
 			},
 			author: {
 				text: "Jacobo Vilella Vilahur",
-				link: "http://www.eseecode.com"
+				link: "http://eseecode.com"
 			},
 			license: {
 				text: "GPLv3 or later",
@@ -41,7 +41,7 @@
 			},
 			web: {
 				text: "eSeeCode.com",
-				link: "http://www.eseecode.com"
+				link: "http://eseecode.com"
 			},
 		},
 		instructions: {
@@ -55,7 +55,8 @@
 			breakpointCounterLimit: 1,
 			step: 1,
 			stepped: false,
-			timeLimit: 10,
+			pause: 500,
+			timeLimit: 120,
 			programCounter: 0,
 			programCounterLimit: 0,
 			endLimit: undefined,
@@ -74,7 +75,8 @@
 			watchpointsChanged: [],
 			inputDefault: "",
 			inputRaw: "",
-			inputPosition: 0
+			inputPosition: 0,
+			basepath: ""
 		},
 		session: {
 			highlight: {
@@ -105,7 +107,10 @@
 			breakpointHandler: false,
 			watchpoints: {},
 			timeoutHandlers: [],
-			disableCode: false
+			audioHandlers: [],
+			pauseHandler: undefined,
+			disableCode: false,
+			kill: undefined
 		},
 		whiteboard: {
 			offsetWidth: 400,
@@ -138,6 +143,7 @@
 			guideVisible: true,
 			gridVisible: true,
 			gridStep: 25,
+			forceBlockSetup: true,
 			setupType: undefined,
 			filemenuVisible: true,
 			translationsmenuVisible: true,
@@ -145,6 +151,7 @@
 			fullscreenmenuVisible: undefined,
 			scrollTimeout: null,
 			tipInterval: null,
+			whiteboardResizeInterval: null,
 			downloadLayersInterval: 500,
 			downloadLayersColumns: 3,
 			preventExit: true
@@ -180,4 +187,4 @@
 				{id: "setup", name: "Setup", div: "setup", element: null, tab: null}
 			]
 		}
-	};
+	});

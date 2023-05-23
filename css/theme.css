@@ -248,10 +248,17 @@
 		width: inherit;
 		height: auto;
 		overflow: hidden;
+		display: flex;
 	}
 	#console {
 		width: auto;
 		overflow: hidden;
+		resize: horizontal;
+		min-width: 400px;
+		max-width: calc(100vw - 700px);
+	}
+	#console.maximized {
+		max-width: calc(100vw - 400px);
 	}
 	#console .tab {
 		float: left;
@@ -300,7 +307,6 @@
 	}
 	#dialog {
 		width: 250px;
-		float: left;
 		border-top-left-radius: 10px;
 		border-bottom-left-radius: 10px;
 		border-bottom-right-radius: 10px;
@@ -455,8 +461,13 @@
 	#translations-translator {
 		display: none;
 	}
+	#whiteboard-tabs {
+		margin-bottom: max(50vh - 275px, 0px);
+	}
 	#whiteboard-wrapper {
-		float: right;
+		display: flex;
+		margin: 0 auto;
+		flex-direction: column;
 	}
 	#whiteboard-wrapper>div {
 		clear: both;

@@ -19,6 +19,15 @@
 	}
 
 	/**
+	 * Gets the execution pause value from the setup and updates in the $_eseecode class
+	 * @private
+	 * @example $e_updateExecutionPause()
+	 */
+	function $e_updateExecutionPause() {
+		$_eseecode.execution.pause = parseInt(document.getElementById("dialog-debug-execute-pause").value);
+	}
+
+	/**
 	 * Gets the execution time limit value from the setup and updates in the $_eseecode class
 	 * @private
 	 * @example $e_updateExecutionTime()
@@ -35,8 +44,8 @@
 	 * @param {Boolean} [inline] Set to true if it is being called inline (as part of the parameters of a call or inside a condition)
 	 * @example $e_eseeCodeInjection(123)
 	 */
-	function $e_eseeCodeInjection(lineNumber, variables, inline) {
-		$e_checkExecutionLimits(lineNumber, inline);
+	async function $e_eseeCodeInjection(lineNumber, variables, inline) {
+		await $e_checkExecutionLimits(lineNumber, inline);
 		// The only case in which we need to return something is for return, since it could be with no parameters leave undefined
 		return undefined;
 	}
@@ -49,14 +58,15 @@
 	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_checkExecutionLimits(31)
 	 */
-	function $e_checkExecutionLimits(lineNumber, inline) {
+	async function $e_checkExecutionLimits(lineNumber, inline) {
 		if ($_eseecode.execution.precode.running) { // We do checkLimits with postcoding because if this code calls a user-defined function we must count statistics and check limits
 			// Precode/Postcode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
+		if ($_eseecode.session.kill) throw "executionKilled";
 		var executionTime = new Date().getTime();
 		$_eseecode.execution.programCounter++;
-		$e_setHighlight(lineNumber);
+		let highlightLine = lineNumber;
 		if ($_eseecode.execution.watchpointsChanged.length > 0) {
 			var watchpointTriggered = false;
 			for (var i=0; i < $_eseecode.execution.watchpointsChanged.length && !watchpointTriggered; i++) {
@@ -71,7 +81,7 @@
 					$_eseecode.execution.breakpointCounterLimit++;
 					if (inline !== true) {
 						// Variable changes are detected before running the next instruction, except in inline checks
-						$e_setHighlight(lineNumber-1);
+						highlightLine = lineNumber - 1;
 					}
 					throw "executionWatchpointed";
 				}
@@ -90,14 +100,21 @@
 		if (executionTime > $_eseecode.execution.endLimit) {
 			throw "executionTimeout";
 		}
-		if ($_eseecode.execution.stepped && $_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
-			if ($_eseecode.execution.programCounter == 1) {
-				$_eseecode.execution.programCounterLimit++;
-				// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
-				return
+		if ($_eseecode.execution.stepped) {
+			if ($_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
+				if ($_eseecode.execution.programCounter == 1) {
+					$_eseecode.execution.programCounterLimit++;
+					// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
+					return;
+				}
+				throw "executionStepped";
 			}
-			throw "executionStepped";
 		}
+		if ($_eseecode.modes.console[0] != 1 && $_eseecode.execution.pause && !$_eseecode.execution.stepped) { // We don't want to pause execution in stepped executions, neither in level1/Touch
+			$e_highlight(lineNumber, "step");
+			if ($_eseecode.execution.programCounter % $_eseecode.execution.step == 0) await new Promise(function(r) { $_eseecode.session.pauseHandler = setTimeout(function() { r(); }, $_eseecode.execution.pause); });
+		}
+		$e_setHighlight(highlightLine); // Set it here so if $e_highlight() is called the old lineNumber is still set to unhighlight it
 	}
 	
 	/**
@@ -110,6 +127,39 @@
 		for (var i=0; i<$_eseecode.session.timeoutHandlers.length; i++) {
 			clearTimeout($_eseecode.session.timeoutHandlers[i]);
 		}
+	}
+	
+	/**
+	 * Stops previous execution sounds
+	 * @private
+	 * @example $e_stopPreviousSounds()
+	 */
+	function $e_stopPreviousSounds() {	
+		// Stop previous execution remaining sounds
+		for (var i=0; i<$_eseecode.session.audioHandlers.length; i++) {
+			$e_stopSound($_eseecode.session.audioHandlers[i]);
+		}
+	}
+	
+	/**
+	 * Stops previous execution's pause
+	 * @private
+	 * @example $e_stopPreviousExecutionPause()
+	 */
+	function $e_stopPreviousExecutionPause() {	
+		clearTimeout($_eseecode.session.pauseHandler);
+	}
+	
+	/**
+	 * Stops previous execution
+	 * @private
+	 * @example $e_stopPreviousExecution()
+	 */
+	function $e_stopPreviousExecution() {
+		$_eseecode.session.kill = true;
+		$e_stopPreviousAnimations();
+		$e_stopPreviousSounds();
+		$e_stopPreviousExecutionPause();
 	}
 
 	/**
@@ -165,7 +215,6 @@
 		var lineNumber;
 		if (err.lineNumber) { // Firefox
 			lineNumber = err.lineNumber;
-			lineNumber++; // Firefox starts lines at 0
 		} else if (err.stack) { // Chrome
 			var lines = err.stack.split("\n");
 			var i;
@@ -238,9 +287,10 @@
 	 * @param {Boolean} [forceNoStep] Whether or not to force to ignore the stepping
 	 * @param {String} [inCode] Code to run. If unset run the code in the console window
 	 * @param {Boolean} [justPrecode] Whether or not to ignore the usercode and just run the precode
+	 * @param {Boolean} [immediate] Run immediately (disable breakpoints and pauses)
 	 * @example $e_execute()
 	 */
-	function $e_execute(forceNoStep, inCode, justPrecode) {
+	async function $e_execute(forceNoStep, inCode, justPrecode, immediate) {
 		if (!inCode) {
 			$e_resetSandbox();
 		}
@@ -287,18 +337,27 @@
 			$e_resetBreakpointWatches();
 			$e_resetWatchpoints();
 		}
+		$_eseecode.session.kill = false; // Must be set after $e_resetCanvas()
+		if (!inCode && !justPrecode && !immediate && $_eseecode.execution.api_prerun_callback) $_eseecode.execution.api_prerun();
 		try {
 			var jsCode = "\"use strict\";";
+			jsCode += "(async function() {";
 			if (!inCode && $_eseecode.execution.precode.code) { // Don't load precode again when running the code of an event
 				// We want to run precode inline so it shares the same context, so we don't use $e_executePrecode()
-				jsCode += "$_eseecode.execution.precode.running=true;"+$e_code2run($_eseecode.execution.precode.code)+";$_eseecode.execution.precode.running=false;\n";
+				var real_precode = $e_code2run($_eseecode.execution.precode.code, { inject: false, inline: true, realcode: true });
+				jsCode += "$_eseecode.execution.precode.running=true;"+real_precode+";$_eseecode.execution.precode.running=false;";
 			}
 			if (!justPrecode) {
-				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+$e_code2run(code);
+				var real_user_code = $e_code2run(code, { inject: !immediate, realcode: true });
+				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+real_user_code;
+				$_eseecode.last_execution = {};
+				$_eseecode.last_execution.linesCount = real_user_code.split("\n").length - 1;
 				if (!inCode && $_eseecode.execution.postcode.code) { // Don't load postcode again when running the code of an event
-					jsCode += ";$_eseecode.execution.postcode.running=true;"+$e_code2run($_eseecode.execution.postcode.code)+";$_eseecode.execution.postcode.running=false;\n";
+					var real_postcode = $e_code2run($_eseecode.execution.postcode.code, { realcode: true });
+					jsCode += ";$_eseecode.execution.postcode.running=true;"+real_postcode+";$_eseecode.execution.postcode.running=false;";
 				}
 			}
+			jsCode += " })();";
 		} catch (exception) {
 			$e_msgBox(_("Can't parse the code. There is the following problem in your code")+":\n\n"+exception.name + ":  " + exception.message);
 			return;
@@ -307,9 +366,7 @@
 			$_eseecode.session.lastRun = new Date().getTime();
 		}
 		var script = document.createElement("script");
-		script.id = "executionCode";
-		script.type = "text/javascript";
-		script.innerHTML = jsCode;
+		await eval(jsCode);
 		var oldWindowProperties;
 		if (Object.getOwnPropertyNames) {
 			oldWindowProperties = Object.getOwnPropertyNames(window);
@@ -325,16 +382,18 @@
 		if ($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id == "debug") {
 			$e_resetDebugLayers();
 		}
+		if (!inCode && !justPrecode && !immediate && $_eseecode.execution.api_postrun_callback) $_eseecode.execution.api_postrun();
 	}
 
 	/**
 	 * Converts user code to executable code and returns it
 	 * @private
 	 * @param {String} pseudoCode User code to convert
+	 * @param {Object} options Encoding options
 	 * @return {String} Executable code
 	 * @example eval($e_code2run("repeat(4){forward(100)}"))
 	 */
-	function $e_code2run(pseudoCode) {
+	function $e_code2run(pseudoCode, options) {
 		var program = eseecodeLanguage.parse(pseudoCode);
 		var level;
 		for (var i=0;i<$_eseecode.modes.console.length;i++) {
@@ -342,17 +401,17 @@
 				level = $_eseecode.modes.console[i].id;
 			}
 		}
-		var userCode = program.makeWrite(level,"","\t",true);
-		var code = "\"use strict\";";
+		var userCode = program.makeWrite(level,"","\t",options);
+		var code = "";
 		var globalVars = $_eseecode.instructions.variables;
 		for (var i=0; i<globalVars.length; i++) {
 			code += "var "+globalVars[i].name+"="+globalVars[i].value+";";
 		}
-		code += "try {"+userCode+";\n\
-				$e_showExecutionResults();\n\
-			} catch(err) {\n\
-				$e_showExecutionResults(err);\n\
-			}";
+		code += "try { "+userCode+";" +
+				"$e_showExecutionResults();" +
+			"} catch(err) {" +
+				"$e_showExecutionResults(err);" +
+			"};";
 		return code;
 	}
 
@@ -365,6 +424,8 @@
 	function $e_showExecutionResults(err) {
 		if (err === undefined) {
 			$e_unhighlight();
+		} else if (err === "executionKilled") {
+			// Do nothing
 		} else if (err === "executionTimeout") {
 			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
 			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
@@ -421,7 +482,12 @@
 	function $e_endExecution() {
 		if ($_eseecode.execution.startTime !== undefined) { // When running precode initially startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
 			var executionTime = ((new Date().getTime())-$_eseecode.execution.startTime)/1000;
-			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+($_eseecode.execution.programCounter-1)+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
+			var executionInstructions = $_eseecode.execution.programCounter - 1;
+			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+executionInstructions+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
+			if (!$_eseecode.execution.precode.running && !$_eseecode.execution.postcode.running) {
+				$_eseecode.last_execution.time = executionTime;
+				$_eseecode.last_execution.instructionsCount = executionInstructions;
+			}
 		}
 		$_eseecode.execution.programCounter = 0;
 		$_eseecode.execution.programCounterLimit = 0;

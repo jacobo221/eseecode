@@ -13,12 +13,6 @@
 			<span id="fullscreen-button" class="button" onclick="$e_toggleFullscreen()"><canvas width="20" height="20"></canvas></span>\
 		</div>\
 		<div id="body">\
-			<div id="whiteboard-wrapper" class="column">\
-				<div id="whiteboard-tabs" class="tab-buttons">\
-					<span id="whiteboard-tabs-download-button" class="tab-button" onclick="$e_downloadWhiteboardMsgBox()"><canvas width="20" height="20"></canvas></span>\
-				</div>\
-				<div id="whiteboard"></div>\
-			</div>\
 			<div id="dialog" class="column">\
 				<div id="dialog-tabs" class="tabs">\
 					<div id="dialog-tabs-setup" class="tab" onclick="$e_switchDialogMode(&quot;setup&quot;)"><canvas width="15" height="15"></canvas></div>\
@@ -52,7 +46,7 @@
 						<div id="dialog-debug-execute-stats-help" class="dialog-help">?</div>\
 						<div id="dialog-debug-execute-stats"></div>\
 						<div id="dialog-debug-execute-step-buttons">\
-							<span id="dialog-debug-execute-step-title"></span><input id="dialog-debug-execute-step" type="number" min="1" onchange="$e_updateExecutionStep()" /><span id="dialog-debug-execute-step-title2"></span><label id="dialog-debug-execute-stepped-label" for="dialog-debug-execute-stepped"></label><input id="dialog-debug-execute-stepped" type="checkbox" onchange="$e_updateExecutionStepped()" />\
+							<span id="dialog-debug-execute-step-title"></span><input id="dialog-debug-execute-step" type="number" min="1" onchange="$e_updateExecutionStep()" /><span id="dialog-debug-execute-pause-title"></span><input id="dialog-debug-execute-pause" type="number" min="0" value="'+$_eseecode.execution.pause+'" onchange="$e_updateExecutionPause()" /><span id="dialog-debug-execute-step-title2"></span><label id="dialog-debug-execute-stepped-label" for="dialog-debug-execute-stepped"></label><input id="dialog-debug-execute-stepped" type="checkbox" '+($_eseecode.execution.stepped?'checked="checked':'')+' onchange="$e_updateExecutionStepped()" />\
 						</div>\
 					</div>\
 					<div id="dialog-setup" class="program">\
@@ -116,6 +110,12 @@
 					</div>\
 					<div id="button-redo" class="button" onclick="$e_redoFromUI()"><canvas width="40" height="20"></canvas></div>\
 				</div>\
+			</div>\
+			<div id="whiteboard-wrapper" class="column">\
+				<div id="whiteboard-tabs" class="tab-buttons">\
+					<span id="whiteboard-tabs-download-button" class="tab-button" onclick="$e_downloadWhiteboardMsgBox()"><canvas width="20" height="20"></canvas></span>\
+				</div>\
+				<div id="whiteboard"></div>\
 			</div>\
 		</div>\
 		<div id="footer"></div>\

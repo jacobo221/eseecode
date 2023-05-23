@@ -24,8 +24,16 @@
 <link rel="apple-touch-icon" sizes="128x128" href="images/eSeeCode-icon-2-5x.png">
 <link rel="apple-touch-icon-precomposed" sizes="128x128" href="images/eSeeCode-icon-2-5x.png">
 <link rel="apple-touch-startup-image" href="images/eSeeCode_logo.png">
-<script type="text/javascript" src="eseecode.js"></script>
 </head>
 <body>
+<script type="text/javascript">
+	var $_eseecode = { cache_token: null };
+	let el = document.createElement("script");
+	el.type = "text/javascript";
+	let v = (new URLSearchParams(window.location.search)).get('v');
+	$_eseecode.cache_token = v === null ? $_eseecode.cache_token : (v === "" ? new Date().getTime() : v);
+	el.src = "js/eseecode.js" + ($_eseecode.cache_token ? '?v=' + $_eseecode.cache_token : '');
+	document.body.appendChild(el);
+</script>
 </body>
 </html>

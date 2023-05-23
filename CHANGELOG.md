@@ -1,8 +1,29 @@
-## 2.5 (ongoing work)
+## 3.0 (2023-05-23)
+ *Milestone reached: Support pauses, sound, automatic judge, customized exercices*
+ *   Added wait() instruction to freeze execution
+ *   Added sound() and soundStop() instructions to play sounds
+ *   Added ask() instruction to ease prompting the user to input data
+ *   Added instructions to get draw/text properties: getSize() getColor() getFont() getBold() getItal
+ *   New API messaging system to communicate within an iframeic()
+ *   Added API methods to support exercises auto-corrections (autojudge) and obtaining UI information
+ *   Added API methods forceblocksetup(), basepath(), pause(), downloadWhiteboard(), API_downloadCode(), API_prerun(), API_postrun(), API_getLastExecutionCodeLinesCount(), API_getLastExecutionInstuctionsCount(), API_getLastExecutionTime()
+ *   Allow to setup grid and guide visibility with API_getWhiteboard() through API
+ *   Allow in API_setInstructions() to decide whether to show or hide parameters in custom instructions
+ *   Added API_setCustomInstructions() to add new instructions into the instruction set, including an instruction icon
+ *   Allow to disable block setup when adding instructions in Drag mode
+ *   Allow to display instruction parameters in level 2
+ *   Allow basepath for image() and sound() calls
  *   Code view now only shows custom instruction set in dialog when custom instruction set is set
+ *   Animate execution steps. Can be be configured from the Debug tab
+ *   Prompt the user before loosing data when there are undo/redo actions available
+ *   Allow calling platform with a versioning number to prevent caching
+ *   Responsive whiteboard
  *   Fix: getPixelColor() was broken. Thanks to Jordi Losantos for reporting
+ *   Fix: image() was leaving the canvas in an unstable context
+ *   Fix: Some strings and translations fixed
+ *   Fix: Cleanup repetitive UI code re-executions
 
-## 2.4
+## 2.4 (2016-07-15)
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)

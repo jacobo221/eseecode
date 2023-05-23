@@ -3,17 +3,21 @@
 	/**
 	 * Returns an image of to the current whiteboard
 	 * @private
+	 * @param {Boolean} gridVisible Can be use to force toggling the grid
+	 * @param {Boolean} guideVisible Can be use to force toggling the guide
 	 * @return {String} Binary of the image
 	 * @example $e_imagifyWhiteboard(document.body.createElement("a"))
 	 */
-	function $e_imagifyWhiteboard() {
+	function $e_imagifyWhiteboard(gridVisible, guideVisible) {
+		if (gridVisible === undefined) gridVisible = $_eseecode.ui.gridVisible;
+		if (guideVisible === undefined) guideVisible = $_eseecode.ui.guideVisible;
 		var canvas = document.createElement('canvas');
 		canvas.width = $_eseecode.canvasArray["grid"].canvas.width;
 		canvas.height = $_eseecode.canvasArray["grid"].canvas.height;
 		var ctx = canvas.getContext("2d");
 		ctx.fillStyle="#FFFFFF";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
-		if ($_eseecode.ui.gridVisible) {
+		if (gridVisible) {
 			ctx.drawImage($_eseecode.canvasArray["grid"].canvas,0,0);
 		}
 		var layer = $_eseecode.canvasArray["$e_bottom"];
@@ -21,24 +25,29 @@
 			ctx.drawImage(layer.canvas,0,0);
 			layer = layer.layerOver;
 		}
-		if ($_eseecode.ui.guideVisible) {
+		if (guideVisible) {
 			$e_drawDebugGuide(ctx, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.name, undefined, undefined, true);
 		}
-		return canvas.toDataURL();
+		return canvas;
 	}
 	
 	/**
 	 * Links an A HTML element to the current whiteboard export drawing
 	 * @private
+	 * @param {Boolean} onlyReturn If true, the a file is not downloaded
+	 * @param {Boolean} gridVisible Can be use to force toggling the grid
+	 * @param {Boolean} guideVisible Can be use to force toggling the guide
 	 * @example $e_downloadWhiteboard()
 	 */
-	function $e_downloadWhiteboard() {
-		var image = $e_imagifyWhiteboard();
-		var dataTuple = $e_dataURItoB64(image);
+	function $e_downloadWhiteboard(onlyReturn, gridVisible, guideVisible) {
+		var canvas = $e_imagifyWhiteboard(gridVisible, guideVisible);
+		var dataUrl = canvas.toDataURL();
+		var dataTuple = $e_dataURItoB64(dataUrl);
 		var data = dataTuple.data;
 		var filename = "canvas-"+(new Date()).getTime()+"."+dataTuple.mimetype.split("/")[1];
 		var mimetype = dataTuple.mimetype;
-		$e_saveFile(data, filename, mimetype);
+		if (!onlyReturn) $e_saveFile(data, filename, mimetype);
+		return { canvas: canvas, dataUrl: dataUrl, binary: data, filename: filename, mimetype: mimetype };
 	}
 
 	/**
@@ -1062,10 +1071,11 @@
 			reason = $_eseecode.session.highlight.reason;
 		}
 		$e_unhighlight();
+		let displayLineNumber = lineNumber; // Steps are triggered before executing the next line
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		if (mode == "blocks") {
 			var consoleDiv = document.getElementById("console-blocks");
-			var div = $e_searchBlockByPosition(consoleDiv.firstChild,lineNumber,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,displayLineNumber,1).element;
 			if (div && div.id != "console-blocks-tip") { // after last instruction in code there is no block (execution finished) so we must check if the block exists
 				var style;
 				if (reason === "error") {
@@ -1091,8 +1101,8 @@
 			} else {
 				style = "ace_step";
 			}
-			$e_selectTextareaLine(lineNumber,lineNumber, style);
-			ace.edit("console-write").scrollToLine(lineNumber, true, true);
+			$e_selectTextareaLine(displayLineNumber,displayLineNumber, style);
+			ace.edit("console-write").scrollToLine(displayLineNumber, true, true);
 		}
 		$_eseecode.session.highlight.lineNumber = lineNumber;
 		$_eseecode.session.highlight.reason = reason;
@@ -1108,9 +1118,10 @@
 		if (!line) {
 			return;
 		}
+		let displayLineNumber = line; // Steps are triggered before executing the next line
 		var consoleDiv = document.getElementById("console-blocks");
 		if (consoleDiv.firstChild && consoleDiv.firstChild.id !== "console-blocks-tip") {
-			var div = $e_searchBlockByPosition(consoleDiv.firstChild,line,1).element;
+			var div = $e_searchBlockByPosition(consoleDiv.firstChild,displayLineNumber,1).element;
 			if (div) { // by the time we have to unhighlight it the div might not exist anymore
 				div.style.border = ""; // accesses the canvas
 				if (!$_eseecode.session.breakpoints[line] || !$_eseecode.session.breakpoints[line].status) {
@@ -1292,7 +1303,7 @@
 	 * @example $e_resetUIFromUI()
 	 */
 	function $e_resetUIFromUI() {
-		if (!$e_codeIsEmpty()) {
+		if (!$e_codeIsEmpty() || $e_hasUndoRedo()) {
 			$e_msgBox(_("Do you really want to start over?"), {acceptAction:$e_resetUIForced,cancelAction:$e_msgBoxClose});
 			return false;
 		} else {
@@ -1323,7 +1334,7 @@
 		$_eseecode.whiteboard = document.getElementById("whiteboard");
 		$_eseecode.ui.dialogWindow = document.getElementById("dialog-window");
 		if (notInitial !== true) {
-			$e_loadURLParams();
+			$e_loadURLParams(undefined, undefined, false, ["precode","code","postcode","execute","maximize","dialog","theme"]); // Prepare the environment except execution and UI elements that are loaded later
 			$e_initializeUISetup();
 		}
 		$e_initUIElements();
@@ -1351,7 +1362,7 @@
 		}
 		$e_resizeConsole(true);
 		$e_initConsole();
-		$e_resetCanvas();
+		$e_resetCanvas(true); // Precode is loaded later with $e_loadURLParams()
 		$e_resetIO(true);
 		$e_resetDebug();
 		$e_resetUndo();
@@ -1366,6 +1377,8 @@
 		window.addEventListener("beforeunload", $e_windowRefresh, false);
 		if (!notInitial) {
 			window.addEventListener('resize', $e_windowResizeHandler, false);
+			if ($_eseecode.ui.whiteboardResizeInterval) clearInterval($_eseecode.ui.whiteboardResizeInterval);
+			$_eseecode.ui.whiteboardResizeInterval = setInterval($e_whiteboardResizeHandler, 100);
 			var orientation = "landscape";
 			if (screen.lockOrientation) {
 				screen.lockOrientation(orientation);
@@ -1389,6 +1402,7 @@
 			$e_toggleFullscreenIcon();
 		}
 		$e_windowResizeHandler();
+		$e_whiteboardResizeHandler();
 		//document.body.removeEventListener("keydown", $e_handlerKeyboard, false); // onkeydown handler will be called from shortcuts so it is only called when no shortcut exists
 		document.body.removeEventListener("keyup", $e_handlerKeyboard, false);
 		$_eseecode.whiteboard.removeEventListener("mousemove", $e_handlerPointer, false);
@@ -1607,6 +1621,26 @@
 			programElements[i].style.height = height+"px";
 		}
 		ace.edit("console-write").resize();
+	}
+
+	/**
+	 * Resizes the whiteboard based on the available size
+	 * @private
+	 * @example $e_whiteboardResizeHandler()
+	 */	
+	function $e_whiteboardResizeHandler() {
+		const el = document.getElementById("whiteboard-wrapper");
+		const new_width = el.clientWidth + parseInt(getComputedStyle(el).marginLeft) * 2;
+		const new_height = $_eseecode.whiteboard.offsetHeight + parseInt(getComputedStyle(document.getElementById("whiteboard-tabs")).marginBottom) * 2;
+		if (this.last_width == new_width && this.last_height == new_height) return;
+		const scale_width = new_width / $_eseecode.whiteboard.offsetWidth;
+		const scale_height = new_height / $_eseecode.whiteboard.offsetHeight;
+		console.log("W: " + scale_width + " (" + new_width + ")\nH: " + scale_height + " (" + new_height + ")")
+		let scale = Math.min(scale_width, scale_height);
+		if (scale < 1) scale = 1;
+		document.getElementById("whiteboard").style.transform = "scale(" + scale + ")";
+		this.last_width = new_width;
+		this.last_height = new_height;
 	}
 
 	/**
@@ -1917,6 +1951,9 @@
 				text += "()";
 			}
 		}
+		if (level === "level2" && instruction.showParams) {
+			text += "(" + parameters.join(", ") + ")";
+		}
 		if (dialog || (level != "level3" && level != "level4" && instruction.name != "unknownFunction")) {
 			return { parameters: parameters, text: text };
 		}
@@ -2114,11 +2151,11 @@
 							title = instruction.nameRewrite[level];
 						}
 						div.innerHTML = '<b>'+title+'</b>';
-						if (instruction.parameters !== null && instruction.code && instruction.code.space) {
+						if (instruction.parameters && instruction.code && instruction.code.space) {
 							div.innerHTML += " ";
 						}
-						if (instruction.parameters !== null) {
-							if (instruction.parameters !== null && (!instruction.code || !instruction.code.noBrackets)) {
+						if (instruction.parameters) {
+							if (instruction.parameters && (!instruction.code || !instruction.code.noBrackets)) {
 								div.innerHTML += '<b>(</b>';
 							}
 							for (var j=0;j<instruction.parameters.length;j++) {
@@ -2127,7 +2164,7 @@
 								}
 								div.innerHTML += _(instruction.parameters[j].name);
 							}
-							if (instruction.parameters !== null && (!instruction.code || !instruction.code.noBrackets)) {
+							if (instruction.parameters && (!instruction.code || !instruction.code.noBrackets)) {
 								div.innerHTML += '<b>)</b>';
 							}
 						}
@@ -2235,10 +2272,10 @@
 	 * @example $e_resetCanvasFromUI()
 	 */
 	function $e_resetCanvasFromUI() {
+		$e_endExecution();
 		$e_resetCanvas();
 		$e_resetIO();
 		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
-		$e_endExecution();
 		$e_initProgramCounter();
 	}
 
@@ -2257,7 +2294,7 @@
   		for(key in $_eseecode.canvasArray) {
 			$e_removeCanvas(key);
 		}
-		$e_stopPreviousAnimations();
+		$e_stopPreviousExecution();
 		$e_resetBreakpointWatches();
 		$e_resetWatchpoints();
 		$e_handlerReset();
@@ -2290,11 +2327,12 @@
 	/**
 	 * Runs the code, triggered by the user
 	 * @private
+	 * @param {Boolean} [immediate] Run immediately (disable breakpoints and pauses)
 	 * @example $e_executeFromUI()
 	 */
-	function $e_executeFromUI() {
-		$e_stopPreviousAnimations();
-		$e_execute();
+	async function $e_executeFromUI(immediate) {
+		$e_stopPreviousExecution();
+		await $e_execute(false, undefined, false, immediate);
 	}
 
 	/**
@@ -2687,7 +2725,7 @@
 			elementsToRemove[i].parentNode.removeChild(elementsToRemove[i]);
 		}
 		// Add files
-		var newThemeJSPath = newThemePath+"/theme.js";
+		var newThemeJSPath = newThemePath+"/theme.js"+($_eseecode.v?"?v="+$_eseecode.v:"");
 		var elementJS = document.createElement("script");
 		elementJS.setAttribute("type", "text/javascript");
 		elementJS.setAttribute("src", newThemeJSPath);

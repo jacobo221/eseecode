@@ -72,10 +72,12 @@
 		document.getElementById("dialog-debug-execute-stats-title").innerHTML = _("Execution")+":";
 		document.getElementById("dialog-debug-execute-stats-help").title = _("Execution statistics");
 		document.getElementById("dialog-debug-execute-stats").innerHTML = "";
-		document.getElementById("dialog-debug-execute-step-title").innerHTML = _("Pause every")+" ";
+		document.getElementById("dialog-debug-execute-step-title").innerHTML = _("Every")+" ";
 		document.getElementById("dialog-debug-execute-step").title = _("Number of instructions until pause");
-		document.getElementById("dialog-debug-execute-step-title2").innerHTML = " "+_("instructions")+" ";
-		document.getElementById("dialog-debug-execute-step").title = _("Run stepped");
+		document.getElementById("dialog-debug-execute-pause-title").innerHTML = _("instructions pause")+" ";
+		document.getElementById("dialog-debug-execute-pause").title = _("Milliseconds to wait");
+		document.getElementById("dialog-debug-execute-step-title2").innerHTML = " "+_("ms or stop")+" ";
+		document.getElementById("dialog-debug-execute-stepped").title = _("Run stepped");
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
 		document.getElementById("dialog-setup").title = _("Setup dialog");

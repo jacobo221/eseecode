@@ -1100,6 +1100,32 @@
 			ctx.closePath();
 			ctx.fill();
 		},
+		"sound": function(ctx, width, height, param) {
+			var margin = 15;
+			ctx.fillStyle = '#000000';
+			ctx.strokeStyle = '#000000';
+			ctx.lineWidth = 4;
+			ctx.beginPath();
+			ctx.moveTo(width/2,height-margin);
+			ctx.lineTo(width/2,margin);
+			ctx.lineTo(margin,height/2-margin);
+			ctx.lineTo(margin,height/2+margin);
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = '#BBBBBB';
+			ctx.lineWidth = 2;
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2+margin);
+			ctx.lineTo(width-margin,height-margin);
+			ctx.stroke();
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2);
+			ctx.lineTo(width-margin,height/2);
+			ctx.stroke();
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2-margin);
+			ctx.lineTo(width-margin,margin);
+			ctx.stroke();
+		},
 		"stop": function(ctx, width, height, param) {
 			var margin = 15;
 			ctx.fillStyle = '#FF0000';
@@ -1119,6 +1145,42 @@
 			ctx.stroke();
 			ctx.moveTo(margin*1.5,height/2);
 			ctx.lineTo(width-margin*1.5,height/2);
+			ctx.stroke();
+		},
+		"stopSound": function(ctx, width, height, param) {
+			var margin = 15;
+			ctx.fillStyle = '#000000';
+			ctx.strokeStyle = '#000000';
+			ctx.lineWidth = 4;
+			ctx.beginPath();
+			ctx.moveTo(width/2,height-margin);
+			ctx.lineTo(width/2,margin);
+			ctx.lineTo(margin,height/2-margin);
+			ctx.lineTo(margin,height/2+margin);
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = '#BBBBBB';
+			ctx.lineWidth = 2;
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2+margin);
+			ctx.lineTo(width-margin,height-margin);
+			ctx.stroke();
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2);
+			ctx.lineTo(width-margin,height/2);
+			ctx.stroke();
+			ctx.moveTo(width/2+(width/2-margin)/4,height/2-margin);
+			ctx.lineTo(width-margin,margin);
+			ctx.stroke();
+			ctx.strokeStyle = "#AA0000";
+			ctx.lineWidth = 4;
+			ctx.beginPath();
+			ctx.moveTo(margin,margin);
+			ctx.lineTo(width-margin,height-margin);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.lineTo(width-margin,margin);
+			ctx.lineTo(margin,height-margin);
 			ctx.stroke();
 		},
 		"transparency": function(ctx, width, height, param) {
@@ -1428,6 +1490,26 @@
 			ctx.fillText(param[0],margin,height/2);
 			ctx.font = fontSize/1.5+"px Verdana";
 			ctx.fillText(param[1],margin,height/2+fontSize);
+		},
+		"wait": function(ctx, width, height, param) {
+			var margin = 15;
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.arc(width/2, height/2, width/2-margin, 0, 360, false);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(width/2, height/2);
+			ctx.lineTo(4*margin/3, height/2);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(width/2, height/2);
+			ctx.lineTo(width/2, 3*margin/2);
+			ctx.closePath();
+			ctx.stroke();
 		},
 		"while": function(ctx, width, height, param) {
 			var margin = 15;

@@ -268,7 +268,7 @@
 						$_eseecode.session.floatingBlock.fromDiv.parentNode.removeChild($_eseecode.session.floatingBlock.fromDiv);
 					} else {
 						action = "add";
-						if (level == "level2" || level == "level3") {
+						if (level == "level3" || (level == "level2" && $_eseecode.ui.forceBlockSetup)) {
 							$e_setupBlock(div, true);
 						}
 						$e_paintBlock(div);
@@ -1759,6 +1759,7 @@
 			bgCanvas.setAttribute("width", bgWidth);
 			bgCanvas.setAttribute("height", bgHeight);
 			var bgCtx = bgCanvas.getContext("2d");
+			bgCtx.block = div;
 			bgCtx.fillStyle = color;
 			bgCtx.fillRect(0,0,bgWidth,bgHeight);
 			if ($_eseecode.ui.theme && $_eseecode.ui.theme.functions && $_eseecode.ui.theme.functions.blockBackground) {
@@ -1866,4 +1867,3 @@
 	function $e_resetUndoBlocks() {
 		$_eseecode.session.blocksUndo = [0];
 	}
-

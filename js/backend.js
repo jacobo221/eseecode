@@ -109,6 +109,17 @@
 		return layer;
 	}
 
+	/** Stop a background sound
+	 * @private
+	 * @param {Object} audio AUdio object to stop
+	 * @example $e_stopSound(backgroundSound("music.mp3"))
+	 */
+	function $e_stopSound(audio) {
+		if (!audio) return;
+		audio.pause();
+		if (audio.parentNode) audio.parentNode.removeChild(audio);
+	}
+
 	/** Returns a window and focuses to it if none had focus
 	 * @private
 	 * @param {Number} [id] Window id (if blank it creates a new id)
@@ -468,7 +479,6 @@
 		if (code === undefined) {
 			return;
 		}
-		//$e_resetUI(true);
 		var level = $_eseecode.modes.console[$_eseecode.modes.console[0]].id;
 		var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
 		var program;
@@ -509,7 +519,6 @@
 			}
 		}
 		if (run) {
-			$e_resetCanvas();
 			if (type === "precode") {
 				$e_execute(undefined, undefined, true);
 			} else {
@@ -518,3 +527,13 @@
 		}
 	}
 
+	/**
+	 * Get if the session has undo/redo instructions
+	 * @private
+	 * @return {Boolean} True if the session has undo/redo instructions, false otherwise
+	 * @example $e_hasUndoRedo()
+	 */
+	function $e_hasUndoRedo() {
+		var aceUndoManager =  ace.edit("console-write").session.getUndoManager();
+		return $_eseecode.session.blocksUndo.length > 1 || aceUndoManager.hasUndo() || aceUndoManager.hasRedo();
+	}
