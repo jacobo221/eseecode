@@ -1613,12 +1613,12 @@
 		if ($e_isNumber(window.innerHeight)) {
 			// The "eseecode" div resizes automatically with CSS but webview in android apps fails to set height 100% correctly so we use this hack
 			var windowHeight = (window.innerHeight > $_eseecode.ui.minWindowHeight)? window.innerHeight : $_eseecode.ui.minWindowHeight;
-			document.getElementById("eseecode").style.height = windowHeight + "px";
+			//document.getElementById("eseecode").style.height = windowHeight + "px";
 		}
 		var height = document.getElementById("eseecode").clientHeight - document.getElementById("header").offsetHeight - document.getElementById("footer").offsetHeight - document.getElementById("console-tabs").offsetHeight - document.getElementById("console-buttons").offsetHeight;
 		var programElements = document.getElementsByClassName("program");
 		for (var i=0; i<programElements.length; i++) {
-			programElements[i].style.height = height+"px";
+			//programElements[i].style.height = height+"px";
 		}
 		ace.edit("console-write").resize();
 	}

@@ -169,7 +169,7 @@
 			var consolePosition = consoleDiv.getBoundingClientRect();
 			var diffTop = consolePosition.top - blockPosition.top;
 			var diffLeft = consolePosition.left - blockPosition.left;
-			var diffHeight = consoleDiv.style.height.replace("px","") - blockMeasures.height;
+			var diffHeight = consolePosition.height - blockMeasures.height;
 			var diffWidth = (consolePosition.width?consolePosition.width:367) - blockMeasures.width;
 			var animationInterval = 50;
 			var animationRepetitions = 8;

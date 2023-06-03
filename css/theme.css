@@ -487,3 +487,43 @@
 		position: absolute;
 		border-radius: 10px;
 	}
+	@media screen and (orientation: portrait) {
+		html > body {
+			min-width: 894px !important;
+		}
+		#eseecode {
+			min-width: initial;
+		}
+		#body {
+			display: grid;
+			grid-template: "whiteboard whiteboard" "dialog console";
+			grid-template-rows: 500px auto;
+			grid-template-columns: 250px auto;
+		}
+		#dialog {
+			grid-area: dialog;
+		}
+		#console {
+			grid-area: console;
+			max-width: initial;
+			overflow: initial;
+		}
+		#whiteboard-wrapper {
+			grid-area: whiteboard;
+			width: 100vw;
+		}
+		#whiteboard {
+			margin: 0 auto;
+		}
+		#whiteboard-tabs {
+			margin: 2em;
+		}
+		.program {
+			height: calc(100vh - 650px);
+		}
+	}
+	@media screen and (pointer: coarse) {
+		.program {
+			height: 100vh;
+		}
+	}
