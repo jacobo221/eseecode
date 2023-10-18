@@ -214,6 +214,26 @@
 		this.body.makeBlocks(level,div);
 	};
 
+	ast.FillStatementNode.prototype.makeBlocks = function(level,parentDiv) {
+		if (!parentDiv) {
+			return this.makeWrite(level,"","");
+		}
+		var colors;
+		if (this.color.type == "SequenceExpression") {
+ 			colors = [
+				this.color.expressions[0].makeBlocks(level,null),
+				this.color.expressions[1].makeBlocks(level,null),
+			]
+		} else {
+ 			colors = [
+				this.color.makeBlocks(level,null),
+				this.color.makeBlocks(level,null),
+			]
+		}
+		var div = appendBlock(level,"fill",parentDiv,colors);
+		this.body.makeBlocks(level,div);
+	};
+
 	ast.DoWhileStatementNode.prototype.makeBlocks = function(level,parentDiv) {
 		if (!parentDiv) {
 			return this.makeWrite(level,"","");

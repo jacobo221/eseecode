@@ -148,7 +148,7 @@
 	.program {
 		position: relative;
 		width: inherit;
-		height: calc(100vh - 120px);
+		height: calc(100vh - 135px);
 		background-color: #FFFFFF;
 		color: inherit;
 		overflow-x: hidden;

@@ -109,6 +109,7 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 "void"                             parser.restricted = false; return "VOID";
 "while"                            return "WHILE";
 "repeat"                           return "REPEAT";
+"fill"                             return "FILL";
 "with"                             return "WITH";
 "true"                             parser.restricted = false; return "TRUE";
 "false"                            parser.restricted = false; return "FALSE";
@@ -120,6 +121,8 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 "extends"                          return "EXTENDS";
 "import"                           return "IMPORT";
 "super"                            return "SUPER";
+"and"                              return "AND";
+"or"                               return "OR";
 {Identifier}                       parser.restricted = false; return "IDENTIFIER";
 {DecimalLiteral}                   parser.restricted = false; return "NUMERIC_LITERAL";
 {HexIntegerLiteral}                parser.restricted = false; return "NUMERIC_LITERAL";
@@ -204,6 +207,7 @@ Statement
     | BreakStatement
     | ReturnStatement
     | WithStatement
+    | FillStatement
     | LabelledStatement
     | SwitchStatement
     | ThrowStatement
@@ -404,6 +408,13 @@ IterationStatement
     | "FOR" "(" "VAR" VariableDeclarationNoIn "IN" Expression ")" Statement
         {
             $$ = new ForInStatementNode($4, $6, $8, createSourceLocation(null, @1, @8));
+        }
+    ;
+
+FillStatement
+    : "FILL" "(" Expression ")" Statement
+        {
+            $$ = new FillStatementNode($3, $5, createSourceLocation(null, @1, @5));
         }
     ;
 
@@ -1295,49 +1306,109 @@ BitwiseORExpressionNoBF
 
 LogicalANDExpression
     : BitwiseORExpression
-    | LogicalANDExpression "&&" BitwiseORExpression
+    | LogicalANDExpressionSymbol
+    | LogicalANDExpressionText
+    ;
+LogicalANDExpressionSymbol
+    : LogicalANDExpression "&&" BitwiseORExpression
         {
             $$ = new LogicalExpressionNode("&&", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalANDExpressionText
+    : LogicalANDExpression "AND" BitwiseORExpression
+        {
+            $$ = new LogicalExpressionNode("and", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
 LogicalANDExpressionNoIn
     : BitwiseORExpressionNoIn
-    | LogicalANDExpressionNoIn "&&" BitwiseORExpressionNoIn
+    | LogicalANDExpressionSymbolNoIn
+    | LogicalANDExpressionTextNoIn
+    ;
+LogicalANDExpressionSymbolNoIn
+    : LogicalANDExpressionNoIn "&&" BitwiseORExpressionNoIn
         {
             $$ = new LogicalExpressionNode("&&", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalANDExpressionTextNoIn
+    : LogicalANDExpressionNoIn "AND" BitwiseORExpressionNoIn
+        {
+            $$ = new LogicalExpressionNode("and", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
 LogicalANDExpressionNoBF
     : BitwiseORExpressionNoBF
-    | LogicalANDExpressionNoBF "&&" BitwiseORExpression
+    | LogicalANDExpressionSymbolNoBF
+    | LogicalANDExpressionTextNoBF
+    ;
+LogicalANDExpressionSymbolNoBF
+    : LogicalANDExpressionNoBF "&&" BitwiseORExpression
         {
             $$ = new LogicalExpressionNode("&&", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalANDExpressionTextNoBF
+    : LogicalANDExpressionNoBF "AND" BitwiseORExpression
+        {
+            $$ = new LogicalExpressionNode("and", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
 LogicalORExpression
     : LogicalANDExpression
-    | LogicalORExpression "||" LogicalANDExpression
+    | LogicalORExpressionSymbol
+    | LogicalORExpressionText
+    ;
+LogicalORExpressionSymbol
+    : LogicalORExpression "||" LogicalANDExpression
         {
             $$ = new LogicalExpressionNode("||", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalORExpressionText
+    : LogicalORExpression "OR" LogicalANDExpression
+        {
+            $$ = new LogicalExpressionNode("or", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
 LogicalORExpressionNoIn
     : LogicalANDExpressionNoIn
-    | LogicalORExpressionNoIn "||" LogicalANDExpressionNoIn
+    | LogicalORExpressionSymbolNoIn
+    | LogicalORExpressionTextNoIn
+    ;
+LogicalORExpressionSymbolNoIn
+    : LogicalORExpressionNoIn "||" LogicalANDExpressionNoIn
         {
             $$ = new LogicalExpressionNode("||", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalORExpressionTextNoIn
+    : LogicalORExpressionNoIn "OR" LogicalANDExpressionNoIn
+        {
+            $$ = new LogicalExpressionNode("or", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
 LogicalORExpressionNoBF
     : LogicalANDExpressionNoBF
-    | LogicalORExpressionNoBF "||" LogicalANDExpression
+    | LogicalORExpressionSymbolNoBF
+    | LogicalORExpressionTextNoBF
+    ;
+LogicalORExpressionSymbolNoBF
+    : LogicalORExpressionNoBF "||" LogicalANDExpression
         {
             $$ = new LogicalExpressionNode("||", $1, $3, createSourceLocation(null, @1, @3));
+        }
+    ;
+LogicalORExpressionTextNoBF
+    : LogicalORExpressionNoBF "OR" LogicalANDExpression
+        {
+            $$ = new LogicalExpressionNode("or", $1, $3, createSourceLocation(null, @1, @3));
         }
     ;
 
@@ -1565,6 +1636,8 @@ ReservedWord
     | "EXTENDS"
     | "IMPORT"
     | "SUPER"
+    | "AND"
+    | "OR"
     ;
 
 %%
@@ -1707,6 +1780,13 @@ function WhileStatementNode(test, body, loc) {
 function RepeatStatementNode(test, body, loc) {
 	this.type = "RepeatStatement";
 	this.test = test;
+	this.body = body;
+	this.loc = loc;
+}
+
+function FillStatementNode(color, body, loc) {
+	this.type = "FillStatement";
+	this.color = color;
 	this.body = body;
 	this.loc = loc;
 }
@@ -1942,6 +2022,7 @@ parser.ast.ThrowStatementNode = ThrowStatementNode;
 parser.ast.TryStatementNode = TryStatementNode;
 parser.ast.WhileStatementNode = WhileStatementNode;
 parser.ast.RepeatStatementNode = RepeatStatementNode;
+parser.ast.FillStatementNode = FillStatementNode;
 parser.ast.DoWhileStatementNode = DoWhileStatementNode;
 parser.ast.ForStatementNode = ForStatementNode;
 parser.ast.ForInStatementNode = ForInStatementNode;

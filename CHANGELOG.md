@@ -1,4 +1,12 @@
+## 3.1 (2023-10-19)
+
+ *Milestone reached: Language structure improvements
+ *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape()
+ *   Support and/or instead of &&/||
+ *   Added instruction getCosine()
+
 ## 3.0 (2023-05-23)
+
  *Milestone reached: Support pauses, sound, automatic judge, customized exercices*
  *   Added wait() instruction to freeze execution
  *   Added sound() and soundStop() instructions to play sounds
@@ -24,6 +32,7 @@
  *   Fix: Cleanup repetitive UI code re-executions
 
 ## 2.4 (2016-07-15)
+
  *Milestone reached: Maximize guided exercises and challanges*
  *   Create custom instruction set where instructions parameters can't be customized
  *   Instructions can now have a maximum amount of uses (only in blocks modes)

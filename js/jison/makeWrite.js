@@ -384,6 +384,44 @@
 		return str;
 	};
 
+	ast.FillStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		var str = "";
+		if (indent && !options.realcode) str += indent;
+		var colors = this.color.makeWrite(level, "", "", options);
+		var fillColor, borderColor;
+		if (this.color.type == "SequenceExpression") {
+			fillColor = this.color.expressions[0].makeWrite(level, "", "", options);
+			borderColor = this.color.expressions[1].makeWrite(level, "", "", options);
+		} else {
+			fillColor = borderColor = this.color.makeWrite(level, "", "", options);
+		}
+		if (options.realcode) {
+			str += "beginShape();";
+			str += "setColor(" + borderColor + ");";
+			if (!options.inline) str += "\n";
+		} else {
+			str += "fill (" + colors + ") {";
+			if (!options.inline) str += "\n";
+		}
+		var body = this.body;
+
+		if (body.type === "BlockStatement") {
+			str += body.makeWrite(level, indent, indentChar, options);
+		} else {
+			str += body.makeWrite(level, indent + indentChar, indentChar, options);
+			if (!options.inline) str += "\n";
+		}
+		if (indent && !options.realcode) str += indent;
+		if (options.realcode) {
+			str += "setColor(" + fillColor + ");";
+			str += "endShape();";
+                } else {
+		        str += "}";
+		}
+
+		return str;
+	};
+
 	ast.DoWhileStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
 		if (options.inject) str += injectCode(options,this.loc.start.line);
 		var str = "";
@@ -732,12 +770,14 @@
 			str += this.left.makeWrite(level, "", "", options);
 		}
 		var operator = this.operator;
-		if (operator == "and") {
-			operator = "&&";
-		} else if (operator == "or") {
-			operator = "||";
+		var real_operator = operator;
+		if (this.operator == "and") real_operator = "&&";
+		else if (this.operator == "or") real_operator = "||";
+		if (options.realcode) {
+			str += " " + real_operator + " ";
+		} else {
+			str += " " + operator + " ";
 		}
-		str += " " + operator + " ";
 		if (needBrackets(this,this.right)) {
 			str += "(" + this.right.makeWrite(level, "", "", options) + ")";
 		} else {

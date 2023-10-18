@@ -1635,7 +1635,6 @@
 		if (this.last_width == new_width && this.last_height == new_height) return;
 		const scale_width = new_width / $_eseecode.whiteboard.offsetWidth;
 		const scale_height = new_height / $_eseecode.whiteboard.offsetHeight;
-		console.log("W: " + scale_width + " (" + new_width + ")\nH: " + scale_height + " (" + new_height + ")")
 		let scale = Math.min(scale_width, scale_height);
 		if (scale < 1) scale = 1;
 		document.getElementById("whiteboard").style.transform = "scale(" + scale + ")";
