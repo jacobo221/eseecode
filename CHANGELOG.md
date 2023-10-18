@@ -1,6 +1,6 @@
 ## 3.1 (2023-10-19)
 
- *Milestone reached: Language structure improvements
+ *Milestone reached: Language structure improvements*
  *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape()
  *   Support and/or instead of &&/||
  *   Added instruction getCosine()
