@@ -850,6 +850,20 @@
 	}
 
 	/**
+	 * Returns the cosine of an angle
+	 * @since 1.0
+	 * @public
+	 * @param {Number} angle Angle
+	 * @return {Number} Cosine of an angle
+	 * @example getCosine(90)
+	 */
+	function getCosine(angle) {
+		$e_parseParameterTypes("getCosine", arguments);
+		var value = Math.cos(angle*Math.PI/180);
+		return value;
+	}
+
+	/**
 	 * Returns the arcsine of an angle
 	 * @since 1.0
 	 * @public
