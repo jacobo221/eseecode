@@ -773,7 +773,7 @@
 		var real_operator = operator;
 		if (this.operator == "and") real_operator = "&&";
 		else if (this.operator == "or") real_operator = "||";
-		if (options.realcode) {
+		if (options && options.realcode) {
 			str += " " + real_operator + " ";
 		} else {
 			str += " " + operator + " ";
