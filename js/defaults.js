@@ -25,7 +25,7 @@
 				link: undefined
 			},
 			version: {
-				text: "3.0.1",
+				text: "3.1",
 				link: "CHANGELOG.md"
 			},
 			logo: {
