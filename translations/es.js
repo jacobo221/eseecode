@@ -489,6 +489,9 @@ $_eseecode.ui.translation = {
 		"Which key code do you want to convert?": "¿Qué código quieres convertir?",
 		"Returns the character corresponding to a key code": "Devuelve el carácter correspondiente a un código de teclado",
 		"firstX and lastX must be different": "firstX i lastX han de tenir valor diferent",
-		"firstY and lastY must be different": "firstY i lastY han de tenir valor diferent"
+		"firstY and lastY must be different": "firstY i lastY han de tenir valor diferent",
+		"Which fill color do you want to use?": "¿Qué color deseas usar para el relleno?",
+		"Which border color do you want to use?": "¿Qué color deseas usar para los bordes?",
+		"Draw a shape": "Dibuja una forma",
 	}
 }

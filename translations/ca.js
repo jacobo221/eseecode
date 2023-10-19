@@ -477,7 +477,7 @@ $_eseecode.ui.translation = {
 		"Checks if a key in the keyboard is being pressed": "Retorna si s'està presionant una tecla del teclat",
 		"Your browser doesn't support direct download of files, please click on %s and save the page that will open.": "El seu navegador no soporta la descàrrega directa d'arxius, per favor cliqui %s i desi la pàgina que se obrirà.",
 		"this link": "aquest enllaç",
-		"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vol carregar un codi nou?",
+		"You have made changes to your code which you haven't yet saved. Are you sure you want to load another code?": "Hi ha canvis al codi que encara no s'han desat. Estàs segur de que vols carregar un codi nou?",
 		"Returns the color in a certain coordinate in the current layer": "Retorna el color d'un píxel específic",
 		"Coordinate x of the position to check the color": "Coordenada x del píxel a comprovar",
 		"Coordinate y of the position to check the color": "Coordenada y del píxel a comprovar",
@@ -489,6 +489,9 @@ $_eseecode.ui.translation = {
 		"Which key code do you want to convert?": "Quin codi vols convertir?",
 		"Returns the character corresponding to a key code": "Retorna el caràcter corresponent a un codi de teclat",
 		"firstX and lastX must be different": "firstX i lastX han de tenir valor diferent",
-		"firstY and lastY must be different": "firstY i lastY han de tenir valor diferent"
+		"firstY and lastY must be different": "firstY i lastY han de tenir valor diferent",
+		"Which fill color do you want to use?": "Quin color vols fer servir per omplir la forma?",
+		"Which border color do you want to use?": "Quin color vols fer servir pels contorns?",
+		"Draw a shape": "Dibuixa una forma",
 	}
 }

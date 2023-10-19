@@ -2133,6 +2133,7 @@
 					if (show) {
 						// write mode can use all available instructions
 						var title = instruction.name;
+						if (title == "blank") continue;
 						var div = document.createElement('div');
 						div.setAttribute("id", "div-"+title);
 						div.className = "";

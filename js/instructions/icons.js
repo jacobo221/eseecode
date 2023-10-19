@@ -258,6 +258,30 @@
 			ctx.arc(width-margin, margin, 2, startAngle, endAngle, false);
 			ctx.fill();
 		},
+		"fill": function(ctx, width, height, param) {
+			var margin = 15;
+			var startAngle = 0;
+			var endAngle = 2*Math.PI;
+			ctx.fillStyle = '#00FFFF';
+			ctx.beginPath();
+			ctx.rect(margin, margin, width-margin*2, height-margin*2);
+			ctx.fill();
+			ctx.closePath();
+			ctx.lineWidth = 4;
+			ctx.strokeStyle = '#000000';
+			ctx.beginPath();
+			ctx.moveTo(width-margin, margin);
+			ctx.lineTo(margin, margin);
+			ctx.lineTo(margin, height/2);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.fillStyle = '#000000';
+			ctx.beginPath();
+			ctx.arc(margin, height/2, 2, startAngle, endAngle, false);
+			ctx.arc(margin, margin+3*(height-margin*2)/4, 2, startAngle, endAngle, false);
+			ctx.arc(margin, height-margin, 2, startAngle, endAngle, false);
+			ctx.fill();
+		},
 		"flipHorizontally": function(ctx, width, height, param) {
 			var margin = 15;
       			ctx.lineWidth = 3;

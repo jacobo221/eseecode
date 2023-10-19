@@ -39,7 +39,7 @@ async function $e_loadURLParams(url, parameters, action, except) {
 			action = true;
 		}
 	}
-	let prerequisites = [ "instructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
+	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
 	let [urlPage, ...urlParams] = url.split("?");
 	urlParams = urlParams.join("?");
 	if (!urlParams) urlParams = "";
@@ -588,7 +588,7 @@ function API_setInstructions(value, action) {
 function API_setCustomInstructions(value, action) {
 	try {
 		var instructions = JSON.parse(value);
-	} catch(e) {}
+	} catch(e) { console.log("Invalid JSON: " + e); }
 	if (!instructions) return;
 	(Array.isArray(instructions) ? instructions : Object.values(instructions)).forEach(instruction_details => {
 		let instruction_name = instruction_details.name;
