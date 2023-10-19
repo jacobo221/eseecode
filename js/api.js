@@ -596,6 +596,7 @@ function API_setCustomInstructions(value, action) {
 		if (instruction_details.icon) $_eseecode.instructions.icons[instruction_name] = function(ctx, width, height, param) {
 			var margin = 15;
 			var img = new Image();
+			img.crossOrigin = "anonymous";
 			img.onload = function(e) {
 				var tempCanvas = document.createElement("canvas");
 				tempCanvas.width = width - margin;
