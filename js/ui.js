@@ -1325,6 +1325,15 @@
 	}
 
 	/**
+	 * Initializes/Resets the instructions pause UI element
+	 * @private
+	 * @example $e_resetInstructionsPause()
+	 */
+	function $e_resetInstructionsPause() {
+		document.getElementById("dialog-debug-execute-pause").value = $_eseecode.execution.pause;
+	}
+
+	/**
 	 * Initializes/Resets all UI elements
 	 * @private
 	 * @param {Boolean} notInitial If set to true it asks for confirmation if code would be lost

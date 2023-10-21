@@ -976,6 +976,7 @@ function API_showThemes(value, action) {
 function API_setInstructionsPause(milliseconds) {
 	var value = parseInt(milliseconds);
 	$_eseecode.execution.pause = value;
+	$e_resetInstructionsPause();
 }
 
 /**

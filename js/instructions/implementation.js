@@ -1004,7 +1004,8 @@
 			guide = $e_getLayer(id).guide;
 		}
 		guide = $e_system2userCoords(guide);
-		return guide.x;
+		var isFloat = Number(guide.x) === guide.x && guide.x % 1 !== 0 && guide.x !== Infinity;
+		return isFloat ? Math.round(guide.x) : guide.x;
 	}
 
 	/**
@@ -1024,7 +1025,8 @@
 			guide = $e_getLayer(id).guide;
 		}
 		guide = $e_system2userCoords(guide);
-		return guide.y;
+		var isFloat = Number(guide.y) === guide.y && guide.y % 1 !== 0 && guide.y !== Infinity;
+		return isFloat ? Math.round(guide.y) : guide.y;
 	}
 
 	/**
