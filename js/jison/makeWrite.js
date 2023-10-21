@@ -128,6 +128,7 @@
 	};
 
 	ast.BlockStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var statements = this.body;
 		var str = "";
 		var newIndent = "";
@@ -143,6 +144,7 @@
 	};
 
 	ast.ExpressionStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += injectCode(options,this.loc.start.line);
@@ -151,6 +153,7 @@
 	};
 
 	ast.IfStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "if (";
@@ -197,12 +200,14 @@
 	};
 
 	ast.LabeledStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += this.label.makeWrite(level, "", "", options) + ": " + this.body.makeWrite(level, "", "", options);
 	};
 
 	ast.BreakStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "break";
@@ -227,6 +232,7 @@
 	};
 
 	ast.WithStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "with (" + this.object.makeWrite(level, "", "", options) + ") {";
@@ -243,6 +249,7 @@
 	};
 
 	ast.SwitchStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		 str += "switch (";
@@ -269,6 +276,7 @@
 	};
 
 	ast.ReturnStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		if (options.inject) str += injectCode(options,this.loc.start.line);
@@ -283,6 +291,7 @@
 	};
 
 	ast.ThrowStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "throw";
@@ -296,6 +305,7 @@
 	};
 
 	ast.TryStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		if (options.inject) str += injectCode(options,this.loc.start.line);
@@ -322,6 +332,7 @@
 	};
 
 	ast.WhileStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "while (";
@@ -349,6 +360,7 @@
 	};
 
 	ast.RepeatStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		var condition = this.test.makeWrite(level, "", "", options);
@@ -385,6 +397,7 @@
 	};
 
 	ast.FillStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		var colors = this.color.makeWrite(level, "", "", options);
@@ -423,6 +436,7 @@
 	};
 
 	ast.DoWhileStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		if (options.inject) str += injectCode(options,this.loc.start.line);
 		var str = "";
 		if (indent && !options.realcode) str += indent;
@@ -442,6 +456,7 @@
 	};
 
 	ast.ForStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		var init = this.init;
@@ -493,6 +508,7 @@
 	};
 
 	ast.ForInStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "for (";
@@ -516,6 +532,7 @@
 	};
 
 	ast.DebugggerStatementNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += "debugger";
@@ -523,6 +540,7 @@
 	};
 
 	ast.FunctionDeclarationNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		var name = this.id.makeWrite(level, "", "", options);
@@ -562,6 +580,7 @@
 	};
 
 	ast.VariableDeclarationNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		str += injectCode(options,this.loc.start.line);
@@ -662,6 +681,7 @@
 	};
 
 	ast.FunctionExpressionNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "(" + (options.realcode ? "async " : "") + "function";
 		var id = this.id;
 		var params = this.params;
@@ -763,6 +783,7 @@
 	};
 
 	ast.LogicalExpressionNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (needBrackets(this,this.left,true)) {
 			str += "(" + this.left.makeWrite(level, "", "", options) + ")";
@@ -812,6 +833,7 @@
 	};
 
 	ast.CallExpressionNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		let callee = this.callee.makeWrite(level, "", "", options);
 		var str = (options.realcode ? "await " : "") + callee + "(";
 		var args = this.arguments;
@@ -835,6 +857,7 @@
 	};
 
 	ast.SwitchCaseNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var str = "";
 		if (indent && !options.realcode) str += indent;
 		var test = this.test;
@@ -859,6 +882,7 @@
 	};
 
 	ast.CatchClauseNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		var name = this.param.makeWrite(level, "", "", options);
 		var str = "";
 		if (options.realcode) {
@@ -880,6 +904,7 @@
 	};
 
 	ast.CommentNode.prototype.makeWrite = function(level, indent, indentChar, options) {
+		if (!options) options = {};
 		if (this.kind === "/*") {
 			var lines = this.body.split(/\r?\n/);
 			if (lines.length > 1) {
