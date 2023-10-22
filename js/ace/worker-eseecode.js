@@ -3991,6 +3991,7 @@ var JSHINT = (function () {
       case "in":
       case "instanceof":
       case "repeat":
+      case "fill":
       case "return":
       case "switch":
       case "throw":
@@ -6442,6 +6443,20 @@ var JSHINT = (function () {
     return this;
   });
 
+  blockstmt("fill", function () {
+    var t = state.tokens.next;
+    funct["(breakage)"] += 1;
+    funct["(loopage)"] += 1;
+    increaseComplexityCount();
+    advance("(");
+    checkCondAssignment(expression(0));
+    advance(")", t);
+    block(true, true);
+    funct["(breakage)"] -= 1;
+    funct["(loopage)"] -= 1;
+    return this;
+  }).labelled = true;
+
   blockstmt("repeat", function () {
     var t = state.tokens.next;
     funct["(breakage)"] += 1;
@@ -8096,7 +8111,7 @@ Lexer.prototype = {
       "try", "let", "this", "else", "case",
       "void", "with", "enum", "while", "break",
       "catch", "throw", "const", "yield", "class",
-      "super", "return", "typeof", "delete", "repeat",
+      "super", "return", "typeof", "delete", "repeat", "fill",
       "switch", "export", "import", "default", "array",
       "finally", "extends", "function", "continue",
       "debugger", "instanceof"
