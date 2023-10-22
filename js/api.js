@@ -51,8 +51,10 @@ async function $e_loadURLParams(url, parameters, action, except) {
 			var key = urlParamParts[2].toLowerCase();
 			var value = urlParamParts[3];
 			if (parameters && parameters.indexOf(key) < 0) continue;
-			if (except && except.indexOf(key) >= 0) continue
-			if (key == "grid") {
+			if (except && except.indexOf(key) >= 0) continue;
+			if (key == "e") {
+				urlParams = urlParams.concat(atob(value).split("&"));
+			} else if (key == "grid") {
 				API_showGrid(value, action);
 			} else if (key == "gridstep") {
 				API_setGridStep(value, action);
