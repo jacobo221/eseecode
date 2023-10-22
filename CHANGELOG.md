@@ -4,6 +4,8 @@
  *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape()
  *   Support and/or instead of &&/||
  *   Added instruction getCosine()
+ *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
+ *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
 
 ## 3.0 (2023-05-23)
 
