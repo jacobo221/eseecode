@@ -1,11 +1,26 @@
+## 3.2 (2023-10-23)
+
+ *   Can now pause/resume executions
+ *   Debug internal code reworked completely. Now debug (breakpoints, watchpoints, stepping) is running the real code, not simulating
+ *   Pause on every instruction is now inbuilt
+ *   Removed timeout setting as it does not make sense anymore with the pause/resume feature
+ *   Breakpoint watches removed, instead we can have breakpoints, breakpointing watches and non-breakpointing watches, which is much easier to understand
+ *   Improved and simplified UI and behaviour of debug breakpoints, watchpoints and steps
+ *   Improved UI visibility for run/resume/clear/reset buttons
+ *   Debug stepping is now only enable/disable through UI (always set to 1 step, stepping size can now be changed through API only)
+ *   New URL params breakpoints= and observe= and API calls setBreakpoints(), getBreakpoints(), setObservers(), getObservers() to set up and obtain breakpoints, watches and watchpoints
+ *   New URL param step= and API call setExecutionStep() to enable/disable debug stepping and how many instructions for each step
+ *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
+ *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
+ *   Updated create.js
+ *   Fix: Maximizing console is back working, and better than every (full maximization)
+
 ## 3.1 (2023-10-19)
 
  *Milestone reached: Language structure improvements*
  *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape()
  *   Support and/or instead of &&/||
  *   Added instruction getCosine()
- *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
- *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
 
 ## 3.0 (2023-05-23)
 

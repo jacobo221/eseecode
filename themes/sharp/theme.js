@@ -217,6 +217,24 @@ $_eseecode.ui.theme = {
 				ctx.fill();
 				ctx.closePath();
 			},
+                       "button-pause": function() {
+                                // Pause execution button
+                                var canvas, ctx, div, width, height, src;
+                                canvas = document.getElementById("button-pause").firstChild;
+                                ctx = canvas.getContext("2d");
+                                width = canvas.width;
+                                var lineWidth = width / 8;
+                                width = canvas.width;
+                                height = canvas.height;
+                                var margin = width/8;
+                                ctx.strokeStyle = "#FFFF00";
+                                ctx.lineWidth = lineWidth;
+                                ctx.moveTo(width/2-margin,margin);
+                                ctx.lineTo(width/2-margin,height-margin);
+                                ctx.moveTo(width/2+margin,margin);
+                                ctx.lineTo(width/2+margin,height-margin);
+                                ctx.stroke();
+                        },
 			"button-clear": function() {
 				// Clear console button
 				var canvas, ctx, div, width, height, src;

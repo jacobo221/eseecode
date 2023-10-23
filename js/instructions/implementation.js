@@ -810,7 +810,7 @@
 		if (b.length < 2) {
 			b = "0"+b;
 		}
-		var color = $e_executionTraceIterate("randomColor", "#"+r+g+b);
+		var color = "#"+r+g+b;
 		return color;
 	}
 
@@ -831,7 +831,7 @@
 		if (upperbound === undefined) {
 			upperbound = Number.MAX_VALUE;
 		}
-		var number = $e_executionTraceIterate("randomNumber", Math.floor(Math.random()*upperbound)); // [0,upperbound-1]
+		var number = Math.floor(Math.random()*upperbound); // [0,upperbound-1]
 		return number;
 	}
 
@@ -1192,6 +1192,16 @@
 		$e_parseParameterTypes("write", arguments);
 		$e_systemWriteAt(text, $_eseecode.currentCanvas.guide, $_eseecode.currentCanvas.guide.angle);
 	}
+	
+	/**
+	 * Fills the shape described within its block
+	 * @name fill
+	 * @since 3.1
+	 * @public
+	 * @param {String} fillcolor Color to use for the fill
+	 * @param {String} bordercolor Color to use for the border
+	 * @example fill("red") { forward(100); turnLeft(90); forward(100); }
+	 */
 
 	/**
 	 * Defines the beginning of a shape definition
@@ -1615,15 +1625,7 @@
 			try {
 				returnValue = eval(command);
 			} catch(event) {
-				// TODO: delays should reset timeout timestamp to avoid infinite loops but don't stop the animation with general timeout
-				if (event === "executionTimeout") {
-					if (timeoutHandlersIndex !== undefined) {
-						unanimate(timeoutHandlersIndex);
-					}
-					return false;
-				} else {
-					throw event;
-				}
+				throw event;
 			}
 		} else if (typeof command === "function"){
 			command();
@@ -2114,7 +2116,7 @@
 	 * @example stop()
 	 */
 	function stop() {
-		$_eseecode.execution.programCounterLimit = true;
+		$_eseecode.session.kill = true;
 	}
 
 	/**

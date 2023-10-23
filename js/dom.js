@@ -46,7 +46,8 @@
 						<div id="dialog-debug-execute-stats-help" class="dialog-help">?</div>\
 						<div id="dialog-debug-execute-stats"></div>\
 						<div id="dialog-debug-execute-step-buttons">\
-							<span id="dialog-debug-execute-step-title"></span><input id="dialog-debug-execute-step" type="number" min="1" onchange="$e_updateExecutionStep()" /><span id="dialog-debug-execute-pause-title"></span><input id="dialog-debug-execute-pause" type="number" min="0" value="'+$_eseecode.execution.pause+'" onchange="$e_updateExecutionPause()" /><span id="dialog-debug-execute-step-title2"></span><label id="dialog-debug-execute-stepped-label" for="dialog-debug-execute-stepped"></label><input id="dialog-debug-execute-stepped" type="checkbox" '+($_eseecode.execution.stepped?'checked="checked':'')+' onchange="$e_updateExecutionStepped()" />\
+							<span id="dialog-debug-execute-step-title"></span><input id="dialog-debug-execute-stepped" type="checkbox" onchange="$e_updateExecutionStep()" /><br>\
+							<span id="dialog-debug-execute-pause-title"></span><input id="dialog-debug-execute-pause" type="number" min="1" value="'+$_eseecode.execution.pause+'" onchange="$e_updateExecutionPause()" /><span id="dialog-debug-execute-step-title2"></span>\
 						</div>\
 					</div>\
 					<div id="dialog-setup" class="program">\
@@ -77,9 +78,6 @@
 							<span id="setup-guide-enable-title"></span><label id="setup-guide-enable-label" for="setup-guide-enable"></label><input id="setup-guide-enable" type="checkbox" onclick="$e_toggleGuideFromUI()" checked />\
 						</div>\
 						<br />\
-						<div id="setup-execute-time-buttons">\
-							<span id="setup-execute-time-title"></span><input id="setup-execute-time" type="number" min="1" onchange="$e_updateExecutionTime()" /><span id="setup-execute-time-title2"></span>\
-						</div>\
 						<div id="dialog-setup-author"></div>\
 					</div>\
 				</div>\
@@ -104,7 +102,8 @@
 				<div id="console-buttons">\
 					<div id="button-undo" class="button" onclick="$e_undoFromUI()"><canvas width="40" height="20"></canvas></div>\
 					<div>\
-						<span id="button-execute" class="button" onclick="$e_executeFromUI()"><canvas width="20" height="20"></canvas></span>\
+						<span id="button-execute" class="button" onclick="$_eseecode.session.runFrom=&quot;user_ui_button&quot;;$e_executeFromUI()"><canvas width="20" height="20"></canvas></span>\
+						<span id="button-pause" class="button" onclick="$e_pauseFromUI()"><canvas width="20" height="20"></canvas></span>\
 						<span id="button-clear" class="button" onclick="$e_resetCanvasFromUI()"><canvas width="20" height="20"></canvas></span>\
 						<span id="button-reset" class="button" onclick="$e_resetUIFromUI()"><canvas width="20" height="20"></canvas></span>\
 					</div>\

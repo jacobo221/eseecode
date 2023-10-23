@@ -306,12 +306,14 @@
 			$_eseecode.session.blocksUndo.splice(blocksUndoIndex+1,$_eseecode.session.blocksUndo.length); // Remove the redo queue
 			if (level == "level1") {
 				$_eseecode.session.lastChange = new Date().getTime();
+				$_eseecode.session.runFrom = "level1_add_block";
 				$e_executeFromUI();
 			} else if (action != "setup" && action != "add") {
 				$_eseecode.session.lastChange = new Date().getTime();
 			}
 			$e_refreshUndoUI();
 		}
+		$e_updateButtonsVisibility();
 	}
 	
 	/**
@@ -1855,6 +1857,7 @@
 			$_eseecode.session.blocksUndo[0]--;
 		}
 		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].id == "level1") {
+			$_eseecode.session.runFrom = "level1_undo_block";
 			$e_executeFromUI();
 		}
 	}

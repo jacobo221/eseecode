@@ -258,7 +258,7 @@
 		max-width: calc(100vw - 700px);
 	}
 	#console.maximized {
-		max-width: calc(100vw - 400px);
+		width: calc(100vw - 400px);
 	}
 	#console .tab {
 		float: left;

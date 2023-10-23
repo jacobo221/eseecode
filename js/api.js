@@ -79,8 +79,6 @@ async function $e_loadURLParams(url, parameters, action, except) {
 			} else if (key == "input") {
 				value = decodeURIComponent(value);
 				API_setInput(value);
-			} else if (key == "timeout") {
-				API_setTimeout(value, action);
 			} else if (key == "axis") {
 				API_setAxis(value, action);
 			} else if (key == "view") {
@@ -117,6 +115,16 @@ async function $e_loadURLParams(url, parameters, action, except) {
 				await API_execute(value);
 			} else if (key == "pause") {
 				API_setInstructionsPause(value);
+			} else if (key == "step") {
+				API_setExecutionStep(value);
+			} else if (key == "breakpoints") {
+				value = decodeURIComponent(value);
+				API_setBreakpoints(value.replace(/ /g, '').split(",").map(v => $e_isNumber(parseInt(v)) ? parseInt(v) : v));
+			} else if (key == "observe") {
+				value = decodeURIComponent(value);
+				API_setObservers(value.replace(/ /g, '').split(","));
+			} else {
+				console.error("Unknown API key", key);
 			}
 		}
 	}
@@ -173,6 +181,7 @@ async function API_execute(value, immediate) {
 		value = true;
 	}
 	if ($e_confirmYes(value)) {
+		$_eseecode.session.runFrom = "api";
 		await $e_executeFromUI(immediate);
 	}
 }
@@ -619,25 +628,6 @@ function API_setCustomInstructions(value, action) {
 }
 
 /**
- * Sets the execution time limit
- * @since 2.3
- * @public
- * @param {Number|String} value Seconds to wait for the execution to finish
- * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setTimeout(20)
- */
-function API_setTimeout(value, action) {
-	if ($e_isNumber(value,true) && value >= 0) {
-		$_eseecode.execution.timeLimit = value;
-	}
-	if (action !== false) {
-		$e_initializeUISetup();
-		// Apply to currently running code if any
-		$_eseecode.execution.endLimit = $_eseecode.execution.startTime+value*1000;
-	}
-}
-
-/**
  * Shows/Hides the filemenu
  * @since 2.3
  * @public
@@ -979,6 +969,69 @@ function API_setInstructionsPause(milliseconds) {
 	var value = parseInt(milliseconds);
 	$_eseecode.execution.pause = value;
 	$e_resetInstructionsPause();
+}
+
+/**
+ * Defines whether to enable execution stepping
+ * @since 3.2
+ * @public
+ * @param {Number} step Number of instructions after which execution must be paused
+ * @example API_setExecutionStep(1)
+ */
+function API_setExecutionStep(value) {
+	if (value === false || value == "false" || parseInt(value) === 0) {
+		$_eseecode.execution.stepped = false;
+		$_eseecode.execution.step = 1;
+	} else {
+		$_eseecode.execution.stepped = true;
+		$_eseecode.execution.step = value === true || value == "true" ? 1 : value;
+	}
+}
+
+/**
+ * Adds breakpoints
+ * @since 3.2
+ * @public
+ * @param {Number|String|Array<Number|String>} value Block/Line numbers and/or variable names where breakpoints/watches are to be placed
+ * @example API_setBreakpoints([8,"name","age"])
+ */
+function API_setBreakpoints(value) {
+	if (!Array.isArray(value)) value = [ value ];
+	$_eseecode.execution.observers = value;
+}
+
+/**
+ * Gets breakpoints
+ * @since 3.2
+ * @public
+ * @return {Array<Number|String>} Block/Line numbers and/or variable names where breakpoints/watches set up
+ * @example API_getBreakpoints()
+ */
+function API_getBreakpoints() {
+	return $_eseecode.execution.observers;
+}
+
+/**
+ * Adds observers
+ * @since 3.2
+ * @public
+ * @param {Number|String|Array<Number|String>} value Variable names to observe
+ * @example API_setObservers(["firstname","surname"])
+ */
+function API_setObservers(value) {
+	if (!Array.isArray(value)) value = [ value ];
+	$_eseecode.execution.observers = value;
+}
+
+/**
+ * Gets breakpoints
+ * @since 3.2
+ * @public
+ * @return {Array<Number|String|<Number,String>>} Block/Line numbers, variable names or line+watch where breakpoints/watches set up
+ * @example API_getObservers()
+ */
+function API_getObservers() {
+	return $_eseecode.execution.observers;
 }
 
 /**

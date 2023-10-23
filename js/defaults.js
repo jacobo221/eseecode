@@ -6,7 +6,7 @@
 
 	// Main initialization
 	/**
-	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{reakpointCounter:Number,breakpointCounterLimit:Number,step:Number,stepped:Boolean,timeLimit:Number,programCounter:Number,programCounterLimit:Number,endLimit:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean},precode:{code:String,running:Boolean},watchpointsChanged:Array<String>,inputDefault:String,inputRaw:String,inputPosition:Number},session:{highlight:{lineNumber:Number,reason:String},handlers:{keyboard:{key:Number,lastKeycode:Number},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnConsoleSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>, disableCode:Boolean},whiteboard:HTMLElement,coordinates:Array<{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>}>,ui:Array<{translations: Array<{id:String,name:String}>translation:Array<*>,themes: Array<{id:String,name:String}>theme:Array<*>,minWindowHeight:Number,codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean,translationsmenuVisible:Boolean,themesmenuVisible:Boolean}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
+	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{breakpointCounter:Number,breakpoints:Array<String|Number>,observers:Array<String>,stepped:Boolean,step:Number,programCounter:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean},precode:{code:String,running:Boolean},watchpointsChanged:Array<String>,inputDefault:String,inputRaw:String,inputPosition:Number},session:{highlight:{lineNumber:Number,reason:String},handlers:{keyboard:{key:Number,lastKeycode:Number},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnConsoleSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>, disableCode:Boolean},whiteboard:HTMLElement,coordinates:Array<{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>}>,ui:Array<{translations: Array<{id:String,name:String}>translation:Array<*>,themes: Array<{id:String,name:String}>theme:Array<*>,minWindowHeight:Number,codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean,translationsmenuVisible:Boolean,themesmenuVisible:Boolean}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
 	 */
 	if (typeof $_eseecode === 'undefined') var $_eseecode; // Create the main object if it hasn't been declated from the calling page
 	$_eseecode = Object.assign({
@@ -25,7 +25,7 @@
 				link: undefined
 			},
 			version: {
-				text: "3.1",
+				text: "3.2",
 				link: "CHANGELOG.md"
 			},
 			logo: {
@@ -53,14 +53,12 @@
 		},
 		execution: {
 			breakpointCounter: 0,
-			breakpointCounterLimit: 1,
-			step: 1,
+			breakpoints: [],
+			observers: [],
 			stepped: false,
+			step: 1,
 			pause: 500,
-			timeLimit: 120,
 			programCounter: 0,
-			programCounterLimit: 0,
-			endLimit: undefined,
 			startTime: undefined,
 			trace: [],
 			sandboxProperties: [],
@@ -81,38 +79,38 @@
 		},
 		session: {
 			highlight: {
-				lineNumber: 0,
-				reason: undefined
-			},
-			handlers: {
-				keyboard: {
-					key: undefined,
-					lastKeycode: undefined
-				},
-				pointer: {
-					x: undefined,
-					y: undefined,
-					lastX: undefined,
-					lastY: undefined,
-					pressed: false
-					
-				}
-			},
-			updateOnConsoleSwitch: false,
-			lastChange: 0,
-			lastRun: 0,
-			lastSave: 0,
-			floatingBlock: { div: null, fromDiv: null, mouse: {x: undefined, y: undefined} },
-			blocksUndo: null,
-			breakpoints: {},
-			breakpointHandler: false,
-			watchpoints: {},
-			timeoutHandlers: [],
-			audioHandlers: [],
-			pauseHandler: undefined,
-			disableCode: false,
-			kill: undefined
-		},
+                                lineNumber: 0,
+                                reason: undefined
+                        },
+                        handlers: {
+                                keyboard: {
+                                        key: undefined,
+                                        lastKeycode: undefined
+                                },
+                                pointer: {
+                                        x: undefined,
+                                        y: undefined,
+                                        lastX: undefined,
+                                        lastY: undefined,
+                                        pressed: false
+
+                                }
+                        },
+                        updateOnConsoleSwitch: false,
+                        lastChange: 0,
+                        lastRun: 0,
+                        lastSave: 0,
+                        floatingBlock: { div: null, fromDiv: null, mouse: {x: undefined, y: undefined} },
+                        blocksUndo: null,
+                        breakpoints: {},
+                        breakpointHandler: false,
+                        watchpoints: {},
+                        timeoutHandlers: [],
+                        audioHandlers: [],
+                        pauseHandler: undefined,
+                        disableCode: false,
+                        kill: undefined
+                },
 		whiteboard: {
 			offsetWidth: 400,
 			offsetHeight: 400

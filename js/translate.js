@@ -52,6 +52,7 @@
 		document.getElementById("console-write").title = _("Console Write");
 		document.getElementById("button-undo").title = _("Undo");
 		document.getElementById("button-execute").title = _("Run");
+		document.getElementById("button-pause").title = _("Pause");
 		document.getElementById("button-clear").title = _("Clear");
 		document.getElementById("button-reset").title = _("Reset");
 		document.getElementById("button-redo").title = _("Redo");
@@ -72,12 +73,12 @@
 		document.getElementById("dialog-debug-execute-stats-title").innerHTML = _("Execution")+":";
 		document.getElementById("dialog-debug-execute-stats-help").title = _("Execution statistics");
 		document.getElementById("dialog-debug-execute-stats").innerHTML = "";
-		document.getElementById("dialog-debug-execute-step-title").innerHTML = _("Every")+" ";
-		document.getElementById("dialog-debug-execute-step").title = _("Number of instructions until pause");
-		document.getElementById("dialog-debug-execute-pause-title").innerHTML = _("instructions pause")+" ";
+		document.getElementById("dialog-debug-execute-stepped").title = _("Pause execution on every instruction");
+		document.getElementById("dialog-debug-execute-step-title").innerHTML = _("Pause on every instruction")+": ";
+		//document.getElementById("dialog-debug-execute-step").title = _("Number of instructions until pause");
+		document.getElementById("dialog-debug-execute-pause-title").innerHTML = _("Instructions speed")+": ";
 		document.getElementById("dialog-debug-execute-pause").title = _("Milliseconds to wait");
-		document.getElementById("dialog-debug-execute-step-title2").innerHTML = " "+_("ms or stop")+" ";
-		document.getElementById("dialog-debug-execute-stepped").title = _("Run stepped");
+		document.getElementById("dialog-debug-execute-step-title2").innerHTML = " "+_("ms")+" ";
 		document.getElementById("dialog-debug-command-input").title = _("Command");
 		document.getElementById("dialog-debug-command-button").title = _("Run");
 		document.getElementById("dialog-setup").title = _("Setup dialog");
@@ -89,8 +90,5 @@
 		document.getElementById("setup-guide-enable-title").innerHTML = _("Guide")+":";
 		document.getElementById("setup-guide-enable-label").innerHTML = _("Toggle guide");
 		document.getElementById("setup-guide-enable").title = _("Toggle guide");
-		document.getElementById("setup-execute-time-title").innerHTML = _("Stop execution after")+" ";
-		document.getElementById("setup-execute-time").title = _("Number of seconds to run");
-		document.getElementById("setup-execute-time-title2").innerHTML = " "+_("seconds");
 		document.getElementById("whiteboard-tabs-download-button").title = _("Download as an image");
 	}

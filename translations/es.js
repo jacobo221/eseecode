@@ -48,6 +48,7 @@ $_eseecode.ui.translation = {
 		"Breakpoint": "Interrupción",
 		"Value": "Valor",
 		"Watchpoint": "Control",
+		"Watch": "Control",
 		"Delete": "Elimina",
 		"Invalid name of variable!": "¡Nombre de variable inválido!",
 		"Here you can:\n * mark a line to stop the program at that point\n * see values of variables at those stops\n * stop the program when a controlled variable is updated": "Aquí puedes:\n * marcar una línea para detener el programa en ese punto\n * ver valores de variables en estos puntos\n * detener el programa cuando una variable controlada se actualice",
@@ -493,5 +494,9 @@ $_eseecode.ui.translation = {
 		"Which fill color do you want to use?": "¿Qué color deseas usar para el relleno?",
 		"Which border color do you want to use?": "¿Qué color deseas usar para los bordes?",
 		"Draw a shape": "Dibuja una forma",
+		"Pause on every instruction": "Pausa en cada instrucción",
+		"Instructions speed": "Velocidad de las instrucciones",
+		"Pause execution on every instruction": "Pausa la ejecución en cada instrucción",
+		"Pause": "Pausar",
 	}
 }

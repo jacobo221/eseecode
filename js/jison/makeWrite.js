@@ -10,19 +10,13 @@
 			str += ";";
 		}
 		str += "await $e_eseeCodeInjection("+lineNumber+",(function(){" +
-			"if ($_eseecode.session.breakpoints["+lineNumber+"]) {" +
-				"for (var watch in $_eseecode.session.breakpoints["+lineNumber+"].watches) {" +
-					"try {" +
-						"$_eseecode.session.breakpoints["+lineNumber+"].watches[watch] = eval(watch);" +
-					"} catch(e) {}" +
-				"}" +
-			"}" +
 			"$_eseecode.execution.watchpointsChanged = [];" +
 			"for (var watch in $_eseecode.session.watchpoints) {" +
 				"try {" +
 					"var newValue;" +
 					"newValue = eval(watch);" +
 					"if (newValue !== $_eseecode.session.watchpoints[watch].value) {" +
+						"$_eseecode.session.watchpoints[watch].oldValue = $_eseecode.session.watchpoints[watch].value;" +
 						"$_eseecode.session.watchpoints[watch].value = newValue;" +
 						"$_eseecode.execution.watchpointsChanged.push(watch);" +
 					"}" +
@@ -119,7 +113,7 @@
 			else str += ";";
 		}
 		str += injectCode(options, this.loc.end.line);
-		if (options.inject) str += ";$e_endExecution();"; // Finish stepped/breakpointed execution
+		if (options.inject) str += ";$e_endExecution();"; // Finish execution
 		return str;
 	};
 

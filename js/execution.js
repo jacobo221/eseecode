@@ -6,16 +6,7 @@
 	 * @example $e_updateExecutionStep()
 	 */
 	function $e_updateExecutionStep() {
-		$_eseecode.execution.step = parseInt(document.getElementById("dialog-debug-execute-step").value);
-	}
-
-	/**
-	 * Gets the execution stepped value from the setup and updates in the $_eseecode class
-	 * @private
-	 * @example $e_updateExecutionStepped()
-	 */
-	function $e_updateExecutionStepped() {
-		$_eseecode.execution.stepped = document.getElementById("dialog-debug-execute-stepped").checked;
+		$_eseecode.execution.stepped = !!document.getElementById("dialog-debug-execute-stepped").checked;
 	}
 
 	/**
@@ -25,15 +16,7 @@
 	 */
 	function $e_updateExecutionPause() {
 		$_eseecode.execution.pause = parseInt(document.getElementById("dialog-debug-execute-pause").value);
-	}
-
-	/**
-	 * Gets the execution time limit value from the setup and updates in the $_eseecode class
-	 * @private
-	 * @example $e_updateExecutionTime()
-	 */
-	function $e_updateExecutionTime() {
-		$_eseecode.execution.timeLimit = parseInt(document.getElementById("setup-execute-time").value);
+		if ($_eseecode.execution.pause < 1) $_eseecode.execution.pause = 1;
 	}
 
 	/**
@@ -55,7 +38,6 @@
 	 * @private
 	 * @param {Number} lineNumber Code line number currently running
 	 * @param {Boolean} [inline=false] Set to true if it is being called inline (as part of the parameters of a call or inside a condition)
-	 * @throws executionWatchpointed | executionBreakpointed | executionTimeout | executionStepped
 	 * @example $e_checkExecutionLimits(31)
 	 */
 	async function $e_checkExecutionLimits(lineNumber, inline) {
@@ -75,48 +57,71 @@
 					watchpointTriggered = true;
 				}
 			}
-			if (watchpointTriggered) {
-				$_eseecode.execution.breakpointCounter++;
-				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
-					$_eseecode.execution.breakpointCounterLimit++;
-					if (inline !== true) {
-						// Variable changes are detected before running the next instruction, except in inline checks
-						highlightLine = lineNumber - 1;
-					}
-					throw "executionWatchpointed";
-				}
+			if (inline !== true) {
+				// Variable changes are detected before running the next instruction, except in inline checks
+				highlightLine = lineNumber - 1; // We detect it before running the next instruction, so highlight the previous instruction
 			}
-		}
-		if ($_eseecode.session.breakpoints[lineNumber]) {
+			await $e_debugBreakpointReached($_eseecode.session.highlight.lineNumber, $_eseecode.execution.watchpointsChanged, false, !watchpointTriggered);
+		} else if ($_eseecode.session.breakpoints[lineNumber]) {
 			$_eseecode.session.breakpoints[lineNumber].count++;
 			if ($_eseecode.session.breakpoints[lineNumber].status) {
-				$_eseecode.execution.breakpointCounter++;
-				if ($_eseecode.execution.breakpointCounter >= $_eseecode.execution.breakpointCounterLimit) {
-					$_eseecode.execution.breakpointCounterLimit++;
-					throw "executionBreakpointed";
-				}
+				await $e_debugBreakpointReached($_eseecode.session.highlight.lineNumber); // We detect it before running the next instruction, so highlight the previous instruction
+				$e_updateExecutionStatus(true);
 			}
-		}
-		if (executionTime > $_eseecode.execution.endLimit) {
-			throw "executionTimeout";
-		}
-		if ($_eseecode.execution.stepped) {
-			if ($_eseecode.execution.programCounter >= $_eseecode.execution.programCounterLimit) {
-				if ($_eseecode.execution.programCounter == 1) {
-					$_eseecode.execution.programCounterLimit++;
-					// We ignore the first line, it doesn't make sense to stop here when nothing has been done yet
-					return;
-				}
-				throw "executionStepped";
+		} else if ($_eseecode.execution.stepped) {
+			if ($_eseecode.execution.programCounter > 1 && $_eseecode.execution.programCounter % $_eseecode.execution.step === 0) { // We ignore the first line, it doesn't make sense to pause before running the first instruction
+				await $e_debugBreakpointReached($_eseecode.session.highlight.lineNumber); // We detect it before running the next instruction, so highlight the previous instruction
+				$e_updateExecutionStatus(true);
 			}
-		}
-		if ($_eseecode.modes.console[0] != 1 && $_eseecode.execution.pause && !$_eseecode.execution.stepped) { // We don't want to pause execution in stepped executions, neither in level1/Touch
+		} else if ($_eseecode.session.running == "pause" || $_eseecode.session.running == "breakpoint") {
+			await $e_debugBreakpointReached($_eseecode.session.highlight.lineNumber, undefined, true); // We detect it before running the next instruction, so highlight the previous instruction
+			$e_updateExecutionStatus(true);
+		} else if ($_eseecode.session.runFrom != "level1_add_block" && $_eseecode.session.runFrom != "level1_undo_block" && $_eseecode.execution.pause) { // We don't want to pause execution in level1/Touch
 			$e_highlight(lineNumber, "step");
-			if ($_eseecode.execution.programCounter % $_eseecode.execution.step == 0) await new Promise(function(r) { $_eseecode.session.pauseHandler = setTimeout(function() { r(); }, $_eseecode.execution.pause); });
+			await new Promise(function(r) { $_eseecode.session.pauseHandler = setTimeout(function() { r(); }, $_eseecode.execution.pause); });
 		}
 		$e_setHighlight(highlightLine); // Set it here so if $e_highlight() is called the old lineNumber is still set to unhighlight it
 	}
-	
+
+	/**
+	 * Informs that the code is now running/stopped/paused
+	 * @private
+	 * @param {String|Boolean} status Running status
+	 * @example $e_updateExecutionStatus()
+	 */
+	function $e_updateExecutionStatus(status) {
+		if (status === true) status = "running";
+		else if (status === false && $_eseecode.session.running !== "clean") status = "dirty";
+		$_eseecode.session.running = status;
+		$e_updateButtonsVisibility();
+	}
+
+	/**
+	 * Check whether there's program currently running
+	 * @private
+	 * @example $e_isExecutionRunning()
+	 */
+	function $e_isExecutionRunning() {
+		return $_eseecode.session.running == "running";
+	}
+
+	/**
+	 * Check whether there's uncleared code in the session
+	 * @private
+	 * @example $e_isExecutionDirty()
+	 */
+	function $e_isExecutionDirty() {
+		return $_eseecode.session.running && $_eseecode.session.running != "clean";
+	}
+
+	/**
+	 * Pause the execution
+	 * @private
+	 * @example $e_pauseExecution()
+	 */
+	function $e_pauseExecution() {
+		$_eseecode.session.running = "pause";
+	}
 	/**
 	 * Stops previous execution animations
 	 * @private
@@ -157,52 +162,45 @@
 	 */
 	function $e_stopPreviousExecution() {
 		$_eseecode.session.kill = true;
+		$e_updateExecutionStatus(false);
 		$e_stopPreviousAnimations();
 		$e_stopPreviousSounds();
 		$e_stopPreviousExecutionPause();
+	}
+	
+	/**
+	 * Checks if previous execution is paused
+	 * @private
+	 * @example $e_isPreviousExecutionPaused()
+	 */
+	function $e_isPreviousExecutionPaused() {
+		 return $_eseecode.session.running == "pause" || $_eseecode.session.running == "breakpoint";
+	}
+	
+	/**
+	 * Resume previous execution
+	 * @private
+	 * @example $e_resumePreviousExecution()
+	 */
+	function $e_resumePreviousExecution() {
+		$e_updateExecutionStatus(true);
 	}
 
 	/**
 	 * Resets and sets up internal configuration for a new code execution
 	 * @private
-	 * @param {Boolean|String} [disableStepping] true = ignore the stepping
 	 * @example $e_initProgramCounter()
 	 */
-	function $e_initProgramCounter(disableStepping) {
+	function $e_initProgramCounter() {
 		if ($_eseecode.execution.precode.running) { // We do check limits with postcode because if it runs user-defined functions we must count statistics and check limits
 			// Precode/Postcode is run as is with no checks and without altering $_eseecode.execution variables
 			return;
 		}
-		var withStep = $_eseecode.execution.stepped;
-		if (disableStepping === "disabled") {
-			withStep = false;
-		}
 		$_eseecode.execution.startTime = new Date().getTime();
-		var time = $_eseecode.execution.timeLimit;
-		if (time <= 0) {
-			time = 3;
-			$_eseecode.execution.timeLimit = time;
-			$e_initSetup();
-		}
-		$_eseecode.execution.endLimit = $_eseecode.execution.startTime+time*1000;
-		if (withStep) {
-			if (!disableStepping) {
-				var step = $_eseecode.execution.step;
-				if (step < 1) {
-					step = 1;
-					$_eseecode.execution.step = step;
-					$e_initSetup();
-				}
-				$_eseecode.execution.programCounterLimit = $_eseecode.execution.programCounter + step;
-			}
-		}
 		$_eseecode.execution.programCounter = 0;
-		$_eseecode.execution.breakpointCounter = 0;
 		for (var key in $_eseecode.session.breakpoints) {
 			$_eseecode.session.breakpoints[key].count = 0;
 		}
-		$e_executionTraceReset("randomColor");
-		$e_executionTraceReset("randomNumber");
 	}
 
 	/**
@@ -295,10 +293,8 @@
 			$e_resetSandbox();
 		}
 		var code;
-		var withStep;
 		if (forceNoStep || inCode) { // Code from events run without stepping
 			code = inCode;
-			withStep = "disabled";
 		}
 		$e_unhighlight();
 		if (code === undefined) {
@@ -334,8 +330,8 @@
 			}
 			$e_resetCanvas(true);
 			$e_resetIO();
-			$e_resetBreakpointWatches();
 			$e_resetWatchpoints();
+			$e_updateDebugBreakAndWatchpoints();
 		}
 		$_eseecode.session.kill = false; // Must be set after $e_resetCanvas()
 		if (!inCode && !justPrecode && !immediate && $_eseecode.execution.api_prerun_callback) $_eseecode.execution.api_prerun();
@@ -349,7 +345,7 @@
 			}
 			if (!justPrecode) {
 				var real_user_code = $e_code2run(code, { inject: !immediate, realcode: true });
-				jsCode += "$e_initProgramCounter("+(withStep==="disabled"?'true':'false')+");"+real_user_code;
+				jsCode += "$e_initProgramCounter();$e_updateExecutionStatus(true);"+real_user_code;
 				$_eseecode.last_execution = {};
 				$_eseecode.last_execution.linesCount = real_user_code.split("\n").length - 1;
 				if (!inCode && $_eseecode.execution.postcode.code) { // Don't load postcode again when running the code of an event
@@ -367,6 +363,7 @@
 		}
 		var script = document.createElement("script");
 		await eval(jsCode);
+		$e_updateExecutionStatus(false);
 		var oldWindowProperties;
 		if (Object.getOwnPropertyNames) {
 			oldWindowProperties = Object.getOwnPropertyNames(window);
@@ -426,18 +423,6 @@
 			$e_unhighlight();
 		} else if (err === "executionKilled") {
 			// Do nothing
-		} else if (err === "executionTimeout") {
-			$e_highlight($_eseecode.session.highlight.lineNumber,"error");
-			$e_msgBox(_("The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab"));
-		} else if (err === "executionStepped") {
-			$e_highlight($_eseecode.session.highlight.lineNumber);
-		} else if (err === "executionBreakpointed") {
-			$e_highlight($_eseecode.session.highlight.lineNumber);
-			$e_switchDialogMode("debug");
-		} else if (err == "executionWatchpointed") {
-			$e_highlight($_eseecode.session.highlight.lineNumber); // We detect it before running the next instruction, so highlight the previous instruction
-			$e_switchDialogMode("debug");
-			$e_highlightWatchpoint($_eseecode.execution.watchpointsChanged);
 		} else if (err.type == "codeError") {
 			var instructionId = err.name;
 			var brackets = "";
@@ -489,9 +474,8 @@
 				$_eseecode.last_execution.instructionsCount = executionInstructions;
 			}
 		}
+		$_eseecode.session.kill = true;
 		$_eseecode.execution.programCounter = 0;
-		$_eseecode.execution.programCounterLimit = 0;
-		$_eseecode.execution.breakpointCounterLimit = 1;
 		$e_executionTraceReset();
 		$e_unhighlight();
 	}

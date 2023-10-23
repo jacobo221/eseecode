@@ -149,5 +149,6 @@ if (!document || !document.getElementById || !document.createElement || !documen
 			};
 			filesLoad(filesToLoad);
 		}, false);
+
 	}
 }

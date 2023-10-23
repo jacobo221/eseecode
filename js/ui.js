@@ -530,15 +530,25 @@
 		if ($_eseecode.modes.console[oldMode].div != $_eseecode.modes.console[id].div && $_eseecode.session.updateOnConsoleSwitch) {
 			$_eseecode.session.updateOnConsoleSwitch = false;
 		}
-		if (level == "level1") {
-			document.getElementById("button-execute").style.display = "none";
-			document.getElementById("button-clear").style.display = "none";
-		} else {
-			document.getElementById("button-execute").style.display = "inline";
-			document.getElementById("button-clear").style.display = "inline";
-		}
+		$e_updateButtonsVisibility(id);
 		$e_refreshUndoUI();
 		$e_highlight();
+	}
+
+	/**
+	 * Switches the dialog window
+	 * @private
+	 * @param {Number|String} [id] Can refer to a dialog index or to a dialog name. If unset it keeps the current dialog window
+	 * @example $e_switchDialogMode("debug")
+	 */
+	function $e_updateButtonsVisibility(id) {
+		if (id === undefined) id = $_eseecode.modes.console[0];
+		var level = $_eseecode.modes.console[id].id;
+		document.getElementById("button-reset").style.display = !$e_codeIsEmpty() ? "inline" : "none";
+		document.getElementById("button-execute").style.display = !$e_isExecutionRunning() && !$e_codeIsEmpty() ? "inline" : "none";
+		document.getElementById("button-pause").style.display = $e_isExecutionRunning() ? "inline" : "none";
+		document.getElementById("button-clear").style.display = $e_isExecutionDirty() ? "inline" : "none";
+		document.getElementById("button-reset").style.display = level == "level1" ? "inline" : "none";
 	}
 
 	/**
@@ -813,13 +823,7 @@
 	 * @example $e_initSetup()
 	 */
 	function $e_initSetup() {
-		document.getElementById("dialog-debug-execute-step").value = $_eseecode.execution.step;
-		if ($_eseecode.execution.stepped) {
-			document.getElementById("dialog-debug-execute-stepped").checked = true;
-		} else {
-			document.getElementById("dialog-debug-execute-stepped").checked = false;
-		}
-		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
+		document.getElementById("dialog-debug-execute-stepped").checked = !!$_eseecode.execution.stepped;
 	}
 
 	/**
@@ -1312,6 +1316,15 @@
 	}
 
 	/**
+	 * Pause execution fromUI
+	 * @private
+	 * @example $e_pauseFromUI()
+	 */
+	function $e_pauseFromUI() {
+		$e_pauseExecution();
+	}
+
+	/**
 	 * Initializes/Resets the filemenu UI element
 	 * @private
 	 * @example $e_resetFilemenu()
@@ -1373,7 +1386,8 @@
 		$e_initConsole();
 		$e_resetCanvas(true); // Precode is loaded later with $e_loadURLParams()
 		$e_resetIO(true);
-		$e_resetDebug();
+		$e_resetDebug(true);
+		$e_updateDebugBreakAndWatchpoints();
 		$e_resetUndo();
 		$e_refreshUndoUI();
 		document.getElementById("dialog-tabs-window").style.display = "none";
@@ -1543,7 +1557,6 @@
 		document.getElementById("setup-guide-enable").checked = $_eseecode.ui.guideVisible;
 		document.getElementById("setup-grid-enable").checked = $_eseecode.ui.gridVisible;
 		document.getElementById("setup-grid-divisions").value = Math.round($_eseecode.whiteboard.offsetWidth / $_eseecode.ui.gridStep) - 1;
-		document.getElementById("setup-execute-time").value = $_eseecode.execution.timeLimit;
 	}
 
 	/**
@@ -1710,6 +1723,7 @@
 				}
 			}
 		} else if ((event.which === 82 || event.keyCode == 82) && event.ctrlKey && !event.shiftKey) { // CTRL+R
+			$_eseecode.session.runFrom = "keyboard_shortcut";
 			$e_execute();
 			event.preventDefault();
 		} else if (mode == "blocks") {
@@ -2282,10 +2296,12 @@
 	 */
 	function $e_resetCanvasFromUI() {
 		$e_endExecution();
-		$e_resetCanvas();
-		$e_resetIO();
-		$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
-		$e_initProgramCounter();
+		setTimeout(() => { // Give it time for the unpause in e_debugBreakpointReached() to trigger and end kill the current execution (if there is one)
+			$e_resetCanvas();
+			$e_resetIO();
+			$e_switchDialogMode($_eseecode.modes.console[0]); // Switch to current console's "pieces" dialog
+			$e_initProgramCounter();
+		}, 10);
 	}
 
 	/**
@@ -2304,7 +2320,6 @@
 			$e_removeCanvas(key);
 		}
 		$e_stopPreviousExecution();
-		$e_resetBreakpointWatches();
 		$e_resetWatchpoints();
 		$e_handlerReset();
 		delete $_eseecode.canvasArray;
@@ -2329,8 +2344,10 @@
 		$e_getOrCreateWindow(0);
 		document.getElementById("dialog-tabs-window").style.display = "none";
 		if (!noPrecode && !$_eseecode.execution.precode.standby) {
+			$_eseecode.session.runFrom = "reset_canvas";
 			$e_execute("disabled", null, true);
 		}
+		$e_updateExecutionStatus("clean");
 	}
 
 	/**
@@ -2340,8 +2357,12 @@
 	 * @example $e_executeFromUI()
 	 */
 	async function $e_executeFromUI(immediate) {
-		$e_stopPreviousExecution();
-		await $e_execute(false, undefined, false, immediate);
+		if ($e_isPreviousExecutionPaused()) {
+			$e_resumePreviousExecution();
+		} else {
+			$e_stopPreviousExecution();
+			await $e_execute(false, undefined, false, immediate);
+		}
 	}
 
 	/**
@@ -2421,6 +2442,7 @@
 		$e_unhighlight();
 		$e_updateWriteBreakpoints(event);
 		$e_refreshUndoUI();
+		$e_updateButtonsVisibility();
 	}
 
 	/**
@@ -2514,6 +2536,7 @@
 		} else {
 			document.getElementById("button-redo").style.visibility = "hidden";
 		}
+		$e_updateButtonsVisibility();
 	}
 
 	/**
@@ -2534,6 +2557,19 @@
 	function $e_resetUndoWrite() {
 		var UndoManager = require("ace/undomanager").UndoManager; 
 		ace.edit("console-write").session.setUndoManager(new UndoManager());
+	}
+
+	/**
+	 * Checks is theres code in the console
+	 * @private
+	 * @example $e_codeIsEmpty()
+	 */
+	function $e_codeIsEmpty() {
+		if ($_eseecode.modes.console[$_eseecode.modes.console[0]].div === "write") {
+			return ace.edit("console-write").session.getLength() <= 1 && !ace.edit("console-write").session.getLine(0);
+		} else {
+			return document.getElementById("console-blocks").firstChild.id == "console-blocks-tip";
+		}
 	}
 
 	/**
