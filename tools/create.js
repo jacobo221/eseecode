@@ -38,8 +38,8 @@
 			forceblocksetup: { title: "Force block setup", type: "checkbox", initial: "true", help: "Force block setup when adding instructions in Drag mode." },
 			blocksetup: { title: "Block setup style", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default." },
 			maximize: { title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." },
-			timeout: { title: "How long before the execution of a program is stopped?", type: "number", initial: "120", help: "Set the amount of seconds programs are allowed to run before stopping them." },
-			pause: { title: "Milliseconds to pause on each instruction", type: "number", initial: "500", help: "Set the amount of milliseconds to pause after each instruction is executed (set to 0 to disable)." },
+			pause: { title: "Milliseconds of delay between instructions", type: "number", initial: "500", help: "Set the amount of milliseconds to delay every time an instruction is executed." },
+			step: { title: "Pause on every instruction", type: "checkbox", initial: "false", help: "Pause execution every time an instruction is run, to help debugging." },
 			observe: { title: "List of variables to observe", type: "text", initial: "", help: "Comma-separated list variables to observe.<br>Example: index,question,answer" },
 			breakpoints: { title: "List of breakpoints and watchpoints", type: "text", initial: "", help: "Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25" },
 		},
@@ -50,8 +50,8 @@
 			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" }
 		},
 		"Instructions": {
-			custominstructions: { title: "Additional instructions' specifications", type: "textarea", initial: "", help: "JSON with the instructions' definitions (have a look at js/intructions/set.js as an example, but remember to make it a JSON). Each instructions can contain an \"icon\" property pointing to an image. The code behind the instructions must be functions defined in precode or code.", events: { change: updateInstructions } },
-			instructions: { title: "Instructions to show (leave blank to use default)", type: "order", options: function() { return $_eseecode.instructions.set; }, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Move them from the left to the right column by selecting an intruction in the left column and clicking the \">\" button. You can add an instruction several times.</li><li>Double-click any instruction in the right column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the right column by selecting it and clicking the \"^\" or \"v\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"&lt;\"button.</li><li>Click the \"-----\" button to add a separator to the instructions in the right column. The separator will be added at the end, remember to move it up with the \"^\" button.</li></ul>" }, // Use function for options since the set it is pointing to changes every time custominstructions is updated
+			custominstructions: { title: "Additional instructions' specifications", type: "custominstructions", initial: "", help: "Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)" },
+			instructions: { title: "Do you want to use a subset of instructions? If so, select which instructions to make available", type: "instructions", options: function() { return $_eseecode.instructions.set; }, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>" }, // Use function for options since the set it is pointing to changes every time custominstructions is updated
 			basepath: { title: "Base path for media", type: "text", initial: "", help: "Base path to prefix to relative paths for the sources of image() and sound() instructions" },
 		},
 		"Code": {
@@ -69,7 +69,7 @@
 	var parametersCalledFromAPI;
 
 	function encodeExerciseURL(url) {
-		if (url.includes('code=')) {
+		if (url.includes('code=') || url.includes('custominstructions=')) { // code=, precode=, postcode=, custominstructions=
 			let [ mainURL, restURL ] = url.split('?');
 			let [ params, target ] = restURL.split('#');
 			url = mainURL;
@@ -261,7 +261,7 @@
 			if (setupPage[key].events) Object.entries(setupPage[key].events).forEach(([ event, callback ]) => select.addEventListener(event, callback));
 			if (!setupPage[key].skipParameterInURL) select.addEventListener("change", buildURL);
 			div.appendChild(select);
-		} else if (setupPage[key].type == "order") {
+		} else if (setupPage[key].type == "instructions") {
 			var br = document.createElement("br");
 			div.appendChild(br);
 			var defaultsSpan = document.createElement("span");
@@ -290,43 +290,63 @@
 			div.appendChild(defaultsButton5);
 			var br = document.createElement("br");
 			div.appendChild(br);
-			var defaultsSpan = document.createElement("span");
-			defaultsSpan.innerHTML = "(Double-click on the right pane to configure the instructions)";
-			div.appendChild(defaultsSpan);
-			var br = document.createElement("br");
-			div.appendChild(br);
 			var innerDiv = document.createElement("div");
 			innerDiv.id = "instructionsbody";
 			var elementId = key;
+			var instructionsoriginDiv = document.createElement("div");
+			instructionsoriginDiv.id = "instructionsorigindiv";
+			innerDiv.appendChild(instructionsoriginDiv);
+			var instructionsoriginfilterDiv = document.createElement("div");
+			var instructionsoriginfilterSpan = document.createElement("span");
+			instructionsoriginfilterSpan.innerHTML = "Filter: ";
+			instructionsoriginfilterDiv.appendChild(instructionsoriginfilterSpan);
+			var selectfilter = document.createElement("input");
+			selectfilter.id = elementId+"originsearch";
+			if (!setupPage[key].skipParameterInURL) selectfilter.addEventListener("keyup",function(e) {Array.from(document.getElementById(elementId+"origin").children).forEach(o => { if (o.innerHTML.startsWith(e.target.value)) o.removeAttribute("hidden"); else o.setAttribute("hidden", "hidden"); });});
+			instructionsoriginfilterDiv.appendChild(selectfilter);
+			instructionsoriginDiv.appendChild(instructionsoriginfilterDiv);
+			var instructionsoriginaddDiv = document.createElement("div");
 			var select = document.createElement("select");
 			select.id = elementId+"origin";
-			select.style.height = "150px";
-			select.style.float = "left";
+			select.style.height = "150px";	
 			select.setAttribute("multiple", true);
-			innerDiv.appendChild(select);
+			instructionsoriginaddDiv.appendChild(select);
+			var instructionsoriginspaceSpan = document.createElement("span");
+			instructionsoriginspaceSpan.innerHTML = " ";
+			instructionsoriginaddDiv.appendChild(instructionsoriginspaceSpan);
+			var rightButton = document.createElement("input");
+			rightButton.type = "button";
+			rightButton.value = "Add";
+			rightButton.setAttribute('disabled', 'disabled');
+			if (!setupPage[key].skipParameterInURL) rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
+			instructionsoriginaddDiv.appendChild(rightButton);
+			instructionsoriginDiv.appendChild(instructionsoriginaddDiv);
+			var instructionsdestDiv = document.createElement("div");
+			instructionsdestDiv.id = "instructionsdestdiv";
+			instructionsdestDiv.style.display = "none";
+			innerDiv.appendChild(instructionsoriginDiv);
+			var instructionsdestSpan = document.createElement("span");
+			instructionsdestSpan.innerHTML = "Selected instructions:";
+			instructionsdestSpan.style.display = "block";
+			instructionsdestDiv.appendChild(instructionsdestSpan);
+			var select2 = document.createElement("select");
+			select2.id = elementId;
+			select2.style.height = "150px";
+			select2.style.minWidth = "100px";
+			select2.setAttribute("multiple", true);
+			instructionsdestDiv.appendChild(select2);
+			const observer = new MutationObserver((mutationList, observer) => {
+				mutationList[0].target.parentNode.style.display = mutationList[0].target.children.length === 0 ? "none" : "block";
+			});
+			observer.observe(select2, { childList: true });
 			var buttonsDiv = document.createElement("div");
 			buttonsDiv.id = "instructionsbuttons";
 			buttonsDiv.style.height = "150px";
-			buttonsDiv.style.float = "left";
-			var rightButton = document.createElement("input");
-			rightButton.type = "button";
-			rightButton.value = ">";
-			rightButton.setAttribute('disabled', 'disabled');
-			if (!setupPage[key].skipParameterInURL) rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
-			buttonsDiv.appendChild(rightButton);
-			var leftButton = document.createElement("input");
-			leftButton.type = "button";
-			leftButton.value = "<";
-			leftButton.setAttribute('disabled', 'disabled');
-			if (!setupPage[key].skipParameterInURL) leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
-			buttonsDiv.appendChild(leftButton);
-			innerDiv.appendChild(buttonsDiv);
-			br = document.createElement("br");
-			buttonsDiv.appendChild(br);
+			buttonsDiv.style.display = "inline-block";
 			var upButton = document.createElement("input");
 			upButton.type = "button";
 			upButton.style.marginBottom = "0px";
-			upButton.value = "^";
+			upButton.value = " Up ";
 			upButton.setAttribute('disabled', 'disabled');
 			if (!setupPage[key].skipParameterInURL) upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
 			buttonsDiv.appendChild(upButton);
@@ -335,36 +355,38 @@
 			var downButton = document.createElement("input");
 			downButton.type = "button";
 			downButton.style.marginTop = "0px";
-			downButton.value = "v";
+			downButton.value = "Down";
 			downButton.setAttribute('disabled', 'disabled');
 			if (!setupPage[key].skipParameterInURL) downButton.addEventListener("click",function() {selectOrderMove("down",elementId);buildURL();});
 			buttonsDiv.appendChild(downButton);
 			br = document.createElement("br");
 			buttonsDiv.appendChild(br);
-			var blankButton = document.createElement("input");
-			blankButton.type = "button";
-			blankButton.style.marginBottom = "1px";
-			blankButton.value = "-----";
-			if (!setupPage[key].skipParameterInURL) blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
-			buttonsDiv.appendChild(blankButton);
-			br = document.createElement("br");
-			buttonsDiv.appendChild(br);
 			var setupButton = document.createElement("input");
 			setupButton.type = "button";
 			setupButton.style.marginTop = "1px";
-			setupButton.value = "Set up";
+			setupButton.value = "Customize";
 			setupButton.setAttribute('disabled', 'disabled');
 			setupButton.setAttribute("data-elementId", elementId);
 			setupButton.addEventListener("click", changeParameters);
 			buttonsDiv.appendChild(setupButton);
-			innerDiv.appendChild(buttonsDiv);
-			var select2 = document.createElement("select");
-			select2.id = elementId;
-			select2.style.float = "left";
-			select2.style.height = "150px";
-			select2.style.minWidth = "100px";
-			select2.setAttribute("multiple", true);
-			innerDiv.appendChild(select2);
+			br = document.createElement("br");
+			buttonsDiv.appendChild(br);
+			var blankButton = document.createElement("input");
+			blankButton.type = "button";
+			blankButton.style.marginBottom = "1px";
+			blankButton.value = "Add spacer";
+			if (!setupPage[key].skipParameterInURL) blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
+			buttonsDiv.appendChild(blankButton);
+			br = document.createElement("br");
+			buttonsDiv.appendChild(br);
+			var leftButton = document.createElement("input");
+			leftButton.type = "button";
+			leftButton.value = "Remove";
+			leftButton.setAttribute('disabled', 'disabled');
+			if (!setupPage[key].skipParameterInURL) leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
+			buttonsDiv.appendChild(leftButton);
+			instructionsdestDiv.appendChild(buttonsDiv);
+			innerDiv.appendChild(instructionsdestDiv);
 			var selectOrder = {};
 			var selectOptions = {};
 			// Read default values
@@ -438,6 +460,8 @@
 				defaultsButton5.style.display = "inline-block";
 			}
 			div.appendChild(innerDiv);
+		} else if (setupPage[key].type == "custominstructions") {
+			div.appendChild(createCustomInstructionsUI(defaultValue));
 		} else if (setupPage[key].type == "textarea") {
 			var br = document.createElement("br");
 			div.appendChild(br);
@@ -525,11 +549,374 @@
 		select.innerHTML = selectOptionsText;
 	}
 
-	function updateInstructions(e) {
+	function createCustomInstructionsUI(descr) {
+
+		if (!descr) descr = "{}";
+
+		var div = document.createElement("div");
+		div.className = "custominstructions";
+
+		var customInstructionsSetEl = document.createElement("textarea");
+		customInstructionsSetEl.id = "custominstructions";
+		customInstructionsSetEl.name = "custominstructions";
+		customInstructionsSetEl.style.display = "none";
+		customInstructionsSetEl.value = descr;
+		div.appendChild(customInstructionsSetEl);
+
+		var instructionsDiv = document.createElement("div");
+		var instructionsSetDiv = document.createElement("div");
+		instructionsDiv.appendChild(instructionsSetDiv);
+		var instructionsNewDiv = document.createElement("div");
+		var instructionsNewButton = document.createElement("button");
+		instructionsNewButton.innerHTML = "+ Add instruction";
+		instructionsNewButton.addEventListener("click", () => addOrUpdateCustomInstruction({}, instructionsSetDiv));
+		instructionsNewDiv.appendChild(instructionsNewButton);
+		instructionsDiv.appendChild(instructionsNewDiv);
+		div.appendChild(instructionsDiv);
+
+		return div;
+
+	}
+	
+	function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
+
+		if (instructionDescr && instructionDescr.id) {
+			const row = document.querySelector("[data-id="+instructionDescr.id+"]");
+			if (row) row.style.display = "none";
+		}
+
+		var instructionForm = document.createElement("form");
+		instructionForm.className = "instructionWrapper";
+
+		var instructionsIdEl = document.createElement("input");
+		instructionsIdEl.id = "instructionId";
+		instructionsIdEl.name = "id";
+		instructionsIdEl.value = instructionDescr.id ? instructionDescr.id : "custom_" + Date.now() + "_" + Math.floor(Math.random() * 100000000);
+		instructionsIdEl.style.display = "none";
+		instructionForm.appendChild(instructionsIdEl);
+
+		var instructionNameDiv = document.createElement("div");
+		var instructionNameLabel = document.createElement("label");
+		instructionNameLabel.innerHTML = "Name: ";
+		instructionNameDiv.appendChild(instructionNameLabel);
+		var instructionNameEl = document.createElement("input");
+		instructionNameEl.id = "instructionName";
+		instructionNameEl.name = "name";
+		instructionNameEl.setAttribute("pattern", "[$a-zA-Z_][0-9a-zA-Z_$]*");
+		instructionNameEl.value = instructionDescr.name ? instructionDescr.name : "";
+		instructionNameEl.setAttribute("required", "required");
+		instructionNameDiv.appendChild(instructionNameEl);
+		instructionNameEl.addEventListener("keyup", updateCustomInstructionWrappers);
+		instructionNameEl.addEventListener("change", updateCustomInstructionWrappers);
+		instructionForm.appendChild(instructionNameDiv);
+
+		var instructionCategoryDiv = document.createElement("div");
+		var instructionCategoryLabel = document.createElement("label");
+		instructionCategoryLabel.innerHTML = "Category: ";
+		instructionCategoryDiv.appendChild(instructionCategoryLabel);
+		var instructionCategorySelect = document.createElement("select");
+		instructionCategorySelect.name = "category";
+		instructionCategorySelect.setAttribute("required", "required");
+		[ "", "guide", "canvas", "value", "draw", "window", "objects", "other" ].forEach(c => {
+			var instructionCategoryOptionEl = document.createElement("option");
+			instructionCategoryOptionEl.innerHTML = c;
+			instructionCategoryOptionEl.value = c;
+			instructionCategorySelect.appendChild(instructionCategoryOptionEl);
+		});
+		instructionCategoryDiv.appendChild(instructionCategorySelect);
+		instructionForm.appendChild(instructionCategoryDiv);
+
+		var instructionTypeDiv = document.createElement("div");
+		var instructionTypeLabel = document.createElement("label");
+		instructionTypeLabel.innerHTML = "Type: ";
+		instructionTypeDiv.appendChild(instructionTypeLabel);
+		var instructionTypeSelect = document.createElement("select");
+		instructionTypeSelect.name = "type";
+		[ "text", "number", "bool", "layer", "object", "window" ].forEach(c => {
+			var instructionTypeOptionEl = document.createElement("option");
+			instructionTypeOptionEl.innerHTML = c;
+			instructionTypeOptionEl.value = c;
+			instructionTypeSelect.appendChild(instructionTypeOptionEl);
+		});
+		instructionTypeDiv.appendChild(instructionTypeSelect);
+		instructionForm.appendChild(instructionTypeDiv);
+
+		var instructionLevelDiv = document.createElement("div");
+		var instructionLevelLabel = document.createElement("label");
+		instructionLevelLabel.innerHTML = "Show in: ";
+		instructionLevelDiv.appendChild(instructionLevelLabel);
+		var instructionLevelSelect = document.createElement("select");
+		instructionLevelSelect.name = "show";
+		instructionLevelSelect.setAttribute("multiple", "multiple");
+		[ "level1", "level2", "level3", "level4" ].forEach(c => {
+			var instructionLevelOptionEl = document.createElement("option");
+			instructionLevelOptionEl.innerHTML = c;
+			instructionLevelOptionEl.value = c;
+			instructionLevelOptionEl.setAttribute("selected", "selected");
+			instructionLevelSelect.appendChild(instructionLevelOptionEl);
+		});
+		instructionLevelDiv.appendChild(instructionLevelSelect);
+		instructionForm.appendChild(instructionLevelDiv);
+
+		var instructionIconDiv = document.createElement("div");
+		var instructionIconLabel = document.createElement("label");
+		instructionIconLabel.innerHTML = "Icon: ";
+		instructionIconDiv.appendChild(instructionIconLabel);
+		var instructionIconEl = document.createElement("input");
+		instructionIconEl.id = "instructionIcon";
+		instructionIconEl.name = "icon";
+		instructionIconEl.setAttribute("placeholder", "URL or image name");
+		instructionIconDiv.appendChild(instructionIconEl);
+		instructionForm.appendChild(instructionIconDiv);
+
+		var instructionTipDiv = document.createElement("div");
+		var instructionTipLabel = document.createElement("label");
+		instructionTipLabel.innerHTML = "Description: ";
+		instructionTipDiv.appendChild(instructionTipLabel);
+		var instructionTipEl = document.createElement("input");
+		instructionTipEl.name = "tip";
+		instructionTipDiv.appendChild(instructionTipEl);
+		
+		var instructionParamsDiv = document.createElement("div");
+		instructionForm.appendChild(instructionParamsDiv);
+
+		var instructionParamsNewDiv = document.createElement("div");
+		var instructionParamsNewEl = document.createElement("button");
+		instructionParamsNewEl.innerHTML = "+ Add parameter";
+		instructionParamsNewEl.addEventListener("click", e => addOrUpdateCustomInstructionParam({}, instructionParamsDiv, e));
+		instructionParamsNewDiv.appendChild(instructionParamsNewEl);
+		instructionForm.appendChild(instructionParamsNewDiv);
+
+		var instructionCodeDiv = document.createElement("div");
+		instructionCodeDiv.className = "instructionCodeDiv";
+		instructionCodeDiv.style.display = "none";
+		var instructionCodeLabel = document.createElement("label");
+		instructionCodeLabel.innerHTML = "Implement the instruction: ";
+		instructionCodeDiv.appendChild(instructionCodeLabel);
+		var instructionCodeFirstLabel = document.createElement("div");
+		instructionCodeFirstLabel.id = "instructionCodeFirstLabel";
+		instructionCodeFirstLabel.innerHTML = "{";
+		instructionCodeDiv.appendChild(instructionCodeFirstLabel);
+		var instructionCodeEl = document.createElement("textarea");
+		instructionCodeEl.name = "run";
+		instructionCodeDiv.appendChild(instructionCodeEl);
+		var instructionCodeLastLabel = document.createElement("div");
+		instructionCodeLastLabel.innerHTML = "}";
+		instructionCodeDiv.appendChild(instructionCodeLastLabel);
+		instructionForm.appendChild(instructionCodeDiv);
+
+		var instructionApplyDiv = document.createElement("div");
+		var instructionApplyButton = document.createElement("input");
+		instructionApplyButton.type = "submit";
+		instructionApplyButton.value = "Apply";
+		instructionApplyDiv.appendChild(instructionApplyButton);
+		var instructionCancelButton = document.createElement("button");
+		instructionCancelButton.innerHTML = "Cancel";
+		instructionCancelButton.addEventListener("click", e => {
+			if (instructionDescr && instructionDescr.id) {
+				const row = document.querySelector("[data-id="+instructionDescr.id+"]");
+				if (row) row.style.display = "block";
+			}
+			e.target.closest(".instructionWrapper").parentNode.removeChild(e.target.closest(".instructionWrapper"));
+		});
+		instructionApplyDiv.appendChild(instructionCancelButton);
+		instructionForm.appendChild(instructionApplyDiv);
+
+		instructionForm.addEventListener("submit", e => applyCustomInstruction(instructionForm, instructionsSetDiv, e));
+		instructionsSetDiv.appendChild(instructionForm);
+
+		updateCustomInstructionFields(instructionDescr, instructionForm);
+		if (instructionDescr.parameters) instructionDescr.parameters.forEach(d => addOrUpdateCustomInstructionParam(d, instructionParamsDiv));
+		updateCustomInstructionWrappers();
+
+	}
+
+	function getCustomInstructionFields(form, processParameters) {
+
+		const descr = {};
+
+		Object.values(form.querySelectorAll("input, select, textarea")).forEach(el => {
+
+			if (!processParameters && el.closest(".paramWrapper")) return;
+
+			let value;
+			if (el.tagName == "SELECT") {
+				if (el.getAttribute("multiple")) value = Array.from(el.selectedOptions).reduce((acc, o) => acc.concat(o.value), []);
+				else value = el.value;
+			} else if (el.type == "checkbox") {
+				value = el.checked;
+			} else {
+				value = el.value;
+			}
+
+			const key = el.name;
+			descr[key] = value;
+
+		});
+
+		return descr;
+
+	}
+
+	function updateCustomInstructionFields(instructionDescr, form) {
+
+		Object.keys(instructionDescr).forEach(key => {
+
+			if (!key) return;
+
+			const value = instructionDescr[key];
+			if (!value) return;
+
+			const el = form.querySelector("[name=" + key + "]");
+			if (!el) return;
+
+			if (el.tagName == "SELECT") {
+				Array.from(el.children).forEach(o => o.selected = value.includes(o.value));
+			} else if (el.type == "checkbox") {
+				el.checked = value;
+			} else {
+				el.value = value;
+			}
+
+		});
+
+	}
+
+	function applyCustomInstruction(form, instructionsSetDiv, e) {
+
+		if (e) e.preventDefault();
+
+		const instructionId = form.querySelector("#instructionId").value;
+		const instructionName = form.querySelector("#instructionName").value;
+
+		const customInstructionsSetEl = document.getElementById("custominstructions");
+		const customInstructionsSet = JSON.parse(customInstructionsSetEl.value);
+		customInstructionsSet[instructionId] = getCustomInstructionFields(form, false);
+		customInstructionsSet[instructionId].parameters = Array.from(form.querySelectorAll(".paramWrapper")).reduce((acc, el) => acc.concat(getCustomInstructionFields(el, true)), []);
+		customInstructionsSetEl.value = JSON.stringify(customInstructionsSet);
+
+		var instructionDiv = document.createElement("div");
+		instructionDiv.dataset.id = instructionId;
+		instructionDiv.className = "instructionRowWrapper";
+		var instructionSpan = document.createElement("span");
+		instructionSpan.innerHTML = instructionName;
+		instructionDiv.appendChild(instructionSpan);
+		var instructionEditButton = document.createElement("button");
+		instructionEditButton.innerHTML = "Edit";
+		instructionEditButton.addEventListener("click", () => addOrUpdateCustomInstruction(JSON.parse(document.getElementById("custominstructions").value)[instructionId], instructionsSetDiv));
+		instructionDiv.appendChild(instructionEditButton);
+		var instructionRemoveButton = document.createElement("button");
+		instructionRemoveButton.innerHTML = "Remove";
+		instructionRemoveButton.addEventListener("click", e => e.target.closest(".instructionRowWrapper").parentNode.removeChild(e.target.closest(".instructionRowWrapper")));
+		instructionDiv.appendChild(instructionRemoveButton);
+		const previousInstructionDiv = document.querySelector("[data-id="+instructionId+"]");
+		if (previousInstructionDiv) {
+			previousInstructionDiv.parentNode.insertBefore(instructionDiv, previousInstructionDiv);
+			previousInstructionDiv.parentNode.removeChild(previousInstructionDiv);
+		} else {
+			instructionsSetDiv.appendChild(instructionDiv);
+		}
+		form.parentNode.removeChild(form);
+
+		updateInstructions();
+		buildURL();
+
+		return false;
+
+	}
+
+	function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionParamsDiv, e) {
+
+		if (e) e.preventDefault();
+
+		var instructionParamDiv = document.createElement("div");
+		instructionParamDiv.className = "paramWrapper";
+
+		var instructionParamNameLabel = document.createElement("label");
+		instructionParamNameLabel.innerHTML = "Name: ";
+		instructionParamDiv.appendChild(instructionParamNameLabel);
+		var instructionParamNameEl = document.createElement("input");
+		instructionParamNameEl.name = "name";
+		instructionParamNameEl.setAttribute("pattern", "[$a-zA-Z_][0-9a-zA-Z_$]*");
+		instructionParamNameEl.className = "paramName";
+		instructionParamNameEl.setAttribute("required", "required");
+		instructionParamNameEl.addEventListener("keyup", updateCustomInstructionWrappers);
+		instructionParamNameEl.addEventListener("change", updateCustomInstructionWrappers);
+		instructionParamDiv.appendChild(instructionParamNameEl);
+
+		var instructionParamTypeDiv = document.createElement("div");
+		var instructionParamTypeLabel = document.createElement("label");
+		instructionParamTypeLabel.innerHTML = "Type: ";
+		instructionParamTypeDiv.appendChild(instructionParamTypeLabel);
+		var instructionParamTypeSelect = document.createElement("select");
+		instructionParamTypeSelect.name = "type";
+		[ "text", "number", "bool", "layer", "object", "window" ].forEach(c => {
+			var instructionParamTypeOptionEl = document.createElement("option");
+			instructionParamTypeOptionEl.innerHTML = c;
+			instructionParamTypeOptionEl.value = c;
+			instructionParamTypeSelect.appendChild(instructionParamTypeOptionEl);
+		});
+		instructionParamTypeDiv.appendChild(instructionParamTypeSelect);
+		instructionParamDiv.appendChild(instructionParamTypeDiv);
+
+		var instructionParamTipDiv = document.createElement("div");
+		var instructionParamTipLabel = document.createElement("label");
+		instructionParamTipLabel.innerHTML = "Description: ";
+		instructionParamTipDiv.appendChild(instructionParamTipLabel);
+		var instructionParamTipEl = document.createElement("input");
+		instructionParamTipEl.name = "tip";
+		instructionParamTipDiv.appendChild(instructionParamTipEl);
+		instructionParamDiv.appendChild(instructionParamTipDiv);
+
+		var instructionParamOptionalDiv = document.createElement("div");
+		var instructionParamOptionalLabel = document.createElement("label");
+		instructionParamOptionalLabel.innerHTML = "Is optional: ";
+		instructionParamOptionalDiv.appendChild(instructionParamOptionalLabel);
+		var instructionParamOptionalEl = document.createElement("input");
+		instructionParamOptionalEl.type = "checkbox";
+		instructionParamOptionalEl.name = "optional";
+		instructionParamOptionalDiv.appendChild(instructionParamOptionalEl);
+		instructionParamDiv.appendChild(instructionParamOptionalDiv);
+
+		var instructionParamInitialDiv = document.createElement("div");
+		var instructionParamInitialLabel = document.createElement("label");
+		instructionParamInitialLabel.innerHTML = "Default value: ";
+		instructionParamInitialDiv.appendChild(instructionParamInitialLabel);
+		var instructionParamInitialEl = document.createElement("input");
+		instructionParamInitialEl.name = "initial";
+		instructionParamInitialDiv.appendChild(instructionParamInitialEl);
+		instructionParamDiv.appendChild(instructionParamInitialDiv);
+
+		var instructionParamRemoveDiv = document.createElement("div");
+		var instructionParamRemoveEl = document.createElement("button");
+		instructionParamRemoveEl.innerHTML = "Remove parameter";
+		instructionParamRemoveEl.addEventListener("click", e => { e.target.closest(".paramWrapper").parentNode.removeChild(e.target.closest(".paramWrapper")); updateCustomInstructionWrappers(); });
+		instructionParamRemoveDiv.appendChild(instructionParamRemoveEl);
+		instructionParamDiv.appendChild(instructionParamRemoveDiv);
+
+		instructionParamsDiv.appendChild(instructionParamDiv);
+
+		updateCustomInstructionFields(instructionParamDescr, instructionParamDiv);
+
+		return false;
+
+	}
+
+	function updateCustomInstructionWrappers() {
+		var readyName = !!document.getElementById("instructionName").value;
+		Array.from(document.querySelectorAll(".instructionCodeDiv")).forEach(el => el.style.display = readyName ? "block" : "none");
+		if (!readyName) return;
+		var name = document.getElementById("instructionName").value;
+		var params = Array.from(document.querySelectorAll(".paramName")).reduce((acc, el) => acc + (acc ? ", " : "") + el.value, "");
+
+		document.getElementById("instructionCodeFirstLabel").innerHTML = "function "+name+"("+params+") {";
+	}
+
+	function updateInstructions() {
 		let custominstructions = document.getElementById("custominstructions").value;
 		try {
 			custominstructions = JSON.parse(custominstructions);
-		} catch(e) {}
+		} catch(e) { console.error("Invalid custominstructions update JSON: " + custominstructions); }
 		if (!custominstructions) {
 			alert("Custom instructions' descriptions has invalid synthax");
 			return;
@@ -620,7 +1007,7 @@
 				var element = document.getElementById(key);
 				if (setupPageItem.type == "checkbox") {
 					paramValue = element.checked === true;
-				} else if (setupPageItem.type == "order") {
+				} else if (setupPageItem.type == "order" || setupPageItem.type == "instructions") {
 					paramValue = "";
 					let options = element.options;
 					if (typeof options == "function") options = options();
@@ -653,7 +1040,7 @@
 				} else {
 					paramValue = element.value;
 				}
-				if (setupPageItem.type !== "order" && setupPageItem.type !== "multiple" && setupPageItem.type !== "select") {
+				if ((setupPageItem.type !== "order" || setupPageItem.type !== "instructions") && setupPageItem.type !== "multiple" && setupPageItem.type !== "select") {
 					paramValue = encodeURIComponent(paramValue);
 				}
 				if (!setupPageItem.skipParameterInURL && paramValue != setupPageItem.initial && paramValue.toString().length > 0) {
