@@ -338,9 +338,24 @@
 		try {
 			var jsCode = "\"use strict\";";
 			jsCode += "(async function() {";
-			if (!inCode && $_eseecode.execution.precode.code) { // Don't load precode again when running the code of an event
-				// We want to run precode inline so it shares the same context, so we don't use $e_executePrecode()
-				var real_precode = $e_code2run($_eseecode.execution.precode.code, { inject: false, inline: true, realcode: true });
+			let instructions = Object.values($_eseecode.instructions.set);
+			if (!inCode && ($_eseecode.execution.precode.code || instructions.some(d => d.run))) { // Don't load precode again when running the code of an event
+				var customInstructionsCode = "";
+				for (let instruction_details of instructions) {
+					if (!instruction_details || !instruction_details.run) continue;
+					customInstructionsCode += "\nfunction " + instruction_details.name + "(";
+					if (instruction_details.parameters) {
+						let parameters_text = "";
+						for (let instructionParam_details of instruction_details.parameters) {
+							if (!instructionParam_details || !instructionParam_details.name) continue;
+							parameters_text += (parameters_text ? ", " : "") + instructionParam_details.name;
+						}
+						customInstructionsCode += parameters_text;
+					}
+					customInstructionsCode += ") {\n" + instruction_details.run + "}\n";
+				}
+				// We want to run precode inline so it shares the same context
+				var real_precode = $e_code2run(customInstructionsCode + $_eseecode.execution.precode.code, { inject: false, inline: true, realcode: true });
 				jsCode += "$_eseecode.execution.precode.running=true;"+real_precode+";$_eseecode.execution.precode.running=false;";
 			}
 			if (!justPrecode) {
