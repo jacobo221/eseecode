@@ -81,6 +81,7 @@
 	}
 
     function redirectTutorial(url) {
+        iframe.contentWindow.API_setPreventExit(false);
         // Have to manually set realtive urls because in Firefox 118 it is using the iframe's location to calculate the parent frame's relative destination
         if (url.match(/(https?|file):\/\//)) {
             location.href = url;
@@ -275,7 +276,7 @@
         if (elementGuideIndex === currentGuideIndex) {
             if (!element || !doc.getElementById(element.id)) {
                 ttDeactivate();
-                ttActivate({ text: "You stepped away from the instructions, you have to start the tutorial all over again", action: "clickMessage", runNext: function() {
+                ttActivate({ text: "You stepped away from the instructions, you have to back up in the tutorial", action: "clickMessage", runNext: function() {
                     iframe.contentWindow.API_restart();
                     timeoutHandler = setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
                 } });
@@ -781,6 +782,7 @@
                 "Click on this message to continue": "Clica en aquest missatge per continuar",
                 "you are being taken back to the previous step": "se t'està portant al pas anterior",
                 "Step": "Paso",
+                "You stepped away from the instructions, you have to back up in the tutorial": "No has seguit correctament les instruccions, has de tornar enrere al tutorial",
             },
             es: {
                 "Waiting": "Espera",
@@ -789,6 +791,7 @@
                 "Click on this message to continue": "Clica en este mensaje para continuar",
                 "you are being taken back to the previous step": "se te está llevando al paso anterior",
                 "Step": "Paso",
+                "You stepped away from the instructions, you have to back up in the tutorial": "No has seguido correctamente las instrucciones, debes volver atrás en el tutorial",
             }
         };
         for (let lang in translatatedStrings) {
