@@ -8,12 +8,15 @@
  *   Improved and simplified UI and behaviour of debug breakpoints, watchpoints and steps
  *   Improved UI visibility for run/resume/clear/reset buttons
  *   Debug stepping is now only enable/disable through UI (always set to 1 step, stepping size can now be changed through API only)
+ *   New API calls stop(), pause(), resume() to control executions
  *   New URL params breakpoints= and observe= and API calls setBreakpoints(), getBreakpoints(), setObservers(), getObservers() to set up and obtain breakpoints, watches and watchpoints
  *   New URL param step= and API call setExecutionStep() to enable/disable debug stepping and how many instructions for each step
  *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
  *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
  *   Custom instructions can now include the code in the instructions' definitions instead of delegating it to precode
  *   Updated create.js
+ *   Updated and improved guide.js, including translations, chaining tutorials, embedding texts, etc
+ *   Fixed and updated tutorials
  *   Fix: Maximizing console is back working, and better than every (full maximization)
 
 ## 3.1 (2023-10-19)

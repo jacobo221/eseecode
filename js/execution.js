@@ -485,6 +485,7 @@
 			var executionInstructions = $_eseecode.execution.programCounter - 1;
 			document.getElementById("dialog-debug-execute-stats").innerHTML = _("Instructions executed")+": "+executionInstructions+"<br />"+_("Execution time")+": "+executionTime+" "+_("secs");
 			if (!$_eseecode.execution.precode.running && !$_eseecode.execution.postcode.running) {
+				if (!$_eseecode.last_execution) $_eseecode.last_execution = {};
 				$_eseecode.last_execution.time = executionTime;
 				$_eseecode.last_execution.instructionsCount = executionInstructions;
 			}

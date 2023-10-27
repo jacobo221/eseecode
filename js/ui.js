@@ -1575,7 +1575,7 @@
 	function $e_toggleFullscreenIcon() {
 		var fullscreenButton = document.getElementById("fullscreen-button");
 		// Do not show this button if the page is embedded
-		if ($e_isEmbedded() || $_eseecode.ui.fullscreenmenuVisible === false) {
+		if ($_eseecode.ui.fullscreenmenuVisible === false) {
 				fullscreenButton.style.display = "none";
 		} else {
 				fullscreenButton.style.display = "block";

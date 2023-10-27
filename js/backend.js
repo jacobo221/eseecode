@@ -513,6 +513,7 @@
 			        $e_resetWriteConsole(program.makeWrite(level,"","\t"));
 					$_eseecode.session.updateOnConsoleSwitch = "write";
 		        }
+		        $e_updateButtonsVisibility();
 			} else {
 				$e_switchConsoleMode("code");
 				$e_resetWriteConsole(code);

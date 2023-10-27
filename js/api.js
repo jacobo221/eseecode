@@ -41,6 +41,7 @@ async function $e_loadURLParams(url, parameters, action, except) {
 	}
 	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
 	let [urlPage, ...urlParams] = url.split("?");
+	if ((!urlParams || urlParams.length === 0) && !url.match(/^(https?|file):\/\//)) urlParams = [ url ];
 	urlParams = urlParams.join("?");
 	if (!urlParams) urlParams = "";
 	urlParams = urlParams.split("&");
@@ -891,6 +892,36 @@ function API_uploadPostcode(code) {
  */
 function API_runCode(code) {
 	$e_execute(true, code);
+}
+
+/**
+ * Stops execution
+ * @since 3.2
+ * @public
+ * @example API_stop()
+ */
+function API_stop() {
+	$e_stopPreviousExecution();
+}
+
+/**
+ * Pauses execution
+ * @since 3.2
+ * @public
+ * @example API_pause()
+ */
+function API_pause() {
+	$e_pauseExecution();
+}
+
+/**
+ * Resumes execution
+ * @since 3.2
+ * @public
+ * @example API_resume()
+ */
+function API_resume() {
+	$e_resumePreviousExecution();
 }
 
 /**

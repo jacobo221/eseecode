@@ -1579,7 +1579,7 @@
 		}
 		// Update the block icon
 		$e_paintBlock(div);
-		$e_msgBoxClose();
+		setTimeout($e_msgBoxClose, 50); // Allow event listeners on form submit to be triggered before removing the form
 	}
 
 	/**

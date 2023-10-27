@@ -1,51 +1,103 @@
+<!DOCTYPE html>
 <html>
     <head>
-        <title>eSeeCode Touch view tutorial</title>
+        <meta charset="utf-8">
+        <title>eSeeCode tutorial</title>
         <script type="text/javascript" src="../tools/guide.js"></script>
     </head>
 <body>
 <iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true"></iframe>
 <script type="text/javascript">
     var guideSteps = [
+        { type: "pagetitle", text: "eSeeCode tutorial: Touch view" },
         { type: "fullscreenmenu", argument: "true" },
         { type: "view", argument: "touch" },
         { type: "info", text: "This tutorial will show you the basics about using the Touch view", timeout: 5 },
-        { type: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction", position: "above", action: "clickMessage" },
+        { type: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction", position: "inside", action: "clickMessage" },
         { type: "dialog", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage" },
         { type: "console", text: "Here you will see the code you are creating", position: "inside", action: "clickMessage" },
         { type: "info", text: "How about drawing a square?<br />Let's try it!" },
         { type: "dialogInstruction", argument: "forward1", text: "Let's begin drawing: Move the guide forward by clicking this instruction" },
-        { type: "verify", argument: "forward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100)", text: "You clicked the wrong button!" },
         { type: "whiteboard", text: "Observe how the guide has moved and the drawing has began", position: "above", action: "clickMessage" },
         { type: "dialogInstruction", argument: "turnLeft1", text: "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90)", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "setColor1", text: "Now to try something different let's change the color for the future" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "forward1", text: "Let's move it forward again by clicking this instruction.<br />See how the previous instruction affects it's direction" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "turnLeft1", text: "Now let's rotate it by 90 degrees again" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0AturnLeft(90)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "setSize3", text: "Let's push forward our imagination by changing the size of the future lines" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0AturnLeft(90)%0AsetSize(4)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "forward1", text: "And move forward again" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0AturnLeft(90)%0AsetSize(4)%0Aforward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "turnLeft1", text: "And rotate again..." },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0AturnLeft(90)%0AsetSize(4)%0Aforward(100)%0AturnLeft(90)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "forward2", text: "Let's move forward to draw the fourth and last side of this square" },
         { type: "info", text: "Ooops! Sorry I told you to click the wrong instruction!<br />This forward doesn't move forward enough to close the square...<br />Let's undo the last instruction" },
         { type: "undoButton", text: "At any moment you can undo the last instruction by pressing this button", position: "above" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);", text: "You clicked the wrong button!" },
         { type: "dialogInstruction", argument: "forward1", text: "Now let's do it right and move forward to close the square" },
-        { type: "verify", argument: "forward(100)%0AturnLeft(90)%0AsetColor(%22%23FF0000%22)%0Aforward(100)%0AturnLeft(90)%0AsetSize(4)%0Aforward(100)%0AturnLeft(90)%0Aforward(100)%0A", text: "You clicked the wrong button!" },
+        { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);forward(100);", text: "You clicked the wrong button!" },
         { type: "whiteboard", text: "With this code we've been able to draw a square", position: "above", action: "clickMessage" },
-        { type: "info", text: "Congratulations!<br />You have finished this tutorial!" }
+        { type: "info", text: "Congratulations!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial" }
     ];
     
     var translations = {
         ca: {
+            "This tutorial will show you the basics about using the Touch view": "Aquest tutorial et mostrarà els conceptes bàsics sobre com utilitzar la vista Toca",
+            "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction": "Això és el Pissarra. Tot el que fem acabarà dibuixant alguna cosa aquí<br />Pots veure la guia al mig. La guia et mostra on començarà la pròxima instrucció i en quina direcció",
+            "Here you will find all available instructions to move the guide in the whiteboard": "Aquí trobaràs totes les instruccions disponibles per moure la guia al pissarra",
+            "How about drawing a square?<br />Let's try it!": "Què et sembla dibuixar un quadrat?<br />Provem-ho!",
+            "Let's begin drawing: Move the guide forward by clicking this instruction": "Comencem a dibuixar: Mou la guia cap endavant fent clic en aquesta instrucció",
+            "You clicked the wrong button!": "Has fet clic en el botó equivocat!",
+            "Observe how the guide has moved and the drawing has began": "Observa com s'ha mogut la guia i ha començat el dibuix",
+            "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction": "Ara girem-la 90 graus per preparar-nos per al següent moviment fent clic en aquesta instrucció",
+            "Now to try something different let's change the color for the future": "Ara provem alguna cosa diferent: canviem el color per al futur",
+            "Let's move it forward again by clicking this instruction.<br />See how the previous instruction affects its direction": "Moguem-la cap endavant una altra vegada fent clic en aquesta instrucció.<br />Observa com l'anterior instrucció afecta la seva direcció",
+            "Now let's rotate it by 90 degrees again": "Ara girem-la 90 graus una altra vegada",
+            "Let's push forward our imagination by changing the size of the future lines": "Endavant amb la nostra imaginació: canviem la mida de les futures línies",
+            "And move forward again": "I moguem-nos cap endavant una altra vegada",
+            "And rotate again...": "I girem una altra vegada...",
+            "Let's move forward to draw the fourth and last side of this square": "Moguem-nos cap endavant per dibuixar el quart i últim costat d'aquest quadrat",
+            "Ooops! Sorry I told you to click the wrong instruction!<br />This forward doesn't move forward enough to close the square...<br />Let's undo the last instruction": "Ooops! Ho sento, et vaig dir que fessis clic a la instrucció equivocada!<br />Aquesta instrucció no avança prou per tancar el quadrat...<br />Desfem l'última instrucció",
+            "At any moment you can undo the last instruction by pressing this button": "En qualsevol moment, pots desfer l'última instrucció prement aquest botó",
+            "Now let's do it right and move forward to close the square": "Ara ho fem bé: movem-nos cap endavant per tancar el quadrat",
+            "With this code we've been able to draw a square": "Amb aquest codi hem pogut dibuixar un quadrat",
+            "Congratulations!<br />You have finished this tutorial!": "Felicitats!<br />Has acabat aquest tutorial!",
+            "eSeeCode tutorial: Touch view": "Tutorial eSeeCode: Vista Toca",
+            "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>": "Altres tutorials recomanats:<br /><b><a href=\"drag.html\">Vista Mou</a></b><br /><a href=\"ui.html\">Interfaç d'usuari</a>",
         },
         es: {
+            "This tutorial will show you the basics about using the Touch view": "Este tutorial te mostrará los conceptos básicos sobre cómo utilizar la vista Toca",
+            "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction": "Este es la Pizarra. Todo l que hagamos se reflejará aquí<br />Puedes ver la guía en el centro. La guía te muestra dónde comenzará a dibujar la próxima instrucción y en qué dirección",
+            "Here you will find all available instructions to move the guide in the whiteboard": "Aquí encontrarás todas las instrucciones disponibles para mover la guía en el pizarón",
+            "How about drawing a square?<br />Let's try it!": "¿Qué te parece dibujar un cuadrado?<br />¡Vamos a intentarlo!",
+            "Let's begin drawing: Move the guide forward by clicking this instruction": "Comencemos a dibujar: Mueve la guía hacia adelante haciendo clic en esta instrucción",
+            "You clicked the wrong button!": "¡Hiciste clic en el botón equivocado!",
+            "Observe how the guide has moved and the drawing has began": "Observa cómo la guía se ha movido y el dibujo ha comenzado",
+            "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction": "Ahora giremos la guía 90 grados para prepararnos para el próximo movimiento, haciendo clic en esta instrucción",
+            "Now to try something different let's change the color for the future": "Ahora, para probar algo diferente, cambiemos el color para el futuro",
+            "Let's move it forward again by clicking this instruction.<br />See how the previous instruction affects its direction": "Avancemos nuevamente haciendo clic en esta instrucción.<br />Observa cómo la instrucción anterior afecta su dirección",
+            "Now let's rotate it by 90 degrees again": "Y volvamos a girarla 90 grados",
+            "Let's push forward our imagination by changing the size of the future lines": "Impulsemos nuestra imaginación cambiando el tamaño de las líneas futuras",
+            "And move forward again": "Y avancemos nuevamente",
+            "And rotate again...": "Y giremos nuevamente...",
+            "Let's move forward to draw the fourth and last side of this square": "Avancemos para dibujar el cuarto y último lado de este cuadrado",
+            "Ooops! Sorry I told you to click the wrong instruction!<br />This forward doesn't move forward enough to close the square...<br />Let's undo the last instruction": "¡Oops! ¡Perdón! Te dije que hicieras clic en la instrucción incorrecta.<br />Este avance no es suficiente para cerrar el cuadrado...<br />Vamos a deshacer la última instrucción",
+            "At any moment you can undo the last instruction by pressing this button": "En cualquier momento, puedes deshacer la última instrucción presionando este botón",
+            "Now let's do it right and move forward to close the square": "Ahora hagámoslo bien y avancemos para cerrar el cuadrado",
+            "With this code we've been able to draw a square": "Con este código, hemos sido capaces de dibujar un cuadrado",
+            "Congratulations!<br />You have finished this tutorial!": "¡Felicidades!<br />¡Has completado este tutorial!",
+            "eSeeCode tutorial: Touch view": "Tutorial eSeeCode: Vista Toca",
+            "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>": "Otros tutoriales recomendados:<br /><b><a href=\"drag.html\">Vista Mueve</a></b><br /><a href=\"ui.html\">Interfaz de usuario</a>",
         }
     };
+    
+    function nextTutorial() {
+        redirectTutorial("drag.html");
+    }
     
     loadGuide("eseecode-frame", "../index.html");
 </script>

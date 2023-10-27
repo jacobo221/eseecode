@@ -80,6 +80,19 @@
         }
 	}
 
+    function redirectTutorial(url) {
+        // Have to manually set realtive urls because in Firefox 118 it is using the iframe's location to calculate the parent frame's relative destination
+        if (url.match(/(https?|file):\/\//)) {
+            location.href = url;
+        } else {
+            location.href = location.origin + location.pathname.split('/').slice(0, -1).join('/') + '/' + url;
+        }
+    }
+
+    function replaceLinks(text) {
+        return text.replace(/ href="([^#"][^"]+)"/g, ' href="#" onclick="window.parent.redirectTutorial(\'$1\');return false;"');
+    }
+
     function ttActivate(currentGuideStep) {
         var element = currentGuideStep.element;
         var position = currentGuideStep.position;
@@ -92,7 +105,7 @@
         ttBox.style.border = "1px solid #000000";
         ttBox.style.zIndex = 100000;
         if (currentGuideStep.text) {
-            ttBox.innerHTML = "<b>"+_(currentGuideStep.text)+"</b>";
+            ttBox.innerHTML = "<b>"+replaceLinks(_(currentGuideStep.text))+"</b>";
         }
         if (currentGuideStep.text || currentGuideStep.timeout || currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
             doc.body.appendChild(ttBox);
@@ -102,31 +115,23 @@
             currentGuideStep.runNext = guideFinishStep;
         }
         if (currentGuideStep.timeout) {
-            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
+            ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+Math.round(currentGuideStep.timeout)+'</i> ]';
             setTimeout(ttCountdown, 1000);
             timeoutHandler = setTimeout(currentGuideStep.runNext, currentGuideStep.timeout*1000);
         } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
-            ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
-            ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
+            ttBox.addEventListener("mousedown", () => { currentGuideStep.runNext(); if (currentGuideStep.run) window.parent[currentGuideStep.run](); }, false);
+            ttBox.addEventListener("touchstart", () => { currentGuideStep.runNext(); if (currentGuideStep.run) window.parent[currentGuideStep.run](); }, false);
             var elements = ttBox.getElementsByTagName("a");
             for (var i=0; i<elements.length; i++) {
                 elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
                 elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
             }
-            ttBox.innerHTML += "<br />"+_("Click on this message to continue");
-        } else if (currentGuideStep.type == "info" || currentGuideStep.action == "clickMessage") {
-            ttBox.addEventListener("mousedown", currentGuideStep.runNext, false);
-            ttBox.addEventListener("touchstart", currentGuideStep.runNext, false);
-            var elements = ttBox.getElementsByTagName("a");
-            for (var i=0; i<elements.length; i++) {
-                elements[i].addEventListener("mousedown", function(event){event.stopPropagation();}, false);
-                elements[i].addEventListener("touchstart", function(event){event.stopPropagation();}, false);
-            }
-            ttBox.innerHTML += "<br />"+_("Click on this message to continue");
+            if (currentGuideStep.embed) ttBox.innerHTML += "<br />" + "<p>" + replaceLinks(_(currentGuideStep.embed)) + "</p>";
+            ttBox.innerHTML += "<br />"+_(currentGuideIndex === guideSteps.length - 1 ? "Click on this message to end" : "Click on this message to continue");
         } else if (element && currentGuideStep.action != "none") {
             var action = currentGuideStep.action;
             if (!action) {
-                currentGuideStep.action = "mouseup";
+                action = currentGuideStep.action = "mouseup";
             }
             if (currentGuideStep.timeout) {
                 ttBox.innerHTML += '<br />[ '+_("Waiting")+'... <i id="ttBoxCountdown">'+currentGuideStep.timeout+'</i> ]';
@@ -152,13 +157,16 @@
                     }, false);
                     element.addEventListener("mouseup", currentGuideStep.runNext, false);
                     element.addEventListener("touchend", currentGuideStep.runNext, false);
-                } else if ((element.nodeName == "BUTTON" || element.nodeName == "INPUT") && element.type == "submit") {
+                } else if ((element.nodeName == "INPUT") && element.type == "submit") {
                     element.form.addEventListener("submit", currentGuideStep.runNext, false);
                 } else if (element.nodeName == "INPUT") {
                     element.addEventListener("keypress", currentGuideStep.runNext, false);
                     element.addEventListener("paste", currentGuideStep.runNext, false);
                     element.addEventListener("input", currentGuideStep.runNext, false);
                     element.addEventListener("change", currentGuideStep.runNext, false);
+                    element.addEventListener("mouseup", currentGuideStep.runNext, false);
+                    element.addEventListener("touchend", currentGuideStep.runNext, false);
+                } else { // div, span, a, ...
                     element.addEventListener("mouseup", currentGuideStep.runNext, false);
                     element.addEventListener("touchend", currentGuideStep.runNext, false);
                 }
@@ -193,7 +201,7 @@
             ttBoxWrapper.parentNode.removeChild(ttBoxWrapper);
         }
         if (clearBorders !== false) {
-            if (currentGuideStep.element) {
+            if (currentGuideStep && currentGuideStep.element) {
                 currentGuideStep.element.removeEventListener("mousedown", currentGuideStep.runNext, false);
                 currentGuideStep.element.removeEventListener("touchstart", currentGuideStep.runNext, false);
                 currentGuideStep.element.removeEventListener("mousemove", currentGuideStep.runNext, false);
@@ -229,6 +237,12 @@
             }
         }
     }
+
+    function normalizeCode(code) { // Remove all spaces, tabs, newlines, always have exactly one semicolor between instructions, always have an ending semicolon
+        code = code.replace(/[\r\n]*{+[\r\n]*/g, '{;').replace(/[\r\n]*}[\r\n]*/g, ';};').replace(/[\r\n;]+/g, ';').replace(/\s/g, '').replace(/'/g, '\"');
+        if (code[code.length - 1] != ';') code += ';';
+        return code;
+    }
     
     function verify(system, currentGuideStep) {
         if (currentGuideStep.argument === undefined) {
@@ -244,10 +258,10 @@
                 handler = iframe.contentWindow.API_getOutput;
                 break;
             case "code":
-                handler = iframe.contentWindow.API_downloadCode;
+                handler = () => normalizeCode(iframe.contentWindow.API_downloadCode());
                 break;
         }
-        var validation = (currentGuideStep.argument == encodeURIComponent(handler()));
+        var validation = (system == "code" ? normalizeCode(currentGuideStep.argument) : currentGuideStep.argument) == handler();
         if (!validation) {
             guideStepBack(currentGuideStep);
         } else {
@@ -314,7 +328,7 @@
                 humanSteps[humanSteps.length] = { index: tempGuideIndex, title: tempGuideStep.humanStep };
             }
         }
-        // If no human steps have been definedmanually, try to guess them
+        // If no human steps have been defined manually, try to guess them
         if (!humanSteps.length) {
             for (var tempGuideIndex = 0; tempGuideIndex < guideSteps.length; tempGuideIndex++) {
                 var tempGuideStep = guideSteps[tempGuideIndex];
@@ -384,14 +398,13 @@
                 case "input":
                 case "timeout":
                 case "axis":
-                case "view":
                 case "fullscreenmenu":
                 case "instructions":
                 case "code":
                 case "precode":
                 case "input":
-                guideNextStep({ type: key, argument: mashupGuide[key] }, true);
-                break;
+                    guideNextStep({ type: key, argument: mashupGuide[key] }, true);
+                    break;
             }
         }
         if (iframe.contentWindow.API_getView() == "touch") {
@@ -404,6 +417,7 @@
     function guideStepBack(currentGuideStep) {
         var ttBox;
         if (!steppingBack) {
+            iframe.contentWindow.API_stop();
             ttDeactivate();
             ttActivate({ text: ((currentGuideStep.type == "verify" && currentGuideStep.text !== undefined)?currentGuideStep.text:"You didn't follow the step correctly. Please pay attention to the instructions."), action: "clickMessage" });
         }
@@ -537,7 +551,6 @@
             case "input":
             case "timeout":
             case "axis":
-            case "view":
             case "fullscreenmenu":
             case "instructions":
                 if (currentGuideStep.argument) {
@@ -550,6 +563,27 @@
                 break;
             case "execute":
                 iframe.contentWindow.API_execute();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "pause":
+                iframe.contentWindow.API_pause();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "resume":
+                iframe.contentWindow.API_resume();
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "stop":
+                iframe.contentWindow.API_stop();
                 element = undefined;
                 skipElement = true;
                 setTimeout(currentGuideStep.runNext, 120);
@@ -571,6 +605,13 @@
                 break;
             case "fullscreen":
                 iframe.contentWindow.API_fullscreen(currentGuideStep.argument);
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 120);
+                return;
+                break;
+            case "preventexit":
+                iframe.contentWindow.API_setPreventExit(currentGuideStep.argument);
                 element = undefined;
                 skipElement = true;
                 setTimeout(currentGuideStep.runNext, 120);
@@ -625,6 +666,13 @@
                 setTimeout(function() {
                     verify("input", currentGuideStep);
                 }, 300); // Wait for the Touch mode animation to be finished
+                return;
+                break;
+            case "pagetitle":
+                document.title = _(currentGuideStep.text);
+                element = undefined;
+                skipElement = true;
+                setTimeout(currentGuideStep.runNext, 1);
                 return;
                 break;
             default:
@@ -700,14 +748,13 @@
             "resetbutton": "button-reset",
             "fullscreenbutton": "fullscreen-button",
             "setup": "dialog-tabs-setup",
-            "language": "language-select",
+            "language": "translations-select",
             "load": "loadcode",
             "save": "savecode",
             "gridenable": "setup-grid-enable",
-            "gridsetup": "setup-grid-step",
+            "gridsetup": "setup-grid-divisions",
             "coordinates": "setup-grid-coordinates",
             "guideenable": "setup-guide-enable",
-            "timeoutfield": "setup-execute-time",
             "pieces": "dialog-tabs-pieces",
             "window": "dialog-tabs-window",
             "io": "dialog-tabs-io",
@@ -724,9 +771,50 @@
         var elementId = translationTable[code];
         return elementId;
     }
+
+    function addTranslatableStrings() {
+        const translatatedStrings = {
+            ca: {
+                "Waiting": "Espera",
+                "You didn't follow the step correctly. Please pay attention to the instructions.": "No has seguit les instruccions correctament. Si us plau para atenció a les instruccions.",
+                "Click on this message to end": "Clica a aquest missatge per finalitzar",
+                "Click on this message to continue": "Clica en aquest missatge per continuar",
+                "you are being taken back to the previous step": "se t'està portant al pas anterior",
+                "Step": "Paso",
+            },
+            es: {
+                "Waiting": "Espera",
+                "You didn't follow the step correctly. Please pay attention to the instructions.": "No has seguido las instrucciones correctamente. Por favor presta atención a las instrucciones.",
+                "Click on this message to end": "Clica en este mensaje para acabar",
+                "Click on this message to continue": "Clica en este mensaje para continuar",
+                "you are being taken back to the previous step": "se te está llevando al paso anterior",
+                "Step": "Paso",
+            }
+        };
+        for (let lang in translatatedStrings) {
+            if (!translations[lang]) translations[lang] = {};
+            Object.assign(translations[lang], translatatedStrings[lang]);
+        }
+    }
     
     function loadGuide(iframeId, src, lang) {
-        currentLanguage = lang?lang:"en";
+        addTranslatableStrings();
+        if (!lang) {
+            const urlParams = new URLSearchParams(location.search);
+            lang = urlParams.get("lang");
+        }
+        if (!lang && document.referrer) {
+            const oldUrl = new URL(document.referrer);
+            const oldParams = new URLSearchParams(oldUrl.search);
+            lang = oldParams.get("lang");
+            if (lang) {
+                let urlParams = new URLSearchParams(window.location.search);
+                urlParams.append("lang", lang);
+                window.history.replaceState(null, null, '?' + urlParams);
+            }
+        }
+        if (!lang) lang = "en";
+        currentLanguage = lang;
         if (iframeId === undefined) {
             iframeId = getElementsByTagName("iframe");
             if (iframeId) {
@@ -759,6 +847,19 @@
                     }
                     setTimeout(waitForAPIReady, 200);
                 }, false);
+                if (lang) {
+                    let calculatedSrc = src;
+                    if (!src.match(/(https?|file):\/\//)) {
+                        calculatedSrc = location.origin + location.pathname.split('/').slice(0, -1).join('/') + '/' + src;
+                    }
+                    const srcUrl = new URL(calculatedSrc);
+                    const srcParams = new URLSearchParams(srcUrl.search);
+                    const srcLang = srcParams.get("lang");
+                    if (!srcLang) {
+                        srcParams.append("lang", lang);
+                        src = srcUrl.origin + srcUrl.pathname + '?' + srcParams + (srcUrl.hash ? '#' + srcUrl.hash : '');
+                    }
+                }
                 iframe.src = src; // Reload the iframe so the iframe's onload trigger is run
             }, false);
             var guideStepsButtons = document.createElement("div");
