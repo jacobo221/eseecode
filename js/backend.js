@@ -44,6 +44,19 @@
 			canvas.height = canvasSize;
 			var context = canvas.getContext("2d");
 			var origin = $e_user2systemCoords({x: 0, y: 0});
+			if ($_eseecode.execution.background) {
+				var img = new Image();
+                                img.onload = function() {
+                                        var ctx = canvas.getContext("2d");
+                                        ctx.save();
+                                        ctx.drawImage(img, 0, 0, canvasSize, canvasSize);
+                                        ctx.restore();
+                                        ctx.translate(canvasSize/2, canvasSize/2);
+                                        // Restore the canvas position and orientation for future image() calls
+                                        ctx.translate(-canvasSize/2, -canvasSize/2);
+                                }
+                                img.src = $_eseecode.execution.background;
+			}
 			$_eseecode.canvasArray[id] = {
 				name: id,
 				canvas: canvas,

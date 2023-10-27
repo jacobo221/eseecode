@@ -11,6 +11,8 @@
  *   New API calls stop(), pause(), resume() to control executions
  *   New URL params breakpoints= and observe= and API calls setBreakpoints(), getBreakpoints(), setObservers(), getObservers() to set up and obtain breakpoints, watches and watchpoints
  *   New URL param step= and API call setExecutionStep() to enable/disable debug stepping and how many instructions for each step
+ *   New URL param background= and its API call setWhiteboardBackground() to set a background image for the whiteboard
+ *   New URL param guideimage= and its API call setGuideImage() to set a custom image for the guide
  *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
  *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
  *   Custom instructions can now include the code in the instructions' definitions instead of delegating it to precode

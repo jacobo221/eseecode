@@ -16,12 +16,6 @@ $_eseecode.ui.theme = {
 			var size = 20;
 			var org = targetCanvas.guide;
 			var angle = targetCanvas.guide.angle;
-			var frontx = org.x+size*Math.cos(angle*Math.PI/180);
-			var fronty = org.y+size*Math.sin(angle*Math.PI/180);
-			var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
-			var lefty = org.y+size/2*Math.sin(angle*Math.PI/180+Math.PI/3);
-			var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
-			var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
 			if (canvas === undefined) {
 				if (!$_eseecode.ui.guideVisible) {
 					return;
@@ -32,6 +26,26 @@ $_eseecode.ui.theme = {
 			canvas.width = canvasSize;
 			// clear guide
 			ctx.clearRect(0,0,canvasSize,canvasSize);
+			if ($_eseecode.execution.guideImage) {
+				var src = $_eseecode.execution.guideImage;
+				if (!src.startsWith("http://") && !src.startsWith("https://")) src = $_eseecode.execution.basepath + src;
+				var img = new Image();
+				img.onload = function() {
+					ctx.save();
+					ctx.translate(org.x, org.y);
+					ctx.rotate(targetCanvas.guide.angle*Math.PI/180);
+					ctx.drawImage(img, -size, -size, size*2, size*2);
+					ctx.restore();
+				}
+				img.src = src;
+				return;
+			}
+			var frontx = org.x+size*Math.cos(angle*Math.PI/180);
+			var fronty = org.y+size*Math.sin(angle*Math.PI/180);
+			var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
+			var lefty = org.y+size/2*Math.sin(angle*Math.PI/180+Math.PI/3);
+			var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
+			var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
 			// draw guide
 			ctx.lineWidth = 1;
 			ctx.strokeStyle = "#888888";

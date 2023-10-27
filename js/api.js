@@ -63,6 +63,12 @@ async function $e_loadURLParams(url, parameters, action, except) {
 				API_setGridDivisions(value, action);
 			} else if (key == "guide") {
 				API_showGuide(value, action);
+			} else if (key == "guideimage") {
+				value = decodeURIComponent(value);
+				API_setGuideImage(value, action);
+			} else if (key == "background") {
+				value = decodeURIComponent(value);
+				API_setWhiteboardBackground(value, action);
 			} else if (key == "viewtabs") {
 				API_setViewTabs(value, action);
 			} else if (key == "filemenu") {
@@ -449,6 +455,28 @@ function API_setBasePath(value) {
 		value = "";
 	}
 	$_eseecode.execution.basepath = value;
+}
+
+/**
+ * Sets a custom image for the whiteboard guide
+ * @since 3.2
+ * @public
+ * @param {String} url URL where the image is, can be a relative path
+ * @example API_setGuideImage("https://eseecode.com/favicon.png")
+ */
+function API_setGuideImage(value) {
+	$_eseecode.execution.guideImage = value;
+}
+
+/**
+ * Sets the background of the whiteboard
+ * @since 3.2
+ * @public
+ * @param {String} url URL where the background is, can be a relative path
+ * @example API_setWhiteboardBackground("https://eseecode.com/favicon.png")
+ */
+function API_setWhiteboardBackground(value) {
+	$_eseecode.execution.background = value;
 }
 
 /**
