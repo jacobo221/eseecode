@@ -1,5 +1,6 @@
 ## 3.2 (2023-11-01)
 
+ *Milestone reached: Real pause/resume execution and debug*
  *   Can now pause/resume executions
  *   Debug internal code reworked completely. Now debug (breakpoints, watchpoints, stepping) is running the real code, not simulating
  *   Pause on every instruction is now inbuilt
