@@ -1,4 +1,4 @@
-## 3.2 (2023-10-23)
+## 3.2 (2023-11-01)
 
  *   Can now pause/resume executions
  *   Debug internal code reworked completely. Now debug (breakpoints, watchpoints, stepping) is running the real code, not simulating
@@ -12,7 +12,7 @@
  *   New URL params breakpoints= and observe= and API calls setBreakpoints(), getBreakpoints(), setObservers(), getObservers() to set up and obtain breakpoints, watches and watchpoints
  *   New URL param step= and API call setExecutionStep() to enable/disable debug stepping and how many instructions for each step
  *   New URL param background= and its API call setWhiteboardBackground() to set a background image for the whiteboard
- *   New URL param guideimage= and its API call setGuideImage() to set a custom image for the guide
+ *   New URL param guideimage= and guidesize= and its API calls setGuideImage() and setGuideSize() to set a custom image and size for the guide
  *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
  *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
  *   Custom instructions can now include the code in the instructions' definitions instead of delegating it to precode

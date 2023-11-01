@@ -13,7 +13,8 @@ $_eseecode.ui.theme = {
 	functions: {
 		drawGuide: function(canvas, targetCanvas) {
 			var canvasSize = $_eseecode.whiteboard.offsetWidth;
-			var size = 20;
+			var size = $_eseecode.execution.guide.size;
+			if (size < 0) size = 0;
 			var org = targetCanvas.guide;
 			var angle = targetCanvas.guide.angle;
 			if (canvas === undefined) {
@@ -26,49 +27,64 @@ $_eseecode.ui.theme = {
 			canvas.width = canvasSize;
 			// clear guide
 			ctx.clearRect(0,0,canvasSize,canvasSize);
-			if ($_eseecode.execution.guideImage) {
-				var src = $_eseecode.execution.guideImage;
-				if (!src.startsWith("http://") && !src.startsWith("https://")) src = $_eseecode.execution.basepath + src;
-				var img = new Image();
-				img.onload = function() {
-					ctx.save();
-					ctx.translate(org.x, org.y);
-					ctx.rotate(targetCanvas.guide.angle*Math.PI/180);
-					ctx.drawImage(img, -size, -size, size*2, size*2);
-					ctx.restore();
-				}
-				img.src = src;
-				return;
+			function drawDefaultGuide(ctx, org, angle, size) {
+				var frontx = org.x+size*Math.cos(angle*Math.PI/180);
+				var fronty = org.y+size*Math.sin(angle*Math.PI/180);
+				var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
+				var lefty = org.y+size/2*Math.sin(angle*Math.PI/180+Math.PI/3);
+				var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
+				var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
+				// draw guide
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#888888";
+				var gradient = ctx.createRadialGradient(frontx,fronty,size/1.2,frontx,fronty,size/10);
+				gradient.addColorStop(0,'rgb(100,100,100)');
+				gradient.addColorStop(1,'rgb(215,215,170)');
+				ctx.fillStyle = gradient;
+				ctx.beginPath();
+				ctx.moveTo(rightx, righty);
+				ctx.lineTo(leftx, lefty);
+				ctx.lineTo(frontx, fronty);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
+				gradient = ctx.createRadialGradient(org.x,org.y,size,org.x,org.y,size/10);
+				gradient.addColorStop(0,'rgb(0,0,0)');
+				gradient.addColorStop(1,'rgb(153,177,201)');
+				ctx.fillStyle = gradient;
+				ctx.beginPath();
+				ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
 			}
-			var frontx = org.x+size*Math.cos(angle*Math.PI/180);
-			var fronty = org.y+size*Math.sin(angle*Math.PI/180);
-			var leftx = org.x+size/2*Math.cos(angle*Math.PI/180+Math.PI/3);
-			var lefty = org.y+size/2*Math.sin(angle*Math.PI/180+Math.PI/3);
-			var rightx = org.x+size/2*Math.cos(angle*Math.PI/180-Math.PI/3);
-			var righty = org.y+size/2*Math.sin(angle*Math.PI/180-Math.PI/3);
-			// draw guide
-			ctx.lineWidth = 1;
-			ctx.strokeStyle = "#888888";
-			var gradient = ctx.createRadialGradient(frontx,fronty,size/1.2,frontx,fronty,size/10);
-			gradient.addColorStop(0,'rgb(100,100,100)');
-			gradient.addColorStop(1,'rgb(215,215,0)');
-			ctx.fillStyle = gradient;
-			ctx.beginPath();
-			ctx.moveTo(rightx, righty);
-			ctx.lineTo(leftx, lefty);
-			ctx.lineTo(frontx, fronty);
-			ctx.closePath();
-			ctx.fill();
-			ctx.stroke();
-			gradient = ctx.createRadialGradient(org.x,org.y,size,org.x,org.y,size/10);
-			gradient.addColorStop(0,'rgb(0,0,0)');
-			gradient.addColorStop(1,'rgb(103,137,171)');
-			ctx.fillStyle = gradient;
-			ctx.beginPath();
-			ctx.arc(org.x, org.y, size/2, 2*Math.PI, 0, false);
-			ctx.closePath();
-			ctx.fill();
-			ctx.stroke();
+			function drawCustomGuide(ctx, org, angle, size, targetCanvas, img) {
+				ctx.save();
+				ctx.translate(org.x, org.y);
+				ctx.rotate(targetCanvas.guide.angle*Math.PI/180);
+				ctx.drawImage(img, -size, -size, size*2, size*2);
+				ctx.restore();
+			}
+			if ($_eseecode.execution.guide.imageUrl) {
+				if ($_eseecode.execution.guide.cache.imageUrl != $_eseecode.execution.guide.imageUrl) {
+					var src = $_eseecode.execution.guide.imageUrl;
+					if (!src.startsWith("http://") && !src.startsWith("https://") && !src.startsWith("file://")) src = $_eseecode.execution.basepath + src;
+					var img = new Image();
+					img.onload = () => {
+						drawCustomGuide(ctx, org, angle, size, targetCanvas, img);
+						$_eseecode.execution.guide.cache = {
+							imageUrl: $_eseecode.execution.guide.imageUrl,
+							imageObj: img,
+						};
+					};
+					img.onerror = () => drawDefaultGuide(ctx, org, angle, size);
+					img.src = src;
+				} else {
+					drawCustomGuide(ctx, org, angle, size, targetCanvas, $_eseecode.execution.guide.cache.imageObj);
+				}
+			} else {
+				drawDefaultGuide(ctx, org, angle, size);
+			}
 		},
 		drawFullscreenButton: function(fullscreenButton) {
 			var iconMargin = 2;

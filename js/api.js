@@ -66,6 +66,8 @@ async function $e_loadURLParams(url, parameters, action, except) {
 			} else if (key == "guideimage") {
 				value = decodeURIComponent(value);
 				API_setGuideImage(value, action);
+			} else if (key == "guidesize") {
+				API_setGuideSize(value, action);
 			} else if (key == "background") {
 				value = decodeURIComponent(value);
 				API_setWhiteboardBackground(value, action);
@@ -461,11 +463,22 @@ function API_setBasePath(value) {
  * Sets a custom image for the whiteboard guide
  * @since 3.2
  * @public
- * @param {String} url URL where the image is, can be a relative path
+ * @param {String} value URL where the image is, can be a relative path
  * @example API_setGuideImage("https://eseecode.com/favicon.png")
  */
 function API_setGuideImage(value) {
-	$_eseecode.execution.guideImage = value;
+	$_eseecode.execution.guide.imageUrl = value;
+}
+
+/**
+ * Sets a custom size for the whiteboard guide
+ * @since 3.2
+ * @public
+ * @param {Integer} value Size in pixels of the guide
+ * @example API_setGuideSize(25)
+ */
+function API_setGuideSize(value) {
+	$_eseecode.execution.guide.size = value;
 }
 
 /**

@@ -44,7 +44,10 @@
 			breakpoints: { title: "List of breakpoints and watchpoints", type: "text", initial: "", help: "Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25" },
 		},
 		"Whiteboard": {
+			background: { title: "Whiteboard background", type: "text", help: "Display an image as background in all whiteboard layers. The image can be a public URL or an image name (which must be uploaded)" },
 			guide: { title: "Display guide?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden." },
+			guideimage: { title: "Custom image for guide?", type: "text", help: "Display a custom image instead of the default guide. The image can be a public URL or an image name (which must be uploaded)" },
+			guidesize: { title: "Size of the guide", type: "number", initial: "20", help: "Size of the guide in pixels (size is used for both width and height)" },
 			grid: { title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden." },
 			griddivisions: { title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." },
 			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" }
