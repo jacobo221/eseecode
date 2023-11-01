@@ -498,5 +498,6 @@ $_eseecode.ui.translation = {
 		"Instructions speed": "Velocidad de las instrucciones",
 		"Pause execution on every instruction": "Pausa la ejecución en cada instrucción",
 		"Pause": "Pausar",
+		"Default": "Por defecto",
 	}
 }

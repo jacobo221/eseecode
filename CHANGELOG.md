@@ -16,6 +16,7 @@
  *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
  *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
  *   Custom instructions can now include the code in the instructions' definitions instead of delegating it to precode
+ *   Default UI language to browser language
  *   Updated create.js
  *   Updated and improved guide.js, including translations, chaining tutorials, embedding texts, etc
  *   Fixed and updated tutorials

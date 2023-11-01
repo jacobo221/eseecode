@@ -137,6 +137,8 @@ async function $e_loadURLParams(url, parameters, action, except) {
 			}
 		}
 	}
+	// Default to browser language if no language has been defined
+	if (!urlParams.some(p => p.startsWith("lang=")) && navigator.language) $e_switchTranslation(navigator.language.substring(0, 2));
 }
 
 /**

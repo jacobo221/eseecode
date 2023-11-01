@@ -140,8 +140,8 @@
 			]
 		},
 		ui: {
-			translations: [{id: "default", name: "English" }],
-			translation: {id: "default", name: "English", code: "en", strings: {} },
+			translations: [{id: "default", name: "Default" }],
+			translation: {id: "default", name: "Default", code: "en", strings: {} },
 			themes: [{id: "default", name: "Default" }],
 			theme: {id: "default", name: "Default" },
 			minWindowHeight: 500,

@@ -5,3 +5,4 @@
 
 $_eseecode.ui.translations.push({id: "ca", name: "Català"});
 $_eseecode.ui.translations.push({id: "es", name: "Español"});
+$_eseecode.ui.translations.push({id: "en", name: "English"});
