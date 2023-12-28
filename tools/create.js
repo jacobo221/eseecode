@@ -1,4 +1,177 @@
 "use strict";
+
+	add_translations({
+		"es": {
+			"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
+			"Language": "Idioma",
+			"Display translations menu?": "¿Mostrar menú de traducciones?",
+			"Theme": "Tema",
+			"Display themes menu?": "¿Mostrar menú de temas?",
+			"Display file menu?": "¿Mostrar menú de archivos?",
+			"Display fullscreen button?": "¿Mostrar botón de pantalla completa?",
+			"Warn on exit if used has entered code?": "¿Advertir al salir si el usuario ha ingresado código?",
+			"Initial view": "Vista inicial",
+			"View tabs to display": "Pestañas de vista a mostrar",
+			"Force block setup": "Forzar configuración de bloques",
+			"Block setup style": "Estilo de configuración de bloques",
+			"Display code console maximized?": "¿Mostrar consola de código maximizada?",
+			"Milliseconds of delay between instructions": "Milisegundos de retraso entre instrucciones",
+			"List of variables to observe": "Lista de variables a observar",
+			"List of breakpoints and watchpoints": "Lista de puntos de interrupción y puntos de observación",
+			"Whiteboard background": "Fondo de pizarra",
+			"Display guide?": "¿Mostrar guía?",
+			"Custom image for guide?": "Imagen personalizada para la guía",
+			"Size of the guide": "Tamaño de la guía",
+			"Display grid?": "¿Mostrar cuadrícula?",
+			"Amount of grid lines?": "Cantidad de líneas de la cuadrícula",
+			"Axis": "Eje",
+			"Additional instructions' specifications": "Especificaciones de instrucciones adicionales",
+			"Do you want to use a subset of instructions? If so, select which instructions to make available": "¿Deseas utilizar un subconjunto de instrucciones? En ese caso, selecciona qué instrucciones estarán disponibles",
+			"Base path for media": "Ruta base para medios",
+			"Code to preload (hidden to the user)": "Código para precargar (oculto para el usuario)",
+			"Code to load as user code (displayed to the user)": "Código para cargar como código de usuario (visible para el usuario)",
+			"Execute the user code": "Ejecutar el código del usuario",
+			"Code to postload (hidden to the user)": "Código para postcargar (oculto para el usuario)",
+			"Input": "Entrada",
+			"Set the language you want for eSeeCode's user interface.": "Establece el idioma que deseas para la interfaz de usuario de eSeeCode.",
+			"Decide whether the translations should be visible or hidden.": "Decide si las traducciones deben ser visibles u ocultas.",
+			"Set the theme you want for eSeeCode's user interface.": "Establece el tema que deseas para la interfaz de usuario de eSeeCode.",
+			"Decide whether the themes should be visible or hidden.": "Decide si los temas deben ser visibles u ocultos.",
+			"Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden.": "Decide si los botones \"Cargar\" y \"Guardar\" deben ser visibles u ocultos.",
+			"Decide whether the fullscreen button should be visible or hidden.": "Decide si el botón de pantalla completa debe ser visible u oculto.",
+			"Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage).": "Decide si eSeeCode debe requerir confirmación antes de cerrarse (o antes de cambiar la página web).",
+			"Select the view which will be displayed initially.": "Selecciona la vista que se mostrará inicialmente.",
+			"Select which views will be available.": "Selecciona qué vistas estarán disponibles.",
+			"Force block setup when adding instructions in Drag mode.": "Forzar la configuración de bloques al agregar instrucciones en el modo de arrastre.",
+			"Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default.": "Selecciona cómo ver la configuración de bloques. En la vista de arrastre, los bloques siempre se configuran visualmente de forma predeterminada, pero en la vista de construcción, puedes decidir si mostrar la configuración de texto de forma predeterminada o la interfaz visual de forma predeterminada.",
+			"Decide whether the code console should be maximized initially.": "Decide si la consola de código debe estar maximizada inicialmente.",
+			"Set the amount of milliseconds to delay every time an instruction is executed.": "Establece la cantidad de milisegundos para el retraso cada vez que se ejecuta una instrucción.",
+			"Pause execution every time an instruction is run, to help debugging.": "Pausar la ejecución cada vez que se ejecuta una instrucción, para ayudar en la depuración.",
+			"Comma-separated list variables to observe.<br>Example: index,question,answer": "Lista de variables separadas por comas para observar.<br>Ejemplo: índice, pregunta, respuesta",
+			"Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25": "Lista de puntos de interrupción (número de línea) y/o puntos de observación (interrumpir cuando cambia el valor de la variable), separados por comas.<br>Ejemplo: índice,4,10, pregunta, respuesta, 25",
+			"Display an image as background in all whiteboard layers. The image can be a public URL or an image name (which must be uploaded)": "Mostrar una imagen como fondo en todas las capas de la pizarra. La imagen puede ser una URL pública o un nombre de imagen (que debe cargarse)",
+			"Decide whether the guide (the cursor in the whiteboard) will be visible or hidden.": "Decide si la guía (el cursor en la pizarra) estará visible u oculta.",
+			"Display a custom image instead of the default guide. The image can be a public URL or an image name (which must be uploaded)": "Mostrar una imagen personalizada en lugar de la guía predeterminada. La imagen puede ser una URL pública o un nombre de imagen (que debe cargarse)",
+			"Size of the guide in pixels (size is used for both width and height)": "Tamaño de la guía en píxeles (el tamaño se utiliza tanto para el ancho como para la altura).",
+			"Decide whether the grid (the lines in the whiteboard) will be visible or hidden.": "Decide si la cuadrícula (las líneas en la pizarra) estarán visibles u ocultas.",
+			"Set the amount of lines in the grid.": "Establece la cantidad de líneas en la cuadrícula.",
+			"Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>": "Selecciona las coordenadas que deseas:<br /><ul><li>Consola de computadora: El origen está en la esquina superior izquierda, aumenta hacia la derecha y hacia abajo</li><li>Matemática simple: El origen está en la esquina inferior izquierda, aumenta hacia la derecha y hacia arriba</li><li>Matemática centrada: El origen está centrado, aumenta hacia la derecha y hacia arriba</li></ul>",
+			"Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)": "Instrucciones adicionales para agregar al entorno de programación, disponibles para los usuarios. El icono puede ser una URL pública o un nombre de imagen (que debe cargarse)",
+			"Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>": "Aquí puedes elegir un subconjunto de instrucciones disponibles para el usuario (todas las demás estarán deshabilitadas).<ul style=\"text-align:justify;\"></li><li>Añádelas seleccionando una instrucción en la primera columna y haciendo clic en el botón \"Añadir\". Puedes agregar una instrucción varias veces.</li><li>Haz doble clic en cualquier instrucción en la columna inferior para configurar sus parámetros, la cantidad de veces que se puede usar la instrucción y si el usuario puede configurar sus parámetros. Recuerda hacer clic en \"Aplicar\" para aplicar después de configurar cada instrucción.</li><li>Mueve hacia arriba y hacia abajo cualquier instrucción en la columna inferior seleccionándola y haciendo clic en los botones \"Arriba\" o \"Abajo\".</li><li>Puedes quitar una instrucción de la columna derecha seleccionándola y haciendo clic en el botón \"Quitar\".</li><li>Haz clic en el botón \"Añadir separador\" para agregar un separador a las instrucciones en la columna inferior. El separador se agregará al final, recuerda moverlo hacia arriba con el botón \"Arriba\".</li></ul>",
+			"Base path to prefix to relative paths for the sources of image() and sound() instructions": "Ruta base para prefijar rutas relativas para las fuentes de las instrucciones image() y sound()",
+			"The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code.": "El código que escribas aquí estará oculto para el usuario, pero se ejecutará inmediatamente después de cargar eSeeCode y cada vez antes del código del usuario.",
+			"The code you write here will be shown as part of the solution, so the user can view it and modify it.": "El código que escribas aquí se mostrará como parte de la solución, para que el usuario pueda verlo y modificarlo.",
+			"Decide whether or not to run the user code immediately after loading eSeeCode.": "Decide si ejecutar o no el código del usuario inmediatamente después de cargar eSeeCode.",
+			"The code you write here will be hidden to the user but will be run everytime after the user code.": "El código que escribas aquí estará oculto para el usuario, pero se ejecutará cada vez después del código del usuario.",
+			"Set the input that will appear in the I/O toolbox.": "Establece la entrada que aparecerá en el diálogo de E/S.",
+			"Yes": "Sí",
+			"No": "No",
+			"Computer console": "Consola de la computadora",
+			"Mathematical simple": "Matemática simple",
+			"Mathematical centered": "Matemática centrada",
+			"Touch": "Toca",
+			"Drag": "Mueve",
+			"Build": "Monta",
+			"Code": "Código",
+			"Visual": "Visual",
+			"Text": "Texto",
+			"Application settings": "Configuración de la aplicación",
+			"Default": "Por defecto",
+			"Programming environment": "Entorno de programación",
+			"Whiteboard": "Pizarra",
+			"Instructions": "Instrucciones",
+			"Share": "Compartir",
+			"Resolution": "Resolución",
+			"Resolution in the whiteboard, the number applies to both width and height": "Resolución de la pizarra, el número se aplica a la resolución horizontal y a la vertical",
+			"Display flow chart?": "¿Mostrar diagrama de flujo?",
+			"Display the blocks as a flow chart initially": "Mostrar inicialmente los bloques como diagrama de flujo",
+		},
+		"ca": {
+			"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
+			"Language": "Idioma",
+			"Display translations menu?": "Mostrar menú de traducciones?",
+			"Theme": "Tema",
+			"Display themes menu?": "Mostrar menú de temes?",
+			"Display file menu?": "Mostrar menú de fitxers?",
+			"Display fullscreen button?": "Mostrar botó de pantalla completa?",
+			"Warn on exit if used has entered code?": "Alerta en sortir si l'usuari ha introduït codi?",
+			"Initial view": "Vista inicial",
+			"View tabs to display": "Pestanyes de vista a mostrar",
+			"Force block setup": "Forçar configuració de blocs",
+			"Block setup style": "Estil de configuració de blocs",
+			"Display code console maximized?": "Mostrar consola de codi a la màxima grandària?",
+			"Milliseconds of delay between instructions": "Milisegons de retard entre les instruccions",
+			"List of variables to observe": "Llista de variables a observar",
+			"List of breakpoints and watchpoints": "Llista de punts d'aturada i punts de vigilància",
+			"Whiteboard background": "Fons de pissarra",
+			"Display guide?": "Mostrar guia?",
+			"Custom image for guide?": "Imatge personalitzada per a la guia?",
+			"Size of the guide": "Mida de la guia",
+			"Display grid?": "Mostrar graella?",
+			"Amount of grid lines?": "Quantitat de línies de la graella",
+			"Axis": "Eix",
+			"Additional instructions' specifications": "Especificacions d'instruccions addicionals",
+			"Do you want to use a subset of instructions? If so, select which instructions to make available": "Vols fer servir un subconjunt d'instruccions? En aquest cas, selecciona quines instruccions vols fer disponibles",
+			"Base path for media": "Ruta base per a mitjans",
+			"Code to preload (hidden to the user)": "Codi a precarregar (ocult a l'usuari)",
+			"Code to load as user code (displayed to the user)": "Codi a carregar com a codi d'usuari (visible a l'usuari)",
+			"Execute the user code": "Executar el codi de l'usuari",
+			"Code to postload (hidden to the user)": "Codi a postcarregar (ocult a l'usuari)",
+			"Input": "Entrada",
+			"Set the language you want for eSeeCode's user interface.": "Estableix l'idioma que vols per a la interfície d'usuari de l'eSeeCode.",
+			"Decide whether the translations should be visible or hidden.": "Decideix si les traduccions han de ser visibles o ocultes.",
+			"Set the theme you want for eSeeCode's user interface.": "Estableix el tema que vols per a la interfície d'usuari de l'eSeeCode.",
+			"Decide whether the themes should be visible or hidden.": "Decideix si els temes han de ser visibles o ocults.",
+			"Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden.": "Decideix si els botons \"Carregar\" i \"Desar\" han de ser visibles o ocults.",
+			"Decide whether the fullscreen button should be visible or hidden.": "Decideix si el botó de pantalla completa ha de ser visible o ocult.",
+			"Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage).": "Decideix si l'eSeeCode ha de requerir confirmació abans de tancar-se (o abans de canviar la pàgina web).",
+			"Select the view which will be displayed initially.": "Selecciona la vista que es mostrarà inicialment.",
+			"Select which views will be available.": "Selecciona quines vistes estaran disponibles.",
+			"Force block setup when adding instructions in Drag mode.": "Força la configuració de blocs en afegir instruccions en el mode d'arrossegament.",
+			"Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default.": "Selecciona com veure la configuració de blocs. A la vista d'arrossegament, els blocs sempre es configuren visualment de forma predeterminada, però a la vista de construcció, pots decidir si mostrar la configuració de text de forma predeterminada o la interfície visual de forma predeterminada.",
+			"Decide whether the code console should be maximized initially.": "Decideix si la consola de codi ha d'estar a la màxima grandària inicialment.",
+			"Set the amount of milliseconds to delay every time an instruction is executed.": "Estableix la quantitat de milisegons d'espera cada vegada que s'executa una instrucció.",
+			"Pause execution every time an instruction is run, to help debugging.": "Pausa l'execució cada vegada que s'executa una instrucció, per ajudar a la depuració.",
+			"Comma-separated list variables to observe.<br>Example: index,question,answer": "Llista de variables separades per comes per observar.<br>Exemple: índex, pregunta, resposta",
+			"Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25": "Llista de punts d'aturada (número de línia) i/o punts de vigilància (aturada quan canvia el valor de la variable), separats per comes.<br>Exemple: índex,4,10, pregunta, resposta, 25",
+			"Display an image as background in all whiteboard layers. The image can be a public URL or an image name (which must be uploaded)": "Mostra una imatge com a fons en totes les capes de la pissarra. La imatge pot ser una URL pública o un nom d'imatge (que s'ha de pujar)",
+			"Decide whether the guide (the cursor in the whiteboard) will be visible or hidden.": "Decideix si la guia (el cursor a la pissarra) serà visible o oculta.",
+			"Display a custom image instead of the default guide. The image can be a public URL or an image name (which must be uploaded)": "Mostra una imatge personalitzada en lloc de la guia predeterminada. La imatge pot ser una URL pública o un nom d'imatge (que s'ha de pujar)",
+			"Size of the guide in pixels (size is used for both width and height)": "Mida de la guia en píxels (la mida s'utilitza tant per l'amplada com per l'altura).",
+			"Decide whether the grid (the lines in the whiteboard) will be visible or hidden.": "Decideix si la graella (les línies a la pissarra) serà visible o oculta.",
+			"Set the amount of lines in the grid.": "Estableix la quantitat de línies a la graella.",
+			"Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>": "Selecciona les coordenades que vols:<br /><ul><li>Consola de computadora: L'origen està a la cantonada superior esquerra, augmenta cap a la dreta i cap avall</li><li>Matemàtica simple: L'origen està a la cantonada inferior esquerra, augmenta cap a la dreta i cap amunt</li><li>Matemàtica centrada: L'origen està centrat, augmenta cap a la dreta i cap amunt</li></ul>",
+			"Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)": "Instruccions addicionals per afegir a l'entorn de programació, disponibles per als usuaris. La icona pot ser una URL pública o un nom d'imatge (que s'ha de pujar)",
+			"Here you can choose a subset of instructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>": "Aquí pots triar un subconjunt d'instruccions disponibles per a l'usuari (totes les altres estaran inhabilitades).<ul style=\"text-align:justify;\"></li><li>Afegix-les seleccionant una instrucció a la primera columna i fent clic al botó \"Afegeix\". Pots afegir una instrucció diverses vegades.</li><li>Fes doble clic a qualsevol instrucció a la columna inferior per configurar els seus paràmetres, la quantitat de vegades que es pot utilitzar la instrucció i si l'usuari pot configurar els seus paràmetres. Recorda fer clic a \"Aplica\" per aplicar-ho després de configurar cada instrucció.</li><li>Mou amunt i avall qualsevol instrucció a la columna inferior seleccionant-la i fent clic als botons \"Amunt\" o \"Avall\".</li><li>Pots eliminar una instrucció de la columna de la dreta seleccionant-la i fent clic al botó \"Elimina\".</li><li>Fes clic al botó \"Afegeix separador\" per afegir un separador a les instruccions a la columna inferior. El separador s'afegirà al final, recorda moure'l amunt amb el botó \"Amunt\".</li></ul>",
+			"Base path to prefix to relative paths for the sources of image() and sound() instructions": "Ruta base per afegir com a prefix a les rutes relatives per a les fonts de les instruccions image() i sound()",
+			"The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code.": "El codi que escriguis aquí serà ocult a l'usuari, però s'executarà immediatament després de carregar l'eSeeCode i sempre abans del codi de l'usuari.",
+			"The code you write here will be shown as part of the solution, so the user can view it and modify it.": "El codi que escriguis aquí es mostrarà com a part de la solució, de manera que l'usuari pugui veure'l i modificar-lo.",
+			"Decide whether or not to run the user code immediately after loading eSeeCode.": "Decideix si executar o no el codi de l'usuari immediatament després de carregar l'eSeeCode.",
+			"The code you write here will be hidden to the user but will be run everytime after the user code.": "El codi que escriguis aquí serà ocult a l'usuari, però s'executarà sempre després del codi de l'usuari.",
+			"Set the input that will appear in the I/O toolbox.": "Estableix l'entrada que apareixerà al diàleg d'E/S.",
+			"Yes": "Sí",
+			"No": "No",
+			"Computer console": "Consola de la computadora",
+			"Mathematical simple": "Matemàtica simple",
+			"Mathematical centered": "Matemàtica centrada",
+			"Touch": "Toca",
+			"Drag": "Mou",
+			"Build": "Munta",
+			"Code": "Codi",
+			"Visual": "Visual",
+			"Text": "Text",
+			"Application settings": "Configuració de l'aplicació",
+			"Default": "Per defecte",
+			"Programming environment": "Entorn de programació",
+			"Whiteboard": "Pissarra",
+			"Instructions": "Instruccions",
+			"Share": "Compartir",
+			"Resolution": "Resolució",
+			"Resolution in the whiteboard, the number applies to both width and height": "Resolució a la pissarra, el número aplica a la resolució horitzontal i a la vertical",
+			"Display flow chart?": "Mostrar diagrama de flux?",
+			"Display the blocks as a flow chart initially": "Mostrar inicialment els blocs com a diagrama de flux",
+		}
+	});
 	
 	if (!$_eseecode) {
 		var $_eseecode = {};
@@ -21,7 +194,7 @@
 	var mainURL;
 	var setupItems = {
 		"Introduction": {
-			"introduction": { type: "html", html: "Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.", skipParameterInURL: true }
+			"introduction": { type: "html", html: _("Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it."), skipParameterInURL: true }
 		},
 		"Application settings": {
 			lang: { title: "Language", type: "select", options: $_eseecode.ui.translations, sort: true, initial: "default", help: "Set the language you want for eSeeCode's user interface." },
@@ -35,11 +208,11 @@
 		"Programming environment": {
 			view: { title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially." },
 			viewtabs: { title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available." },
+			flow: { title: "Display flow chart?", type: "select", options: ["Yes", "No"], initial: "No", help: "Display the blocks as a flow chart initially" },
 			forceblocksetup: { title: "Force block setup", type: "checkbox", initial: "true", help: "Force block setup when adding instructions in Drag mode." },
 			blocksetup: { title: "Block setup style", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default." },
 			maximize: { title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." },
 			pause: { title: "Milliseconds of delay between instructions", type: "number", initial: "500", help: "Set the amount of milliseconds to delay every time an instruction is executed." },
-			step: { title: "Pause on every instruction", type: "checkbox", initial: "false", help: "Pause execution every time an instruction is run, to help debugging." },
 			observe: { title: "List of variables to observe", type: "text", initial: "", help: "Comma-separated list variables to observe.<br>Example: index,question,answer" },
 			breakpoints: { title: "List of breakpoints and watchpoints", type: "text", initial: "", help: "Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25" },
 		},
@@ -50,10 +223,11 @@
 			guidesize: { title: "Size of the guide", type: "number", initial: "20", help: "Size of the guide in pixels (size is used for both width and height)" },
 			grid: { title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden." },
 			griddivisions: { title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." },
-			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" }
+			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" },
+			whiteboardresolution: { title: "Resolution", type: "number", initial: 400, help: "Resolution in the whiteboard, the number applies to both width and height" },
 		},
 		"Instructions": {
-			custominstructions: { title: "Additional instructions' specifications", type: "custominstructions", initial: "", help: "Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)" },
+			custominstructions: { title: "Additional instructions' specifications", type: "custominstructions", initial: "{}", help: "Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)" },
 			instructions: { title: "Do you want to use a subset of instructions? If so, select which instructions to make available", type: "instructions", options: function() { return $_eseecode.instructions.set; }, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>" }, // Use function for options since the set it is pointing to changes every time custominstructions is updated
 			basepath: { title: "Base path for media", type: "text", initial: "", help: "Base path to prefix to relative paths for the sources of image() and sound() instructions" },
 		},
@@ -62,7 +236,7 @@
 			code: { title: "Code to load as user code (displayed to the user)", type: "textarea", initial: "", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it." },
 			execute: { title: "Execute the user code", type: "checkbox", initial: "false", help: "Decide whether or not to run the user code immediately after loading eSeeCode." },
 			postcode: { title: "Code to postload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run everytime after the user code." },
-			input: { title: "Input", type: "textarea", initial: "", help: "Set the input that will appear in the I/O dialog." }
+			input: { title: "Input", type: "textarea", initial: "", help: "Set the input that will appear in the I/O toolbox." }
 		},
 		"Share": {
 			links: { type: "html", skipParameterInURL: true }
@@ -105,9 +279,9 @@
 		divSwitch.appendChild(element);
 		element = document.createElement("input");
 		element.id = "switchMode";
-		element.setAttribute("type", "button");
-		element.setAttribute("value", "Full view");
-		element.setAttribute("data-switchTo", "full");
+		element.type = "button";
+		element.value = "Full view";
+		element.dataset.switchTo = "full";
 		element.addEventListener("click", switchMode);
 		divSwitch.appendChild(element);
 		assistant.appendChild(divSwitch);
@@ -120,7 +294,7 @@
 			div.class = "step";
 			var divTitle = document.createElement("div");
 			divTitle.className = "pageTitle";
-			divTitle.innerHTML = page;
+			divTitle.innerHTML = _(page);
 			div.appendChild(divTitle);
 			Object.keys(setupPage).forEach(key => createSetupItem(setupPage, key, div));
 			div.style.clear = "left";
@@ -130,8 +304,8 @@
 		assistant.appendChild(divSteps);
 		element = document.createElement("input");
 		element.id = "stepNumber";
-		element.setAttribute("type", "hidden");
-		element.setAttribute("value", "1");
+		element.type = "hidden";
+		element.value = "1";
 		assistant.appendChild(element);
 		var divNavigator = document.createElement("div");
 		divNavigator.id = "controls";
@@ -140,8 +314,8 @@
 		divButtons.id = "controls-navigator";
 		element = document.createElement("input");
 		element.id = "prev";
-		element.setAttribute("type", "button");
-		element.setAttribute("value", "< Back");
+		element.type = "button";
+		element.value = "< Back";
 		element.addEventListener("click",goToPrevStep);
 		divButtons.appendChild(element);
 		var element = document.createElement("select");
@@ -149,7 +323,7 @@
 		stepNumber = 1;
 		var options = "";
 		for (var page in setupItems) {
-			options += "<option value=\""+stepNumber+"\">"+stepNumber+": "+page+"</option>"; 
+			options += "<option value=\""+stepNumber+"\">"+stepNumber+": "+_(page)+"</option>"; 
 			stepNumber++;
 		}
 		element.innerHTML = options;
@@ -157,8 +331,8 @@
 		divButtons.appendChild(element);
 		element = document.createElement("input");
 		element.id = "next";
-		element.setAttribute("type", "button");
-		element.setAttribute("value", "Next >");
+		element.type = "button";
+		element.value = "Next >";
 		element.addEventListener("click",goToNextStep);
 		divButtons.appendChild(element);
 		divNavigator.appendChild(divButtons);
@@ -172,18 +346,18 @@
 		let div = document.createElement("DIV");
 		div.className = "page_field";
 		parentDiv.appendChild(div);
-		if (setupPage[key].category) div.setAttribute("data-category", setupPage[key].category);
+		if (setupPage[key].category) div.dataset.category = setupPage[key].category;
 		if (setupPage[key].title) {
 			var title = document.createElement("DIV");
 			title.className = "title";
-			title.innerHTML = setupPage[key].title;
+			title.innerHTML = _(setupPage[key].title);
 			title.innerHTML += " ";
 			div.appendChild(title);
 		}
 		if (setupPage[key].help) {
 			var divHelp = document.createElement("div");
 			divHelp.className = "help";
-			divHelp.innerHTML = setupPage[key].help;
+			divHelp.innerHTML = _(setupPage[key].help);
 			if (setupPage[key].initial || setupPage[key].userValue) {
 				divHelp.innerHTML += "<br />";
 				if (setupPage[key].initial) {
@@ -197,7 +371,7 @@
 		}
 		if (setupPage[key].title && setupPage[key].type != "button") {
 			var title = document.createElement("label");
-			title.innerHTML = setupPage[key].title;
+			title.innerHTML = _(setupPage[key].title);
 			if (setupPage[key].title.substring(setupPage[key].title.length-1) != "?") {
 				title.innerHTML += ":";
 			}
@@ -226,15 +400,16 @@
 				if ((typeof options[optionsKey]) === "object") {
 					id = options[optionsKey].id;
 					value = options[optionsKey].name;
-					selectId = " value=\""+id+"\"";
+					selectId = id;
 				} else {
 					value = options[optionsKey];
 					id = value;
+					selectId = value;
 				}
 				if (defaultValue && (id.toLowerCase() === defaultValue.toLowerCase())) {
 					selected = " selected";
 				}
-				selectOptions += "<option"+selectId+selected+">"+value+"</option>";
+				selectOptions += "<option value=\""+selectId+"\""+selected+">"+_(value)+"</option>";
 			}
 			select.innerHTML = selectOptions;
 			if (setupPage[key].events) Object.entries(setupPage[key].events).forEach(([ event, callback ]) => select.addEventListener(event, callback));
@@ -245,7 +420,7 @@
 			div.appendChild(br);
 			var select = document.createElement("select");
 			select.id = key;
-			select.setAttribute("multiple", true);
+			select.multiple = true;
 			var options = setupPage[key].options;
 			var selectOptions = "";
 			for (var id in options) {
@@ -258,7 +433,7 @@
 						}
 					}
 				}
-				selectOptions += "<option"+selected+">"+options[id]+"</option>";
+				selectOptions += "<option value=\""+options[id]+"\""+selected+">"+_(options[id])+"</option>";
 			}
 			select.innerHTML = selectOptions;
 			if (setupPage[key].events) Object.entries(setupPage[key].events).forEach(([ event, callback ]) => select.addEventListener(event, callback));
@@ -305,14 +480,14 @@
 			instructionsoriginfilterDiv.appendChild(instructionsoriginfilterSpan);
 			var selectfilter = document.createElement("input");
 			selectfilter.id = elementId+"originsearch";
-			if (!setupPage[key].skipParameterInURL) selectfilter.addEventListener("keyup",function(e) {Array.from(document.getElementById(elementId+"origin").children).forEach(o => { if (o.innerHTML.startsWith(e.target.value)) o.removeAttribute("hidden"); else o.setAttribute("hidden", "hidden"); });});
+			if (!setupPage[key].skipParameterInURL) selectfilter.addEventListener("keyup",function(event) {Array.from(document.getElementById(elementId+"origin").children).forEach(o => { if (o.innerHTML.startsWith(event.target.value)) o.removeAttribute("hidden"); else o.hidden = true; });});
 			instructionsoriginfilterDiv.appendChild(selectfilter);
 			instructionsoriginDiv.appendChild(instructionsoriginfilterDiv);
 			var instructionsoriginaddDiv = document.createElement("div");
 			var select = document.createElement("select");
 			select.id = elementId+"origin";
 			select.style.height = "150px";	
-			select.setAttribute("multiple", true);
+			select.multiple = true;
 			instructionsoriginaddDiv.appendChild(select);
 			var instructionsoriginspaceSpan = document.createElement("span");
 			instructionsoriginspaceSpan.innerHTML = " ";
@@ -320,7 +495,7 @@
 			var rightButton = document.createElement("input");
 			rightButton.type = "button";
 			rightButton.value = "Add";
-			rightButton.setAttribute('disabled', 'disabled');
+			rightButton.disabled = true;
 			if (!setupPage[key].skipParameterInURL) rightButton.addEventListener("click",function() {selectOrderMove("right",elementId);buildURL();});
 			instructionsoriginaddDiv.appendChild(rightButton);
 			instructionsoriginDiv.appendChild(instructionsoriginaddDiv);
@@ -336,7 +511,7 @@
 			select2.id = elementId;
 			select2.style.height = "150px";
 			select2.style.minWidth = "100px";
-			select2.setAttribute("multiple", true);
+			select2.multiple = true;
 			instructionsdestDiv.appendChild(select2);
 			const observer = new MutationObserver((mutationList, observer) => {
 				mutationList[0].target.parentNode.style.display = mutationList[0].target.children.length === 0 ? "none" : "block";
@@ -350,7 +525,7 @@
 			upButton.type = "button";
 			upButton.style.marginBottom = "0px";
 			upButton.value = " Up ";
-			upButton.setAttribute('disabled', 'disabled');
+			upButton.disabled = true;
 			if (!setupPage[key].skipParameterInURL) upButton.addEventListener("click",function() {selectOrderMove("up",elementId);buildURL();});
 			buttonsDiv.appendChild(upButton);
 			br = document.createElement("br");
@@ -359,7 +534,7 @@
 			downButton.type = "button";
 			downButton.style.marginTop = "0px";
 			downButton.value = "Down";
-			downButton.setAttribute('disabled', 'disabled');
+			downButton.disabled = true;
 			if (!setupPage[key].skipParameterInURL) downButton.addEventListener("click",function() {selectOrderMove("down",elementId);buildURL();});
 			buttonsDiv.appendChild(downButton);
 			br = document.createElement("br");
@@ -368,8 +543,8 @@
 			setupButton.type = "button";
 			setupButton.style.marginTop = "1px";
 			setupButton.value = "Customize";
-			setupButton.setAttribute('disabled', 'disabled');
-			setupButton.setAttribute("data-elementId", elementId);
+			setupButton.disabled = true;
+			setupButton.dataset.elementId = elementId;
 			setupButton.addEventListener("click", changeParameters);
 			buttonsDiv.appendChild(setupButton);
 			br = document.createElement("br");
@@ -385,7 +560,7 @@
 			var leftButton = document.createElement("input");
 			leftButton.type = "button";
 			leftButton.value = "Remove";
-			leftButton.setAttribute('disabled', 'disabled');
+			leftButton.disabled = true;
 			if (!setupPage[key].skipParameterInURL) leftButton.addEventListener("click",function() {selectOrderMove("left",elementId);buildURL();});
 			buttonsDiv.appendChild(leftButton);
 			instructionsdestDiv.appendChild(buttonsDiv);
@@ -401,29 +576,29 @@
 						var defaultInstruction = instructionName+";"
 						var k = 0;
 						while (j+1+k < defaultValue.length && (
-						  $e_isNumber(defaultValue[j+1+k],true) ||
-						  $e_isBoolean(defaultValue[j+1+k],true) ||
-						  decodeURIComponent(defaultValue[j+1+k]).charAt(0) == '"' ||
-						  decodeURIComponent(defaultValue[j+1+k]).charAt(0) == "'" ||
+						  $e.isNumber(defaultValue[j+1+k],true) ||
+						  $e.isBoolean(defaultValue[j+1+k],true) ||
+						  decodeURIComponent(defaultValue[j+1+k]).startsWith("\"") ||
+						  decodeURIComponent(defaultValue[j+1+k]).startsWith("'") ||
 						  defaultValue[j+1+k] == "showParams" ||
 						  defaultValue[j+1+k] == "noChange" ||
-						  defaultValue[j+1+k].indexOf("param:") == 0 ||
-						  defaultValue[j+1+k].indexOf("count:") == 0)) {
+						  defaultValue[j+1+k].startsWith("param:") ||
+						  defaultValue[j+1+k].startsWith("count:"))) {
 		                    if (defaultValue[j+1+k] == "showParams") {
 		                    	defaultInstruction += "showParams;";
 		                    } else if (defaultValue[j+1+k] == "noChange") {
 		                    	defaultInstruction += "noChange;";
-		                    } else if (defaultValue[j+1+k].indexOf("count:") == 0) {
+		                    } else if (defaultValue[j+1+k].startsWith("count:")) {
 		                    	var maxCount = parseInt(defaultValue[j+1+k].split(":")[1]);
 		                    	defaultInstruction += "count:"+maxCount+";";
 		                    } else if ($_eseecode.instructions.set[instructionName].parameters[k]) {
 				            	var param = defaultValue[j+1+k];
-		                    	if (param.indexOf("param:") == 0) {
+		                    	if (param.startsWith("param:")) {
 		                    		param = param.split(":")[1];
 		                    	}
 		                    	defaultInstruction += "param:"+param+";";
 					        } else {
-								console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+defaultValue[j]+". You tried to set it to: "+defaultValue[j+1+k]);
+								console.warn("Error while loading instructions from URL: There is no "+$e.ordinal(k+1)+" parameter for instruction "+defaultValue[j]+". You tried to set it to: "+defaultValue[j+1+k]);
 					        }
 					        k++;
 						}
@@ -439,17 +614,17 @@
 			}
 			// Create options
 			createSortOptions(setupPage[key], select, selectOptions, selectOrder, elementId);
-			select.addEventListener('change', e => {
-				const disable = e.target.selectedOptions.length === 0;
+			select.addEventListener('change', (event) => {
+				const disable = event.target.selectedOptions.length === 0;
 				[ rightButton ].forEach(el => {
-					if (disable) el.setAttribute('disabled', 'disabled');
+					if (disable) el.disabled = true;
 					else el.removeAttribute('disabled');
 				});
 			});
-			select2.addEventListener('change', e => {
-				const disable = e.target.selectedOptions.length === 0;
+			select2.addEventListener('change', event => {
+				const disable = event.target.selectedOptions.length === 0;
 				[ leftButton, upButton, downButton, setupButton ].forEach(el => {
-					if (disable) el.setAttribute('disabled', 'disabled');
+					if (disable) el.disabled = true;
 					else el.removeAttribute('disabled');
 				});
 			});
@@ -491,9 +666,9 @@
 			input.id = key;
 			if (setupPage[key].type) {
 				input.type = setupPage[key].type;
-				if (setupPage[key].min !== undefined) input.setAttribute("min", setupPage[key].min);
-				if (setupPage[key].max !== undefined) input.setAttribute("max", setupPage[key].max);
-				if (setupPage[key].step !== undefined) input.setAttribute("step", setupPage[key].step);
+				if (setupPage[key].min !== undefined) input.min = setupPage[key].min;
+				if (setupPage[key].max !== undefined) input.max = setupPage[key].max;
+				if (setupPage[key].step !== undefined) input.step = setupPage[key].step;
 			}
 			if (defaultValue) {
 				if (setupPage[key].type == "checkbox") {
@@ -511,8 +686,8 @@
 	function createSortOptions(setupItem, select, selectOptions, selectOrder, elementId) {
 		var options = setupItem.options;
 		if (typeof options == "function") options = options();
-		for (var n=0; n<$_eseecode.instructions.categories.length; n++) {
-			var category = $_eseecode.instructions.categories[n].name;
+		for (var i=0; i<$_eseecode.instructions.categories.length; i++) {
+			var category = $_eseecode.instructions.categories[i];
 			for (var id in options) {
 				// Only show instructions in the current category
 				if (category != $_eseecode.instructions.set[id].category) {
@@ -528,7 +703,7 @@
 				var instruction = options[id].name+";";
 				for (var param in options[id].parameters) {
 					var value = options[id].parameters[param].initial;
-					value = encodeURIComponent($e_parsePredefinedConstants(value));
+					value = encodeURIComponent($e.instructions.parsePredefinedConstants(value));
 					instruction += "param:"+value+";";
 				}
 				for (var view in options[id].show) {
@@ -605,9 +780,9 @@
 		var instructionNameEl = document.createElement("input");
 		instructionNameEl.id = "instructionName";
 		instructionNameEl.name = "name";
-		instructionNameEl.setAttribute("pattern", "[$a-zA-Z_][0-9a-zA-Z_$]*");
+		instructionNameEl.pattern = "[$a-zA-Z_][0-9a-zA-Z_$]*";
 		instructionNameEl.value = instructionDescr.name ? instructionDescr.name : "";
-		instructionNameEl.setAttribute("required", "required");
+		instructionNameEl.required = true;
 		instructionNameDiv.appendChild(instructionNameEl);
 		instructionNameEl.addEventListener("keyup", updateCustomInstructionWrappers);
 		instructionNameEl.addEventListener("change", updateCustomInstructionWrappers);
@@ -619,7 +794,7 @@
 		instructionCategoryDiv.appendChild(instructionCategoryLabel);
 		var instructionCategorySelect = document.createElement("select");
 		instructionCategorySelect.name = "category";
-		instructionCategorySelect.setAttribute("required", "required");
+		instructionCategorySelect.required = true;
 		[ "", "guide", "canvas", "value", "draw", "window", "objects", "other" ].forEach(c => {
 			var instructionCategoryOptionEl = document.createElement("option");
 			instructionCategoryOptionEl.innerHTML = c;
@@ -650,7 +825,7 @@
 		instructionLevelDiv.appendChild(instructionLevelLabel);
 		var instructionLevelSelect = document.createElement("select");
 		instructionLevelSelect.name = "show";
-		instructionLevelSelect.setAttribute("multiple", "multiple");
+		instructionLevelSelect.multiple = true;
 		[ "level1", "level2", "level3", "level4" ].forEach(c => {
 			var instructionLevelOptionEl = document.createElement("option");
 			instructionLevelOptionEl.innerHTML = c;
@@ -668,7 +843,7 @@
 		var instructionIconEl = document.createElement("input");
 		instructionIconEl.id = "instructionIcon";
 		instructionIconEl.name = "icon";
-		instructionIconEl.setAttribute("placeholder", "URL or image name");
+		instructionIconEl.placeholder = "URL or image name";
 		instructionIconDiv.appendChild(instructionIconEl);
 		instructionForm.appendChild(instructionIconDiv);
 
@@ -686,7 +861,7 @@
 		var instructionParamsNewDiv = document.createElement("div");
 		var instructionParamsNewEl = document.createElement("button");
 		instructionParamsNewEl.innerHTML = "+ Add parameter";
-		instructionParamsNewEl.addEventListener("click", e => addOrUpdateCustomInstructionParam({}, instructionParamsDiv, e));
+		instructionParamsNewEl.addEventListener("click", (event) => addOrUpdateCustomInstructionParam({}, instructionParamsDiv, event));
 		instructionParamsNewDiv.appendChild(instructionParamsNewEl);
 		instructionForm.appendChild(instructionParamsNewDiv);
 
@@ -715,17 +890,17 @@
 		instructionApplyDiv.appendChild(instructionApplyButton);
 		var instructionCancelButton = document.createElement("button");
 		instructionCancelButton.innerHTML = "Cancel";
-		instructionCancelButton.addEventListener("click", e => {
+		instructionCancelButton.addEventListener("click", event => {
 			if (instructionDescr && instructionDescr.id) {
 				const row = document.querySelector("[data-id="+instructionDescr.id+"]");
 				if (row) row.style.display = "block";
 			}
-			e.target.closest(".instructionWrapper").parentNode.removeChild(e.target.closest(".instructionWrapper"));
+			event.target.closest(".instructionWrapper").parentNode.removeChild(event.target.closest(".instructionWrapper"));
 		});
 		instructionApplyDiv.appendChild(instructionCancelButton);
 		instructionForm.appendChild(instructionApplyDiv);
 
-		instructionForm.addEventListener("submit", e => applyCustomInstruction(instructionForm, instructionsSetDiv, e));
+		instructionForm.addEventListener("submit", (event) => applyCustomInstruction(instructionForm, instructionsSetDiv, event));
 		instructionsSetDiv.appendChild(instructionForm);
 
 		updateCustomInstructionFields(instructionDescr, instructionForm);
@@ -785,9 +960,9 @@
 
 	}
 
-	function applyCustomInstruction(form, instructionsSetDiv, e) {
+	function applyCustomInstruction(form, instructionsSetDiv, event) {
 
-		if (e) e.preventDefault();
+		if (event) event.preventDefault();
 
 		const instructionId = form.querySelector("#instructionId").value;
 		const instructionName = form.querySelector("#instructionName").value;
@@ -810,7 +985,7 @@
 		instructionDiv.appendChild(instructionEditButton);
 		var instructionRemoveButton = document.createElement("button");
 		instructionRemoveButton.innerHTML = "Remove";
-		instructionRemoveButton.addEventListener("click", e => e.target.closest(".instructionRowWrapper").parentNode.removeChild(e.target.closest(".instructionRowWrapper")));
+		instructionRemoveButton.addEventListener("click", (event) => event.target.closest(".instructionRowWrapper").parentNode.removeChild(event.target.closest(".instructionRowWrapper")));
 		instructionDiv.appendChild(instructionRemoveButton);
 		const previousInstructionDiv = document.querySelector("[data-id="+instructionId+"]");
 		if (previousInstructionDiv) {
@@ -828,9 +1003,9 @@
 
 	}
 
-	function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionParamsDiv, e) {
+	function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionParamsDiv, event) {
 
-		if (e) e.preventDefault();
+		if (event) event.preventDefault();
 
 		var instructionParamDiv = document.createElement("div");
 		instructionParamDiv.className = "paramWrapper";
@@ -840,9 +1015,9 @@
 		instructionParamDiv.appendChild(instructionParamNameLabel);
 		var instructionParamNameEl = document.createElement("input");
 		instructionParamNameEl.name = "name";
-		instructionParamNameEl.setAttribute("pattern", "[$a-zA-Z_][0-9a-zA-Z_$]*");
+		instructionParamNameEl.pattern = "[$a-zA-Z_][0-9a-zA-Z_$]*";
 		instructionParamNameEl.className = "paramName";
-		instructionParamNameEl.setAttribute("required", "required");
+		instructionParamNameEl.required = true;
 		instructionParamNameEl.addEventListener("keyup", updateCustomInstructionWrappers);
 		instructionParamNameEl.addEventListener("change", updateCustomInstructionWrappers);
 		instructionParamDiv.appendChild(instructionParamNameEl);
@@ -893,7 +1068,7 @@
 		var instructionParamRemoveDiv = document.createElement("div");
 		var instructionParamRemoveEl = document.createElement("button");
 		instructionParamRemoveEl.innerHTML = "Remove parameter";
-		instructionParamRemoveEl.addEventListener("click", e => { e.target.closest(".paramWrapper").parentNode.removeChild(e.target.closest(".paramWrapper")); updateCustomInstructionWrappers(); });
+		instructionParamRemoveEl.addEventListener("click", (event) => { event.target.closest(".paramWrapper").parentNode.removeChild(event.target.closest(".paramWrapper")); updateCustomInstructionWrappers(); });
 		instructionParamRemoveDiv.appendChild(instructionParamRemoveEl);
 		instructionParamDiv.appendChild(instructionParamRemoveDiv);
 
@@ -919,7 +1094,7 @@
 		let custominstructions = document.getElementById("custominstructions").value;
 		try {
 			custominstructions = JSON.parse(custominstructions);
-		} catch(e) { console.error("Invalid custominstructions update JSON: " + custominstructions); }
+		} catch(error) { console.error("Invalid custominstructions update JSON: " + custominstructions); }
 		if (!custominstructions) {
 			alert("Custom instructions' descriptions has invalid synthax");
 			return;
@@ -950,14 +1125,14 @@
 		hideAll();
 		document.getElementById("steps").scrollTop = 0;
 		document.getElementById("step-"+step).style.display = "block";
-		document.getElementById("stepNumber").setAttribute("value", step);
+		document.getElementById("stepNumber").value = step;
 		if (step === 1) {
-			document.getElementById("prev").setAttribute("disabled", "true");
+			document.getElementById("prev").disabled = true;
 		} else {
 			document.getElementById("prev").removeAttribute("disabled");
 		}
 		if (!document.getElementById("step-"+(step+1))) {
-			document.getElementById("next").setAttribute("disabled", "true");
+			document.getElementById("next").disabled = true;
 		} else {
 			document.getElementById("next").removeAttribute("disabled");
 		}
@@ -987,13 +1162,13 @@
 		if (switchTo === "full") {
 			showAll();
 			document.getElementById("controls-navigator").style.display = "none";
-			button.setAttribute("value", "Wizard view");
-			button.setAttribute("data-switchTo", "wizard");
+			button.value = "Wizard view";
+			button.dataset.switchTo = "wizard";
 		} else {
 			goToStep();
 			document.getElementById("controls-navigator").style.display = "block";
-			button.setAttribute("value", "Full view");
-			button.setAttribute("data-switchTo", "full");
+			button.value = "Full view";
+			button.dataset.switchTo = "full";
 		}
 	}
 	
@@ -1043,15 +1218,13 @@
 				} else {
 					paramValue = element.value;
 				}
-				if ((setupPageItem.type !== "order" || setupPageItem.type !== "instructions") && setupPageItem.type !== "multiple" && setupPageItem.type !== "select") {
-					paramValue = encodeURIComponent(paramValue);
-				}
 				if (!setupPageItem.skipParameterInURL && paramValue != setupPageItem.initial && paramValue.toString().length > 0) {
+					if ((setupPageItem.type !== "order" || setupPageItem.type !== "instructions") && setupPageItem.type !== "multiple" && setupPageItem.type !== "select") paramValue = encodeURIComponent(paramValue);
 					var component = key+"="+paramValue;
 					components.push(component);
 					var skipParameterInURL = false;
 					for (var j in parametersCalledFromAPI) {
-                        if (component.indexOf(parametersCalledFromAPI[j]+"=") == 0) {
+                        if (component.startsWith(parametersCalledFromAPI[j]+"=")) {
                             skipParameterInURL = true;
                         }
 					}
@@ -1151,7 +1324,7 @@
 		var instructionParameters = $_eseecode.instructions.set[instructionName].parameters;
 		for (var i=0; i<instructionParameters.length; i++) {
 			var initialHelper = ((!instructionParameters[i].optional || instructionParameters[i].optional === false) && instructionParameters[i].initial)?" Default: "+instructionParameters[i].initial:"";
-			setupDiv.querySelector("#setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" />"+initialHelper+"<br />";
+			setupDiv.querySelector("#setupDivParams").innerHTML += $e.ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" />"+initialHelper+"<br />";
 		}
 		var countParams = 1;
 		var values = target.value.split(";");
@@ -1175,7 +1348,7 @@
 		}
 		var optionIndex = target.index;
 		setupDiv.querySelector("#setupDivIndex").value = optionIndex;
-		dialog(setupDiv);
+		toolbox(setupDiv);
 	}
 
 	function changeParametersApply(selectId) {

@@ -1,0 +1,68 @@
+/* We use #body .block.block.block.block to overwrite background shorthand property's background-color subproperty */
+
+.textblock.category-internal,
+.block.category-internal > .icon,
+#body .block.block.block.block.category-internal {
+	background-color: transparent;
+	color: inherit;
+}
+.textblock.category-guide,
+.block.category-guide > .icon,
+#body .block.block.block.block.category-guide {
+	background-color: #FFFF00;
+	color: var(--broken-black);
+}
+.textblock.category-canvas,
+.block.category-canvas > .icon,
+#body .block.block.block.block.category-canvas {
+	background-color: #D033D0;
+	color: var(--broken-white);
+}
+.textblock.category-draw,
+.block.category-draw > .icon,
+#body .block.block.block.block.category-draw {
+	background-color: #FF3030;
+	color: var(--broken-white);
+}
+.textblock.category-objects,
+.block.category-objects > .icon,
+#body .block.block.block.block.category-objects {
+	background-color: #606060;
+	color: var(--broken-white);
+}
+.textblock.category-flow,
+.block.category-flow > .icon,
+#body .block.block.block.block.category-flow:not(.subblock) {
+	background-color: #80FF80;
+	color: var(--broken-black);
+}
+.textblock.category-value,
+.block.category-value > .icon,
+#body .block.block.block.block.category-value {
+	background-color: #60FFFF;
+	color: var(--broken-black);
+}
+.textblock.category-window,
+.block.category-window > .icon,
+#body .block.block.block.block.category-window {
+	background-color: #00A000;
+	color: var(--broken-white);
+}
+.textblock.category-other,
+.block.category-other > .icon,
+#body .block.block.block.block.category-other {
+	background-color: #DDDDDD;
+	color: var(--broken-black);
+}
+.textblock.category-userdefined,
+.block.category-userdefined > .icon,
+#body .block.block.block.block.category-userdefined {
+	background-color: #333333;
+	color: var(--broken-black);
+}
+.textblock.category-custom,
+.block.category-custom > .icon,
+#body .block.block.block.block.category-custom {
+	background-color: transparent;
+	color: inherit;
+}

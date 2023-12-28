@@ -1,197 +1,261 @@
 "use strict";
-	/**
-	 * @author Jacobo Vilella Vilahur
-	 * @license GPL-3.0
-	 */
 
-	// Main initialization
-	/**
-	 * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{*},icons:Array{*}},execution:{breakpointCounter:Number,breakpoints:Array<String|Number>,observers:Array<String>,stepped:Boolean,step:Number,programCounter:Number,startTime:Number,trace:Array<*>,sandboxProperties:Array<String>,precode:{code:String,running:Boolean,standby:Boolean},precode:{code:String,running:Boolean},watchpointsChanged:Array<String>,inputDefault:String,inputRaw:String,inputPosition:Number,basepath:String,guide:{imageUrl:String,size:Integer,cache:{imageUrl:String,imageObj:Object}},session:{highlight:{lineNumber:Number,reason:String},handlers:{keyboard:{key:Number,lastKeycode:Number},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnConsoleSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,floatingBlock:{div:HTMLElement,fromDiv:HTMLElement,mouse:{x:Number,y:Number}},blocksUndo:Array<{*}>,breakpoints:Array<{*}>,breakpointHandler:Boolean|Number,watchpoints:Array<String>,watchpoints:Array<Boolean>,timeoutHandlers:Array<{*}>, disableCode:Boolean},whiteboard:HTMLElement,coordinates:Array<{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>}>,ui:Array<{translations: Array<{id:String,name:String}>translation:Array<*>,themes: Array<{id:String,name:String}>theme:Array<*>,minWindowHeight:Number,codeFileName:String,dialogWindow:HTMLElement,tipInterval:Object,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean,translationsmenuVisible:Boolean,themesmenuVisible:Boolean}>,canvasArray:Array<{*}>,windowsArray:Array<{*}>,currentCanvas:Object,currentWindow:HTMLElement,setup:{blockWidth:Array<{String, String},blockheight:Array<{String, String}>,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,modes:{console:Array<{*}>,dialog:Array<{*}>}}
-	 */
-	if (typeof $_eseecode === 'undefined') var $_eseecode; // Create the main object if it hasn't been declated from the calling page
-	$_eseecode = Object.assign({
-		basepath: (function(){
-				var scripts = document.getElementsByTagName("script");
-				var scriptPath = scripts[scripts.length-1].src;
-				var result = scriptPath.substring(0,scriptPath.lastIndexOf("/js/"));
-				if (result.length == 0) {
-					result = ".";
-				}
-				return result;
-			})(),
-		platform: {
-			name: {
-				text: "eSeeCode",
-				link: undefined
-			},
-			version: {
-				text: "3.2",
-				link: "CHANGELOG.md"
-			},
-			logo: {
-				text: "/images/eSeeCode_logo.png",
-				link: "http://eseecode.com"
-			},
-			author: {
-				text: "Jacobo Vilella Vilahur",
-				link: "http://eseecode.com"
-			},
-			license: {
-				text: "GPLv3 or later",
-				link: "https://gnu.org/licenses/gpl.html"
-			},
-			web: {
-				text: "eSeeCode.com",
-				link: "http://eseecode.com"
-			},
+// Main initialization
+/**
+ * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{String},icons:Array{*}},execution:{stepSize:Number,instructionsPause:Number,precode:String,monitors:Array<{breakpoint:Boolean}>,postcode:String,inputDefault:String,basepath:String,guides:{imageUrl:String,size:Integer},breaktouiInterval:Number,current:{stepped:Number,sandboxProperties:Array<String>,precode:{running:Boolean,standby:Boolean},usercode:{running:Boolean},postcode:{running:Boolean},guideCache:{imageUrl:String,imageObj:Object},highlight:{lineNumber:Number,reason:String},monitors:Array<{value:*,oldValue:*,count:Number}>,inputRaw:String,inputPosition:Number,watchesChanged:Array<String>,layersChanged:Array<Number|String>,programCounter:Number,startTime:Number,trace:{stack:Array<*>,current:Integer,replaced:Array<{name:String,original:Function}>},timeoutHandlers:Array<{*}>,audioHandlers:Array<Number>,pauseHandler:Number,status:String,kill:Boolean,breaktoui:Boolean,breaktouiHandler:Number}},ide:{last_id:Number,blocks:{changes:{stack:Array<{*}>,current:Number},flowVisible:Boolean},write:Object},handlers:{keyboard:{key:Number,lastKey:String},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnViewSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,kill:Boolean},session:{editor:Object,breakpointHandler:{Boolean|Number},lastRunLineNumber:Number,runFrom:String,disableCode:Boolean},backend:{whiteboard:{element:HTMLElement,width:Number,height:Number,axis:{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>},layers:{available:Object,current:Object,top:Object,bottom:Object},guides:Object,axis:Object},windows:{available:Array<HTMLElement>,current:HTMLElement},io:Object,sound:Object},events:Object},ui:Array<{element:Object,loading:Object,msgBox:Object,maxDragForSetup:Number,blocks:{styles:Object,forceSetup:boolean,setup:{current:Object},floating:{blockEl:HTMLElement,sourceBlockEl:HTMLElement,movesCount:Number,mouse:{x:Number,y:Number}}},write:Object,debug:Object,translations:{available:Array<{id:String,name:String,menuVisible:Boolean}>,curreny:Array<*>},themes:{available:Array<{id:String,name:String}>,current:Array<*>,menuVisible:Boolean},minWindowHeight:Number,codeFileName:String,toolboxWindow:HTMLElement,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,disableKeyboardShortcuts:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean}>,debug:Object,setup:{defaultView:String,defaultToolbox:String,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,tabSize:Number},modes:{views:{current:Object,available:Object},toolboxes:{current:Object,available:Object}}},api:Object}
+ */
+
+(() => {
+
+const eseecodeEl = $e.ui.element; // Keep it to retore it later, as we are going to erase the contents of $e
+
+Object.assign($e, {
+	basepath: (() => {
+			const scripts = document.querySelectorAll("script");
+			const scriptPath = scripts[scripts.length - 1].src;
+			let result = scriptPath.substring(0, scriptPath.lastIndexOf("/js/"));
+			if (result.length === 0) {
+				result = ".";
+			}
+			return result;
+		})(),
+	platform: {
+		name: {
+			text: "eSeeCode",
+			link: undefined,
 		},
-		instructions: {
-			set: {},
-			custom: [],
-			categories: {},
-			icons: {}
+		version: {
+			text: "4.0",
+			link: "CHANGELOG.md",
 		},
-		execution: {
-			breakpointCounter: 0,
-			breakpoints: [],
-			observers: [],
-			stepped: false,
-			step: 1,
-			pause: 500,
-			programCounter: 0,
-			startTime: undefined,
-			trace: [],
+		logo: {
+			text: "/images/logo.svg",
+			link: "http://eseecode.com",
+		},
+		author: {
+			text: "Jacobo Vilella Vilahur",
+			link: "http://eseecode.com",
+		},
+		license: {
+			text: "GPLv3 or later",
+			link: "https://gnu.org/licenses/gpl.html",
+		},
+		web: {
+			text: "eSeeCode.com",
+			link: "http://eseecode.com",
+		},
+	},
+	instructions: {
+		set: {},
+		custom: [],
+		categories: [],
+		icons: {},
+	},
+	execution: {
+		stepSize: 1,
+		instructionsPause: 50,
+		inputDefault: "",
+		basepath: "",
+		guide: {
+			imageUrl: undefined,
+			size: 20,
+		},
+		precode: "",
+		postcode: "",
+		monitors: {},
+		breaktouiInterval: 300,
+		current: {
+			stepped: undefined,
 			sandboxProperties: [],
+			guideCache: {
+				imageUrl: undefined,
+				imageObj: undefined,
+			},
 			precode: {
-				code: "",
 				running: false,
-				standby: false
+				standby: false,
+			},
+			usercode: {
+				running: false,
 			},
 			postcode: {
-				code: "",
-				running: false
+				running: false,
 			},
-			watchpointsChanged: [],
-			inputDefault: "",
 			inputRaw: "",
 			inputPosition: 0,
-			basepath: "",
-			guide: {
-				imageUrl: undefined,
-				size: 20,
-				cache: {
-					imageUrl: undefined,
-
-				}
-			}
-		},
-		session: {
+			programCounter: -1,
+			monitors: {},
+			watchesChanged: [],
+			layersChanged: [],
+			startTime: undefined,
+			trace: {
+				stack: [],
+				current: -1,
+				replaced: [],
+			},
+			timeoutHandlers: [],
+			audioHandlers: [],
+			pauseHandler: undefined,
+			status: "clean",
+			kill: undefined,
 			highlight: {
-                                lineNumber: 0,
-                                reason: undefined
-                        },
-                        handlers: {
-                                keyboard: {
-                                        key: undefined,
-                                        lastKeycode: undefined
-                                },
-                                pointer: {
-                                        x: undefined,
-                                        y: undefined,
-                                        lastX: undefined,
-                                        lastY: undefined,
-                                        pressed: false
-
-                                }
-                        },
-                        updateOnConsoleSwitch: false,
-                        lastChange: 0,
-                        lastRun: 0,
-                        lastSave: 0,
-                        floatingBlock: { div: null, fromDiv: null, mouse: {x: undefined, y: undefined} },
-                        blocksUndo: null,
-                        breakpoints: {},
-                        breakpointHandler: false,
-                        watchpoints: {},
-                        timeoutHandlers: [],
-                        audioHandlers: [],
-                        pauseHandler: undefined,
-                        disableCode: false,
-                        kill: undefined
-                },
+				lineNumber: 0,
+				reason: undefined,
+			},
+			breaktoui: false,
+			breaktouiHandler: undefined,
+			lastRunLineNumber: -1,
+		},
+	},
+	ide: {
+		last_id: 0,
+		blocks: {
+			changes: {
+				stack: [],
+				current: -1,
+			},
+			flowVisible: false,
+		},
+		write: {},
+	},
+	session: {
+		editor: undefined,
+		handlers: {
+			keyboard: {
+				key: undefined,
+				lastKey: undefined,
+			},
+			pointer: {
+				x: undefined,
+				y: undefined,
+				lastX: undefined,
+				lastY: undefined,
+				pressed: false,
+			},
+		},
+		disableCode: false,
+		updateOnViewSwitch: false,
+		lastChange: 0,
+		lastRun: 0,
+		lastSave: 0,
+		ready: false, // This overwriteConsos the value from eseecode.js, both are set to false to indicate it is loading
+		breakpointHandler: undefined,
+		runFrom: undefined,
+	},
+	backend: {
 		whiteboard: {
-			offsetWidth: 400,
-			offsetHeight: 400
-		},
-		coordinates: {
-			origin: {
-				x: 0,
-				y: 0
+			element: undefined,
+			width: 600,
+			height: 600,
+			axis: {
+				origin: {
+					x: 0,
+					y: 0,
+				},
+				scale:{
+					x: 1,
+					y: 1,
+				},
+				userSelection: 2,
+				predefined: [
+					{ name: "Computer view", origin: { x: 0, y: 0 }, scale: { x: 1, y: 1 }, initial: false },
+					{ name: "Mathematical simple", origin: { x: 0, y: () => $e.backend.whiteboard.width }, scale: { x: 1, y: -1 }, initial: false },
+					{ name: "Mathematical centered", origin: { x: () => $e.backend.whiteboard.width / 2, y: () => $e.backend.whiteboard.width / 2 }, scale: { x: 1, y: -1 }, initial: true },
+				],
 			},
-			scale:{
-				x: 1,
-				y: 1
+			layers: {
+				available: {},
+				current: null,
+				top: null,
+				bottom: null,
 			},
-			userSelection: 2,
-			predefined: [
-				{ name: "Computer console", origin: {x: 0, y: 0}, scale: {x: 1, y: 1}, initial: false },
-				{ name: "Mathematical simple", origin: {x: 0, y: 400}, scale: {x: 1, y: -1 }, initial: false },
-				{ name: "Mathematical centered", origin: {x: 200, y: 200}, scale: {x: 1, y: -1}, initial: true }
-			]
+			guides: {},
 		},
-		ui: {
-			translations: [{id: "default", name: "Default" }],
-			translation: {id: "default", name: "Default", code: "en", strings: {} },
-			themes: [{id: "default", name: "Default" }],
-			theme: {id: "default", name: "Default" },
-			minWindowHeight: 500,
-			codeFilename: "code.esee",
-			dialogWindow: null,
-			guideVisible: true,
-			gridVisible: true,
-			gridStep: 25,
-			forceBlockSetup: true,
-			setupType: undefined,
-			filemenuVisible: true,
-			translationsmenuVisible: true,
-			themesmenuVisible: true,
-			fullscreenmenuVisible: undefined,
-			scrollTimeout: null,
-			tipInterval: null,
-			whiteboardResizeInterval: null,
-			downloadLayersInterval: 500,
-			downloadLayersColumns: 3,
-			preventExit: true
+		windows: {
+			available: [],
+			currentWindow: null,
 		},
-		canvasArray: [],
-		windowsArray: [],
-		currentCanvas: null,
-		currentWindow: null,
-		setup: {
-			blockWidth: { level1: 68, level2: 68, level3: 45, level4: undefined },
-			blockHeight: { level1: 68, level2: 68, level3: 15, level4: 15 },
-			defaultFontSize: 9,
-			defaultFontWidth: 6,
-			undoDepth: 20
+		io: {},
+		sound: {},
+		events: {},
+	},
+	ui: {
+		element: undefined,
+		translations: {
+			available: [ { id: "default", name: "Default" } ],
+			current: { id: "default", name: "Default", code: "en", strings: {} },
+			menuVisible: true,
 		},
-		modes: {
-			console: [
-				1,
-				{id: "level1", name: "Touch", div: "blocks", tab: null},
-				{id: "level2", name: "Drag", div: "blocks", tab: null},
-				{id: "level3", name: "Build", div: "blocks", tab: null},
-				{id: "level4", name: "Code", div: "write", tab: null}
-			],
-		  	dialog: [
-				1,
-				{id: "level1", name: "Touch", div: "blocks", element: null, tab: null},
-				{id: "level2", name: "Drag", div: "blocks", element: null, tab: null},
-				{id: "level3", name: "Build", div: "blocks", element: null, tab: null},
-				{id: "level4", name: "Code", div: "write", element: null, tab: null},
-				{id: "io", name: "I/O", div: "io", element: null, tab: null},
-				{id: "window", name: "Window", div: "window", element: null, tab: null},
-				{id: "debug", name: "Debug", div: "debug", element: null, tab: null},
-				{id: "setup", name: "Setup", div: "setup", element: null, tab: null}
-			]
-		}
-	}, $_eseecode);
+		themes: {
+			available: [ { id: "default", name: "Default" } ],
+			current: { id: "default", name: "Default" },
+			menuVisible: true,
+		},
+		minWindowHeight: 500,
+		codeFilename: "code.esee",
+		toolbxosWindow: null,
+		guideVisible: true,
+		gridVisible: true,
+		gridStep: 50,
+		setupType: undefined,
+		filemenuVisible: true,
+		fullscreenmenuVisible: undefined,
+		scrollTimeout: null,
+		whiteboardResizeInterval: null,
+		downloadLayersInterval: 500,
+		downloadLayersColumns: 3,
+		preventExit: true,
+		disableKeyboardShortcuts: false,
+		blocks: {
+			styles: {},
+			forceSetup: true,
+			setup: {
+				current: undefined,
+			},
+			floating: undefined,
+		},
+		maxDragForSetup: 5,
+		write: {},
+		debug: {},
+		loading: {},
+		msgBox: {},
+	},
+	debug: {},
+	setup: {
+		defaultView: "level1",
+		defaultToolbox: "level1",
+		defaultFontSize: 9,
+		defaultFontWidth: 6,
+		undoDepth: 20,
+		tabSize: 4,
+	},
+	modes: {
+		views: {
+			current: undefined,
+			available: {
+				level1: { id: "level1", name: "Touch", type: "blocks", tab: null, },
+				level2: { id: "level2", name: "Drag", type: "blocks", tab: null, },
+				level3: { id: "level3", name: "Build", type: "blocks", tab: null, },
+				level4: { id: "level4", name: "Code", type: "write", tab: null, },
+			},
+		},
+		toolboxes: {
+			current: undefined,
+			available: {
+				level1: { id: "level1", name: "Touch", type: "blocks", element: null, tab: null, },
+				level2: { id: "level2", name: "Drag", type: "blocks", element: null, tab: null, },
+				level3: { id: "level3", name: "Build", type: "blocks", element: null, tab: null, },
+				level4: { id: "level4", name: "Code", type: "write", element: null, tab: null, },
+				io: { id: "io", name: "I/O", type: "io", element: null, tab: null, },
+				window: { id: "window", name: "Window", type: "window", element: null, tab: null, },
+				debug: { id: "debug", name: "Debug", type: "debug", element: null, tab: null, },
+				setup: { id: "setup", name: "Setup", type: "setup", element: null, tab: null, },
+			},
+		},
+	},
+	api: {},
+});
+
+$e.ui.element = eseecodeEl; // Restore the element from previous $e value, as it might have been passed as parameter to the loader
+
+})();

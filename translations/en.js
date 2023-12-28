@@ -1,6 +1,8 @@
 "use strict";
 
-$_eseecode.ui.translation = {
+(() => {	
+
+$e.ui.translations.current = {
 	id: "en",
 	name: "English",
 	code: "en",
@@ -8,5 +10,6 @@ $_eseecode.ui.translation = {
 	translatorLink: "",
 	strings: {
 	}
-}
+};
 
+})();

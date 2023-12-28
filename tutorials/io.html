@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>eSeeCode tutorial</title>
+        <script type="text/javascript" src="../tools/guide.js"></script>
+    </head>
+<body>
+<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true"></iframe>
+<script type="text/javascript">
+    var guideSteps = [
+        { type: "pagetitle", text: "eSeeCode tutorial: Input/Output" },
+        { type: "fullscreenmenu", argument: "true" },
+        { type: "view", argument: "code" },
+        { type: "info", text: "This tutorial will show you the basics about input/output", timeout: 5, humanStep: "Intro" },
+        { type: "preventexit", argument: false },
+        { type: "info", text: "Very well!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><a href=\"code.html\">Code view</a><br /><a href=\"debug.html\">Debug</a><br /><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial", humanStep: "End" }
+    ];
+    
+    add_translations({
+        ca: {
+            "eSeeCode tutorial: Input/Output": "Tutorial eSeeCode: Entrada/Sortida",
+            "This tutorial will show you the basics about input/output": "Aquest tutorial et mostrarà els conceptes bàsics sobre l'entrada/sortida",
+            "Intro": "Intro",
+            "Execute button": "Botó Executar",
+            "End": "Final",
+            "Very well!<br />You have finished this tutorial!": "Molt bé!<br />Heu acabat aquest tutorial!",
+            "Other tutorials recommended:<br /><a href=\"code.html\">Code view</a><br /><a href=\"debug.html\">Debug</a><br /><br /><a href=\"ui.html\">User interface</a>": "Altres tutorials recomanats:<br /><a href=\"code.html\">Vista Codi</a><br /><a href=\"debug.html\">Depurar</a><br /><a href=\"ui.html\">Interfície d'usuari</a>",
+        },
+        es: {
+            "eSeeCode tutorial: Input/Output": "Tutorial eSeeCode: Entrada/Salida",
+            "This tutorial will show you the basics about input/output": "Este tutorial te mostrará los conceptos básicos sobre la entrada/salida",
+            "Intro": "Intro",
+            "Execute button": "Botón Ejecutar",
+            "End": "Final",
+            "Very well!<br />You have finished this tutorial!": "¡Muy bien!<br />Has terminado este tutorial!",
+            "Other tutorials recommended:<br /><a href=\"code.html\">Code view</a><br /><a href=\"debug.html\">Debug</a><br /><br /><a href=\"ui.html\">User interface</a>": "Otros tutoriales recomendados tutorials recommended:<br /><a href=\"code.html\">Vista Código</a><br /><a href=\"debug.html\">Depurar</a><br /><a href=\"ui.html\">Interfaz de usuario</a>",
+        }
+    });
+    
+    function nextTutorial() {
+        redirectTutorial("ui.html");
+    }
+
+    loadGuide("eseecode-frame", "../index.html");
+
+</script>
+</body>
+</html>

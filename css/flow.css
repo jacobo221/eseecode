@@ -1,0 +1,484 @@
+:root {
+
+    --flow-color: rgb(132, 132, 132);
+    --flow-margin: 0.5rem;
+    --flow-text-size: 2rem;
+	--flow-border-size: var(--smaller-border);
+    --flow-line-size: 5px;
+    --flow-symbol-size: 50px;
+    --flow-arrow-head-size: calc(var(--flow-symbol-size) / 2);
+	--flow-block-container-icon-margin: var(--flow-margin);
+
+	--flow-image-circle: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="50" cy="50" r="45" fill="transparent" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" /></svg>');
+	--flow-image-rhombus: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M 50 0 L 100 50 L 50 100 L 0 50 Z" fill="transparent" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" /></svg>');
+	--flow-image-line-horizontal: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="50" x2="100" y2="50" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round" /></svg>');
+    --flow-image-line-vertical: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="50" y2="100" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" stroke-linecap="round" /></svg>');
+    --flow-image-dotted-horizontal: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="0" y1="50" x2="100" y2="50" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" stroke-dasharray="1 10" stroke-linecap="round" /></svg>');
+    --flow-image-dotted-vertical: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="50" y2="100" stroke="rgb(132, 132, 132)" stroke-width="5" vector-effect="non-scaling-stroke" stroke-dasharray="1 10" stroke-linecap="round" /></svg>');
+    --flow-image-arrow-head-down: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 50,100 100,0" fill="rgb(132, 132, 132)" /></svg>');
+    --flow-image-arrow-head-left: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,50 100,0 100,100" fill="rgb(132, 132, 132)" /></svg>');
+    --flow-image-arrow-head-right: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="100,50 0,100 0,0" fill="rgb(132, 132, 132)" /></svg>');
+	--flow-image-start: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="0,0 100,50 0,100" fill="rgb(26, 115, 26)" /></svg>');
+	--flow-image-end: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polygon points="33,0 66,0 100,33 100,66 66,100 33,100 0,66 0,33" fill="red" /></svg>');
+
+}
+
+#body { /* We need to apply it in #body because --block-current-size is defined there */
+
+	--flow-block-container-icon-size: calc(var(--block-current-size) + var(--flow-block-container-icon-margin) * 2);
+
+    --flow-background-rhombus:
+		var(--flow-image-rhombus) center center / 100% 100% no-repeat;
+
+	--flow-background-start:
+		var(--flow-image-circle) center top / var(--flow-symbol-size) var(--flow-symbol-size) no-repeat,
+		var(--flow-image-start) center top 10px / calc(var(--flow-symbol-size) - 20px) calc(var(--flow-symbol-size) - 20px) no-repeat;
+	--flow-background-end:
+		var(--flow-image-circle) center bottom / var(--flow-symbol-size) var(--flow-symbol-size) no-repeat,
+		var(--flow-image-end) center bottom 10px / calc(var(--flow-symbol-size) - 20px) calc(var(--flow-symbol-size) - 20px) no-repeat;
+
+	--flow-background-arrow-down-full:
+		var(--flow-image-line-vertical) center top / var(--flow-line-size) calc(100% - var(--flow-arrow-head-size)) no-repeat,
+		var(--flow-image-arrow-head-down) center bottom / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+	--flow-background-arrow-down-top:
+		var(--flow-image-line-vertical) center top / var(--flow-line-size) calc(var(--flow-symbol-size) - var(--flow-arrow-head-size)) no-repeat,
+		var(--flow-image-arrow-head-down) center top calc(var(--flow-symbol-size) - var(--flow-arrow-head-size)) / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+	--flow-background-arrow-down-bottom:
+		var(--flow-image-line-vertical) center bottom / var(--flow-line-size) calc(var(--flow-symbol-size) - var(--flow-arrow-head-size)) no-repeat,
+		var(--flow-image-arrow-head-down) center bottom calc(var(--flow-symbol-size) - var(--flow-arrow-head-size)) / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+
+	--flow-background-arrow-extension-top-down:
+		var(--flow-image-line-vertical) center top / var(--flow-line-size) calc(var(--flow-symbol-size) / 2) no-repeat;
+	--flow-background-arrow-extension-top-up:
+		var(--flow-image-line-vertical) center top calc(var(--flow-symbol-size) / 2) / var(--flow-line-size) calc(var(--flow-symbol-size) / 2) no-repeat;
+	--flow-background-arrow-extension-top-vertical:
+		var(--flow-image-line-vertical) center top / var(--flow-line-size) var(--flow-symbol-size) no-repeat;
+	--flow-background-arrow-extension-bottom-down:
+		var(--flow-image-line-vertical) center bottom / var(--flow-line-size) calc(var(--flow-symbol-size) / 2) no-repeat;
+	--flow-background-arrow-extension-bottom-up:
+		var(--flow-image-line-vertical) center bottom calc(var(--flow-symbol-size) / 2) / var(--flow-line-size) calc(var(--flow-symbol-size) / 2) no-repeat;
+	--flow-background-arrow-extension-bottom-vertical:
+		var(--flow-image-line-vertical) center bottom / var(--flow-line-size) var(--flow-symbol-size) no-repeat;
+	--flow-background-arrow-extension-top-right:
+		var(--flow-image-line-horizontal) right top / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-extension-top-left:
+		var(--flow-image-line-horizontal) left top / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-extension-top-horizontal:
+		var(--flow-image-line-horizontal) center top / 100% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-extension-bottom-right:
+		var(--flow-image-line-horizontal) right bottom / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-extension-bottom-left:
+		var(--flow-image-line-horizontal) left bottom / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-extension-bottom-horizontal:
+		var(--flow-image-line-horizontal) center bottom / 100% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-dotted-top-left:
+		var(--flow-image-dotted-horizontal) left top / 50% var(--flow-line-size) no-repeat;
+
+	--flow-background-arrow-extension-middle-right:
+		var(--flow-image-line-horizontal) right top calc(var(--flow-symbol-size) + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-head-middle-left:
+		var(--flow-image-arrow-head-right) left top calc(var(--flow-symbol-size) + var(--flow-block-container-icon-size) / 2 - var(--flow-arrow-head-size) / 2) / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+
+	--flow-background-arrow-backwards:
+		var(--flow-image-line-horizontal) left bottom calc(var(--flow-symbol-size) - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat,
+		var(--flow-image-line-vertical) left bottom var(--flow-symbol-size) / var(--flow-line-size) calc(100% - var(--flow-symbol-size) - var(--flow-symbol-size) / 2) no-repeat,
+		var(--flow-image-line-horizontal) left top calc(var(--flow-symbol-size) / 2 - var(--flow-line-size) / 2) / calc(50% - var(--flow-arrow-head-size)) var(--flow-line-size) no-repeat,
+		var(--flow-image-arrow-head-right) left calc(50% - var(--flow-arrow-head-size)) top calc(var(--flow-symbol-size) / 2 - var(--flow-arrow-head-size) / 2) / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+	--flow-background-arrow-backwards-do:
+		var(--flow-image-line-horizontal) left bottom calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat,
+		var(--flow-image-line-vertical) left bottom calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2) / var(--flow-line-size) calc(100% - var(--flow-symbol-size) * 2 - var(--flow-block-container-icon-size) / 2 - var(--flow-symbol-size) * 2 - var(--flow-block-container-icon-size) / 2) no-repeat,
+		var(--flow-image-line-horizontal) left top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / calc(50% - var(--flow-block-container-icon-size) / 2 - var(--flow-arrow-head-size)) var(--flow-line-size) no-repeat,
+		var(--flow-image-arrow-head-right) left calc(50% - var(--flow-block-container-icon-size) / 2 - var(--flow-arrow-head-size)) top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-arrow-head-size) / 2) / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+	--flow-background-arrow-skip-loop:
+		var(--flow-image-dotted-horizontal) right top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat,
+		var(--flow-image-dotted-vertical) right top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / var(--flow-line-size) calc(100% - var(--flow-symbol-size) * 2 - var(--flow-block-container-icon-size) / 2) no-repeat,
+		var(--flow-image-dotted-horizontal) right bottom / 50% var(--flow-line-size) no-repeat;
+	--flow-background-arrow-skip-conditional:
+		var(--flow-image-dotted-horizontal) right top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat,
+		var(--flow-image-dotted-vertical) right top calc(var(--flow-symbol-size) * 2 + var(--flow-block-container-icon-size) / 2 - var(--flow-line-size) / 2) / var(--flow-line-size) calc(100% - var(--flow-symbol-size) * 2 - var(--flow-block-container-icon-size) / 2 - var(--flow-arrow-head-size) / 2) no-repeat,
+		var(--flow-image-dotted-horizontal) right bottom calc(var(--flow-arrow-head-size) / 2 - var(--flow-line-size) / 2) / 50% var(--flow-line-size) no-repeat,
+		var(--flow-image-arrow-head-left) right calc(50% - var(--flow-arrow-head-size) / 2) bottom / var(--flow-arrow-head-size) var(--flow-arrow-head-size) no-repeat;
+	--flow-background-loop:
+		var(--flow-background-arrow-extension-top-vertical),
+		var(--flow-background-arrow-backwards),
+		var(--flow-background-arrow-skip-loop);
+	--flow-background-loop-do:
+		var(--flow-background-arrow-extension-top-vertical),
+		var(--flow-background-arrow-backwards-do),
+		var(--flow-background-arrow-extension-bottom-down),
+		var(--flow-background-arrow-extension-bottom-up);
+		
+}
+
+/* Basics */
+
+/* We add #body to win CSS preference over blocks.css */
+#body.flow #view-blocks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#body.flow #view-blocks > .block:first-child {
+	margin-top: calc(var(--flow-symbol-size) + var(--flow-margin));
+}
+#body.flow #view-blocks > .block:first-child::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: calc(var(--flow-symbol-size) * -1);
+	left: 0;
+	height: var(--flow-symbol-size);
+	width: 100%;
+	background:
+		var(--flow-background-start);
+}
+#body.flow #view-blocks > #view-blocks-tip::before,
+#body.flow #view-blocks > #view-blocks-tip::after {
+	content: none;
+	display: none;
+}
+
+#body.flow #view-blocks > .block:last-child {
+	margin-bottom: calc(var(--flow-symbol-size) * 2 + var(--flow-margin));
+}
+#body.flow #view-blocks > .block:last-child::after {
+	content: "";
+	display: block;
+	position: absolute;
+	bottom: calc(var(--flow-symbol-size) * 2 * -1);
+	left: 0;
+	height: calc(var(--flow-symbol-size) * 2);
+	width: 100%;
+	background:
+		var(--flow-background-arrow-down-top),
+		var(--flow-background-end);
+}
+
+#body.flow .block {
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	align-items: center;
+    margin: 0 0;
+	background: none;
+	border: none;
+	box-shadow: none;	
+}
+#body.flow .toolbox-panel .block {
+	display: inline-block;
+    margin: var(--small-space) var(--small-space);
+	box-shadow: var(--default-space) var(--small-space) var(--big-space) var(--block-shadow-color);
+    border: var(--minimal-space) solid var(--block-border-color);
+}
+#body.flow .block.setupBlockIcon {
+    border: var(--minimal-space) solid var(--block-border-color);
+}
+#body#body.flow .block { /* We use #body#body to overwrite styles in categories.css */
+	 background-color: transparent;
+}
+#body.flow .block.setupBlockIcon {
+	margin: 0.5em;
+}
+
+#body.flow .block > .icon {
+	background-image: var(--icon-image-current), var(--block-gradient);
+    text-align: center;
+    border: var(--flow-border-size) solid var(--flow-color);
+	box-sizing: content-box;
+}
+#body.flow .toolbox-panel .block > .icon,
+#body.flow .block.floating.fromToolbox > .icon{
+	text-align: initial;
+	border: none;
+}
+#body.flow .view-panel .block > .icon {
+	border-radius: var(--big-radius);
+}
+
+#body.flow .block > .icon:hover {
+	box-shadow: var(--default-space) var(--default-space) var(--default-space) var(--msgbox-shadow-color);
+}
+#body.level1.flow .block > .icon:hover,
+#body.flow .block.setupBlockIcon > .icon:hover {
+	box-shadow: none;
+}
+
+#body.flow .block .icon {
+	overflow-x: clip; /* Clip long instructions names. We use it here instead of in .block because we want to allow overflow to display ::before/::after arrows, but Chrome considers arrows to be in overflow-x whereas firefox considers it to be in overflow-y... so use overflow: clip in .icon to clip the intruction names, and overflow: visible in .block to display adjacent arrows */
+}
+#body.level3.flow .toolbox-panel .block > .icon,
+#body.level3.flow .view-panel .block > .icon { /* Do not include the setupBlockIcon */
+	background-image: var(--block-gradient);
+	background-size: 100% 100%;
+}
+
+/* Labels */
+
+#body.flow .block .icon > label.name,
+#body.flow .block .icon > label.reduced,
+#body.flow .block .icon > label.code,
+#body.flow .block .icon > label.flow {
+	display: none;
+}
+#body.level2.flow .block .icon > label.name {
+   display: initial;
+}
+#body.level3.flow .block {
+	min-height: initial;
+}
+#body.level3.flow .toolbox-panel .block .icon > label.reduced,
+#body.level3.flow .block.floating.fromToolbox .icon > label.reduced {
+   display: initial;
+}
+#body.level3.flow .view-panel .block .icon > label.flow,
+#body.level3.flow .block.floating:not(.fromToolbox) .icon > label.flow {
+   display: initial;
+   position: relative;
+   z-index: 1;
+   font-weight: bold;
+}
+
+/* Highlight */
+
+#body.flow .block.highlight.highlight.highlight.highlight.highlight > .icon { /* Several .highlight are needed to overwrite #body.flow .block.container.* > .block.subblock > .icon */
+	border: var(--smaller-border) solid var(--step-color);
+}
+#body.flow .block.highlight.highlight.highlight.highlight.highlight.highlight-error > .icon {
+	border-color: var(--error-color);
+	box-shadow: var(--default-space) var(--default-space) var(--default-space) var(--error-color);
+}
+#body.flow .block.highlight.highlight.highlight.highlight.highlight.highlight-breakpoint > .icon {
+	box-shadow: none;
+}
+
+/* Diagram: Simple instructions */
+
+#body.flow .block {
+	overflow: visible; /* We want to clip instruction names while allowing overflow to display ::before/::after arrows, but Chrome considers arrows to be in overflow-x whereas firefox considers it to be in overflow-y... so use overflow: clip in .icon to clip the intruction names, and overflow: visible in .block to display adjacent arrows */
+}
+
+#body.flow .block {
+	padding-top: var(--flow-symbol-size);
+	padding-bottom: var(--flow-symbol-size);
+	background:
+		var(--flow-background-arrow-down-top),
+		var(--flow-background-arrow-extension-bottom-vertical);
+}
+#body.flow .block.setupBlockIcon,
+#body.flow .toolbox-panel .block,
+#body.flow .block.floating.fromToolbox {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+/* Diagram: Containers */
+
+#body.flow .block.container {
+	padding: var(--flow-symbol-size) calc(var(--flow-symbol-size) / 2); /* For background image */
+	background: var(--flow-background-arrow-extension-top-vertical);
+}
+#body.flow .toolbox-panel .block.container {
+	padding: 0 0;
+}
+#body.flow .block.floating:not(.fromToolbox) {
+	height: var(--block-code-height-in-code, initial);
+}
+
+#body.flow .block.subblock {
+	padding: var(--flow-symbol-size) calc(var(--flow-symbol-size) / 2); /* For background image */
+	border-radius: 0;
+	height: 100%;
+}
+#body.flow .toolbox-panel .block.subblock,
+#body.flow .block.container.floating.fromToolbox .subblock {
+	display: none;
+}
+
+#body.flow .block.category-internal {
+    display: none;
+}
+
+#body.flow .block.container.function-container,
+#body.flow .block.container.fill-container {
+	border: var(--flow-line-size) solid var(--flow-color);
+}
+#body.flow .toolbox-panel .block.container.function-container,
+#body.flow .block.container.fill-container.function.fromToolbox,
+#body.flow .toolbox-panel .block.container.fill-container,
+#body.flow .block.container.fill-container.floating.fromToolbox {
+	border: var(--minimal-space) solid var(--block-border-color);
+}
+#body.flow .toolbox-panel .block.container.function-container,
+#body.flow .toolbox-panel .block.container.fill-container {
+	box-shadow: var(--default-space) var(--small-space) var(--big-space) var(--block-shadow-color);
+}
+
+#body.flow .block.container.function-container > .subblock::after,
+#body.flow .block.container.fill-container > .subblock::after {
+	content: "";
+	display: block;
+	height: var(--flow-symbol-size);
+	width: 100%;
+	background: var(--flow-background-arrow-down-full);
+}
+
+#body.flow .block.container.conditional {
+	flex-direction: row;
+	align-items: start;
+}
+#body.flow .toolbox-panel .block.container.conditional,
+#body.flow .block.container.conditional.floating.fromToolbox {
+	background-image: none;
+}
+
+#body.flow .block.container.conditional > .subblock {
+    height: 100%; /* Grow as much as the tallest sibling, so blocks can be dropped inside */
+	min-width: var(--block-big-size); /* This is to ensure the width of the subblocks is initially the same in level1 and level2 when the blocks have no instructions or one column of instructions, so the container ::before and ::after arrows are initially centered and aligned */
+}
+
+/* Loops */
+
+#body.flow .block.container.loop {
+	background: var(--flow-background-loop);
+}
+#body.flow .block.container.loop.do-container {
+	background: var(--flow-background-loop-do);
+}
+#body.flow .toolbox-panel .block.container.loop,
+#body.flow .block.floating.container.loop.fromToolbox {
+	background-image: none;
+}
+
+#body.flow .block.container.loop > .subblock {
+	background:
+		var(--flow-background-arrow-down-top),
+		var(--flow-background-arrow-extension-bottom-vertical);
+}
+
+/* Conditionals */
+
+#body.flow .block.container.conditional {
+	background:
+		var(--flow-background-arrow-extension-top-vertical),
+		var(--flow-background-arrow-extension-bottom-vertical);
+}
+#body.flow .block.container.conditional:not(.has-else):not(.has-default) {
+	background:
+		var(--flow-background-arrow-extension-top-vertical),
+		var(--flow-background-arrow-extension-bottom-vertical),
+		var(--flow-background-arrow-skip-conditional);
+}
+#body.flow .toolbox-panel .block.container.conditional,
+#body.flow .block.floating.container.conditional.fromToolbox {
+	background: none;
+}
+
+#body.flow .block.container.conditional > .subblock {
+	height: 100%;
+}
+
+#body.flow .block.container.conditional > .subblock:first-of-type:last-of-type { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	background:
+		var(--flow-background-arrow-down-top),
+		var(--flow-background-arrow-extension-bottom-vertical);
+}
+#body.flow .block.container.conditional > .subblock:first-of-type:not(:last-of-type) { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	background:
+		var(--flow-background-arrow-extension-top-right),
+		var(--flow-background-arrow-down-top),
+		var(--flow-background-arrow-extension-middle-right),
+		var(--flow-background-arrow-extension-bottom-vertical),
+		var(--flow-background-arrow-extension-bottom-right);
+}
+#body.flow .block.container.conditional > .subblock:not(:first-of-type):not(:last-of-type) { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	background:
+		var(--flow-background-arrow-extension-top-horizontal),
+		var(--flow-background-arrow-head-middle-left),
+		var(--flow-background-arrow-extension-middle-right),
+		var(--flow-background-arrow-extension-bottom-vertical),
+		var(--flow-background-arrow-extension-bottom-horizontal);
+}
+#body.flow .block.container.conditional > .subblock:not(:first-of-type):last-of-type { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	background:
+		var(--flow-background-arrow-dotted-top-left),
+		var(--flow-background-arrow-head-middle-left),
+		var(--flow-background-arrow-extension-bottom-vertical),
+		var(--flow-background-arrow-extension-bottom-left);
+}
+
+#body.flow .block.container.conditional > .subblock::after {
+	content: "";
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: var(--flow-image-line-vertical) center center / var(--flow-line-size) 100% no-repeat;
+}
+
+#body.flow .block.container.conditional > .icon,
+#body.flow .block.container.conditional > .block.subblock > .icon,
+#body.flow .block.container.loop > .icon,
+#body.flow .block.container.loop > .block.subblock > .icon {
+	position: relative;
+	z-index: 1;
+	overflow: visible;
+	border: none;
+	margin: var(--flow-block-container-icon-margin); /* Leave space so the icon and label fit inside the background image rhombus */
+}
+#body.flow .toolbox-panel .block.container.conditional > .icon,
+#body.flow .block.floating.container.conditional.fromToolbox > .icon,
+#body.flow .toolbox-panel .block.container.loop > .icon,
+#body.flow .block.floating.container.loop.fromToolbox > .icon {
+	margin: 0;
+}
+
+#body.flow .block.container.conditional > .icon::after,
+#body.flow .block.container.conditional > .block.subblock > .icon::after,
+#body.flow .block.container.loop > .icon::after,
+#body.flow .block.container.loop > .block.subblock > .icon::after {
+	content: "";
+	display: block;
+	width: calc(100% + var(--flow-block-container-icon-margin) * 2);
+	height: calc(100% + var(--flow-block-container-icon-margin) * 2);
+	background: var(--flow-background-rhombus);
+	position: absolute;
+	top: calc(var(--flow-block-container-icon-margin) * -1);
+	left: calc(var(--flow-block-container-icon-margin) * -1);
+	z-index: -1;
+}
+#body.flow .toolbox-panel .block.container.conditional > .icon::after,
+#body.flow .block.floating.container.conditional.fromToolbox > .icon::after,
+#body.flow .toolbox-panel .block.container.loop > .icon::after,
+#body.flow .block.floating.container.loop.fromToolbox > .icon::after {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+/* Placeholder */
+
+#body.flow .block.placeholder-before::before,
+#body.flow .block.placeholder-after::after,
+#body.flow #view-blocks > .block.placeholder-before:first-child::before,
+#body.flow #view-blocks > .block.placeholder-after:last-child::after,
+#body.flow .block.container.conditional > .subblock.placeholder-after::after {
+	content: " ";
+	display: block;
+	background: linear-gradient(transparent 20%, #f2a30b, transparent 80%) center center / 100% var(--big-space) no-repeat;
+	width: calc(100% + var(--row-margin));
+	margin-left: calc(var(--row-margin) / 2);
+	height: var(--flow-symbol-size);
+	animation: fadeIn var(--default-transition-time);
+}
+#body.flow .block.placeholder-before::before,
+#body.flow #view-blocks > .block.placeholder-before:first-child::before {
+	position: absolute;
+	top: calc(var(--flow-symbol-size) * -1);
+
+}
+#body.flow .block.placeholder-after::after,
+#body.flow #view-blocks > .block.placeholder-after:last-child::after {
+	position: absolute;
+	bottom: calc(var(--flow-symbol-size) * -1);
+}

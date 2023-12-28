@@ -16,16 +16,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#$e_loadURLParams">$e_loadURLParams</a></b>(urlParams)
-								</div>
-								<div class="description">Parses the parameters in the URL</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_downloadCode">API_downloadCode</a></b>()
+								<div class="fixedFont"><b><a href="#$e.downloadCode">$e.downloadCode</a></b>()
 								</div>
 								<div class="description">Returns the user's code</div>
 							</td>
@@ -34,16 +25,97 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_execute">API_execute</a></b>()
+								<div class="fixedFont"><b><a href="#$e.forceBlockSetup">$e.forceBlockSetup</a></b>(value)
 								</div>
-								<div class="description">Runs the code in the console</div>
+								<div class="description">Sets if block setup is forced in level2</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_getOuput">API_getOuput</a></b>()
+								<div class="fixedFont"><b><a href="#$e.fullscreen">$e.fullscreen</a></b>(fullscreen)
+								</div>
+								<div class="description">Sets tool in fullscreen</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getBreakpoints">$e.getBreakpoints</a></b>()
+								</div>
+								<div class="description">Gets breakpoints</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getToolbox">$e.getToolbox</a></b>()
+								</div>
+								<div class="description">Returns the name of the current toolbox</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getGridProperties">$e.getGridProperties</a></b>()
+								</div>
+								<div class="description">Returns the grid's properties</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getInput">$e.getInput</a></b>()
+								</div>
+								<div class="description">Gets the input from I/O</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getLastExecutionCodeLinesCount">$e.getLastExecutionCodeLinesCount</a></b>()
+								</div>
+								<div class="description">Gets the number of lines of code in the last execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getLastExecutionInstuctionsCount">$e.getLastExecutionInstuctionsCount</a></b>()
+								</div>
+								<div class="description">Gets the number of instructions run in the last execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getLastExecutionTime">$e.getLastExecutionTime</a></b>()
+								</div>
+								<div class="description">Gets the exection time in the last execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getObservers">$e.getObservers</a></b>()
+								</div>
+								<div class="description">Gets breakpoints</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getOuput">$e.getOuput</a></b>()
 								</div>
 								<div class="description">Gets the output from I/O</div>
 							</td>
@@ -52,7 +124,16 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_getWhiteboard">API_getWhiteboard</a></b>()
+								<div class="fixedFont"><b><a href="#$e.getView">$e.getView</a></b>()
+								</div>
+								<div class="description">Returns the name of the current view</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.getWhiteboard">$e.getWhiteboard</a></b>(gridVisible, guideVisible)
 								</div>
 								<div class="description">Returns the image binary of the whiteboard</div>
 							</td>
@@ -61,7 +142,70 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_setAxis">API_setAxis</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.isReady">$e.isReady</a></b>()
+								</div>
+								<div class="description">Returns if the eSeeCode is ready</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.maximize">$e.maximize</a></b>(fullscreen)
+								</div>
+								<div class="description">Sets the code view maximized</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.pause">$e.pause</a></b>()
+								</div>
+								<div class="description">Pauses execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.reset">$e.reset</a></b>()
+								</div>
+								<div class="description">Resets the execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.restart">$e.restart</a></b>()
+								</div>
+								<div class="description">Restarts eSeeCode interface</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.resume">$e.resume</a></b>()
+								</div>
+								<div class="description">Resumes execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.runCode">$e.runCode</a></b>(code)
+								</div>
+								<div class="description">Runs code silently</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setAxis">$e.setAxis</a></b>(value, action)
 								</div>
 								<div class="description">Chooses the predefined axis to use for the grid</div>
 							</td>
@@ -70,7 +214,61 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_setGridStep">API_setGridStep</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.setBasePath">$e.setBasePath</a></b>(value)
+								</div>
+								<div class="description">Sets the base path for loading images</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setBlockSetup">$e.setBlockSetup</a></b>(value)
+								</div>
+								<div class="description">Sets the default block setup style</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setBreakpoints">$e.setBreakpoints</a></b>(value)
+								</div>
+								<div class="description">Adds breakpoints</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setCustomInstructions">$e.setCustomInstructions</a></b>(value, action)
+								</div>
+								<div class="description">Sets definitions of custom instructions</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setExecutionStep">$e.setExecutionStep</a></b>(step)
+								</div>
+								<div class="description">Defines whether to enable execution stepping</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setGridDivisions">$e.setGridDivisions</a></b>(value, action)
+								</div>
+								<div class="description">Sets the number of the lines in the grid</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setGridStep">$e.setGridStep</a></b>(value, action)
 								</div>
 								<div class="description">Sets the separation of the lines in the grid</div>
 							</td>
@@ -79,7 +277,25 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_setInput">API_setInput</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.setGuideImage">$e.setGuideImage</a></b>(value)
+								</div>
+								<div class="description">Sets a custom image for the whiteboard guide</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setGuideSize">$e.setGuideSize</a></b>(value)
+								</div>
+								<div class="description">Sets a custom size for the whiteboard guide</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setInput">$e.setInput</a></b>(value, action)
 								</div>
 								<div class="description">Sets the input in I/O</div>
 							</td>
@@ -88,7 +304,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_setInstructions">API_setInstructions</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.setInstructions">$e.setInstructions</a></b>(value, action)
 								</div>
 								<div class="description">Sets the instruction blocks to make available to the user</div>
 							</td>
@@ -97,16 +313,61 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_setTimeout">API_setTimeout</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.setInstructionsPause">$e.setInstructionsPause</a></b>(milliseconds)
 								</div>
-								<div class="description">Sets the execution time limit</div>
+								<div class="description">Pauses every instruction for a certain amount of time</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_showFilemenu">API_showFilemenu</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.setObservers">$e.setObservers</a></b>(value)
+								</div>
+								<div class="description">Adds observers</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setPreventExit">$e.setPreventExit</a></b>(value)
+								</div>
+								<div class="description">Prevent exit when user has entered code</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setTheme">$e.setTheme</a></b>(theme, run)
+								</div>
+								<div class="description">Switches the active theme</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setViewTabs">$e.setViewTabs</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides views tabs</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.setWhiteboardBackground">$e.setWhiteboardBackground</a></b>(url)
+								</div>
+								<div class="description">Sets the background of the whiteboard</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.showFilemenu">$e.showFilemenu</a></b>(value, action)
 								</div>
 								<div class="description">Shows/Hides the filemenu</div>
 							</td>
@@ -115,7 +376,16 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_showGrid">API_showGrid</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.showFullscreenmenu">$e.showFullscreenmenu</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the fullscreen menu</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.showGrid">$e.showGrid</a></b>(value, action)
 								</div>
 								<div class="description">Shows/Hides the grid</div>
 							</td>
@@ -124,7 +394,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_showGuide">API_showGuide</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.showGuide">$e.showGuide</a></b>(value, action)
 								</div>
 								<div class="description">Shows/Hides the guide</div>
 							</td>
@@ -133,7 +403,43 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_switchLanguage">API_switchLanguage</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.showThemes">$e.showThemes</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the themes menu</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.showTranslations">$e.showTranslations</a></b>(value, action)
+								</div>
+								<div class="description">Shows/Hides the translations menu</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.stop">$e.stop</a></b>()
+								</div>
+								<div class="description">Stops execution</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.switchToolbox">$e.switchToolbox</a></b>(value, action)
+								</div>
+								<div class="description">Switches to the specified toolbox</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.switchLanguage">$e.switchLanguage</a></b>(value, action)
 								</div>
 								<div class="description">Switches to the specified language</div>
 							</td>
@@ -142,7 +448,7 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_switchView">API_switchView</a></b>(value, action)
+								<div class="fixedFont"><b><a href="#$e.switchView">$e.switchView</a></b>(value, action)
 								</div>
 								<div class="description">Switches to the specified view</div>
 							</td>
@@ -151,18 +457,36 @@
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_uploadCode">API_uploadCode</a></b>(code, run)
+								<div class="fixedFont"><b><a href="#$e.updateSavedTime">$e.updateSavedTime</a></b>()
 								</div>
-								<div class="description">Loads code into the console</div>
+								<div class="description">Marks the code as saved now</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#API_uploadPrecode">API_uploadPrecode</a></b>(code, run)
+								<div class="fixedFont"><b><a href="#$e.ide.uploadCode">$e.ide.uploadCode</a></b>(code, run)
 								</div>
-								<div class="description">Loads precode into the console</div>
+								<div class="description">Loads code into the view</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.uploadPostcode">$e.uploadPostcode</a></b>(code)
+								</div>
+								<div class="description">Loads postcode into the view</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#$e.uploadPrecode">$e.uploadPrecode</a></b>(code, run)
+								</div>
+								<div class="description">Loads precode into the view</div>
 							</td>
 						</tr>
 					
@@ -187,68 +511,22 @@
 					Method Detail
 				</div>
 				
-					<a name="$e_loadURLParams"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>$e_loadURLParams</b>(urlParams)
-					
-					</div>
-					<div class="description">
-						Parses the parameters in the URL
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">$e_loadURLParams()</pre>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{String}</span> <b>urlParams</b>
-									<i>Optional</i>
-								</dt>
-								<dd>URL to parse. If unset use browser's location</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="API_downloadCode"> </a>
+					<a name="$e.downloadCode"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{String}</span>
-					<b>API_downloadCode</b>()
+					<b>$e.downloadCode</b>()
 					
 					</div>
 					<div class="description">
 						Returns the user's code
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_downloadCode()</pre>
+					<pre class="code">$e.downloadCode()</pre>
 					
 					
 					
@@ -269,28 +547,82 @@
 
 					<hr />
 				
-					<a name="API_execute"> </a>
+					<a name="$e.forceBlockSetup"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_execute</b>()
+					<b>$e.forceBlockSetup</b>(value)
 					
 					</div>
 					<div class="description">
-						Runs the code in the console
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						Sets if block setup is forced in level2
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_execute()</pre>
+					<pre class="code">$e.forceBlockSetup(true)</pre>
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether or not to force block setup when adding instructions on level2</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.fullscreen"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.fullscreen</b>(fullscreen)
+					
+					</div>
+					<div class="description">
+						Sets tool in fullscreen
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.fullscreen()</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>fullscreen</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Force fullscreen</dd>
+							
+							</dl>
 						
 						
 						
@@ -307,25 +639,351 @@
 
 					<hr />
 				
-					<a name="API_getOuput"> </a>
+					<a name="$e.getBreakpoints"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array<Number|String>}</span>
+					<b>$e.getBreakpoints</b>()
+					
+					</div>
+					<div class="description">
+						Gets breakpoints
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getBreakpoints()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array<Number|String>}</span> Block/Line numbers and/or variable names where breakpoints/watches set up</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getToolbox"> </a>
 					<div class="fixedFont">
 					
 					<span class="light">{String}</span>
-					<b>API_getOuput</b>()
+					<b>$e.getToolbox</b>()
+					
+					</div>
+					<div class="description">
+						Returns the name of the current toolbox
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getToolbox()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> Name of the current toolbox</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getGridProperties"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.getGridProperties</b>()
+					
+					</div>
+					<div class="description">
+						Returns the grid's properties
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getGridProperties()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getInput"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>$e.getInput</b>()
+					
+					</div>
+					<div class="description">
+						Gets the input from I/O
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getInput()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> Input in the I/O</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getLastExecutionCodeLinesCount"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>$e.getLastExecutionCodeLinesCount</b>()
+					
+					</div>
+					<div class="description">
+						Gets the number of lines of code in the last execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getLastExecutionCodeLinesCount()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> Number of lines of code in the last execution</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getLastExecutionInstuctionsCount"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>$e.getLastExecutionInstuctionsCount</b>()
+					
+					</div>
+					<div class="description">
+						Gets the number of instructions run in the last execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getLastExecutionInstuctionsCount()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> Number of instructions run in the last execution</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getLastExecutionTime"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>$e.getLastExecutionTime</b>()
+					
+					</div>
+					<div class="description">
+						Gets the exection time in the last execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getLastExecutionTime()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> Execution time of code in the last execution</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getObservers"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array<Number|String|<Number|String>>}</span>
+					<b>$e.getObservers</b>()
+					
+					</div>
+					<div class="description">
+						Gets breakpoints
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getObservers()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array<Number|String|<Number|String>>}</span> Block/Line numbers, variable names or line+watch where breakpoints/watches set up</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.getOuput"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>$e.getOuput</b>()
 					
 					</div>
 					<div class="description">
 						Gets the output from I/O
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_getOuput("1 1 2 3 5 8")</pre>
+					<pre class="code">$e.getOuput()</pre>
 					
 					
 					
@@ -352,25 +1010,22 @@
 
 					<hr />
 				
-					<a name="API_getWhiteboard"> </a>
+					<a name="$e.getView"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{*}</span>
-					<b>API_getWhiteboard</b>()
+					<span class="light">{String}</span>
+					<b>$e.getView</b>()
 					
 					</div>
 					<div class="description">
-						Returns the image binary of the whiteboard
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						Returns the name of the current view
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_getWhiteboard()</pre>
+					<pre class="code">$e.getView()</pre>
 					
 					
 					
@@ -388,7 +1043,7 @@
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{*}</span> Image binary of the whiteboard</dd>
+								<dd><span class="light fixedFont">{String}</span> Name of the current view</dd>
 							
 							</dl>
 						
@@ -397,25 +1052,355 @@
 
 					<hr />
 				
-					<a name="API_setAxis"> </a>
+					<a name="$e.getWhiteboard"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>$e.getWhiteboard</b>(gridVisible, guideVisible)
+					
+					</div>
+					<div class="description">
+						Returns the image binary of the whiteboard
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.getWhiteboard()</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>gridVisible</b>
+									
+								</dt>
+								<dd>Can be use to force toggling the grid</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>guideVisible</b>
+									
+								</dt>
+								<dd>Can be use to force toggling the guide</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> Data URL of the whiteboard</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.isReady"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>$e.isReady</b>()
+					
+					</div>
+					<div class="description">
+						Returns if the eSeeCode is ready
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.isReady()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> The date since it is ready, undefined otherwise</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.maximize"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_setAxis</b>(value, action)
+					<b>$e.maximize</b>(fullscreen)
+					
+					</div>
+					<div class="description">
+						Sets the code view maximized
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.maximize()</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>fullscreen</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Force fullscreen</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.pause"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.pause</b>()
+					
+					</div>
+					<div class="description">
+						Pauses execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.pause()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.reset"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.reset</b>()
+					
+					</div>
+					<div class="description">
+						Resets the execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.reset()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.restart"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.restart</b>()
+					
+					</div>
+					<div class="description">
+						Restarts eSeeCode interface
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.restart()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.resume"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.resume</b>()
+					
+					</div>
+					<div class="description">
+						Resumes execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.resume()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.runCode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.runCode</b>(code)
+					
+					</div>
+					<div class="description">
+						Runs code silently
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.runCode("repeat(4){forward(100)}")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>code</b>
+									
+								</dt>
+								<dd>Code to run</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setAxis"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setAxis</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Chooses the predefined axis to use for the grid
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_setAxis(0)</pre>
+					<pre class="code">$e.setAxis(0)</pre>
 					
 					
 					
@@ -452,25 +1437,310 @@
 
 					<hr />
 				
-					<a name="API_setGridStep"> </a>
+					<a name="$e.setBasePath"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_setGridStep</b>(value, action)
+					<b>$e.setBasePath</b>(value)
+					
+					</div>
+					<div class="description">
+						Sets the base path for loading images
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setBasePath("https://eseeco.de/example/")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Base path, can be a full URL</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setBlockSetup"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setBlockSetup</b>(value)
+					
+					</div>
+					<div class="description">
+						Sets the default block setup style
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setBlockSetup("basic")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Pixels between each line in the grid</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setBreakpoints"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setBreakpoints</b>(value)
+					
+					</div>
+					<div class="description">
+						Adds breakpoints
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setBreakpoints([8,"name","age"])</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String|Array<Number|String>}</span> <b>value</b>
+									
+								</dt>
+								<dd>Block/Line numbers and/or variable names where breakpoints/watches are to be placed</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setCustomInstructions"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setCustomInstructions</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets definitions of custom instructions
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setCustomInstructions({...})</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Seconds to wait for the execution to finish</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setExecutionStep"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setExecutionStep</b>(step)
+					
+					</div>
+					<div class="description">
+						Defines whether to enable execution stepping
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setExecutionStep(1)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>step</b>
+									
+								</dt>
+								<dd>Number of instructions after which execution must be paused</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setGridDivisions"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setGridDivisions</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Sets the number of the lines in the grid
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setGridDivisions(10)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Number of lines in the grid</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setGridStep"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setGridStep</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Sets the separation of the lines in the grid
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_setGridStep(50)</pre>
+					<pre class="code">$e.setGridStep(50)</pre>
 					
 					
 					
@@ -493,6 +1763,13 @@
 							</dl>
 						
 						
+							<dl class="detailList">
+							<dt class="heading">Deprecated:</dt>
+							<dt>
+								since version 2.4
+							</dt>
+							</dl>
+						
 						
 							<dl class="detailList">
 							<dt class="heading">Since:</dt>
@@ -507,25 +1784,114 @@
 
 					<hr />
 				
-					<a name="API_setInput"> </a>
+					<a name="$e.setGuideImage"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_setInput</b>(value, action)
+					<b>$e.setGuideImage</b>(value)
+					
+					</div>
+					<div class="description">
+						Sets a custom image for the whiteboard guide
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setGuideImage("https://eseecode.com/favicon.png")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>URL where the image is, can be a relative path</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setGuideSize"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setGuideSize</b>(value)
+					
+					</div>
+					<div class="description">
+						Sets a custom size for the whiteboard guide
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setGuideSize(25)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Integer}</span> <b>value</b>
+									
+								</dt>
+								<dd>Size in pixels of the guide</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setInput"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setInput</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Sets the input in I/O
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_setInput("1 1 2 3 5 8")</pre>
+					<pre class="code">$e.setInput("1 1 2 3 5 8")</pre>
 					
 					
 					
@@ -562,25 +1928,22 @@
 
 					<hr />
 				
-					<a name="API_setInstructions"> </a>
+					<a name="$e.setInstructions"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_setInstructions</b>(value, action)
+					<b>$e.setInstructions</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Sets the instruction blocks to make available to the user
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_setInstructions("turnLeft;90;forward")</pre>
+					<pre class="code">$e.setInstructions("turnLeft;90;forward")</pre>
 					
 					
 					
@@ -592,7 +1955,7 @@
 									<span class="light fixedFont">{String}</span> <b>value</b>
 									
 								</dt>
-								<dd>Instructions to makwe available (spearated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)</dd>
+								<dd>Instructions to make available (separated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Boolean}</span> <b>action</b>
@@ -617,25 +1980,22 @@
 
 					<hr />
 				
-					<a name="API_setTimeout"> </a>
+					<a name="$e.setInstructionsPause"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_setTimeout</b>(value, action)
+					<b>$e.setInstructionsPause</b>(milliseconds)
 					
 					</div>
 					<div class="description">
-						Sets the execution time limit
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						Pauses every instruction for a certain amount of time
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_setTimeout(20)</pre>
+					<pre class="code">$e.setInstructionsPause(500)</pre>
 					
 					
 					
@@ -644,10 +2004,200 @@
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number|String}</span> <b>value</b>
+									<span class="light fixedFont">{Number}</span> <b>milliseconds</b>
 									
 								</dt>
-								<dd>Seconds to wait for the execution to finish</dd>
+								<dd>Time to pause each instruction</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setObservers"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setObservers</b>(value)
+					
+					</div>
+					<div class="description">
+						Adds observers
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setObservers(["firstname","surname"])</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number|String|Array<Number|String>}</span> <b>value</b>
+									
+								</dt>
+								<dd>Variable names to observe</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setPreventExit"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setPreventExit</b>(value)
+					
+					</div>
+					<div class="description">
+						Prevent exit when user has entered code
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setPreventExit(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to prevent exit when user has coded</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setTheme"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setTheme</b>(theme, run)
+					
+					</div>
+					<div class="description">
+						Switches the active theme
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setTheme("sharp")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>theme</b>
+									
+								</dt>
+								<dd>Name of the theme to use</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>run</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>If true, applies the theme immediately</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.setViewTabs"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.setViewTabs</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides views tabs
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setViewTabs("touch,drag")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>List of view tabs to display, separated with colon or semi-colon</dd>
 							
 								<dt>
 									<span class="light fixedFont">{Boolean}</span> <b>action</b>
@@ -661,7 +2211,7 @@
 						
 							<dl class="detailList">
 							<dt class="heading">Since:</dt>
-								<dd>2.3</dd>
+								<dd>2.4</dd>
 							</dl>
 							</dl>
 						
@@ -672,25 +2222,68 @@
 
 					<hr />
 				
-					<a name="API_showFilemenu"> </a>
+					<a name="$e.setWhiteboardBackground"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_showFilemenu</b>(value, action)
+					<b>$e.setWhiteboardBackground</b>(url)
+					
+					</div>
+					<div class="description">
+						Sets the background of the whiteboard
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.setWhiteboardBackground("https://eseecode.com/favicon.png")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>url</b>
+									
+								</dt>
+								<dd>URL where the background is, can be a relative path</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.showFilemenu"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.showFilemenu</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Shows/Hides the filemenu
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_showFilemenu(false)</pre>
+					<pre class="code">$e.showFilemenu(false)</pre>
 					
 					
 					
@@ -727,25 +2320,74 @@
 
 					<hr />
 				
-					<a name="API_showGrid"> </a>
+					<a name="$e.showFullscreenmenu"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_showGrid</b>(value, action)
+					<b>$e.showFullscreenmenu</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the fullscreen menu
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.showFilemenu(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.3</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.showGrid"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.showGrid</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Shows/Hides the grid
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_showGrid(false)</pre>
+					<pre class="code">$e.showGrid(false)</pre>
 					
 					
 					
@@ -782,25 +2424,22 @@
 
 					<hr />
 				
-					<a name="API_showGuide"> </a>
+					<a name="$e.showGuide"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_showGuide</b>(value, action)
+					<b>$e.showGuide</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Shows/Hides the guide
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_showGuide(false)</pre>
+					<pre class="code">$e.showGuide(false)</pre>
 					
 					
 					
@@ -837,25 +2476,213 @@
 
 					<hr />
 				
-					<a name="API_switchLanguage"> </a>
+					<a name="$e.showThemes"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_switchLanguage</b>(value, action)
+					<b>$e.showThemes</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the themes menu
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.showThemes(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.showTranslations"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.showTranslations</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Shows/Hides the translations menu
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.showTranslations(false)</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean|String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Whether to show it (true) or hide it (false)</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.stop"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.stop</b>()
+					
+					</div>
+					<div class="description">
+						Stops execution
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.stop()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>3.2</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.switchToolbox"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.switchToolbox</b>(value, action)
+					
+					</div>
+					<div class="description">
+						Switches to the specified toolbox
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.switchToolbox("io")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>value</b>
+									
+								</dt>
+								<dd>Toolbox to switch to</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Boolean}</span> <b>action</b>
+									<i>Optional, Default: true</i>
+								</dt>
+								<dd>Whether to run the actions to apply the changes (true) or just set the variables (false)</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.switchLanguage"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.switchLanguage</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Switches to the specified language
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_switchLanguage("ca")</pre>
+					<pre class="code">$e.switchLanguage("ca")</pre>
 					
 					
 					
@@ -892,25 +2719,22 @@
 
 					<hr />
 				
-					<a name="API_switchView"> </a>
+					<a name="$e.switchView"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_switchView</b>(value, action)
+					<b>$e.switchView</b>(value, action)
 					
 					</div>
 					<div class="description">
 						Switches to the specified view
 						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
-						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_switchView("build")</pre>
+					<pre class="code">$e.switchView("build")</pre>
 					
 					
 					
@@ -947,25 +2771,57 @@
 
 					<hr />
 				
-					<a name="API_uploadCode"> </a>
+					<a name="$e.updateSavedTime"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_uploadCode</b>(code, run)
+					<b>$e.updateSavedTime</b>()
 					
 					</div>
 					<div class="description">
-						Loads code into the console
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						Marks the code as saved now
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_uploadCode("repeat(4){forward(100)}",true)</pre>
+					<pre class="code">$e.updateSavedTime()</pre>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.ide.uploadCode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.ide.uploadCode</b>(code, run)
+					
+					</div>
+					<div class="description">
+						Loads code into the view
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.ide.uploadCode("repeat(4){forward(100)}",true)</pre>
 					
 					
 					
@@ -996,25 +2852,68 @@
 
 					<hr />
 				
-					<a name="API_uploadPrecode"> </a>
+					<a name="$e.uploadPostcode"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>API_uploadPrecode</b>(code, run)
+					<b>$e.uploadPostcode</b>(code)
 					
 					</div>
 					<div class="description">
-						Loads precode into the console
-						
-							<br />
-							<i>Defined in: </i> &lt;/home/ubuntu/workspace/js/api.js&gt;.
+						Loads postcode into the view
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">API_uploadPrecode("repeat(4){forward(100)}")</pre>
+					<pre class="code">$e.uploadPostcode("repeat(4){forward(100)}")</pre>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>code</b>
+									
+								</dt>
+								<dd>Code to set as postcode</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>2.4</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="$e.uploadPrecode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>$e.uploadPrecode</b>(code, run)
+					
+					</div>
+					<div class="description">
+						Loads precode into the view
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">$e.uploadPrecode("repeat(4){forward(100)}")</pre>
 					
 					
 					
@@ -1053,5 +2952,5 @@
 				
 			
 			
-<!-- ============================== event details ========================= -->		
+<!-- ============================== event details ========================= -->
 </body></html>

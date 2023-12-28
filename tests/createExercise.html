@@ -5,8 +5,8 @@
         <title>Build your own eSeeCode exercise</title>
         <style type="text/css">
             body {
-              margin: 0px;
-              padding: 0px;
+              margin: 0;
+              padding: 0;
             }
             div {
               text-align: center;
@@ -16,8 +16,8 @@
               min-height: 200px;
             }
             .help {
-              margin: 10px 10px 10px 10px;
-              padding: 10px 10px 10px 10px;
+              margin: 10px 10px;
+              padding: 10px 10px;
               background-color: #CCCCCC;
             }
             .pageTitle {
@@ -31,7 +31,7 @@
               text-align: center;
             }
             #controls * {
-              margin: 10px 10px 0px 10px;
+              margin: 10px 10px 0 10px;
             }
             #conclusion {
               overflow-wrap: break-word;
@@ -81,7 +81,7 @@
             }
             #steps input {
               height: 20px;
-              padding: 0px;
+              padding: 0;
               text-size: 14px;
             }
             #switch {
@@ -91,7 +91,7 @@
             #tool {
               position: relative;
               width: 500px;
-              margin: 0px 10px 10px 10px;
+              margin: 0 10px 10px 10px;
             }
             #url {
               width: 1100px;
@@ -135,11 +135,11 @@
               background-color: #987654;
               text-align: center;
               vertical-align: middle;
-              padding: 0px 10px 10px 10px;
+              padding: 0 10px 10px 10px;
               cursor: pointer;
               border: 2px solid #765432;
-              border-top-width: 0px;
-              border-radius: 0px 0px 10px 10px;
+              border-top-width: 0;
+              border-radius: 0 0 10px 10px;
             }
             #switch input[type="button"]:hover {
               color: #CCCCCC;
@@ -160,7 +160,6 @@
         <script type="text/javascript" src="../js/defaults.js"></script>
         <script type="text/javascript" src="../js/common.js"></script>
         <script type="text/javascript" src="../js/translate.js"></script>
-        <script type="text/javascript" src="../js/instructions/categories.js"></script>
         <script type="text/javascript" src="../js/instructions/set.js"></script>
         <script type="text/javascript" src="../translations/installed.js"></script>
         <script type="text/javascript" src="../themes/installed.js"></script>
@@ -171,9 +170,9 @@
                 document.getElementById("url").value = url;
                 document.getElementById("eseecode-frame").src = url + ((url !== website) ? "&" : "?") + "preventexit=false";
                 if (url.length >= 2000) {
-                    document.getElementById("notes").innerHTML = "The resulting URL has 2000 characters or more. This URL might not load correctly on Internet Explorer browsers!";
+                    document.getElementById("notes").textContent = "The resulting URL has 2000 characters or more. This URL might not load correctly on Internet Explorer browsers!";
                 } else {
-                    document.getElementById("notes").innerHTML = "";
+                    document.getElementById("notes").textContent = "";
                 }
                 document.getElementById("conclusion").innerHTML = "Use this code to embed the exercise in your website:<br /><br /><div style=\"text-align:left;\">"+"&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\" allowfullscreen=\"true\">&lt;/iframe></div><br /><br />Below you can copy the URL to the exercise you have created, you can send this URL to your students.<br /><br />Underneath you can preview how the exercise will look like.";
             }

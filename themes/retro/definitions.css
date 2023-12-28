@@ -1,0 +1,47 @@
+:root {
+
+	--bg-color: #000000;
+	--text-color: #298d29;
+	--msgbox-bg-color: #000000;
+	--msgbox-color: #298d29;
+	--msgbox-shadow-color: #000000;
+	--tabs-bg-color: #000000;
+	--border-color: #298d29;
+	--hover-color: #298d29;
+	--disabled-bg-color: #000000;
+	--disabled-border-color: #298d29;
+	--outsidier-color: #298d29;
+	--block-border-color: #298d29;
+	--block-shadow-color: #298d29;
+	--block-shadow-hover-color: #298d29;
+
+	--bigger-space: 20px;
+	--big-space: 10px;
+	--default-space: 5px;
+	--small-space: 3px;
+	
+	--msgbox-padding-all: var(--big-space);
+	--msgbox-border-all:  var(--default-space);
+	
+}
+
+#toolbox-blocks,
+#view-blocks {
+	background-image: unset !important;
+}
+.panel-column {
+	color: var(--text-color);
+}
+.tab {
+	color: var(--bg-color);
+}
+.tab-active {
+	color: var(--text-color);
+}
+.tab-button,
+.tab-button:hover {
+	color: var(--msgbox-bg-color);
+}
+.msgBox {
+	color: var(--text-color);
+}

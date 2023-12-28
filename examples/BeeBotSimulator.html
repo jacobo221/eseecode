@@ -3,11 +3,11 @@
 <iframe id="eseecode-frame" width="1000" height="500" src="../index.html?view=touch&instructions=forward;75;blank;turnLeft;turnRight;blank;setColor;'black';unsetColor"></iframe>
 <script type="text/javascript">
 function testme() {
-document.getElementById('eseecode-frame').contentWindow.API_uploadPrecode('changeAxis(0,0,1.05,1.05);image("http://www.suppliesforschools.co.uk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/i/b/ibfarm.jpg",0,-2,false,400,400);use();goTo(37,37);turnRight(90);unsetColor()', true);
+document.getElementById('eseecode-frame').contentWindow.$e.uploadPrecode('changeAxis(0,0,1.05,1.05);image("http://www.suppliesforschools.co.uk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/i/b/ibfarm.jpg",0,-2,false,400,400);use();goTo(37,37);turnRight(90);unsetColor()', true);
 }
 document.getElementById('eseecode-frame').addEventListener("load", function() {
     var retryUntilLoaded = setInterval(function() {
-        if (document.getElementById('eseecode-frame').contentWindow.API_isReady && document.getElementById('eseecode-frame').contentWindow.API_isReady()) {
+        if (document.getElementById('eseecode-frame').contentWindow.$e.isReady && document.getElementById('eseecode-frame').contentWindow.$e.isReady()) {
             clearInterval(retryUntilLoaded);
             testme();
         }

@@ -1,0 +1,39 @@
+:root {
+
+	--bg-color: #ff3478;
+	--text-color: #333333;
+	--msgbox-bg-color: #e9e9e9;
+	--msgbox-color: #0cc9fa;
+	--msgbox-shadow-color: #5098f4;
+	--tabs-bg-color: #fe0910;
+	--border-color: #808080;
+	--hover-color: #fe949d;
+	--disabled-bg-color: #bbbbbb;
+	--disabled-border-color: #ffffff;
+	--outsidier-color: #77794C;
+	--block-border-color: #AAAAAA;
+	--block-shadow-color: #cbf675;
+	--block-shadow-hover-color: #8ac640;
+
+	--bigger-space: 25px;
+	--big-space: 15px;
+	--default-space: 8px;
+	--small-space: 5px;
+	
+}
+
+.tab-active, .tab-active:hover {
+	color: var(--broken-white);
+}
+.panel-column {
+	background-image: none !important;
+	background-color: #d445cc;	
+}
+#toolbox .panel-column {
+	background-color: #f6f380;
+}
+#toolbox-debug-command,
+#view-buttons {
+	background-image: none;
+	background-color: var(--msgbox-color);	
+}

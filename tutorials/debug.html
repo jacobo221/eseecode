@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>eSeeCode tutorial</title>
+        <script type="text/javascript" src="../tools/guide.js"></script>
+    </head>
+<body>
+<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true"></iframe>
+<script type="text/javascript">
+    var guideSteps = [
+        { type: "pagetitle", text: "eSeeCode tutorial: Debug" },
+        { type: "fullscreenmenu", argument: "true" },
+        { type: "view", argument: "code" },
+        { type: "info", text: "This tutorial will show you the basics about debugging", timeout: 5, humanStep: "Intro" },
+        { type: "code", argument: "var size = 30; repeat(30) { forward(size); turnLeft(20); size = size - 1; if ((repeatCount % 5) == 0) snapshot(); }" },
+        { type: "info", text: "We begin with this code that draws a spiral" },
+        { type: "debug", text: "Switch to Debug to have more insight on what's happening in this code" },
+        { type: "toolbox", argument: "debug" },
+        { type: "watchadd", text: "We want to watch the variable \"size\". Click here to add a watch", humanStep: "Watches" },
+        { type: "watchaddinput", text: "Enter the name of the variable you want to watch, in this case enter \"size\" (without quotes)" },
+        { type: "accept", text: "Once you have writen the name of the variable to watch, accept to create the watch" },
+        { type: "verifywatches", argument: "size" },
+        { type: "watch", argument: "size", text: "Notice the variable \"size\" has been added to the list of watched variables", action: "clickMessage" },
+        { type: "executebutton", text: "Run your code to see what happens", position: "above" },
+        { type: "watch", argument: "size", text: "Notice that you can watch the value of the variable \"size\" in real time", timeout: 10 },
+        { type: "stop", skipIf: "not running" },
+        { type: "watchtoggle", argument: "size", text: "Now check the checkbox next to the variable's name" },
+        { type: "verifybreakpoints", argument: "size" },
+        { type: "executebutton", text: "Run your code to see what happens", position: "above" },
+        { type: "watch", argument: "size", text: "Notice the execution is paused every time the variable's value changes, and you can see the old value and the new value", action: "clickMessage" },
+        { type: "executebutton", argument: "You can resume the execution. It will pause again when the variable's value changes" },
+        { type: "watchtoggle", argument: "size", text: "Uncheck the checkbox next to the variable name to continue watching the variable but stop it from pausing every time its value changes" },
+        { type: "verifybreakpoints", argument: "" },
+        { type: "verifywatches", argument: "size" },
+        { type: "pause", skipIf: "frozen" },
+        { type: "executebutton", argument: "Resume the execution to see the execution will no longer be paused when the variable's value changes", position: "above" },
+        { type: "watchremove", argument: "size", text: "Click on the red X to delete this variable's watch" },
+        { type: "breakpointadd", text: "You can also force the execution to pause every time a certain line is reached, this is called a breakpoint", humanStep: "Breakpoints" },
+        { type: "view", text: "Click on the line you which you want to place the breakpoint. Click on line 4", position: "right", wrapper: false },
+        { type: "verifybreakpoints", argument: "4", stepsBack: 3 },
+        { type: "breakpoint", argument: 4, text: "Notice that the breakpoint is added to the list, and there's a count for how many times the line has been reached", action: "clickMessage" },
+        { type: "breakpointupdate", argument: 4, text: "Click here to move the breakpoint to another line. Uncheck/check the checkbox to disable/enable the breakpoint" },
+        { type: "view", text: "Click on line 5", position: "right", wrapper: false },
+        { type: "verifybreakpoints", argument: "5", stepsBack: 3 },
+        { type: "executebutton", argument: "Now run the code and see what happens", position: "above" },
+        { type: "buildbutton", text: "This also works on the other view modes. Change to the Build view" },
+        { type: "view", argument: "build" },
+        { type: "toolbox", argument: "debug" },
+        { type: "breakpointadd", text: "Add a breakpoint on the sixth block" },
+        { type: "view", text: "Click on the the sixth block (\"snapshot()\")", position: "right", action: "clickMessage", stepsBack: 3, wrapper: false },
+        { type: "verifybreakpoints", argument: "4,6" },
+        { type: "breakpointremove", argument: 4, text: "Now remove the breakpoint on line 4 by clicking on the red cross", position: "above" },
+        { type: "verifybreakpoints", argument: "6" },
+        // TODO { type: "steppedtoggle", argument: "toolbox-debug-execute-stepped", text: "You can pause the execution on every instruction by checking this", humanStep: "Stepped execution" },
+        { type: "stop", skipIf: "not running" },
+        { type: "executebutton", argument: "Now run the code and see what happens", position: "above" },
+        { type: "executebutton", argument: "You must click to run for every instruction", position: "above" },
+        { type: "executebutton", argument: "Click a couple times more", position: "above" },
+        { type: "executebutton", argument: "Click once more", position: "above" },
+        { type: "executespeed", text: "You can speed up or down the execution of your programs", humanStep: "Execution speed" },
+        { type: "executebutton", argument: "Now run the code and see how it runs slower/faster", position: "above" },
+        { type: "toolbox-debug-layers", text: "Here you can see each layer independently by hovering over their name, and also switch them on or off", timeout: 5, humanStep: "Layers" },
+        { type: "preventexit", argument: false },
+        { type: "info", text: "Very well!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><b><a href=\"io.html\">Input/Output</a></b><br /><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial", humanStep: "End" }
+    ];
+    
+    add_translations({
+        ca: {
+            "eSeeCode tutorial: Debug": "Tutorial eSeeCode: Depurar",
+            "This tutorial will show you the basics about debugging": "Aquest tutorial et mostrarà els conceptes bàsics sobre com depurar el teu codi",
+            "Intro": "Intro",
+            "Execute button": "Botó Executar",
+            "End": "Final",
+            "Very well!<br />You have finished this tutorial!": "Molt bé!<br />Heu acabat aquest tutorial!",
+            "Other tutorials recommended:<br /><b><a href=\"io.html\">Input/Output</a></b><br /><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>": "Altres tutorials recomanats:<br /><b><a href=\"io.html\">Entrada/Sortida</a></b><br /><a href=\"animations.html\">Animacions</a></b><br /><a href=\"ui.html\">Interfície d'usuari</a>",
+        },
+        es: {
+            "eSeeCode tutorial: Debug": "Tutorial eSeeCode: Depurar",
+            "This tutorial will show you the basics about debugging": "Este tutorial te mostrará los conceptos básicos sobre cómo depurar tu código",
+            "Intro": "Intro",
+            "Execute button": "Botón Ejecutar",
+            "End": "Final",
+            "Very well!<br />You have finished this tutorial!": "¡Muy bien!<br />Has terminado este tutorial!",
+            "Other tutorials recommended:<br /><b><a href=\"io.html\">Input/Output</a></b><br /><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>": "Otros tutoriales recomendados tutorials recommended:<br /><b><a href=\"io.html\">Entrada/Salida</a></b><br /><a href=\"animations.html\">Animaciones</a></b><br /><a href=\"ui.html\">Interfaz de usuario</a>",
+        }
+    });
+    
+    function nextTutorial() {
+        redirectTutorial("io.html");
+    }
+
+    loadGuide("eseecode-frame", "../index.html");
+
+</script>
+</body>
+</html>

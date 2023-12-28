@@ -1,0 +1,31 @@
+:root {
+
+	--bg-color: #c0c0c0;
+	--text-color: #333333;
+	--msgbox-bg-color: #e9e9e9;
+	--msgbox-color: #999999;
+	--msgbox-shadow-color: #5098f4;
+	--tabs-bg-color: #999999;
+	--border-color: #666666;
+	--hover-color: #789ABC;
+	--disabled-bg-color: #bbbbbb;
+	--disabled-border-color: #ffffff;
+	--outsidier-color: #77794C;
+	--block-border-color: #AAAAAA;
+	--block-shadow-color: #888888;
+	--block-shadow-hover-color: #000000;
+
+	--bigger-space: 20px;
+	--big-space: 10px;
+	--default-space: 5px;
+	--small-space: 3px;
+	
+}
+
+.tab-active, .tab-active:hover {
+	color: var(--broken-white);
+}
+
+#body[data-level="level1"] .block, #body[data-level="level2"] .block, #body[data-level="level3"] .block {
+	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 180%, rgba(0,0,0,0.95) 200%);
+  }

@@ -1,0 +1,242 @@
+"use strict";
+
+/**
+ * Gets the instructionsPause value from the setup and updates in the $e class
+ * @private
+ * @example $e.execution.updateInstructionsPause()
+ */
+$e.execution.updateInstructionsPause = () => {
+	$e.execution.instructionsPause = parseInt($e.ui.element.querySelector("#toolbox-debug-execute-instructionsPause-input").value);
+	if ($e.execution.instructionsPause < 0) $e.execution.instructionsPause = 0;
+};
+
+/**
+ * Informs that the code is now running/stopped/paused
+ * @private
+ * @param {String|Boolean} status Running status
+ * @example $e.execution.updateStatus()
+ */
+$e.execution.updateStatus = (status) => {
+	if (typeof status != "string") console.error("Invalid status in updateStatus", status);
+	$e.execution.current.status = status;
+	$e.ui.updateViewButtonsVisibility();
+};
+
+/**
+ * Check whether there's code currently in the evaluation pipeline
+ * @private
+ * @example $e.execution.isEvaluating()
+ */
+$e.execution.isEvaluating = () => {
+	return $e.execution.current.precode.running || $e.execution.current.usercode.running || $e.execution.current.postcode.running;
+};
+
+/**
+ * Check whether the code is currently running
+ * @private
+ * @example $e.execution.isRunning()
+ */
+$e.execution.isRunning = () => {
+	return $e.execution.current.status === "running";
+};
+
+/**
+ * Checks if previous execution is breakpointed
+ * @private
+ * @example $e.execution.isBreakpointed()
+ */
+$e.execution.isBreakpointed = () => {
+	return $e.execution.current.status == "breakpointed";
+};
+
+/**
+ * Checks if previous execution is paused
+ * @private
+ * @example $e.execution.isPaused()
+ */
+$e.execution.isPaused = () => {
+	return $e.execution.current.status == "paused";
+};
+
+/**
+ * Checks if previous execution is frozen
+ * @private
+ * @example $e.execution.isFrozen()
+ */
+$e.execution.isFrozen = () => {
+	return $e.execution.current.status == "paused" || $e.execution.current.status == "breakpointed" || $e.execution.current.status == "stepped";
+};
+
+/**
+ * Check whether there whiteboard is clean
+ * @private
+ * @example $e.execution.isClean()
+ */
+$e.execution.isClean = () => {
+	return $e.execution.current.status === "clean";
+};
+
+/**
+ * Check whether the code has finished running
+ * @private
+ * @example $e.execution.isFinished()
+ */
+$e.execution.isFinished = () => {
+	return $e.execution.current.status === "finished";
+};
+
+/**
+ * Check whether the code is not running nor paused
+ * @private
+ * @example $e.execution.isKilled()
+ */
+$e.execution.isKilled = () => {
+	return $e.execution.current.status === "finished" || $e.execution.current.status === "stopped" || $e.execution.current.status === "clean";
+};
+
+/**
+ * Stops execution and waits before returning
+ * @private
+ * @example $e.execution.stopAndWait()
+ */
+$e.execution.stopAndWait = async function() {
+	$e.execution.stop();
+	const waitUntilStopped = (r) => {
+		if ($e.execution.isEvaluating()) setTimeout(() => waitUntilStopped(r), 10);
+		else r();
+	};
+	await new Promise(waitUntilStopped); // Wait until execution has been successfully stopped. We must run this async, otherwise it halts execution
+};
+
+/**
+ * Pause the execution
+ * @private
+ * @example $e.execution.pause()
+ */
+$e.execution.pause = () => {
+	if ($e.execution.isRunning()) $e.execution.updateStatus("paused"); // If it is "breakpointed" or "stepped", leave it as that already is paused and we do not want to overwrite that (this will only happen if pause is called from the API)
+};
+
+/**
+ * Resume the execution
+ * @private
+ * @example $e.execution.resume()
+ */
+$e.execution.resume = () => {
+	$e.execution.traceTruncate();
+	$e.execution.updateStatus("running");
+};
+
+/**
+ * Stops previous execution animations
+ * @private
+ * @example $e.execution.stopAnimations()
+ */
+$e.execution.stopAnimations = () => {	
+	// Stop previous execution remaining animations
+	$e.execution.current.timeoutHandlers.forEach(handler => clearTimeout(handler));
+};
+
+/**
+ * Stops previous execution sounds
+ * @private
+ * @example $e.execution.stopSounds()
+ */
+$e.execution.stopSounds = () => {	
+	// Stop previous execution remaining sounds
+	$e.execution.current.audioHandlers.forEach(handler => $e.backend.sound.stop(handler));
+};
+
+/**
+ * Stops previous execution
+ * @private
+ * @example $e.execution.stop()
+ */
+$e.execution.stop = () => {
+	if ($e.execution.current.pauseHandler) clearTimeout($e.execution.current.pauseHandler); // Stop if paused
+	$e.execution.current.kill = true;
+	clearTimeout($e.execution.current.breaktouiHandler);
+	$e.execution.updateStatus("stopped");
+	$e.execution.stopAnimations();
+	$e.execution.stopSounds();
+};
+
+/**
+ * Finishes the current execution
+ * @private
+ * @example $e.execution.end();
+ */
+$e.execution.end = () => {
+	if ($e.execution.current.startTime !== undefined) { // When running precode initially startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
+		const executionTime = ((new Date().getTime()) - $e.execution.current.startTime) / 1000;
+		const executionInstructions = $e.execution.current.programCounter;
+		$e.ui.element.querySelector("#toolbox-debug-execute-stats").innerHTML = _("Instructions executed") + ": " + executionInstructions + "<br />" + _("Execution time") + ": " + executionTime + " " + _("secs");
+		if (!$e.execution.precode.running && !$e.execution.current.postcode.running) {
+			$e.last_execution.time = executionTime;
+			$e.last_execution.instructionsCount = executionInstructions;
+		}
+	}
+	$e.execution.current.kill = true;
+	$e.ui.unhighlight();
+};
+
+/**
+ * Clears all the history in the tracing platform
+ * @private
+ * @example $e.execution.traceClear()
+ */
+$e.execution.traceClear = () => {
+	$e.execution.current.trace.stack = [];
+};
+
+/**
+ * Cuts the trace disarding everything after the current position
+ * @private
+ * @example $e.execution.traceTruncate()
+ */
+$e.execution.traceTruncate = () => {
+	$e.execution.current.trace.stack.splice($e.execution.current.trace.current + 1);
+};
+
+/**
+ * Replace non-deterministic functions with deterministic ones
+ * @private
+ * @example $e.execution.traceInject()
+ */
+$e.execution.traceInject = () => {
+	$e.execution.current.trace.current = -1;
+	$e.execution.current.trace.replaced = [];
+	Object.values($e.instructions.set).concat(Object.values($e.instructions.custom)).filter(v => v.nondeterministic).forEach((insrtruction) => {
+		const functionName = insrtruction.name;
+		$e.execution.current.trace.replaced.push({
+			name: functionName,
+			original: window[functionName],
+		});
+		window[functionName] = (() => {
+			const callback = window[functionName];
+			return (...argv) => {
+				$e.execution.current.trace.current++;
+				let value;
+				if ($e.execution.current.trace.current < $e.execution.current.trace.stack.length) {
+					value = $e.execution.current.trace.stack[$e.execution.current.trace.current];
+				} else {
+					value = callback(...argv);
+					$e.execution.current.trace.stack.push(value);
+				}
+
+				return value;
+			};
+		})();
+	});
+};
+
+/**
+ * Replace the substitute deterministic functions with the original ones
+ * @private
+ * @example $e.execution.traceRestore()
+ */
+$e.execution.traceRestore = () => {
+	$e.execution.current.trace.replaced.forEach((replacedFunction) => {
+		window[replacedFunction.name] = replacedFunction.original;
+	});
+};

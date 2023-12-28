@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>eSeeCode tutorial</title>
+        <script type="text/javascript" src="../tools/guide.js"></script>
+    </head>
+<body>
+<iframe id="eseecode-frame" width="1100" height="500" frameborder="0" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" oallowfullscreen="true" msallowfullscreen="true"></iframe>
+<script type="text/javascript">
+    var guideSteps = [
+        { type: "pagetitle", text: "eSeeCode tutorial: Code view" },
+        { type: "fullscreenmenu", argument: "true" },
+        { type: "view", argument: "code" },
+        { type: "info", text: "This tutorial will show you the basics about using the Code view", timeout: 5, humanStep: "Intro" },
+        { type: "view", argument: "build" },
+        { type: "code", argument: "var sides = 5;var size = 50;repeat(sides){forward(size);turnLeft(360 - (360 / sides))}" },
+        { type: "info", text: "We will begin from the code we built with the Build view tutorial" },
+        { type: "codebutton", text: "Click here to have the blocks converted into actual code" },
+        { type: "info", text: "As you can see, the blocks were converted into actual code" },
+        { type: "view", text: "The code is exactly the same as what you read in the Build view. Add \"forward(100)\" (without quotes) at the end of the code", position: "above" },
+        { type: "executebutton", text: "Once you have added \"forward(100)\" (without quotes) at the end of the code, run it", position: "above" },
+        { type: "verify", argument: "var sides = 5;var size = 50;repeat(sides){forward(size);turnLeft(360 - (360 / sides))};forward(100);" },
+        { type: "view", argument: "code" },
+        { type: "info", text: "You can go back to another view and your code will be converted along (unless the code has synthaxis errors, in which case it cannot be converted, you will have to fix your code before switching to another view)", humanStep: "Switch between views" },
+        { type: "buildbutton", text: "Go back to the Build view" },
+        { type: "info", text: "As you can see, your code was converted into blocks, including the instruction you added" },
+        { type: "codebutton", text: "Click here to go back to the Code view" },
+        { type: "view", argument: "code" },
+        { type: "toolbox", text: "On the left panel you have a reference list of instructions you can use", position: "above", tiewout: 3, humanStep: "Instructions reference" },
+        { type: "htmlelement", argument: "div-setColor", text: "Click on an instruction and it will be added to the code for you. It will be added to wherever your cursor is in the code" },
+        { type: "viewmaximize", text: "Sometimes code has very long lines, click here to maximize the code area", humanStep: "Maximize" },
+        { type: "viewmaximize", text: "And click again to restore it to its original size" },
+        { type: "view", argument: "code" },
+        { type: "info", text: "Another cool and very educational feature is the gentle code styling: You are free to use your own style while you code, but every time you run your code, it will be back in the style we consider most educational. This way, you will gradually learn to code with style by mimicing what you see!", humanStep: "Code re-styling" },
+        { type: "code", argument: "var sides = 5;var size = 50;repeat(sides){forward(size);turnLeft(360 - (360 / sides))};forward(100);" },
+        { type: "view", text: "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block", position: "above" },
+        { type: "executebutton", text: "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block.<br>Once you're done, run the code. You will see it will be re-styled", position: "above" },
+        { type: "preventexit", argument: false },
+        { type: "info", text: "Very well!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><b><a href=\"debug.html\">Debug</a></b><br /><a href=\"io.html\">Input/Output</a></b><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial", humanStep: "End" }
+    ];
+    
+    add_translations({
+        ca: {
+            "eSeeCode tutorial: Code view": "Tutorial eSeeCode: Vista Codi",
+            "This tutorial will show you the basics about using the Code view": "Aquest tutorial et mostrarà els conceptes bàsics sobre com utilitzar la vista Codigo",
+            "We will begin from the code we built with the Build view tutorial": "Empezaremos desde el código que construimos con el tutorial de la vista Monta",
+            "Click here to have the blocks converted into actual code": "Haz clic aquí para convertir los bloques en código real",
+            "As you can see, the blocks were converted into actual code": "Como puedes ver, los bloques se han convertido en código real",
+            "The code is exactly the same as what you read in the Build view. Add \"forward(100)\" (without quotes) at the end of the code": "El código es exactamente el mismo que leíste en la vista Monta. Agrega \"forward(100)\" (sin comillas) al final del código",
+            "Once you have added \"forward(100)\" (without quotes) at the end of the code, run it": "Una vez que hayas agregado \"forward(100)\" (sin comillas) al final del código, ejecútalo",
+            "You can go back to another view and your code will be converted along (unless the code has syntax errors, in which case it cannot be converted, you will have to fix your code before switching to another view)": "Puedes volver a otra vista y tu código se convertirá automáticamente (a menos que el código tenga errores de sintaxis, en cuyo caso no se puede convertir y deberás corregirlo antes de cambiar a otra vista)",
+            "Go back to the Build view": "Vuelve a la vista Monta",
+            "As you can see, your code was converted into blocks, including the instruction you added": "Como puedes ver, tu código se ha convertido en bloques, incluyendo la instrucción que agregaste",
+            "Click here to go back to the Code view": "Haz clic aquí para volver a la vista Código",
+            "On the left panel you have a reference list of instructions you can use": "En el panel izquierdo tienes una lista de referencia de instrucciones que puedes usar",
+            "Click on an instruction and it will be added to the code for you. It will be added to wherever your cursor is in the code": "Haz clic en una instrucción y se agregará al código por ti. Se agregará en el lugar donde esté tu cursor en el código",
+            "Sometimes code has very long lines, click here to maximize the code area": "A veces el código tiene líneas muy largas, haz clic aquí para maximizar el área de código",
+            "And click again to restore it to its original size": "Y vuelve a hacer clic para restaurarlo a su tamaño original",
+            "Another cool and very educational feature is the gentle code styling: You are free to use your own style while you code, but every time you run your code, it will be back in the style we consider most educational. This way, you will gradually learn to code with style by mimicking what you see!": "Otra característica genial y muy educativa es el estilo suave del código: Eres libre de utilizar tu propio estilo mientras codificas, pero cada vez que ejecutas tu código, volverá al estilo que consideramos más educativo. De esta manera, aprenderás gradualmente a codificar con estilo imitando lo que ves",
+            "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block": "Agrega espacios al azar, elimina los saltos de línea alrededor de \"{\" y \"}\" y quita los espacios iniciales en las líneas dentro del bloque repeat(4){}",
+            "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block.<br>Once you're done, run the code. You will see it will be re-styled": "Agrega espacios al azar, elimina los saltos de línea alrededor de \"{\" y \"}\" y quita los espacios iniciales en las líneas dentro del bloque repeat(4){}.<br>Una vez que hayas terminado, ejecuta el código. Verás que se volverá a formatear",
+            "Very well!<br />You have finished this tutorial!": "¡Muy bien!<br />Has terminado este tutorial!",
+            "Very well!<br />You have finished this tutorial!": "Molt bé!<br />Heu acabat aquest tutorial!",
+            "Other tutorials recommended:<br /><b><a href=\"debug.html\">Debug</a></b><br /><a href=\"io.html\">Input/Output</a></b><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>": "Altres tutorials recomanats:<br /><b><a href=\"debug.html\">Depurar</a></b><br /><a href=\"io.html\">Entrada/Sortida</a></b><a href=\"animations.html\">Animacions</a></b><br /><a href=\"ui.html\">Interfície d'usuari</a>",
+            "Intro": "Intro",
+            "Switch between views": "Cambiar entre vistas",
+            "Instructions reference": "Referencia de instrucciones",
+            "Maximize": "Maximizar",
+            "Code re-styling": "Reformateo de código",
+            "End": "Final",
+        },
+        es: {
+            "eSeeCode tutorial: Code view": "Tutorial eSeeCode: Vista Código",
+            "This tutorial will show you the basics about using the Code view": "Este tutorial te mostrará los conceptos básicos sobre cómo utilizar la vista Código",
+            "We will begin from the code we built with the Build view tutorial": "Començarem des del codi que vam construir amb el tutorial de la vista Munta",
+            "Click here to have the blocks converted into actual code": "Feu clic aquí per convertir els blocs en codi real",
+            "As you can see, the blocks were converted into actual code": "Com podeu veure, els blocs s'han convertit en codi real",
+            "The code is exactly the same as what you read in the Build view. Add \"forward(100)\" (without quotes) at the end of the code": "El codi és exactament igual que el que heu llegit a la vista Munta. Afegiu \"forward(100)\" (sense cometes) al final del codi",
+            "Once you have added \"forward(100)\" (without quotes) at the end of the code, run it": "Un cop hàgiu afegit \"forward(100)\" (sense cometes) al final del codi, executeu-lo",
+            "You can go back to another view and your code will be converted along (unless the code has syntax errors, in which case it cannot be converted, you will have to fix your code before switching to another view)": "Podeu tornar a una altra vista i el vostre codi es convertirà (a menys que tingui errors de sintaxi, en aquest cas no es podrà convertir i haureu de corregir el codi abans de canviar de vista)",
+            "Go back to the Build view": "Torreu a la vista Munta",
+            "As you can see, your code was converted into blocks, including the instruction you added": "Com podeu veure, el vostre codi es va convertir en blocs, incloent-hi la instrucció que heu afegit",
+            "Click here to go back to the Code view": "Feu clic aquí per tornar a la vista Codi",
+            "On the left panel you have a reference list of instructions you can use": "Al panell esquerre teniu una llista de referència d'instruccions que podeu utilitzar",
+            "Click on an instruction and it will be added to the code for you. It will be added to wherever your cursor is in the code": "Feu clic a una instrucció i s'afegirà al codi per a vosaltres. S'afegirà on sigui que tingueu el cursor al codi",
+            "Sometimes code has very long lines, click here to maximize the code area": "De vegades el codi té línies molt llargues, feu clic aquí per maximitzar l'àrea de codi",
+            "And click again to restore it to its original size": "I feu clic de nou per restaurar-lo a la mida original",
+            "Another cool and very educational feature is the gentle code styling: You are free to use your own style while you code, but every time you run your code, it will be back in the style we consider most educational. This way, you will gradually learn to code with style by mimicking what you see!": "Una altra característica interessant i molt educativa és l'estil suau del codi: Sou lliure d'utilitzar el vostre propi estil mentre codifiqueu, però cada cop que executeu el vostre codi, tornarà a l'estil que considerem més educatiu. D'aquesta manera, aprendreu gradualment a codificar amb estil imitant el que veieu",
+            "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block": "Afegiu espais aleatoris, elimineu els salts de línia al voltant de \"{\" i \"}\" i elimineu els espais inicials a les línies dins del bloc repeat(4){}",
+            "Add random spaces, remove line breaks around \"{\" and \"}\" and remove the leading spaces in the lines inside the repeat(4){} block.<br>Once you're done, run the code. You will see it will be re-styled": "Afegiu espais aleatoris, elimineu els salts de línia al voltant de \"{\" i \"}\" i elimineu els espais inicials a les línies dins del bloc repeat(4){}.<br>Un cop acabat, executeu el codi. Veureu que es reformatarà",
+            "Very well!<br />You have finished this tutorial!": "¡Muy bien!<br />Has terminado este tutorial!",
+            "Other tutorials recommended:<br /><b><a href=\"debug.html\">Debug</a></b><br /><a href=\"io.html\">Input/Output</a></b><a href=\"animations.html\">Animations</a></b><br /><a href=\"ui.html\">User interface</a>": "Otros tutoriales recomendados tutorials recommended:<br /><b><a href=\"debug.html\">Depurar</a></b><br /><a href=\"io.html\">Entrada/Salida</a></b><a href=\"animations.html\">Animaciones</a></b><br /><a href=\"ui.html\">Interfaz de usuario</a>",
+            "Intro": "Intro",
+            "Switch between views": "Canvia entre les vistes",
+            "Instructions reference": "Referència d'instruccions",
+            "Maximize": "Maximitza",
+            "Code re-styling": "Reformat del codi",
+            "End": "Final",
+        }
+    });
+    
+    function nextTutorial() {
+        redirectTutorial("debug.html");
+    }
+
+    loadGuide("eseecode-frame", "../index.html");
+
+</script>
+</body>
+</html>

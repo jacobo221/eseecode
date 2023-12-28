@@ -1,5 +1,5 @@
 "use strict";
-
+	
 window.addEventListener("message", async (event) => {
 
 	let api_call		= event.data;
@@ -12,8 +12,8 @@ window.addEventListener("message", async (event) => {
 		if (!api_parameters) api_parameters = [];
 		else if (typeof api_parameters != "array") api_parameters = [ api_parameters ];
 	}
-    
-	let response = await window["API_" + api_call](...api_parameters);
+	
+	let response = await $e.api[api_call](...api_parameters);
 
 	if (api_nounce) event.source.postMessage({ response: response, nounce: api_nounce }, event.origin);
 
@@ -21,337 +21,354 @@ window.addEventListener("message", async (event) => {
 
 /**
  * Parses the parameters in the URL
- * @private
- * @param {String} [urlParams] URL to parse. If unset use browser's location
- * @param {Array} [parameters] Only load this specific parameters
- * @param {Boolean} [action] Run the action (true) or only set it up (false)
- * @param {Array} [except] Do not load this specific parameters
- * @example $e_loadURLParams("view=drag")
- */
-async function $e_loadURLParams(url, parameters, action, except) {
-	if (url === undefined) {
-		url = window.location.href;
-		if (action === undefined) {
-			action = false;
-		}
-	} else {
-		if (action === undefined) {
-			action = true;
-		}
-	}
-	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
-	let [urlPage, ...urlParams] = url.split("?");
-	if ((!urlParams || urlParams.length === 0) && !url.match(/^(https?|file):\/\//)) urlParams = [ url ];
-	urlParams = urlParams.join("?");
-	if (!urlParams) urlParams = "";
-	urlParams = urlParams.split("&");
-	urlParams = urlParams.sort((a, b) => prerequisites.indexOf(b.split("=")[0]) - prerequisites.indexOf(a.split("=")[0]));
-	for (var i=0; i<urlParams.length; i++) {
-		var urlParamParts = urlParams[i].match(/(\?|&)?([A-z\-_]+)=([^&#]+)/);
-		if (urlParamParts !== null) {
-			var key = urlParamParts[2].toLowerCase();
-			var value = urlParamParts[3];
-			if (parameters && parameters.indexOf(key) < 0) continue;
-			if (except && except.indexOf(key) >= 0) continue;
-			if (key == "e") {
-				urlParams = urlParams.concat(atob(value).split("&"));
-			} else if (key == "grid") {
-				API_showGrid(value, action);
-			} else if (key == "gridstep") {
-				API_setGridStep(value, action);
-			} else if (key == "griddivisions") {
-				API_setGridDivisions(value, action);
-			} else if (key == "guide") {
-				API_showGuide(value, action);
-			} else if (key == "guideimage") {
-				value = decodeURIComponent(value);
-				API_setGuideImage(value, action);
-			} else if (key == "guidesize") {
-				API_setGuideSize(value, action);
-			} else if (key == "background") {
-				value = decodeURIComponent(value);
-				API_setWhiteboardBackground(value, action);
-			} else if (key == "viewtabs") {
-				API_setViewTabs(value, action);
-			} else if (key == "filemenu") {
-				API_showFilemenu(value, action);
-			} else if (key == "lang") {
-				API_switchLanguage(value, action);
-			} else if (key == "translations") {
-				API_showTranslations(value, action);
-			} else if (key == "theme") {
-				API_setTheme(value, action);
-			} else if (key == "themes") {
-				API_showThemes(value);
-			} else if (key == "maximize") {
-				API_maximize(value, action);
-			} else if (key == "input") {
-				value = decodeURIComponent(value);
-				API_setInput(value);
-			} else if (key == "axis") {
-				API_setAxis(value, action);
-			} else if (key == "view") {
-				API_switchView(value, action);
-			} else if (key == "dialog") {
-				API_switchDialog(value, action);
-			} else if (key == "instructions") {
-				value = decodeURIComponent(value);
-				API_setInstructions(value, action);
-			} else if (key == "custominstructions") {
-				value = decodeURIComponent(value);
-				API_setCustomInstructions(value, action);
-			} else if (key == "forceblocksetup") {
-				API_forceBlockSetup(value, action);
-			} else if (key == "blocksetup") {
-				API_setBlockSetup(value, action);
-			} else if (key == "basepath") {
-				value = decodeURIComponent(value);
-				API_setBasePath(value);
-			} else if (key == "fullscreenmenu") {
-				API_showFullscreenmenu(value, action);
-			} else if (key == "preventexit") {
-				API_setPreventExit(value, action);
-			} else if (key == "precode") {
-				value = decodeURIComponent(value);
-				API_uploadPrecode(value);
-			} else if (key == "postcode") {
-				value = decodeURIComponent(value);
-				API_uploadPostcode(value);
-			} else if (key == "code") {
-				value = decodeURIComponent(value);
-				API_uploadCode(value);
-			} else if (key == "execute") {
-				await API_execute(value);
-			} else if (key == "pause") {
-				API_setInstructionsPause(value);
-			} else if (key == "step") {
-				API_setExecutionStep(value);
-			} else if (key == "breakpoints") {
-				value = decodeURIComponent(value);
-				API_setBreakpoints(value.replace(/ /g, '').split(",").map(v => $e_isNumber(parseInt(v)) ? parseInt(v) : v));
-			} else if (key == "observe") {
-				value = decodeURIComponent(value);
-				API_setObservers(value.replace(/ /g, '').split(","));
-			} else {
-				console.error("Unknown API key", key);
-			}
-		}
-	}
-	// Default to browser language if no language has been defined
-	if (!urlParams.some(p => p.startsWith("lang=")) && navigator.language) $e_switchTranslation(navigator.language.substring(0, 2));
-}
-
-/**
- * Parses the parameters in the URL
  * @since 2.3
  * @public
- * @param {String} [urlParams] URL to parse. If unset use browser's location
- * @example API_loadURLParams("view=drag")
+ * @param {String} [url] URL to parse. If unset use browser's location
+ * @param {Array} [whitelist] Only load this specific parameters
+ * @param {Boolean} [action] Run the action (true) or only set it up (false)
+ * @param {Array} [blacklist] Do not load this specific parameters
+ * @example $e.api.api.loadURLParams("view=drag")
  */
-async function API_loadURLParams(urlParams) {
-	await $e_loadURLParams(urlParams);
-}
+$e.api.loadURLParams = async function(url = "", whitelist, action = true, blacklist) { // By default explicit API calls result in immediate UI effect
+	let url_params = "";
+	if (url.includes("?")) {
+		url_params = url.split("?")[1]; // Full URL with parameters
+	} else {
+		if (url.match(/^https?:\/\/|file:\/\//)) { // Full URL without parameters
+			url_params = "";
+		} else {
+			url_params = url; // Only parameters
+		}
+	}
+	url_params = new URLSearchParams(url_params);
+	if (url_params.get("e")) {
+		const encodedParamsSearch = new URLSearchParams(atob(url_params.get("e")));
+		encodedParamsSearch.forEach((k, v) => url_params.append(k, v));
+	}
+
+	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
+	Array.from(url_params).sort((a, b) => prerequisites.indexOf(b[0]) - prerequisites.indexOf(a[0])).forEach(async function(param) {
+		const key = param[0].toLowerCase();
+		let value = param[1];
+		if (whitelist && !whitelist.includes(key)) return;
+		if (blacklist && blacklist.includes(key)) return;
+		if (key == "e") return; // Already processed
+
+		if (key == "grid") {
+			$e.api.showGrid(value, action);
+		} else if (key == "gridstep") {
+			$e.api.setGridStep(value, action);
+		} else if (key == "griddivisions") {
+			$e.api.setGridDivisions(value, action);
+		} else if (key == "guide") {
+			$e.api.showGuide(value, action);
+		} else if (key == "guideimage") {
+			$e.api.setGuideImage(value, action);
+		} else if (key == "guidesize") {
+			$e.api.setGuideSize(value, action);
+		} else if (key == "background") {
+			$e.api.setWhiteboardBackground(value, action);
+		} else if (key == "viewtabs") {
+			$e.api.setViewTabs(value, action);
+		} else if (key == "filemenu") {
+			$e.api.showFilemenu(value, action);
+		} else if (key == "lang") {
+			$e.api.switchLanguage(value, action);
+		} else if (key == "translations") {
+			$e.api.showTranslations(value, action);
+		} else if (key == "theme") {
+			$e.api.setTheme(value, action);
+		} else if (key == "themes") {
+			$e.api.showThemes(value);
+		} else if (key == "maximize") {
+			$e.api.maximize(value, action);
+		} else if (key == "flow") {
+			$e.api.showFlow(value, action);
+		} else if (key == "flowtab") {
+			$e.api.showFlowTab(value, action);
+		} else if (key == "input") {
+			$e.api.setInput(value);
+		} else if (key == "axis") {
+			$e.api.setAxis(value, action);
+		} else if (key == "view") {
+			$e.api.switchView(value, action);
+		} else if (key == "dialog" || key == "toolbox") { // dialog is deprecated since 4.0
+			$e.api.switchToolbox(value, action);
+		} else if (key == "instructions") {
+			$e.api.setInstructions(value, action);
+		} else if (key == "custominstructions") {
+			$e.api.setCustomInstructions(value, action);
+		} else if (key == "forceblocksetup") {
+			$e.api.forceBlockSetup(value, action);
+		} else if (key == "blocksetup") {
+			$e.api.setBlockSetup(value, action);
+		} else if (key == "basepath") {
+			$e.api.setBasePath(value);
+		} else if (key == "fullscreenmenu") {
+			$e.api.showFullscreenmenu(value, action);
+		} else if (key == "preventexit") {
+			$e.api.setPreventExit(value, action);
+		} else if (key == "precode") {
+			$e.api.uploadPrecode(value);
+		} else if (key == "postcode") {
+			$e.api.uploadPostcode(value);
+		} else if (key == "code") {
+			$e.api.uploadCode(value);
+		} else if (key == "execute") {
+			await $e.api.execute(value);
+		} else if (key == "pause") {
+			$e.api.setInstructionsPause(value);
+		} else if (key == "stepsize") {
+			$e.api.setStepSize(value);
+		} else if (key == "breakpoints") {
+			$e.api.addBreakpoints(value, false, action);
+		} else if (key == "watches") {
+			$e.api.addWatches(value, false, action);
+		} else if (key == "whiteboardresolution") {
+			$e.api.setWhiteboardResolution(value, action);
+		} else if (key == "v") {
+			// Do nothing, this is only used to skip caching in URLs
+		} else {
+			console.error("Unknown API key", key);
+		}
+	});
+
+	// Default to browser language if no language has been defined
+	if (!whitelist && !url_params.get("lang") && navigator.language) $e.ui.translations.switch(navigator.language.substring(0, 2));
+
+};
+
+/**
+ * Loads data from a file. This function can be called by embedding apps such as Android's webview or iOS's uiwebview, for example they could replace $e.ui.openCodeFile() and then call $e.ide.loadFile
+ * @private
+ * @param data Data to load
+ * @param filename File name where the data was read from
+ * @param call Function to call
+ * @example $e.api.ide.loadFile("forward(100)", "esee.code", $e.ui.loadCodeFile)
+ */
+$e.api.loadFile = (data, filename, call) => {
+	return call(data, filename);
+};
 
 /**
  * Returns the user's code
  * @public
  * @return {String} User code
- * @example API_downloadCode()
+ * @example $e.api.downloadCode()
  */
-function API_downloadCode() {
-	var mode = $_eseecode.modes.console[$_eseecode.modes.console[0]].div;
-	var code;
+$e.api.downloadCode = () => {
+	const mode = $e.modes.views.current.type;
+	let code;
 	if (mode == "blocks") {
-		code = $e_blocks2code(document.getElementById("console-blocks").firstChild);
+		code = $e.ide.blocks.toCode($e.ui.element.querySelector("#view-blocks").firstChild);
 	} else if (mode == "write") {
-		code = ace.edit("console-write").getValue();
+		code = ace.edit("view-write").getValue();
 	}
 	return code;
-}
+};
 
 /**
  * Returns the grid's properties
  * @since 3.0
  * @public
- * @example API_getGridProperties()
+ * @example $e.api.getGridProperties()
  */
-function API_getGridProperties() {
-	return { width: $_eseecode.canvasArray["grid"].canvas.width, height: $_eseecode.canvasArray["grid"].canvas.height };
-}
+$e.api.getGridProperties = () => {
+	return { width: $e.backend.whiteboard.layers.available["grid"].canvas.width, height: $e.backend.whiteboard.layers.available["grid"].canvas.height };
+};
 
 /**
- * Runs the code in the console
+ * Runs the code in the view
  * @since 2.3
  * @public
  * @param {Boolean} [value] Run or not the code
  * @param {Boolean} [immediate] Run immediately (disable breakpoints and pauses)
- * @example API_execute(value)
+ * @example $e.api.execution.execute(value)
  */
-async function API_execute(value, immediate) {
-	if (value === undefined) {
-		value = true;
+$e.api.execute = async function (value = true, immediate) {
+	if ($e.confirmYes(value)) {
+		$e.session.runFrom = "api";
+		await $e.ide.execute(immediate);
 	}
-	if ($e_confirmYes(value)) {
-		$_eseecode.session.runFrom = "api";
-		await $e_executeFromUI(immediate);
-	}
-}
+};
 
 /**
  * Runs the a function right before running user code
  * @since 3.0
  * @public
  * @param {Function} [callback] Function to call before running user code
- * @example API_prerun(function() { alert("RUN!"); })
+ * @example $e.api.prerun(function() { alert("RUN!"); })
  */
-async function API_prerun(callback) {
-	$_eseecode.execution.api_prerun = callback;
-}
+$e.api.prerun = async function (callback) {
+	$e.execution.$e.prerun = callback;
+};
 
 /**
  * Runs the a function right after running user code
  * @since 3.0
  * @public
  * @param {Function} [callback] Function to call after running user code
- * @example API_postrun(function() { alert("DONE!"); })
+ * @example $e.api.postrun(function() { alert("DONE!"); })
  */
-async function API_postrun(callback) {
-	$_eseecode.execution.api_postrun = callback;
-}
+$e.api.postrun = async function (callback) {
+	$e.execution.$e.postrun = callback;
+};
 
 /**
  * Sets tool in fullscreen
  * @since 2.3
  * @public
  * @param {Boolean} [fullscreen] Force fullscreen
- * @example API_fullscreen()
+ * @example $e.api.fullscreen()
  */
-function API_fullscreen(value) {
-	if ($e_confirmYes(value)) {
+$e.api.fullscreen = (value) => {
+	if ($e.confirmYes(value)) {
 		value = true;
 	} else {
 		value = false;
 	}
-	$e_toggleFullscreen(value);
-}
+	$e.ui.toggleFullscreen(value);
+};
 
 /**
- * Sets the code console maximized
+ * Sets the code view maximized
  * @since 2.4
  * @public
  * @param {Boolean} [fullscreen] Force fullscreen
- * @example API_maximize()
+ * @example $e.api.maximize()
  */
-function API_maximize(value) {
-	if ($e_confirmYes(value)) {
+$e.api.maximize = (value) => {
+	if ($e.confirmYes(value)) {
 		value = true;
 	} else {
 		value = false;
 	}
-	$e_resizeConsole(!value);
-}
+	$e.ui.resizeView(!value);
+};
 
 /**
- * Returns the name of the current dialog
- * @since 2.3
+ * Switches to flow view
+ * @since 4.0
  * @public
- * @returns {String} Name of the current dialog
- * @example API_getDialog()
+ * @param {Boolean} [displayFlow] If true, switches to flow view
+ * @example $e.api.showFlow()
  */
-function API_getDialog() {
-	return $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].name.toLowerCase();
-}
+$e.api.showFlow = (value) => {
+	if ($e.confirmYes(value)) {
+		value = true;
+	} else {
+		value = false;
+	}
+	$e.ui.blocks.toggleFlow(value);
+};
+
+/**
+ * Returns the name of the current toolbox
+ * @since 4.0
+ * @public
+ * @returns {String} Name of the current toolbox
+ * @example $e.api.getToolbox()
+ */
+$e.api.getToolbox = () => {
+	return $e.modes.toolboxes.current.name.toLowerCase();
+};
+
+/**
+ * @since 2.3
+ * @deprecated since 4.0
+ */
+$e.api.getDialog = $e.api.getToolbox;
 
 /**
  * Gets the input from I/O
  * @since 2.3
  * @public
  * @return {String} Input in the I/O
- * @example API_getInput()
+ * @example $e.api.getInput()
  */
-function API_getInput() {
-	return document.getElementById("dialog-io-input").value;
-}
+$e.api.getInput = () => {
+	return $e.ui.element.querySelector("#toolbox-io-input").value;
+};
 
 /**
  * Returns an image grid containing all the layers
  * @private
  * @param {Number} columns Amount of columns per line
  * @return {*} The image binary
- * @example API_getLayersAsGrid(5)
+ * @example $e.api.getLayersAsGrid(5)
  */
-function API_getLayersAsGrid(columns) {
-	return $e_imagifyLayers(true, columns).imageBinary;
-}
+$e.api.getLayersAsGrid = (columns) => {
+	return $e.ide.imagifyLayers(true, columns).imageBinary;
+};
 
 /**
  * Returns an image animation containing all the layers
  * @private
  * @param {Number} milliseconds Waiting interval between each layer, in milliseconds
  * @return {*} The image binary
- * @example API_getLayersAsGrid(5)
+ * @example $e.api.getLayersAsGrid(5)
  */
-function API_getLayersAsAnimation(milliseconds) {
-	return $e_imagifyLayers(false, milliseconds).imageBinary;
-}
+$e.api.getLayersAsAnimation = (milliseconds) => {
+	return $e.ide.imagifyLayers(false, milliseconds).imageBinary;
+};
 
 /**
  * Gets the output from I/O
  * @since 2.3
  * @public
  * @return {String} Output in the I/O
- * @example API_getOuput()
+ * @example $e.api.getOuput()
  */
-function API_getOuput() {
-	return document.getElementById("dialog-io-output").value;
-}
+$e.api.getOuput = () => {
+	return $e.ui.element.querySelector("#toolbox-io-output").textContent;
+};
 
 /**
  * Gets the number of lines of code in the last execution
  * @since 3.0
  * @public
  * @return {Number} Number of lines of code in the last execution
- * @example API_getLastExecutionCodeLinesCount()
+ * @example $e.api.getLastExecutionCodeLinesCount()
  */
-function API_getLastExecutionCodeLinesCount() {
-	if (!$_eseecode.last_execution) return false;
-	return $_eseecode.last_execution.linesCount;
-}
+$e.api.getLastExecutionCodeLinesCount = () => {
+	if (!$e.last_execution) return false;
+	return $e.last_execution.linesCount;
+};
 
 /**
  * Gets the number of instructions run in the last execution
  * @since 3.0
  * @public
  * @return {Number} Number of instructions run in the last execution
- * @example API_getLastExecutionInstuctionsCount()
+ * @example $e.api.getLastExecutionInstuctionsCount()
  */
-function API_getLastExecutionInstuctionsCount() {
-	if (!$_eseecode.last_execution) return false;
-	return $_eseecode.last_execution.instructionsCount;
-}
+$e.api.getLastExecutionInstuctionsCount = () => {
+	if (!$e.last_execution) return false;
+	return $e.last_execution.instructionsCount;
+};
 
 /**
  * Gets the exection time in the last execution
  * @since 3.0
  * @public
  * @return {Number} Execution time of code in the last execution
- * @example API_getLastExecutionTime()
+ * @example $e.api.getLastExecutionTime()
  */
-function API_getLastExecutionTime() {
-	if (!$_eseecode.last_execution) return false;
-	return $_eseecode.last_execution.time;
-}
+$e.api.getLastExecutionTime = () => {
+	if (!$e.last_execution) return false;
+	return $e.last_execution.time;
+};
 
 /**
  * Returns the name of the current view
  * @since 2.3
  * @public
  * @returns {String} Name of the current view
- * @example API_getView()
+ * @example $e.api.getView()
  */
-function API_getView() {
-	return $_eseecode.modes.console[$_eseecode.modes.console[0]].name.toLowerCase();
-}
+$e.api.getView = () => {
+	return $e.modes.views.current.name.toLowerCase();
+};
 
 /**
  * Returns the image binary of the whiteboard
@@ -360,32 +377,32 @@ function API_getView() {
  * @param {Boolean} gridVisible Can be use to force toggling the grid
  * @param {Boolean} guideVisible Can be use to force toggling the guide
  * @return {String} Data URL of the whiteboard
- * @example API_getWhiteboard()
+ * @example $e.api.getWhiteboard()
  */
-function API_getWhiteboard(gridVisible, guideVisible) {
-	return $e_downloadWhiteboard(true, gridVisible, guideVisible);
-}
+$e.api.getWhiteboard = (gridVisible, guideVisible) => {
+	return $e.ide.downloadWhiteboard(true, gridVisible, guideVisible);
+};
 
 /**
  * Resets the execution
  * @since 2.3
  * @public
- * @example API_reset()
+ * @example $e.api.reset()
  */
-function API_reset() {
-	$e_resetCanvasFromUI();
-}
+$e.api.reset = () => {
+	$e.ide.reset();
+};
 
 /**
  * Restarts eSeeCode interface
  * @since 2.3
  * @public
- * @example API_restart()
+ * @example $e.api.restart()
  */
-function API_restart() {
-	$e_resetUI(false);
-	$e_msgBoxClose();
-}
+$e.api.restart = () => {
+	$e.ui.reset();
+	$e.ui.msgBox.close();
+};
 
 /**
  * Chooses the predefined axis to use for the grid
@@ -393,106 +410,102 @@ function API_restart() {
  * @public
  * @param {Number|String} value Index of the predefined axis to use
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setAxis(0)
+ * @example $e.api.setAxis(0)
  */
-function API_setAxis(value, action) {
+$e.api.setAxis = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	var axis = undefined;
-	if ($e_isNumber(value,true) && $_eseecode.coordinates.predefined[value]) {
-		$_eseecode.coordinates.userSelection = value;
+	const axis = undefined;
+	if ($e.isNumber(value, true) && $e.backend.whiteboard.axis.predefined[value]) {
+		$e.backend.whiteboard.axis.userSelection = value;
 	} else {
-		value = decodeURIComponent(value);
-		for (var i=0; i<$_eseecode.coordinates.predefined.length; i++) {
-			if (value == $_eseecode.coordinates.predefined[i].name.toLowerCase()) {
-				$_eseecode.coordinates.userSelection = i;
-				break;
+		$e.backend.whiteboard.axis.predefined.some((coords, i) => {
+			if (value == $coords.name.toLowerCase()) {
+				$e.backend.whiteboard.axis.userSelection = i;
+				return true;
 			}
-		}
+		});
 	}
-	if (action !== false) {
-		$e_resetGridModeSelect();
-		$e_changeAxisBasedOnUISettings();
+	if (action) {
+		$e.ui.resetGridModeSelect();
+		$e.backend.whiteboard.axis.update();
 	}
-}
+};
 
 /**
  * Sets if block setup is forced in level2
  * @since 3.0
  * @public
  * @param {Boolean} value Whether or not to force block setup when adding instructions on level2
- * @example API_forceBlockSetup(true)
+ * @example $e.api.forceBlockSetup(true)
  */
-function API_forceBlockSetup(value) {
+$e.api.forceBlockSetup = (value) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.forceBlockSetup = false;
+	if ($e.confirmNo(value)) {
+		$e.ui.blocks.forceSetup = false;
 	} else {
-		$_eseecode.ui.forceBlockSetup = true;
+		$e.ui.blocks.forceSetup = true;
 	}
-}
+};
 
 /**
  * Sets the default block setup style
  * @since 2.4
  * @public
  * @param {String} value Pixels between each line in the grid
- * @example API_setBlockSetup("basic")
+ * @example $e.api.setBlockSetup("basic")
  */
-function API_setBlockSetup(value) {
+$e.api.setBlockSetup = (value) => {
 	if (value) {
 		value = value.toLocaleLowerCase();
 		if (value === "visual" || value === "text") {
-			$_eseecode.ui.setupType = value;
+			$e.ui.setupType = value;
 		}
 	}
-}
+};
 
 /**
- * Sets the base path for loading images
+ * Sets the base path for loading images and sounds
  * @since 3.0
  * @public
  * @param {String} value Base path, can be a full URL
- * @example API_setBasePath("https://eseeco.de/example/")
+ * @example $e.api.setBasePath("https://eseeco.de/example/")
  */
-function API_setBasePath(value) {
-	if (value === undefined) {
-		value = "";
-	}
-	$_eseecode.execution.basepath = value;
-}
+$e.api.setBasePath = (value = "") => {
+	$e.execution.basepath = value;
+};
 
 /**
  * Sets a custom image for the whiteboard guide
  * @since 3.2
  * @public
  * @param {String} value URL where the image is, can be a relative path
- * @example API_setGuideImage("https://eseecode.com/favicon.png")
+ * @example $e.api.setGuideImage("https://eseecode.com/favicon.png")
  */
-function API_setGuideImage(value) {
-	$_eseecode.execution.guide.imageUrl = value;
-}
+$e.api.setGuideImage = (value) => {
+	$e.execution.guide.imageUrl = value;
+};
 
 /**
  * Sets a custom size for the whiteboard guide
  * @since 3.2
  * @public
  * @param {Integer} value Size in pixels of the guide
- * @example API_setGuideSize(25)
+ * @example $e.api.setGuideSize(25)
  */
-function API_setGuideSize(value) {
-	$_eseecode.execution.guide.size = value;
-}
+$e.api.setGuideSize = (value) => {
+	$e.execution.guide.size = value;
+};
 
 /**
  * Sets the background of the whiteboard
  * @since 3.2
  * @public
  * @param {String} url URL where the background is, can be a relative path
- * @example API_setWhiteboardBackground("https://eseecode.com/favicon.png")
+ * @example $e.api.setWhiteboardBackground("https://eseecode.com/favicon.png")
  */
-function API_setWhiteboardBackground(value) {
-	$_eseecode.execution.background = value;
-}
+$e.api.setWhiteboardBackground = (value) => {
+	$e.execution.background = value;
+};
 
 /**
  * Sets the separation of the lines in the grid
@@ -501,17 +514,17 @@ function API_setWhiteboardBackground(value) {
  * @public
  * @param {Number|String} value Pixels between each line in the grid
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setGridStep(50)
+ * @example $e.api.setGridStep(50)
  */
-function API_setGridStep(value, action) {
-	if ($e_isNumber(value,true) && value > 0) {
-		$_eseecode.ui.gridStep = value;
+$e.api.setGridStep = (value, action = true) => {
+	if ($e.isNumber(value, true) && value > 0) {
+		$e.ui.gridStep = value;
 	}
-	if (action !== false) {
-		$e_resetGrid();
-		$e_initializeUISetup();
+	if (action) {
+		$e.ide.resetGrid();
+		$e.ui.initializeSetup();
 	}
-}
+};
 
 /**
  * Sets the number of the lines in the grid
@@ -519,20 +532,20 @@ function API_setGridStep(value, action) {
  * @public
  * @param {Number|String} value Number of lines in the grid
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setGridDivisions(10)
+ * @example $e.api.setGridDivisions(10)
  */
-function API_setGridDivisions(value, action) {
-	if ($e_isNumber(value,true)) {
+$e.api.setGridDivisions = (value, action = true) => {
+	if ($e.isNumber(value, true)) {
 		value = parseInt(value);
-		if (value > 0 && value < $_eseecode.whiteboard.offsetWidth/2) {
-			$_eseecode.ui.gridStep = $_eseecode.whiteboard.offsetWidth / (value + 1);
+		if (value > 0 && value < $e.backend.whiteboard.width / 2) {
+			$e.ui.gridStep = $e.backend.whiteboard.width / (value + 1);
 		}
 	}
-	if (action !== false) {
-		$e_resetGrid();
-		$e_initializeUISetup();
+	if (action) {
+		$e.ide.resetGrid();
+		$e.ui.initializeSetup();
 	}
-}
+};
 
 /**
  * Sets the input in I/O
@@ -540,17 +553,13 @@ function API_setGridDivisions(value, action) {
  * @public
  * @param {String} value Input to use
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setInput("1 1 2 3 5 8")
+ * @example $e.api.setInput("1 1 2 3 5 8")
  */
-function API_setInput(value, action) {
-	if (value === undefined) {
-		value = "";
-	}
-	$_eseecode.execution.inputDefault = value;
-	if (action !== false) {
-		$e_resetIO(true);
-	}
-}
+$e.api.setInput = (value = "", action = true) => {
+	$e.backend.io.reset();
+	$e.execution.inputDefault = value;
+	if (action) $e.ui.resetIO(true);
+};
 
 /**
  * Sets the instruction blocks to make available to the user
@@ -558,118 +567,108 @@ function API_setInput(value, action) {
  * @public
  * @param {String} value Instructions to make available (separated with semi-colon, parameters can be postfixed to each instruction also separated with semi-colons)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setInstructions("turnLeft;90;forward")
+ * @example $e.api.setInstructions("turnLeft;90;forward")
  */
-function API_setInstructions(value, action) {
-	$_eseecode.session.disableCode = false; // By default enable code, but if there's a block with maxInstances enabled we must disable code
-	var instructions = value.split(";");
-	var customNameCount = {};
-	$_eseecode.instructions.custom = [];
-	for (var j=0; j<instructions.length; j++) {
-		var instructionName = instructions[j].trim();
+$e.api.setInstructions = (value, action = true) => {
+	$e.session.disableCode = false; // By default enable code, but if there's a block with maxInstances enabled we must disable code
+	const instructions = value.split(";");
+	const customNameCount = {};
+	$e.instructions.custom = [];
+	instructions.forEach((instruction, i) => {
+		const instructionName = instruction.trim();
 		if (customNameCount[instructionName] === undefined) {
 			customNameCount[instructionName] = 1;
 		} else {
 			customNameCount[instructionName]++;
 		}
-		var baseInstructionId = instructionName;
-		var newInstructionId = baseInstructionId+"-custom"+customNameCount[instructionName];
-		if ($_eseecode.instructions.set[baseInstructionId]) {
-	        $_eseecode.instructions.set[newInstructionId] = $e_clone($_eseecode.instructions.set[baseInstructionId]);
-	        $_eseecode.instructions.set[newInstructionId].show = [];
-	        var customInstructionsNum = 0;
-	        if ($_eseecode.instructions.custom) {
-	        	customInstructionsNum = $_eseecode.instructions.custom.length;
-	        }
-			$_eseecode.instructions.custom[customInstructionsNum] = newInstructionId;
-			var k = 0;
-			while (j+1+k < instructions.length && (
-			  $e_isNumber(instructions[j+1+k],true) ||
-			  $e_isBoolean(instructions[j+1+k],true) ||
-			  decodeURIComponent(instructions[j+1+k]).charAt(0) == '"' ||
-			  decodeURIComponent(instructions[j+1+k]).charAt(0) == "'" ||
-			  instructions[j+1+k] == "showParams" ||
-			  instructions[j+1+k] == "noChange" ||
-			  instructions[j+1+k].indexOf("param:") == 0 ||
-			  instructions[j+1+k].indexOf("count:") == 0)) {
-                // Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
-                if (instructions[j+1+k] == "showParams") {
-                	$_eseecode.instructions.set[newInstructionId].showParams = true;
-                } else if (instructions[j+1+k] == "noChange") {
-                	$_eseecode.instructions.set[newInstructionId].noChange = true;
-                } else if (instructions[j+1+k].indexOf("count:") == 0) {
-                	var maxCount = parseInt(instructions[j+1+k].split(":")[1]);
-                	if ($e_isNumber(maxCount)) {
-                		$_eseecode.session.disableCode = true; // Disable Code view since we cannot count blocks usage there
-                		$_eseecode.instructions.set[newInstructionId].maxInstances = maxCount;
-                		$_eseecode.instructions.set[newInstructionId].countInstances = 0;
-                	}
-                } else if ($_eseecode.instructions.set[newInstructionId].parameters[k]) {
-	            	var param = instructions[j+1+k];
-                	if (param.indexOf("param:") == 0) {
-                		param = param.split(":")[1];
-                	}
-	            	$_eseecode.instructions.set[newInstructionId].parameters[k].initial = param;
-		        	$_eseecode.instructions.set[newInstructionId].parameters[k].forceInitial = true;
-		        } else {
-					console.warn("Error while loading instructions from URL: There is no "+$e_ordinal(k+1)+" parameter for instruction "+instructions[j]+". You tried to set it to: "+instructions[j+1+k])
-		        }
-		        k++;
+		const baseInstructionId = instructionName;
+		const newInstructionId = baseInstructionId + "-custom" + customNameCount[instructionName];
+		if ($e.instructions.set[baseInstructionId]) {
+			$e.instructions.set[newInstructionId] = $e.clone($e.instructions.set[baseInstructionId]);
+			$e.instructions.set[newInstructionId].show = [];
+			let customInstructionsNum = 0;
+			if ($e.instructions.custom) {
+				customInstructionsNum = $e.instructions.custom.length;
+			}
+			$e.instructions.custom[customInstructionsNum] = newInstructionId;
+			for (let k = 0; j + 1 + k < instructions.length && (
+			$e.isNumber(instructions[j + 1 + k], true) ||
+			$e.isBoolean(instructions[j + 1 + k], true) ||
+			instructions[j + 1 + k].startsWith('"') ||
+			instructions[j + 1 + k].startsWith("'") ||
+			instructions[j + 1 + k] == "showParams" ||
+			instructions[j + 1 + k] == "noChange" ||
+			instructions[j + 1 + k].startsWith("param:") ||
+			instructions[j + 1 + k].startsWith("count:")); k++) {
+				// Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
+				if (instructions[j + 1 + k] == "showParams") {
+					$e.instructions.set[newInstructionId].showParams = true;
+				} else if (instructions[j + 1 + k] == "noChange") {
+					$e.instructions.set[newInstructionId].noChange = true;
+				} else if (instructions[j + 1 + k].startsWith("count:")) {
+					const maxCount = parseInt(instructions[j + 1 + k].split(":")[1]);
+					if ($e.isNumber(maxCount)) {
+						$e.session.disableCode = true; // Disable Code view since we cannot count blocks usage there
+						$e.instructions.set[newInstructionId].maxInstances = maxCount;
+						$e.instructions.set[newInstructionId].countInstances = 0;
+					}
+				} else if ($e.instructions.set[newInstructionId].parameters[k]) {
+					let param = instructions[j + 1 + k];
+					if (param.startsWith("param:")) {
+						param = param.split(":")[1];
+					}
+					$e.instructions.set[newInstructionId].parameters[k].initial = param;
+					$e.instructions.set[newInstructionId].parameters[k].forceInitial = true;
+				} else {
+					console.error("Error while loading instructions from URL: There is no " + $e.ordinal(k + 1) + " parameter for instruction " + instruction + ". You tried to set it to: " + instructions[j + 1 + k]);
+				}
 			}
 			j += k;
 			newInstructionId++;
 		} else {
-			console.warn("Error while loading instructions from URL: Instruction "+instructionName+" doesn't exist")
+			console.error("Error while loading instructions from URL: Instruction " + instructionName + " doesn't exist");
 		}
-	}
-	if (action !== false) {
-		$e_initDialogBlocks($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
-	}
-	if ($_eseecode.session.disableCode) {
-		ace.edit("console-write").setOptions({readOnly: true});
-	} else {
-		ace.edit("console-write").setOptions({readOnly: false});
-	}
-}
+	});
+	if (action) $e.ui.blocks.initToolbox($e.modes.toolboxes.current.id, $e.modes.toolboxes.current.element);
+	ace.edit("view-write").setOptions({readOnly: !!$e.session.disableCode});
+};
 
 /**
  * Sets definitions of custom instructions
  * @since 3.0
  * @public
- * @param {Number|String} value Seconds to wait for the execution to finish
+ * @param {Number|String} value JSON or object defining an instruction using set.js structure plus an optional "run" property with the body of the function code and an "icon" property with the URL or relative path of the icon representing the instruction
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setCustomInstructions({...})
+ * @example $e.api.setCustomInstructions({...})
  */
-function API_setCustomInstructions(value, action) {
+$e.api.setCustomInstructions = (value, action = true) => {
+	let instructions;
 	try {
-		var instructions = JSON.parse(value);
-	} catch(e) { console.log("Invalid JSON: " + e); }
+		instructions = JSON.parse(value);
+	} catch(error) { console.error("Invalid JSON: " + error); }
 	if (!instructions) return;
 	(Array.isArray(instructions) ? instructions : Object.values(instructions)).forEach(instruction_details => {
 		let instruction_name = instruction_details.name;
-		$_eseecode.instructions.set[instruction_name] = instruction_details;
-		if (instruction_details.icon) $_eseecode.instructions.icons[instruction_name] = function(ctx, width, height, param) {
-			var margin = 15;
-			var img = new Image();
+		$e.instructions.set[instruction_name] = instruction_details;
+		if (instruction_details.icon) $e.instructions.icons[instruction_name] = (iconEl, param) => {
+			const margin = height < 15 * 4 ? 0 : 15;
+			const img = new Image();
 			img.crossOrigin = "anonymous";
-			img.onload = function(e) {
-				var tempCanvas = document.createElement("canvas");
+			img.onload = () => {
+				const tempCanvas = document.createElement("canvas");
 				tempCanvas.width = width - margin;
 				tempCanvas.height = height - margin;
-				var tempCtx = tempCanvas.getContext("2d");
+				const tempCtx = tempCanvas.getContext("2d");
 				tempCtx.save();
 				tempCtx.drawImage(img, 0, 0, width - 2 * margin, height - 2 * margin);
 				tempCtx.restore();
 				ctx.drawImage(tempCanvas, margin, margin);
-				ctx.block.style.backgroundImage = "url("+ctx.canvas.toDataURL()+")";
 			}
 			img.src = instruction_details.icon;
 		};
 	});
-	if (action !== false) {
-		$e_initDialogBlocks($_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].id, $_eseecode.modes.dialog[$_eseecode.modes.dialog[0]].element);
-	}
-}
+	if (action) $e.ui.blocks.initToolbox($e.modes.toolboxes.current.id, $e.modes.toolboxes.current.element);
+};
 
 /**
  * Shows/Hides the filemenu
@@ -677,19 +676,13 @@ function API_setCustomInstructions(value, action) {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showFilemenu(false)
+ * @example $e.api.showFilemenu(false)
  */
-function API_showFilemenu(value, action) {
+$e.api.showFilemenu = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.filemenuVisible = false;
-	} else {
-		$_eseecode.ui.filemenuVisible = true;
-	}
-	if (action !== false) {
-		$e_resetFilemenu();
-	}
-}
+	$e.ui.filemenuVisible = !$e.confirmNo(value);
+	if (action) $e.ui.resetFileMenu();
+};
 
 /**
  * Shows/Hides the fullscreen menu
@@ -697,35 +690,29 @@ function API_showFilemenu(value, action) {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showFilemenu(false)
+ * @example $e.api.showFilemenu(false)
  */
-function API_showFullscreenmenu(value, action) {
+$e.api.showFullscreenmenu = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.fullscreenmenuVisible = false;
-	} else {
-		$_eseecode.ui.fullscreenmenuVisible = true;
-	}
-	if (action !== false) {
-		$e_toggleFullscreenIcon();
-	}
-}
+	$e.ui.fullscreenmenuVisible = !$e.confirmNo(value);
+	if (action) $e.ui.toggleFullscreenIcon();
+};
 
 /**
  * Prevent exit when user has entered code
  * @since 2.4
  * @public
  * @param {Boolean|String} value Whether to prevent exit when user has coded
- * @example API_setPreventExit(false)
+ * @example $e.api.setPreventExit(false)
  */
-function API_setPreventExit(value) {
+$e.api.setPreventExit = (value) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.preventExit = false;
+	if ($e.confirmNo(value)) {
+		$e.ui.preventExit = false;
 	} else {
-		$_eseecode.ui.preventExit = true;
+		$e.ui.preventExit = true;
 	}
-}
+};
 
 /**
  * Shows/Hides the grid
@@ -733,20 +720,16 @@ function API_setPreventExit(value) {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showGrid(false)
+ * @example $e.api.showGrid(false)
  */
-function API_showGrid(value, action) {
+$e.api.showGrid = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.gridVisible = false;
-	} else {
-		$_eseecode.ui.gridVisible = true;
+	$e.ui.gridVisible = !$e.confirmNo(value);
+	if (action) {
+		$e.ide.resetGrid();
+		$e.ui.initializeSetup();
 	}
-	if (action !== false) {
-		$e_resetGrid();
-		$e_initializeUISetup();
-	}
-}
+};
 
 /**
  * Shows/Hides the guide
@@ -754,93 +737,75 @@ function API_showGrid(value, action) {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showGuide(false)
+ * @example $e.api.showGuide(false)
  */
-function API_showGuide(value, action) {
+$e.api.showGuide = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.guideVisible = false;
-	} else {
-		$_eseecode.ui.guideVisible = true;
+	$e.ui.guideVisible = !$e.confirmNo(value);
+	if (action) {
+		$e.ui.resetGuide();
+		$e.ui.initializeSetup();
 	}
-	if (action !== false) {
-		$e_resetGuide();
-		$e_initializeUISetup();
-	}
-}
+};
 
 /**
  * Shows/Hides views tabs
  * @since 2.4
  * @public
  * @param {String} value List of view tabs to display, separated with colon or semi-colon
- * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_setViewTabs("touch,drag")
+ * @example $e.api.setViewTabs("touch, drag")
  */
-function API_setViewTabs(value, action) {
-	if (value && value.length > 0) {
-		for (var i=1, tab=undefined; tab = document.getElementById("console-tabs-level"+i); i++) {
-			tab.style.display = "none";
-		}
-	}
-	value = typeof value == "string" ? value.toLowerCase() : value;
+$e.api.setViewTabs = (value) => {
+	Object.values($e.modes.views.available).forEach(view => $e.ui.element.querySelector("#view-tabs-" + view.id).classList.add("hide"));
 	value = value.replace(/,/g , ";");
-	var viewtabs = value.split(";");
-	for (var i=0; i < viewtabs.length; i++) {
-		var viewtab = viewtabs[i];
-		var tabToShow = undefined;
-		// Check that the level exists
-		if ($e_isNumber(viewtab,true) && $_eseecode.modes.console[viewtab]) {
-			tabToShow = viewtab;
-		} else {
-			for (var id in $_eseecode.modes.console) {
-				if (id == 0) {
-					continue;
-				}
-				var levelName = $_eseecode.modes.console[id].name.toLowerCase();
-				var levelId = $_eseecode.modes.console[id].id.toLowerCase();
-				if (levelName == viewtab || levelId == viewtab) {
-					tabToShow = id;
-					break;
-				}
-			}
+	const viewtabs = value.split(";");
+	viewtabs.forEach(id => {
+		if (!$e.modes.views.available[id]) {
+			const view = Object.values($e.modes.views.available).find(view => id.toLowerCase() == view.name.toLowerCase());
+			if (!view) return console.error("Unknown view tab " + id);
+			id = view.id;
 		}
-		if (tabToShow) {
-			document.getElementById("console-tabs-level"+tabToShow).style.display = "block";
-		}
-	}
-}
+		$e.ui.element.querySelector("#view-tabs-" + id).classList.remove("hide");
+	});
+};
 
 /**
- * Switches to the specified dialog
- * @since 2.4
+ * Shows/Hides flow tabs
+ * @since 4.0
  * @public
- * @param {String} value Dialog to switch to
- * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_switchDialog("io")
+ * @param {Boolean} value Whether to display the flow tabs or not
+ * @example $e.api.setFlowTabs(false)
  */
-function API_switchDialog(value, action) {
-	value = typeof value == "string" ? value.toLowerCase() : value;
-	// Check that the dialog exists
-	if ($e_isNumber(value,true) && $_eseecode.modes.dialog[value]) {
-		$_eseecode.modes.dialog[0] = value;
+$e.api.showFlowTab = (value) => {
+	document.querySelector("#view-tabs-flow").classList[!$e.confirmYes(value) ? "add" : "remove"]("hide");
+};
+
+/**
+ * Switches to the specified toolbox
+ * @since 4.0
+ * @public
+ * @param {String} id Toolbox to switch to
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.switchToolbox("io")
+ */
+$e.api.switchToolbox = (id, action = true) => {
+	if (!$e.modes.toolboxes.available[id]) {
+		const toolbox = Object.values($e.modes.toolboxes.available).find(toolbox => id.toLowerCase() == toolbox.name.toLowerCase());
+		if (!toolbox) return console.error("Unknown toolbox " + id);
+		id = toolbox.id;
+	}
+	if (action) {
+		$e.ui.switchToolboxMode(id);
 	} else {
-		for (var id in $_eseecode.modes.dialog) {
-			if (id == 0) {
-				continue;
-			}
-			var levelName = $_eseecode.modes.dialog[id].name.toLowerCase();
-			var levelId = $_eseecode.modes.dialog[id].id.toLowerCase();
-			if (levelName == value || levelId == value) {
-				$_eseecode.modes.dialog[0] = id;
-				break;
-			}
-		}
+		$e.modes.toolboxes.current = $e.modes.toolboxes.available[id];
 	}
-	if (action !== false) {
-		$e_switchDialogMode();
-	}
-}
+};
+
+/**
+ * @since 2.4
+ * @deprecated since 4.0
+ */
+$e.api.switchDialog = $e.api.switchToolbox;
 
 /**
  * Switches to the specified language
@@ -848,134 +813,115 @@ function API_switchDialog(value, action) {
  * @public
  * @param {String} value Language to switch to
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_switchLanguage("ca")
+ * @example $e.api.switchLanguage("ca")
  */
-function API_switchLanguage(value, action) {
-	$e_switchTranslation(value, action);
+$e.api.switchLanguage = (value, action) => {
+	$e.ui.translations.switch(value, action);
 
-}
+};
 
 /**
  * Switches to the specified view
  * @since 2.3
  * @public
- * @param {String} value View to switch to
+ * @param {String} id View to switch to
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_switchView("build")
+ * @example $e.api.switchView("build")
  */
-function API_switchView(value, action) {
-	value = typeof value == "string" ? value.toLowerCase() : value;
-	// Check that the level exists
-	if ($e_isNumber(value,true) && $_eseecode.modes.console[value]) {
-		$_eseecode.modes.console[0] = value;
-	} else {
-		for (var id in $_eseecode.modes.console) {
-			if (id == 0) {
-				continue;
-			}
-			var levelName = $_eseecode.modes.console[id].name.toLowerCase();
-			var levelId = $_eseecode.modes.console[id].id.toLowerCase();
-			if (levelName == value || levelId == value) {
-				$_eseecode.modes.console[0] = id;
-				break;
-			}
-		}
+$e.api.switchView = (id, action = true) => {
+	if (!$e.modes.views.available[id]) {
+		const view = Object.values($e.modes.views.available).find(view => id.toLowerCase() == view.name.toLowerCase());
+		if (!view) return console.error("Unknown view " + id);
+		id = view.id;
 	}
-	if (action !== false) {
-		$e_switchConsoleMode();
-	}
-}
+	$e.modes.views.current = $e.modes.views.available[id];
+	if (action) $e.ui.switchViewMode();
+};
 
 /**
- * Loads code into the console
+ * Loads code into the view
  * @public
  * @param {String} code Code to upload
  * @param {Boolean} [run=false] If true, it runs the code immediately
- * @example API_uploadCode("repeat(4){forward(100)}",true)
+ * @example $e.api.uploadCode("repeat(4){forward(100)}", true)
  */
-function API_uploadCode(code, run) {
-	if (run === undefined) {
-		run = false;
-	}
-	$e_uploadCode(code, run);
-}
+$e.api.uploadCode = (code, run = false) => {
+	$e.ide.uploadCode(code, run);
+};
 
 /**
- * Loads precode into the console
+ * Loads precode into the view
  * @since 2.2
  * @public
  * @param {String} code Code to set as precode
  * @param {Boolean} [run=true] If false, it doesn't run the code immediately, only when the user executes user code
- * @example API_uploadPrecode("repeat(4){forward(100)}")
+ * @example $e.api.uploadPrecode("repeat(4){forward(100)}")
  */
-function API_uploadPrecode(code, run) {
-	if (run === undefined) {
-		run = true;
-	}
-	$e_uploadCode(code, run, "precode");
-}
+$e.api.uploadPrecode = (code, run=true) => {
+	$e.ide.uploadCode(code, run, "precode");
+};
 
 /**
- * Loads postcode into the console
+ * Loads postcode into the view
  * @since 2.4
  * @public
  * @param {String} code Code to set as postcode
- * @example API_uploadPostcode("repeat(4){forward(100)}")
+ * @example $e.api.uploadPostcode("repeat(4){forward(100)}")
  */
-function API_uploadPostcode(code) {
-	$e_uploadCode(code, false, "postcode");
-}
+$e.api.uploadPostcode = (code) => {
+	$e.ide.uploadCode(code, false, "postcode");
+};
 
 /**
  * Runs code silently
  * @since 2.3
  * @public
  * @param {String} code Code to run
- * @example API_runCode("repeat(4){forward(100)}")
+ * @example $e.api.runCode("repeat(4){forward(100)}")
  */
-function API_runCode(code) {
-	$e_execute(true, code);
-}
+$e.api.runCode = (code) => {
+	$e.execution.execute(true, code);
+};
 
 /**
  * Stops execution
  * @since 3.2
  * @public
- * @example API_stop()
+ * @example $e.api.stop()
  */
-function API_stop() {
-	$e_stopPreviousExecution();
-}
+$e.api.stop = () => {
+	$e.execution.stop();
+};
 
 /**
  * Pauses execution
  * @since 3.2
  * @public
- * @example API_pause()
+ * @example $e.api.pause()
  */
-function API_pause() {
-	$e_pauseExecution();
-}
+$e.api.pause = () => {
+	$e.execution.pause();
+};
 
 /**
  * Resumes execution
  * @since 3.2
  * @public
- * @example API_resume()
+ * @example $e.api.resume()
  */
-function API_resume() {
-	$e_resumePreviousExecution();
-}
+$e.api.resume = () => {
+	$e.execution.resume();
+};
 
 /**
  * Marks the code as saved now
  * @since 2.4
  * @public
- * @example API_updateSavedTime()
+ * @example $e.api.updateSavedTime()
  */
-function API_updateSavedTime() {
-	$_eseecode.session.lastSave = new Date().getTime();
-}
+$e.api.updateSavedTime = () => {
+	$e.session.lastSave = new Date().getTime();
+};
 
 /**
  * Shows/Hides the translations menu
@@ -983,19 +929,45 @@ function API_updateSavedTime() {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showTranslations(false)
+ * @example $e.api.showTranslations(false)
  */
-function API_showTranslations(value, action) {
+$e.api.showTranslations = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.translationsmenuVisible = false;
+	if ($e.confirmNo(value)) {
+		$e.ui.translations.menuVisible = false;
 	} else {
-		$_eseecode.ui.translationsmenuVisible = true;
+		$e.ui.translations.menuVisible = true;
 	}
-	if (action !== false) {
-		$e_resetTranslationsmenu();
-	}
-}
+	if (action) $e.ui.translations.resetMenu();
+};
+
+/**
+ * Returns the whiteboard size
+ * @since 4.0
+ * @public
+ * @return {Object<Number, Number>} Returns an object width and the height
+ * @example $e.api.getWhiteboardResolution()
+ */
+$e.api.getWhiteboardResolution = () => {
+	return { width: $e.backend.whiteboard.width, height: $e.backend.whiteboard.width };
+};
+
+/**
+ * Changes the whiteboard size
+ * @since 4.0
+ * @public
+ * @param {Array<Number>Number|String|Number} value Width and height of the new whiteboard
+ * @param {Boolean} [run=true] If true, applies the theme immediately
+ * @example $e.api.setWhiteboardResolution("sharp")
+ */
+$e.api.setWhiteboardResolution = (value, run) => {
+	if ($e.isNumber(value)) value = [ value ];
+	else if (typeof value == "string") value = value.split(",");
+	if (value[1] === undefined) value[1] = value[0];
+	[ $e.backend.whiteboard.width, $e.backend.whiteboard.width ] = value.map(v => parseInt(v));
+	$e.ui.loadWhiteboardSize();
+	if (run) $e.backend.whiteboard.reset();
+};
 
 /**
  * Switches the active theme
@@ -1003,14 +975,12 @@ function API_showTranslations(value, action) {
  * @public
  * @param {String} theme Name of the theme to use
  * @param {Boolean} [run=true] If true, applies the theme immediately
- * @example API_setTheme("sharp")
+ * @example $e.api.setTheme("sharp")
  */
-function API_setTheme(theme, run) {
-	if (!$_eseecode.session.ready && !run) {
-		return;
-	}
-	$e_switchTheme(theme, true);
-}
+$e.api.setTheme = (theme, run) => {
+	if (!$e.session.ready && !run) return;
+	$e.ui.themes.switch(theme, true);
+};
 
 /**
  * Shows/Hides the themes menu
@@ -1018,103 +988,166 @@ function API_setTheme(theme, run) {
  * @public
  * @param {Boolean|String} value Whether to show it (true) or hide it (false)
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example API_showThemes(false)
+ * @example $e.api.showThemes(false)
  */
-function API_showThemes(value, action) {
+$e.api.showThemes = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	if ($e_confirmNo(value)) {
-		$_eseecode.ui.themesmenuVisible = false;
+	if ($e.confirmNo(value)) {
+		$e.ui.themes.menuVisible = false;
 	} else {
-		$_eseecode.ui.themesmenuVisible = true;
+		$e.ui.themes.menuVisible = true;
 	}
-	if (action !== false) {
-		$e_resetThemesmenu();
-	}
-}
+	if (action) $e.ui.themes.resetMenu();
+};
 
 /**
  * Pauses every instruction for a certain amount of time
  * @since 3.0
  * @public
- * @param {Number} milliseconds Time to pause each instruction
- * @example API_setInstructionsPause(500)
+ * @param {Number} value Time to pause each instruction, in milliseconds
+ * @example $e.api.setInstructionsPause(500)
  */
-function API_setInstructionsPause(milliseconds) {
-	var value = parseInt(milliseconds);
-	$_eseecode.execution.pause = value;
-	$e_resetInstructionsPause();
-}
+$e.api.setInstructionsPause = (milliseconds) => {
+	$e.execution.instructionsPause = parseInt(milliseconds);
+	$e.ui.debug.resetInstructionsPause();
+};
 
 /**
- * Defines whether to enable execution stepping
- * @since 3.2
+ * Defines the number of instructions to jump on every stepped execution
+ * @since 4.0
  * @public
- * @param {Number} step Number of instructions after which execution must be paused
- * @example API_setExecutionStep(1)
+ * @param {Number} step Number of instructions after which execution must be paused when running stepped
+ * @example $e.api.setStepSize(1)
  */
-function API_setExecutionStep(value) {
-	if (value === false || value == "false" || parseInt(value) === 0) {
-		$_eseecode.execution.stepped = false;
-		$_eseecode.execution.step = 1;
-	} else {
-		$_eseecode.execution.stepped = true;
-		$_eseecode.execution.step = value === true || value == "true" ? 1 : value;
-	}
-}
+$e.api.setStepSize = (value) => {
+	$e.execution.stepSize = !value ? 1 : value;
+};
+
+/**
+ * Run a number of steps (forward or backwards)
+ * @since 4.0
+ * @public
+ * @param {Number} steps Number of steps to run. A possitive number runs forwards, a negative number runs backwards
+ * @example $e.api.runSteps(1)
+ */
+$e.api.runSteps = (value) => {
+	$e.ide.runSteps(value);
+};
 
 /**
  * Adds breakpoints
- * @since 3.2
+ * @since 4.0
  * @public
- * @param {Number|String|Array<Number|String>} value Block/Line numbers and/or variable names where breakpoints/watches are to be placed
- * @example API_setBreakpoints([8,"name","age"])
+ * @param {Number|String|Array<Number|String>} value Block/Line numbers and/or variable names where breakpoints are to be placed
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.setBreakpoints([8, "name", "age"])
  */
-function API_setBreakpoints(value) {
-	if (!Array.isArray(value)) value = [ value ];
-	$_eseecode.execution.observers = value;
-}
+$e.api.addBreakpoints = (value, action = true) => {
+	if (value === "" || !value) value = [];
+	else if (typeof value == "string") value = value.replace(/ /g, '').split(",").map(v => $e.isNumber(parseInt(v)) ? parseInt(v) : v);
+	else if (typeof value == "number") value = [ value ];
+	$e.execution.monitors = Object.assign($e.execution.monitors, value.reduce((acc, b) => acc[b] = { breakpoint: true }, {}));
+	if (action) $e.ui.debug.updateMonitors();
+};
 
 /**
- * Gets breakpoints
- * @since 3.2
+ * Remove breakpoints
+ * @since 4.0
  * @public
- * @return {Array<Number|String>} Block/Line numbers and/or variable names where breakpoints/watches set up
- * @example API_getBreakpoints()
+ * @param {Number|String|Array<Number|String>} value Block/Line numbers and/or variable names to remove from breakpoints
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.ui.debug.updateRemovedBreakpoints([8, "name", "age"])
  */
-function API_getBreakpoints() {
-	return $_eseecode.execution.observers;
-}
+$e.api.removeBreakpoints = (value, action = true) => {
+	if (value === "" || !value) value = [];
+	else if (typeof value == "string") value = value.replace(/ /g, '').split(",").map(v => $e.isNumber(parseInt(v)) ? parseInt(v) : v);
+	else if (typeof value == "number") value = [ value ];
+	value.forEach(key => {
+		delete $e.execution.monitors[key];
+		delete $e.execution.current.monitors[key];
+	});
+	if (action) $e.ui.debug.updateMonitors();
+};
 
 /**
- * Adds observers
+ * Gets list of breakpoints
  * @since 3.2
  * @public
- * @param {Number|String|Array<Number|String>} value Variable names to observe
- * @example API_setObservers(["firstname","surname"])
+ * @return {Array<Number|String>} Block/Line numbers and/or variable names where breakpoints/watches are to be set up
+ * @example $e.api.getBreakpoints()
  */
-function API_setObservers(value) {
-	if (!Array.isArray(value)) value = [ value ];
-	$_eseecode.execution.observers = value;
-}
+$e.api.getBreakpoints = () => {
+	const list = [];
+	Object.entries($e.session.monitor).forEach(([key, b]) => { if ($e.isNumber(key) || b.breakpoint) list.push(b); });
+	return list;
+};
 
 /**
- * Gets breakpoints
+ * Adds watches
+ * @since 4.0
+ * @public
+ * @param {String|Array<String>} value Variable names to watch
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.debug.addWatches([ "firstname", "surname" ])
+ */
+$e.api.addWatches = (value = [], action = true) => {
+	if (value === "") value = [];
+	else if (typeof value == "string") value = value.replace(/ /g, '').split(",");
+	else if (typeof value == "number") value = [ value ];
+	$e.execution.current.monitors = Object.assign($e.execution.current.monitors, value.reduce((acc, b) => acc[b] = { breakpoint: false }, {}));
+	if (action) $e.ui.debug.updateMonitors();
+};
+
+/**
+ * Remove watches
+ * @since 4.0
+ * @public
+ * @param {String|Array<String>} value Block/Line numbers and/or variable names to remove from watches
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.debug.removeWatches([ "name", "age" ])
+ */
+$e.api.removeWatches = (value = [], action = true) => {
+	if (value === "") value = [];
+	else if (typeof value == "string") value = value.replace(/ /g, '').split(",");
+	else if (typeof value == "number") value = [ value ];
+	value.forEach(key => {
+		delete $e.execution.monitors[key];
+		delete $e.execution.current.monitors[key];
+	});
+	if (action) $e.ui.debug.updateMonitors();
+};
+
+/**
+ * Gets watches
  * @since 3.2
  * @public
- * @return {Array<Number|String|<Number,String>>} Block/Line numbers, variable names or line+watch where breakpoints/watches set up
- * @example API_getObservers()
+ * @return {Array<String>} Variable names where watches are set up
+ * @example $e.api.getWatches()
  */
-function API_getObservers() {
-	return $_eseecode.execution.observers;
-}
+$e.api.getWatches = () => {
+	const list = [];
+	Object.entries($e.session.monitor).forEach(([key, b]) => { if (!$e.isNumber(key) && !b.breakpoint) list.push(b); });
+	return list;
+};
 
 /**
  * Returns if the eSeeCode is ready
  * @since 2.4
  * @public
  * @return {String} The date since it is ready, undefined otherwise
- * @example API_isReady()
+ * @example $e.api.isReady()
  */
-function API_isReady() {
-	return $_eseecode.session.ready;
-}
+$e.api.isReady = () => {
+	return $e.session.ready;
+};
+
+/**
+ * Returns the status of the last execution
+ * @since 4.0
+ * @public
+ * @return {String} Status of the execution
+ * @example $e.api.getStatus()
+ */
+$e.api.getStatus = () => {
+	return $e.execution.current.status;
+};

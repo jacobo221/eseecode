@@ -9,19 +9,18 @@
 <p>Size: <input id="width" type="number" value="68" style="width:50px" />x<input id="height" type="number" value="68" style="width:50px" /></p>
 <p>Show title: <select id="showTitle"><option value="yes">Yes</option><option value="no">No</option></select></p>
 <p>Show flat background: <select id="showFlatBg"><option value="yes">Yes</option><option value="no" selected="selected">No</option></select></p>
-<p>Type of corners: <select id="showCorners"><option value="no">Sharp</option><option value="dialog" selected="selected">Dialog</option><option value="console">Console</option><option value="floating">Floating</option></select></p>
+<p>Type of corners: <select id="showCorners"><option value="no">Sharp</option><option value="toolbox" selected="selected">Toolbox</option><option value="view">View</option><option value="floating">Floating</option></select></p>
 <p>Show border: <select id="showBorder"><option value="yes" selected="selected">Yes</option><option value="no">No</option></select></p>
 <p><input type="button" onclick="createIcon()" value="CREATE" /></p>
 <p><canvas id="icon" style="width:68px;height:68px;"></canvas></p>
 <p><b><a href="" onclick="downloadIcon(this)">Download</a></b></p>
 <script type="text/javascript" src="../js/defaults.js"></script>
-<script type="text/javascript" src="../js/instructions/categories.js"></script>
 <script type="text/javascript" src="../js/instructions/icons.js"></script>
 <script type="text/javascript" src="../js/instructions/set.js"></script>
 <script type="text/javascript" src="../js/ui.js"></script>
 <script type="text/javascript" src="../js/common.js"></script>
 <script type="text/javascript">
-var icons = $_eseecode.instructions.icons;
+var icons = $e.instructions.icons;
 var select = document.getElementById('instructions');
 for (key in icons) {
 	var option = document.createElement("option");
@@ -43,11 +42,11 @@ function createIcon() {
 	var borderSize;
     var borderRadius;
 	var borderColor;
-    if (showCorners == "dialog") {
+    if (showCorners == "toolbox") {
     	borderSize = 1;
     	borderRadius = 5;
 		borderColor = "#AAAAAA";
-    } else if (showCorners == "console") {
+    } else if (showCorners == "view") {
     	borderSize = 1;
     	borderRadius = 10;
 		borderColor = "#AAAAAA";
@@ -66,14 +65,7 @@ function createIcon() {
 	canvas.height = height;
 	var ctx = canvas.getContext("2d");
 	var instrId = instr;
-	var instrObj = $_eseecode.instructions.set[instrId];
-	var color = "transparent";
-	for (var i=0; i<$_eseecode.instructions.categories.length; i++) {
-        if (instrObj.category == $_eseecode.instructions.categories[i].name) {
-            color = $_eseecode.instructions.categories[i].color;
-            break;
-        }
-    }
+	var instrObj = $e.instructions.set[instrId];
     if (showCorners != "no") {
     	ctx.save();
 	    ctx.beginPath();
@@ -91,7 +83,6 @@ function createIcon() {
 	 	ctx.lineTo(0,borderRadius);
 	    ctx.clip();
     }
-	ctx.fillStyle = color;
 	ctx.fillRect(0,0,width,height);
     if (showFlatBg != "yes") {
 		var gradient = ctx.createRadialGradient(width/2,height/2,height*1.5,width/3,height/3,height/4);
@@ -152,7 +143,7 @@ function createIcon() {
 	 	ctx.drawImage(canvasWrapper,0,0);
     }
 	if (showTitle != "no") {
-		ctx.fillStyle = $e_readableText(color);
+		ctx.fillStyle = "#000000";
 		var fontSize = 10*(Math.min(width,height)/Math.min(widthOriginal,heightOriginal));
 		ctx.font = "bold "+fontSize+"px Arial";
 		ctx.fillText(instr,0+borderSize,fontSize-1+borderSize);

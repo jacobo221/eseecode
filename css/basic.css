@@ -1,0 +1,57 @@
+html,
+body {
+	min-height: max(var(--landscape-min-height), 100%); /* This is the most compatible with Safari: set html and body to 100%, which unlike 100vh it excludes the address bar. 100dvh is post-2019 so we cannot use it just yet (to fullfill requirements) */
+	min-width: max(var(--landscape-min-width), 100vw);
+	margin: 0 0;
+}
+
+.eseecode {
+	width: 100%;
+	min-height: 100%;
+	position: relative;
+	background-color: var(--bg-color);
+	color: var(--broken-black);
+	font-family: var(--default-font);
+	font-size: var(--default-text-size);
+	font-style: normal;
+	font-weight: normal;
+	letter-spacing: 0;
+	text-decoration: none;
+	margin: 0 0;
+	padding: 0 var(--default-space);
+	box-sizing: border-box;
+	animation: fadeIn 2s;
+	user-select: none;
+}
+
+.eseecode h1 {
+	font-size: var(--big-text-size);
+	background-color: inherit;
+	color: var(--broken-white);
+	margin: 0 0;
+	border-top-left-radius: var(--default-radius);
+	border-top-right-radius: var(--default-radius);
+}
+.eseecode input,
+.eseecode select,
+.eseecode button {
+	border-radius: var(--small-radius);
+}
+.eseecode input:hover,
+.eseecode select:hover {
+	box-shadow: 0 0 var(--default-space) var(--broken-black);
+}
+.eseecode input[type="checkbox"] {
+	margin: var(--small-space);
+}
+
+@media screen and (orientation: portrait) {html,
+	body {
+		min-height: max(var(--portrait-min-height), 100%); /* This is the most compatible with Safari: set html and body to 100%, which unlike 100vh it excludes the address bar. 100dvh is post-2019 so we cannot use it just yet (to fullfill requirements) */
+		min-width: max(var(--portrait-min-width), 100vw);
+	}
+	.eseecode {
+		min-height: max(max(var(--portrait-min-height), var(--whiteboard-height)), 100%);
+		min-width: max(max(var(--portrait-min-width), var(--whiteboard-width)), 100%);
+	}
+}

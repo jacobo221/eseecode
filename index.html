@@ -1,39 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>eSeeCode</title>
-<meta name="author" content="Jacobo Vilella Vilahur" />
-<meta name="description" content="Easy computer programming eLearning development platform for schools and fun" />
-<meta name="keywords" content="esee,code,eesecode,programming,school" />
-<link rel="manifest" href="manifest.json">
-<meta name="viewport" content="width=device-width" />
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="eSeeCode">
-<meta name="application-name" content="eSeeCode">
-<meta name="msapplication-TileImage" content="favicon.png">
-<meta name="msapplication-TileColor" content="#123456">
-<link rel="icon" sizes="192x192" href="images/eSeeCode-icon-4x.png">
-<link rel="icon" sizes="128x128" href="images/eSeeCode-icon-2-5x.png">
-<link rel="icon" type="image/x-icon" sizes="64x64 32x32 16x16" href="favicon.ico" />
-<link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
-<link rel="apple-touch-icon" href="favicon.png" />
-<link rel="apple-touch-icon" sizes="128x128" href="images/eSeeCode-icon-2-5x.png">
-<link rel="apple-touch-icon-precomposed" sizes="128x128" href="images/eSeeCode-icon-2-5x.png">
-<link rel="apple-touch-startup-image" href="images/eSeeCode_logo.png">
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>eSeeCode</title>
+	<meta name="author" content="Jacobo Vilella Vilahur" />
+	<meta name="description" content="Easy computer programming eLearning development platform for schools and fun" />
+	<meta name="keywords" content="esee,code,eesecode,programming,school" />
+	<link rel="manifest" href="manifest.json">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, interactive-widget=overlays-content" />
+	<meta name="application-name" content="eSeeCode">
+	<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+	<!-- The lines below are for Chrome devices only -->
+	<meta name="mobile-web-app-capable" content="yes">
+	<!-- The lines below are for Apple devices only -->
+	<link rel="mask-icon" href="images/favicon.svg" />
+	<link rel="apple-touch-icon" href="images/favicon.png" color="green" />
+	<link rel="apple-touch-startup-image" href="images/favicon.png" color="#000000">
+	<meta name="apple-mobile-web-app-title" content="eSeeCode">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
 <body>
 <script type="text/javascript">
-	var $_eseecode = { cache_token: null };
-	let el = document.createElement("script");
-	el.type = "text/javascript";
-	let v = (new URLSearchParams(window.location.search)).get('v');
-	$_eseecode.cache_token = v === null ? $_eseecode.cache_token : (v === "" ? new Date().getTime() : v);
-	el.src = "js/eseecode.js" + ($_eseecode.cache_token ? '?v=' + $_eseecode.cache_token : '');
-	document.body.appendChild(el);
+	// To keep JS synthax backwards compatible in this feature-testing page, arguments is used instead of the spread operator, var here is used instead of const, function() is used instead of arrow functions
+	try { // Feature-test the browser for compatibility
+
+		// Test if the browser supports ECMAScript 2017, CSS Grid and PointerEvent
+		eval("(async function() {})()");
+		if (typeof URLSearchParams == "undefined" || typeof JSON === "undefined" || !Array.prototype.map || !("PointerEvent" in window) || typeof CSS === "undefined" || !CSS.supports || !CSS.supports("display", "grid") || !CSS.supports("width", "max-content")) throw new Error("incompatbile browser");
+
+		// Shorthands for debugging
+		function ñ() { console.log.apply(this, arguments); } function ññ() { console.log.apply(this, Array.from(arguments).map(arg => { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
+
+		// Run
+		var el = document.createElement("script");
+		el.type = "text/javascript";
+		var v = (new URLSearchParams(window.location.search)).get('v');
+		if (v === "") v = new Date().getTime(); // ?v= is passed without value
+		el.src = "js/eseecode.js" + (v ? '?v=' + v : '');
+		document.body.appendChild(el);
+
+	} catch (error) {
+		const timeToRedirect = 10;
+		document.body.innerHTML = "<p><b>The latest eSeeCode version is not compatible with your browser!</b></p>";
+		document.body.innerHTML += "<p>Please use one of the following browsers:<ul><li>Chrome >= 57</li><li>Edge >= 79</li><li>Firefox >= 66</li><li>Safari >= 13</li><li>Opera >= 44</li></ul></p>";
+		document.body.innerHTML += "<p><i>Alternatively, <a href=\"https://play.eseecode.com/versions\">you can try using an older version of eSeeCode</a>.</i></p>";
+		document.body.innerHTML += "<p>In " + timeToRedirect + " seconds you will be automatically redirected to eSeeCode version 2.4 (released in 2016) as a failback for compatibility with your device.</p>";
+		setTimeout(function () { window.location.href = "https://play.eseecode.com/2.4"; }, timeToRedirect * 1000);
+	}
 </script>
 </body>
 </html>

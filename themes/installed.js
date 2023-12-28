@@ -1,6 +1,11 @@
 /**************************************************************
- * Add here the id and name of the installed themes, ie:      *
- *   $_eseecode.ui.themes.push({id: "sharp", name: "Sharp"}); *
+ * Add here the id and name of the installed themes,          *
  **************************************************************/
 
-$_eseecode.ui.themes.push({id: "sharp", name: "Sharp"});
+$e.ui.themes.init = () => {
+    $e.ui.themes.available = $e.ui.themes.available.concat([
+        { id: "sharp", name: "Sharp" },
+        { id: "retro", name: "Retro" },
+        { id: "psychedelic", name: "Psychedelic"},
+    ]);
+}

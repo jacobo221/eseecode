@@ -1,102 +1,424 @@
-	.block {
-		background-repeat: no-repeat;
-		background-color: #AAAAAA;
-		border-left: 1px solid #AAAAAA;
-		clear: both;
-		float: left;
-		border: 1px solid #AAAAAA;
-		margin-left: 10px;
-		margin-right: 5px;
-		box-shadow: 5px 5px 5px #888888;
-		width: auto;
-	}
-	.blockTitle {
-		display: block;
-		white-space: nowrap;
-	}
-	.blockCount {
-		position: absolute;
-		bottom: -5px;
-		right: -5px;
-		display: inline-block;
-		min-width: 12px;
-		height: 12px;
-		font-size: 12px;
-		border-radius: 6px;
-		text-align: center;
-		vertical-align: middle;
-		font-weight: bold;
-		color: #FFFFFF;
-		background-color: #FF0000;
-	}
-	.dummyBlock {
-		background-image: none;
-		background-color: transparent;
-		border: none;
-		box-shadow: none !important;
-	}
-	.floatingBlock {
-		border: 3px solid #555555 !important;
-		box-shadow: 5px 5px 10px #AAAAAA !important;
-		border-radius: 10px !important;
-	}
-	.floatingBlock canvas {
-		border-radius: 4px !important;
-	}
-	.level1 {
-		margin-top: 7px;
-		border-radius: 10px;
-	}
-	.level2, .level3 {
-		border-top-width: 0px;
-		margin-bottom: 0px;
-		margin-top: 0px;
-		border-radius: 0px;
-	}
-	.level2:first-child, .level3:first-child {
-		border-top-width: 1px;
-	}
-	.level2:hover, .level3:hover {
-		box-shadow: 7px 5px 5px #4444AA;
-	}
-	.function {
-		border-top-width: 2px !important;
-		border-radius: 10px !important;
-	}
-	div.function:before {
-		border-bottom-left-radius: 10px !important;
-		border-bottom-right-radius: 10px !important;
-	}
-	div.function:after {
-		border-top-left-radius: 10px !important;
-		border-top-right-radius: 10px !important;
-	}
-	#console-blocks>div:first-child {
-		margin-top: 5px;
-		border-top-left-radius: 10px !important;
-		border-top-right-radius: 10px !important;
-	}
-	#console-blocks>div:last-child {
-		margin-bottom: 10px;
-		border-bottom-left-radius: 10px !important;
-		border-bottom-right-radius: 10px !important;
-	}
-	#console-blocks span, #dialog-blocks span {
-		cursor: default;
-	}
-	#console-blocks.breakpointHandler span {
-		cursor: crosshair !important;
-	}
-	#dialog .block {
-		position: relative;
-		border: 1px solid #AAAAAA;
-		margin: 2px;
-		float: left;
-		clear: none;
-		box-shadow: 4px 3px 10px #888888;
-		border-radius: 5px;
-		width: initial;
-	}
-	#dialog-blocks div:hover {
-		box-shadow: 0px 0px 20px #000000;
-	}
+:root {
+
+	--block-big-size: 68px;
+	--block-small-size: 15px;
+
+	--block-indent: 29px;
+
+	--block-border-color: #aaaaaa;
+	--block-shadow-color: #888888;
+	--block-shadow-hover-color: #000000;
+	--block-gradient: radial-gradient(at 30% 30%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 200%, rgba(0,0,0,0.95) 200%);
+
+	--block-count-size: 14px;
+
+}
+
+/* Basics */
+
+.block {
+	display: block;
+	background-repeat: no-repeat;
+	background-color: transparent;
+	border: var(--minimal-border) solid var(--block-border-color);
+	margin-left: var(--default-space);
+	margin-right: var(--default-space);
+	box-shadow: var(--default-space) var(--default-space) var(--default-space) var(--block-shadow-color);
+	width: max-content;
+	box-sizing: border-box;
+	position: relative; /* So we can add floating elements such as the max instances countdown */
+	overflow: clip;
+	font-family: var(--default-font);
+	font-size: var(--default-text-size);
+	animation: fadeIn var(--default-transition-time);
+	transition: opacity var(--default-transition-time) linear, filter var(--default-transition-time) linear, border-radius var(--default-transition-time) linear;
+}
+.level3 .block {
+	min-height: var(--block-small-size); /* Must use min-* because some blocks contain other blocks and thus are larger */
+	min-width: 45px; /* Must use min-* because some block contain other blocks and thus are larger */
+}
+
+.level3 .view-panel .panel-column > .block {
+	margin-left: var(--block-indent); /* Do not change, this var is generated from javascript */
+}
+.level1 .toolbox-panel .block:active {
+	filter: invert(100%);
+}
+
+.block.highlight,
+.block.subblock.highlight > .icon {
+	border: var(--smaller-border) solid var(--step-color);
+}
+.block.highlight.highlight-error,
+.block.subblock.highlight.highlight-error > .icon {
+	border-color: var(--error-color);
+	box-shadow: var(--default-space) var(--default-space) var(--default-space) var(--error-color);
+}
+.block.highlight.highlight-breakpoint,
+.block.subblock.highlight.highlight-breakpoint > .icon {
+	box-shadow: none;
+}
+.block.subblock.highlight {
+	border: none;
+}
+
+.block > .icon {
+	background: var(--icon-image-current) center center / var(--block-current-size) var(--block-current-size);
+}
+#body:not(.flow) .block.block.block > .icon {
+	background-color: transparent;
+}
+.level3 .block > .icon {
+	background-size: 0;
+}
+.level3 .block.setupBlockIcon > .icon {
+	background-size: initial;
+}
+.level1 .block,
+.level2 .block,
+.level3 .block {
+	background-image: var(--block-gradient);
+}
+.block > .icon {
+	display: block;
+	padding-left: initial;
+	padding-right: initial;
+	background-repeat: no-repeat;
+	box-sizing: border-box;
+	white-space: nowrap;
+	/* background-image is set by blocks.js */
+}
+.level3 .view-panel .block,
+.level3 .block.floating,
+.level3 .block.floating .block {
+	font-family: var(--monospace-font);
+	padding-top: 1px; /* ace editor's line height adds 3 pixels to the font size, so add one extra pixel in the level3 blocks to align with write view (the other two pixels are top and bottom border) */
+}
+.level1 .block > .icon,
+.level2 .block > .icon,
+.setupBlockIcon > .icon {
+	min-width: var(--block-big-size);
+	width: var(--block-big-size);
+	min-height: var(--block-big-size);
+	height: var(--block-big-size);
+}
+.level3 .block:not(.setupBlockIcon) > .icon {
+	height: var(--block-small-size);
+	padding-left: var(--default-space);
+	padding-right: var(--default-space);
+}
+.level1 .block > .icon {
+	color: transparent; /* Hide instruction names */
+}
+.block.subblock {
+	min-height: var(--block-small-size);
+	background-image: none;
+	margin: 0 0;
+	border: none;
+	box-shadow: none;
+}
+#body#body .block.subblock { /* We use #body#body to overwrite styles in categories.css */
+	background-color: transparent;
+}
+.block.container > .icon {
+	display: none;
+}
+.toolbox-panel .block.container > .icon,
+.block.floating.container.fromToolbox > .icon {
+	display: block;
+}
+.block.subblock > .block {
+	margin-left: var(--block-indent); /* Do not change, this var is generated from javascript */
+}
+.block.extraIndent {
+	margin-left: var(--block-indent); /* Do not change, this var is generated from javascript */
+}
+.view-panel .block.function-container {
+	border-top-width: var(--minimal-border);
+}
+.view-panel .block.function-container,
+.view-panel .block.function-container > .icon {
+	border-radius: var(--big-radius);
+}
+.view-panel .block.function-container:before {
+	border-bottom-left-radius: var(--big-border);
+	border-bottom-right-radius: var(--big-border);
+}
+.view-panel .block.function-container:after {
+	border-top-left-radius: var(--big-border);
+	border-top-right-radius: var(--big-border);
+}
+.view-panel .block.function-container + .block,
+.view-panel .block:first-of-type { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	border-top-left-radius: var(--big-border);
+	border-top-right-radius: var(--big-border);
+}
+.level1 .view-panel .block.function-container + .block,
+.level2 .view-panel .block.function-container + .block,
+.level1 .view-panel .block:first-of-type,
+.level2 .view-panel .block:first-of-type { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	margin-top: var(--default-space);
+}
+.view-panel .block.subblock:first-of-type {
+	margin-top: 0;
+}
+.view-panel .block:last-child { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	border-bottom-left-radius:  var(--big-radius);
+	border-bottom-right-radius: var(--big-radius);
+}
+.level1 .view-panel .block:last-child,
+.level2 .view-panel .block:last-child { /* Blocks are divs and icons are spans, thus we can use CSS selectors :first/last-of-type until ".block:nth-first-child(1 of .block)" (introduced in Chrome and Firefox in 2023) can be considered widespread */
+	margin-bottom: var(--big-border);
+}
+.block > .icon > label {
+	display: none;
+}
+.level2 .toolbox-panel .block > .icon > label.name,
+.level2 .block.floating.fromToolbox > .icon > label.name,
+.level2 .block.floating:not(.fromToolbox) > .icon > label.name,
+.level2 .view-panel .block > .icon > label.name {
+	display: inline;
+}
+.level3 .toolbox-panel .block > .icon > label.reduced,
+.level3 .block.floating.fromToolbox > .icon > label.reduced,
+.level3 .view-panel .block > .icon > label.code,
+.level3 .block.floating:not(.fromToolbox) > .icon > label.code,
+.level3 .block.floating > .block:not(.fromToolbox) .icon > label.code {
+	display: inline;
+}
+#body > .block.floating {
+	position: absolute;
+	z-index: 1;
+	border: var(--minimal-border) solid var(--border-color);
+	box-shadow: var(--default-space) var(--default-space) var(--big-space) var(--block-shadow-color);
+	animation: none; /* Otherwise the animation on creation goes to opacity: 1 and then jumps to the final opacity */
+}
+#body > .block.floating,
+#body > .block.floating > .icon {
+	border-radius: var(--big-radius);
+}
+#body > .block.floating {
+	opacity: var(--almost-enabled-opacity);
+}
+#body > .block.floating.setupCandidate {
+	visibility: hidden;
+}
+#body > .block.floating.setupCandidate,
+#body > .block.floating.cancelCandidate {
+	opacity: var(--half-enabled-opacity);
+}
+.block.deleteCandidate {
+	filter: blur(var(--default-space));
+}
+.view-panel .block.cancelCandidate,
+.view-panel .block.moveCandidate {
+	opacity: var(--disabled-opacity);
+}
+.view-panel .block.setupCandidate,
+.view-panel .block.setupCandidate > .icon {
+	filter: invert(100%);
+	border-radius: var(--huge-radius); /* Keep this below .view-panel .block:last-child */
+}
+.view-panel .block.setupCandidate.subblock > .icon {
+	filter: contrast(100%);
+}
+.block .countdown {
+	position: absolute;
+	bottom: -0.5em;
+	right: -0.5em;
+	display: inline-block;
+	min-width: var(--block-count-size);
+	height: var(--block-count-size);
+	font-size: var(--block-count-size);
+	border-radius: var(--default-radius);
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	color: var(--broken-white);
+	background-color: var(--error-color);
+}
+#view-blocks-tip {
+	padding: 50% var(--big-space);
+	border-width: 0;
+	box-shadow: none;
+	text-align: center;
+	color: #FF5555;
+	font-weight: bold;
+	text-shadow: var(--minimal-space) var(--minimal-space) var(--small-space) var(--block-shadow-hover-color);
+}
+#view-blocks-tip::after {
+	content: "⟵";
+	display: block;
+	font-size: xxx-large;
+}
+.level1 .block {
+	margin-top: var(--default-space);
+}
+.level1 .block,
+.level1 .block > .icon {
+	border-radius: var(--big-radius);
+}
+.level2 .block,
+.level3 .block {
+	border-top-width: 0;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.level2 .block,
+.level2 .block > .icon,
+.level3 .block, 
+.level3 .block > .icon {
+	border-radius: 0;
+}
+.level2 .block:first-child,
+.level3 .block:first-child {
+	border-top-width: var(--minimal-border);
+}
+.level2 .block:hover,
+.level3 .block:hover {
+	box-shadow: var(--default-space) var(--default-space) var(--default-space) var(--msgbox-shadow-color);
+}
+.block.subblock:hover {
+	box-shadow: none;
+}
+.level1 .block.category-internal,
+.level2 .block.category-internal {
+	display: none;
+}
+.view-panel,
+.toolbox-panel {
+	cursor: default;
+}
+.addBreakpointHandler .view-panel {
+	cursor: crosshair;
+}
+.toolbox-panel .block {
+	display: inline-block;
+	border: var(--minimal-space) solid var(--block-border-color);
+	margin: var(--small-space);
+	box-shadow: var(--default-space) var(--small-space) var(--big-space) var(--block-shadow-color);
+}
+.toolbox-panel .block,
+.toolbox-panel .block > .icon {
+	border-radius: var(--small-radius);
+}
+.toolbox-panel .block:hover {
+	box-shadow: 0 0 var(--bigger-space) var(--block-shadow-hover-color);
+}
+.toolbox-panel .block.subblock,
+.block.floating.fromToolbox .block.subblock {
+	display: none;
+}
+.toolbox-panel .disabled {
+	opacity: var(--disabled-opacity);
+}
+.setupBlock .content {
+	margin: 0 auto;
+	max-width: 600px;
+}
+.setupBlock .content {
+	display: grid;
+	grid-template: "tabs tabs" var(--tab-size) "parameters icon" auto;
+	grid-template-columns: auto min-content;
+}
+.setupBlock .tabs {
+	grid-area: tabs;
+	float: none;
+	text-align: right;
+}
+.setupBlock .tabs > .tab {
+	display: inline-block;
+	width: max-content;
+}
+.setupBlockIcon {
+	grid-area: icon;
+	max-height: var(--block-big-size);
+	max-width: var(--block-big-size);
+}
+.setupBlock .textual .setupBlockIcon {
+	display: none;
+}
+.setupBlock .parameters {
+	grid-area: parameters;
+}
+.setupBlock .content.visualMode .textual {
+	display: none;
+}
+.setupBlock .content.textualMode .visual {
+	display: none;
+}
+.setupBlock .textual .setupInput {
+	width: calc(100% - var(--big-space));
+}
+.setupBlock .content.visualMode .parameter.complexValue .visual {
+	display: none;
+}
+.setupBlock .content.visualMode .parameter.complexValue .textual {
+	display: initial;
+}
+.setupBlock .content.visualMode .parameter.complexValue .setupInput {
+	pointer-events: none;
+	border-color: var(--disabled-border-color);
+	background-color: var(--disabled-bg-color);
+	color: var(--disabled-color);
+}
+.setupBlock .wizard input[type="text"] {
+	width: calc(100% - var(--big-space));
+}
+.setupBlock button.operator {
+	width: var(--button-big-size);
+}
+.setupBlock .visualMode .tab.style::before {
+	content: "👓";
+	color: var(--broken-black);
+}
+.setupBlock .textualMode .tab.style::before {
+	content: "🕶";
+	color: transparent;
+	text-shadow: 0 0 0 var(--broken-black);
+}
+.setupBlockSubblockAction::before {
+	content: "➕";
+	margin-right: var(--default-space);
+}
+.setupBlock .tab.duplicateBlock::before {
+	content: "⎘";
+}
+.setupBlock .tab.duplicateContainer::before {
+	content: "⎗";
+}
+.setupBlock .tab.remove::before {
+	content: "🗑";
+	color: var(--error-color);
+}
+.setupBlock .visual .parameter:not(:first-child) {
+	margin-top: var(--row-margin);
+}
+.setupBlock .parameter.undefined .wizard {
+	display: none;
+}
+.setupBlock .parameter:not(.undefined) .wizard {
+	display: block;
+}
+.shadowBlock {
+	position: absolute;
+	transition-timing-function: linear;
+	box-sizing: border-box;
+	animation: none;
+}
+.block.placeholder-before::before,
+.block.placeholder-after::after,
+#view-blocks-tip.placeholder-before::before,
+#view-blocks-tip.placeholder-after::after {
+	content: " ";
+	background: linear-gradient(transparent 20%, #f2a30b, transparent 80%);
+	display: block;
+	width: calc(100% + var(--row-margin));
+	margin-left: calc(var(--row-margin) / 2);
+	height: 0.5em;
+	animation: fadeIn var(--default-transition-time);
+}
+.setupBlock .visualValue {
+	display: initial;
+	margin-left: 0.5em;
+}

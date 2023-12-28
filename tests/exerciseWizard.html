@@ -15,14 +15,14 @@
                     { id: "lang", title: "Language", options: ["ca", "en", "es"] },
                     { id: "view", title: "Initial view", options: ["Touch", "Drag", "Build", "Code"] },
                     { id: "filemenu", title: "Display file menu?", options: ["Yes", "No"] },
-                    { id: "axis", title: "Axis", options: ["Computer console", "Mathematical simple", "Mathematical centered"] }
+                    { id: "axis", title: "Axis", options: ["Computer view", "Mathematical simple", "Mathematical centered"] }
                 ];
                 var assistant = document.createElement("div");
                 for (key in setupItems) {
                     var options = setupItems[key].options;
                     var div = document.createElement("div");
                     var title = document.createElement("span");
-                    title.innerHTML = setupItems[key].title+": ";
+                    title.textContent = setupItems[key].title + ": ";
                     div.appendChild(title);
                     var select = document.createElement("select");
                     select.id = setupItems[key].id;
@@ -44,7 +44,7 @@
                 for (key in setupCodeareas) {
                     var div = document.createElement("div");
                     var title = document.createElement("div");
-                    title.innerHTML = setupCodeareas[key].title;
+                    title.textContent = setupCodeareas[key].title;
                     div.appendChild(title);
                     var textarea = document.createElement("textarea");
                     textarea.id = setupCodeareas[key].id;
@@ -121,8 +121,8 @@
                 document.getElementById("eseecode-frame").addEventListener("load",function() {
                     var descrValue = document.getElementById("description").value;
                     var codeareas = [
-                        { id: "preload", func: this.contentWindow.API_uploadPrecode },
-                        { id: "code", func: this.contentWindow.API_uploadCode }
+                        { id: "preload", func: this.contentWindow.$e.uploadPrecode },
+                        { id: "code", func: this.contentWindow.$e.ide.uploadCode }
                     ];
                     for (var i=0; i<codeareas.length; i++) {
                         var setupStartPosition = descrValue.indexOf("\nESEECODE ASSISTANT CONFIGURATION "+codeareas[i].id+" BEGIN");
@@ -131,14 +131,14 @@
                             var code = descrValue.substring(setupStartPosition+1, setupEndPosition);
                             code = code.substring(code.indexOf("\n")+1);
                             var run = undefined;
-                            if (code.indexOf("//RUN:") == 0) {
+                            if (code.startsWith("//RUN:")) {
                                 run = (code.substring("//RUN:".length,code.indexOf("\n"))=="true")?true:false;
                                 code = code.substring(code.indexOf("\n"));
                             }
                             codeareas[i].func(code, run);
                         }
                     }
-                })
+                });
             }
         </script>
     </body>

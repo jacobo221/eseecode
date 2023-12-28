@@ -1,3 +1,31 @@
+## 4.0 (2023-01-01)
+
+ *Milestone reached: Flowchart, real grid resize, run backwards*
+ *   New flowchart view. New url parameters flow= and flowtab=, and API calls showFlow() and showFlowTab()
+ *   Grid can now be any resolution, not only 400x400. New url parameter whiteboardresolution=, and API calls getWhiteboardResolution() and setWhiteboardResolution() 
+ *   Stepped execution can now run backwards. Stepped executions do not trigger breakpoints (but do update monitors). Stepped execution now works independently to regular execution, so a new API call runSteps() exists, and API call setExecutionStep() and URL parameter step= have been deprecated in favour of setStepSize() and stepsize=
+ *   Allow to always pause the execution, even if running with no delay
+ *   Highlight where the block is going to be dropped, blur the block if it is going to be removed if dropped
+ *   Added keyboard shortcuts to open (CTRL+O) and save (CTRL+S). CTRl+R will now toggle between run/resume and pause
+ *   New instruction say() to display a message to the user
+ *   Output box now allows to select and copy its content
+ *   Clicking on a layer name in the debug toolbox no longer switches to that layer, as that intereferes with the execution and pedagogically the layer switch must be done with code
+ *   Deprecated getKeyboardLastKeycode() and getKeyboardKeycode(), use getKeyboardLastKey() and getKeyboardKey() instead, including for special keys
+ *   If a block is moved and then returned to its position, don't open block setup dialog
+ *   Improved general visual style, animations and responsiveness
+ *   Improved block setup dialog UI
+ *   Animation during initial loading, and during view switches
+ *   Themes system has been reworked and simplified to make it easier to create/maintain themes
+ *   Base code deeply updated, refreshed and reworked. Dropped support for IE and browsers older than 2019
+ *   Disable automatic browser translation (because it translates instructions)
+ *   New resume execution button
+ *   Two new themes: Psychedelic and Retro
+ *   Default and sharp themes updated
+ *   Window instructions are not listed anymore in the Build view, only in the Code view
+ *   Fixed getKeyboardLastKey()
+ *   URL param "dialog" has been renamed to "toolbox", and API calls switchDialog() and getDialog() have been renamed to switchToolbox() and getToolbox()
+ *   Small fixes in some instructions' metainfo
+
 ## 3.2 (2023-11-01)
 
  *Milestone reached: Real pause/resume execution and debug*
@@ -21,12 +49,12 @@
  *   Updated create.js
  *   Updated and improved guide.js, including translations, chaining tutorials, embedding texts, etc
  *   Fixed and updated tutorials
- *   Fix: Maximizing console is back working, and better than every (full maximization)
+ *   Fix: Maximizing view is back working, and better than every (full maximization)
 
 ## 3.1 (2023-10-19)
 
  *Milestone reached: Language structure improvements*
- *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape()
+ *   New block fill() {} to ease the use of shapes (more intuitive than beginShape()+endShape())
  *   Support and/or instead of &&/||
  *   Added instruction getCosine()
 
@@ -46,7 +74,7 @@
  *   Allow to disable block setup when adding instructions in Drag mode
  *   Allow to display instruction parameters in level 2
  *   Allow basepath for image() and sound() calls
- *   Code view now only shows custom instruction set in dialog when custom instruction set is set
+ *   Code view now only shows custom instruction set in toolbox when custom instruction set is set
  *   Animate execution steps. Can be be configured from the Debug tab
  *   Prompt the user before loosing data when there are undo/redo actions available
  *   Allow calling platform with a versioning number to prevent caching
@@ -63,8 +91,8 @@
  *   Instructions can now have a maximum amount of uses (only in blocks modes)
  *   Now Layers can be called by name or position in the stack and you can check if a layer exists with getLayerExists()
  *   Debug shows the position and name of every layer
- *   Allow variables and expressions in parameters, maximize code console and disable prevent exit from API
- *   Allow code, precode, postcode, execute, set dialog mode, hide view tabs, etc from URL
+ *   Allow variables and expressions in parameters, maximize code view and disable prevent exit from API
+ *   Allow code, precode, postcode, execute, set toolbox mode, hide view tabs, etc from URL
  *   Allow to initialize variables when declaring them in blocks views
  *   Allow to duplicate blocks
  *   New tool to ease creation of customized eseecode for exercises
@@ -139,7 +167,7 @@
  *   Better way of accessing the instructions' definitions
  *   Added documentation for not-in-implementation.js code elements such as repeat(), while(), if(), ...
  *   Prevent from selecting text (except in Code view), which frequently was an error when trying to click
- *   Improved order of blocks in dialog in Touch and Drag views
+ *   Improved order of blocks in toolbox in Touch and Drag views
  *   Deprecated unsetColor()
  *   arc() by default draws circles
  *   When using mouse attend only to left button
@@ -200,12 +228,12 @@
  *   Added options to download all layers as an animation
  *   Level1 has no text in blocks no more
  *   Removed advanced parameter description from level 2
- *   New resize console button, much more intuitive than doubleclicking level tabs
+ *   New resize view button, much more intuitive than doubleclicking level tabs
  *   Enable ACE editor worker, helper and horizontal scroll
  *   Download layer images hides/shows guide and grid based on settings
  *   Added a shortcut to run the code: CTRL+R
- *   Focus back to code when clicking instruction in dialog
- *   Resetting the UI and switching the console level always leave the dialog in Pieces mode
+ *   Focus back to code when clicking instruction in toolbox
+ *   Resetting the UI and switching the view level always leave the toolbox in Pieces mode
  *   Guide icon slightly redesigned
  *   Better icon for if/ifelse
  *   lineAt and writeAt icons are now dynamic
@@ -218,8 +246,8 @@
  *   Easily convert between if and ifelse in blocks modes
  *   Added option in visual block setup to leave parameters without value, and instructionSet parameter "optional"
  *   Clicking on "}" block or "else" block will prompt for the parent block setup
- *   Additional parameter in "image" allows the image to be centered in teh given position
- *   Wrapped all functions under the $e_ prefix so it is much less probably to have a conflict with function/variable names
+ *   Additional parameter in "image" allows the image to be centered in the given position
+ *   Wrapped all functions under the $e. prefix so it is much less probably to have a conflict with function/variable names
  *   Added the possibility to include global variables in the language
  *   Allow predefined constants in the instruction set definitions: minX, minY, maxX, maxY, centerX, centerY, originX, originY (only applies to type "number")
  * Debug:
@@ -270,7 +298,7 @@
  * Translatable UI
  * Translations available: ca, es (by default: en)
  * Setup window to simplify UI, reduce height and make the whole app fit in Android browser
- * Get parameters from URL to set console mode and language
+ * Get parameters from URL to set view mode and language
  * Debug now allows breakpoints and watchpoints
  * Available API to easily embed eSeeCode into other platforms
  * Ace editor is now mandatory, makes no sense to keep compatibility with textarea
@@ -312,7 +340,7 @@
 ## 0.7 (2014-04-08)
 
  * Icons change dynamically depending on the value of the parameters
- * Level4 can now use Ace http://ace.c9.io/#nav=about
+ * Level4 now uses Ace editor
  * It is now possible to load and save codes, and download the canvas image
  * Lots of beautifying
 
@@ -337,7 +365,7 @@
 
  * Debug system to list layers, their order, show their guide and run commands (independently of the code)
  * New Window API to create interactive applications
- * Can now maximize/restore the console
+ * Can now maximize/restore the view
 
 ## 0.2 (2014-01-31)
 

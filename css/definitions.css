@@ -1,0 +1,81 @@
+:root {
+
+	--landscape-min-width: 1020px; /* iPad / Android default layout viewport */
+	--landscape-min-height: 350px;
+	--portrait-min-width: 600px;
+	--portrait-min-height: 600px;
+	--loading-inner-size: 50px;
+	--header-height: 50px;
+	--logo-width: 150px;
+	--footer-height: 18px;
+	--tab-height: 24px;
+	--tab-margin: var(--default-space);
+	--toolbox-width: 250px;
+	--row-margin: 1em;
+	--view-buttons-edges-size: 75px;
+	--view-buttons-middle-size: 150px;
+	--lowerbar-height: 28px;
+	--lowerbar-padding-top: var(--small-space);
+	--lowerbar-border-all: var(--minimal-border);
+	--lowerbar-height-outbox: calc(var(--lowerbar-height) + var(--lowerbar-padding-top) + var(--lowerbar-border-all) * 2);
+	--button-big-size: 25px;
+	--button-small-size: 15px;
+	--input-min-size: 40px;
+
+	--broken-white: #fafafa;
+	--broken-black: #202020;
+	--bg-color: #123456;
+	--text-color: var(--broken-white);
+	--msgbox-bg-color: #e9e9e9;
+	--msgbox-color: #456789;
+	--msgbox-shadow-color: #5098f4;
+	--tabs-bg-color: var(--msgbox-bg-color);
+	--border-color: #666666;
+	--hover-color: #789abc;
+	--disabled-color: var(--border-color);
+	--disabled-bg-color: #bbbbbb;
+	--disabled-border-color: #ffffff;
+	--outsidier-color: #77794C;
+	--step-color: #00ff9d;
+	--error-color: #ff0000;
+	--begin-color: #1a731a;
+	--monitor-color: var(--msgbox-shadow-color);
+	--bar-bg-color: #bbbbbb;
+	--bar-hover-color: #888888;
+	--bar-active-color: #aaaaaa;
+
+	--disabled-opacity: 0.4;
+	--half-enabled-opacity: 0.6;
+	--almost-enabled-opacity: 0.8;
+	--hover-opacity: 0.1;
+	--active-opacity: 0.3;
+
+	--default-font: Arial, Helvetica, sans-serif;
+	--monospace-font: "Courier New", Courier, monospace;
+	--default-text-size: 14px;
+	--small-text-size: 10px;
+	--big-text-size: 30px;
+
+	--bigger-space: 20px;
+	--big-space: 10px;
+	--default-space: 5px;
+	--small-space: 3px;
+	--minimal-space: 1px;
+
+	--tab-size: 2.5rem;
+	--bigger-border: var(--bigger-space);
+	--big-border: var(--big-space);
+	--default-border: var(--big-text-size);
+	--small-border: var(--default-space);
+	--smaller-border: var(--small-space);
+	--minimal-border: var(--minimal-space);
+	--huge-radius: 50%;
+	--big-radius: var(--big-space);
+	--default-radius: var(--big-text-size);
+	--small-radius: var(--default-space);
+	
+	--msgbox-padding-all: var(--big-space);
+	--msgbox-border-all:  var(--default-space);
+
+	--default-transition-time: 0.5s;	
+}

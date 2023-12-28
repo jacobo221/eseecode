@@ -1,0 +1,772 @@
+.view-panel .ace-chrome .ace_marker-layer .ace_stack { /* Overwrite Ace's definition */
+	background: var(--error-color);
+}
+.ace_gutter-layer {
+	width: calc(var(--block-indent) + var(--minimal-border) + var(--default-space) - var(--default-space)) !important; /* Indent size to leave space for line numbers + block left border + bloc left padding - ace text left padding, to align perfectly with code in level3 view.  /* Do not change var(--block-indent), this var is generated from javascript */
+}
+div.ace_gutter-cell {
+	padding-left: 0;
+}
+.ace_text-layer {
+	padding-left: var(--default-space) !important;
+}
+.ace-breakpoint { 
+	border-radius: var(--bigger-border) 0 0 var(--bigger-border);
+	box-shadow: 0 0 var(--minimal-space) var(--minimal-space) var(--monitor-color) inset; 
+}
+.button {
+	cursor: pointer;
+}
+.button.disabled {
+	pointer-events: none;	
+	color: var(--disabled-color);
+	text-shadow: 0 0 0 var(--disabled-color);
+	border-color: var(--disabled-border-color);
+}
+.buttonAdd {
+	display: inline-block;
+	width: var(--button-small-size);
+	height: var(--button-small-size);
+	margin: 0 var(--small-space);
+	text-align: center;
+	vertical-align: middle;
+	background-color: olive;
+	font-weight: bolder;
+	border-radius: var(--big-radius);
+}
+.buttonRemove {
+	display: inline-block;
+	width: var(--button-small-size);
+	height: var(--button-small-size);
+	margin: 0 var(--small-space);
+	text-align: center;
+	vertical-align: middle;
+	background-color: #D00000;
+	font-weight: bolder;
+	border-radius: var(--big-radius);
+}
+.toolbox-debug-analyzer-breakpoint-block {
+	margin-top: var(--default-space);
+}
+.toolbox-debug .highlight {
+	font-weight: bold;
+}
+.toolbox-debug-analyzer-breakpoint-remove,
+.toolbox-debug-analyzer-breakpoint-edit,
+.toolbox-debug-analyzer-watch-remove {
+	font-size: smaller;
+}
+.toolbox-help {
+	float: right;
+	font-weight: bold;
+	width: var(--big-space);
+	margin: 0 0;
+	cursor: help;
+}
+.toolbox-help::before {
+	content: "?";
+}
+.toolbox-debug-layers-position {
+	color: var(--block-border-color);
+	font-style: italic;
+}
+.toolbox-title {
+	padding: var(--small-space);
+	border-bottom: var(--minimal-border) solid var(--broken-black);
+	text-align: center;
+	font-weight: bold;
+	background-color: #CCCCCC;
+	color: inherit;
+}
+.toolbox-title-name {
+	display: inline-block;
+}
+.toolbox-cell {
+	padding: var(--small-space);
+}
+.helpNote {
+	color: #AAAAAA;
+	font-style: italic;
+}
+.hide {
+	display: none !important;
+}
+.link {
+	cursor: pointer;
+	text-decoration: underline;
+	color: blue;
+}
+.link:hover {
+	text-decoration: none;
+	font-weight: bold;
+}
+#body.view-maximized #view-buttons {
+	border-bottom-left-radius: var(--big-radius);
+}
+#view-tabs-restore-toolbox {
+	display: none;
+}
+#view-tabs-restore-toolbox::before {
+	content: "➥";
+}
+#body.view-maximized #view-tabs-restore-toolbox {
+	display: initial;
+}
+.loadingWrapper,
+.msgBoxWrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 9999; /* jscolor uses z-index 10000 */
+	border: 0 solid black;
+	background-color: rgba(0, 0, 0, var(--disabled-opacity));
+	animation: fadeIn var(--default-transition-time);
+}
+.msgBox {
+	position: relative;
+	margin: auto;
+	top: 25%;
+	max-width: 50%;
+	width: max-content;
+	border: var(--msgbox-border-all) solid var(--msgbox-color);
+	border-radius: 1em;
+	background-color: var(--msgbox-bg-color);
+	color: var(--broken-black);
+	padding: var(--msgbox-padding-all);
+	white-space: pre-line;
+	font-family: var(--default-font);
+}
+.submit-wrapper {
+	margin: var(--default-space) 0;
+	width: 100%;
+	text-align: center;
+}
+.msgBox > div:first-child {
+	overflow-y: auto;
+	width: auto;
+	min-height: calc(100vh / 3 - var(--button-big-size) - var(--msgbox-border-all) * 2 - var(--msgbox-padding-all) * 2) + "px";
+}
+.msgBox.error {
+	font-family: var(--monospace-font);
+}
+.msgBox button,
+.msgBox input[type=button],
+.msgBox input[type=submit] {
+	margin: var(--small-space);
+	background-color: var(--broken-white);
+	border-color: var(--msgbox-shadow-color);
+	color: var(--broken-black);
+	font-weight: bold;
+}
+.msgBox .tabs {
+	position: relative;
+	bottom: var(--default-space);
+	right: var(--default-space);
+	float: right;
+}
+.tabs .tab {
+	vertical-align: bottom;
+}
+.msgBox .tabs .tab {
+	min-width: var(--tab-size);
+	min-height: var(--tab-size);
+	margin: var(--small-space);
+	background-color: var(--broken-white);
+	color: var(--broken-black);
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	border: var(--minimal-border) solid var(--bg-color);
+}
+.msgBox .tabs a:hover,
+.msgBox .tabs button:hover {
+	filter: invert(10%);
+}
+.msgBox .tabs a:hover {
+	margin: var(--small-space) 0 0 0;
+	background-color: var(--hover-color);
+	color: inherit;
+	font-weight: bold;
+}
+.msgBox .submit-wrapper button,
+.msgBox .submit-wrapper input[type=button],
+.msgBox .submit-wrapper input[type=submit] {
+	min-height: var(--button-big-size);
+	margin: var(--default-space);
+}
+.panel-column {
+	position: relative;
+	width: inherit;
+	height: 100%;
+	background-color: var(--bg-color);
+	color: inherit;
+	overflow: auto;
+	border: var(--minimal-border) solid var(--border-color);
+	border-top-width: 0;
+	border-bottom-width: 0;
+}
+#toolbox .panel-column {
+	overflow-x: hidden;
+}
+.separator {
+	border-bottom: var(--minimal-border) solid var(--broken-white);
+	clear: both;
+	height: 0;
+}
+.tab {
+	display: inline-block;
+	height: var(--tab-height);
+	margin: var(--tab-margin) 0 0 0;
+	padding: var(--small-space) var(--small-space) 0 var(--small-space);
+	border: var(--minimal-border) solid var(--text-color);
+	background-color: var(--msgbox-color);
+	color: var(--text-color);
+	text-align: center;
+	text-decoration: none;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+.tab:active {
+	border: var(--minimal-border) solid #aaaaaa;
+	background-color: rgba(0, 0, 0, var(--active-opacity));
+}
+.tab.active,
+.tab.active:hover,
+.tab:hover {
+	transform: scale(1.1) translateY(-1px);
+}
+.tab.active:hover.disabled,
+.tab:hover.disabled {
+	transform: none;
+}
+.tab.active,
+.tab.active:hover {
+	background-color: var(--tabs-bg-color);
+	color: var(--bg-color);
+}
+.tab.disabled {
+	display: inline-block;
+	padding: 0 var(--small-space);
+	border: var(--minimal-border) solid var(--disabled-border-color);
+	background-color: var(--disabled-bg-color);
+	color: var(--disabled-color);
+	text-align: center;
+	border-radius: var(--default-radius);
+	text-decoration: var(--error-color);
+	cursor: default;
+}
+.text-disabled, .text-disabled input {
+	color: var(--disabled-color);
+}
+.text-disabled input:hover {
+	box-shadow: none;
+}
+span.tab-title {
+	color: var(--text-color);
+	font-weight: bold;
+	padding: var(--default-space) var(--default-space) 0 var(--big-space);
+}
+#body {
+	width: inherit;
+	overflow: hidden;
+	display: flex;
+	min-height: calc(100vh - var(--header-height) - var(--footer-height));
+	height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+#view {
+	min-width: 350px;
+	overflow: hidden;
+	resize: horizontal;
+}
+#body.view-maximized #view {
+	width: calc(100vw - var(--whiteboard-width));
+}
+#view-buttons,
+#toolbox-debug-command {
+	padding-top: var(--lowerbar-padding-top);
+	display: flex;
+	color: inherit;
+	height: var(--lowerbar-height);
+	background-color: var(--bar-bg-color);
+	background-image: linear-gradient(180deg, var(--broken-white) 0%, var(--bar-bg-color) 40%, var(--border-color) 100%);
+}
+#view-buttons {
+	padding-left: var(--small-space);
+	padding-right: var(--small-space);
+	border-bottom-right-radius: var(--big-radius);
+	font-size: 1.4rem;
+}
+#view-buttons div {
+	flex: auto;
+	text-align: center;
+}
+#view-buttons div:first-child,
+#view-buttons div:last-child  {
+	width: var(--view-buttons-edges-size);
+}
+#view-buttons div:not(:first-child):not(:last-child)  {
+	width: var(--view-buttons-middle-size);
+}
+#view-blocks {
+	background-repeat: repeat;
+}
+#view-blocks-tip {
+	border-radius: 0;
+	background-color: transparent;
+}
+#view-tabs {
+	margin: 0 var(--small-space) 0 0;
+}
+#view-content {
+	width: 100%;
+	height: calc(100% - var(--tab-height) - var(--tab-margin) - var(--lowerbar-height-outbox));
+}
+#view-content .panel-column {
+	border-top-right-radius: var(--big-radius);
+}
+#view-write {
+	position: relative;
+}
+#view-content.addBreakpointHandler,
+#view-content.addBreakpointHandler .ace_content {
+	cursor: crosshair;
+	filter: invert(90%);
+}
+#view-content.addBreakpointHandler label { /* This is explicitly mentioned as in Firefox 119 it will otherwise leave the default cursor on labels for some strange reason, but we do not want to reapply the invert(90%) filter again */
+	cursor: crosshair;
+}
+#toolbox {
+	width: var(--toolbox-width);
+	border-top-left-radius: var(--big-radius);
+	border-bottom-left-radius: var(--big-radius);;
+	border-bottom-right-radius: var(--big-radius);;
+}
+#toolbox > div {
+	width: inherit;
+}
+#toolbox .panel-column {
+	background-color: var(--msgbox-bg-color);
+	border-top-left-radius: var(--big-radius);;
+}
+.textblock {
+	border: var(--minimal-border) solid var(--block-border-color);
+}
+#toolbox-write .textblock.first-in-category {
+	margin-top: var(--default-space);
+}
+#toolbox-debug {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+#toolbox-debug-analyzer-toolbar {
+	text-align: center;
+}
+#toolbox-debug-analyzer-watches:not(:empty) {
+	border-top: var(--minimal-border) solid var(--broken-black);
+}
+#toolbox-debug-command {
+	clear: both;
+	text-align: left;
+	border-bottom-left-radius: var(--big-radius);
+}
+#toolbox-debug-command-input {
+	height: 1.3em;
+	width: max(calc(var(--toolbox-width) - var(--button-big-size) - var(--small-space) * 5), 100px);
+	float: left;
+}
+#toolbox-debug-command-button {
+	width: var(--button-big-size);
+	margin: 0 var(--small-space);
+}
+#toolbox-debug-execute-step-buttons {
+	width: 100%;
+	text-align: center;
+	margin-top: var(--default-space);
+}
+#toolbox-debug-execute-instructionsPause-before::before {
+	content: "🐌";
+	display: inline-block;
+	transform: scaleX(-1);
+	font-size: 2em;
+}
+#toolbox-debug-execute-instructionsPause-input {
+	direction: rtl;
+}
+#toolbox-debug-execute-instructionsPause-after::after {
+	content: "🐎";
+	display: inline-block;
+	transform: scaleX(-1);
+	font-size: 2em;
+}
+#toolbox-debug-execute-step-backwards::before {
+	content: "⏏";
+	display: inline-block;
+	transform: rotate(-90deg);
+}
+#toolbox-debug-execute-step-forward::before {
+	content: "⏏";
+	display: inline-block;
+	transform: rotate(90deg);
+}
+#toolbox-debug-layers,
+#toolbox-debug-analyzer,
+#toolbox-debug-execute-stats {
+	width: auto;
+	overflow-x: hidden;
+}
+#toolbox-debug-execute-stats {
+	flex-grow: 1;
+	display: flex;
+	align-items: end;
+}
+#toolbox-debug-layers .highlight {
+	font-weight: bold;
+}
+#toolbox-debug-layers-title {
+	position: relative;
+}
+.toolbox-title-column-name {
+	position: absolute;
+	left: 0px;
+	font-weight: normal;
+	font-size: small;
+}
+#toolbox-io-input,
+#toolbox-io-output {
+	width: max(calc(var(--toolbox-width) - var(--button-small-size)), 100px);
+	min-height: 150px;
+	resize: vertical;
+	background-color: var(--broken-white);
+	color: var(--broken-black);
+	border: var(--minimal-border) solid var(--broken-black);
+}
+#toolbox-io-output {
+	white-space: pre;
+	cursor: text;
+	overflow: auto;
+	user-select: text;
+}
+#toolbox-setup {
+	text-align: center;
+	position: relative;
+}
+#toolbox-debug input[type="number"],
+#toolbox-setup input[type="number"] {
+	width: var(--input-min-size);
+}
+#toolbox-setup-author {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	text-align: center;
+}
+#toolbox-tabs {
+	text-align: right;
+}
+#toolbox-tabs div {
+	width: auto;
+}
+#toolbox-tabs .tab,
+#view-tabs .tab {
+	border-radius: var(--big-radius) var(--big-radius) 0 0;
+}
+#toolbox-window .toolbox-window {
+	background-color: var(--block-border-color);
+	color: inherit;
+	height: inherit;
+}
+#filemenu {
+	width: auto;
+}
+#filemenu input:hover {
+	box-shadow: 0 0 var(--default-space) var(--broken-white);
+}
+#fullscreen-button {
+	position: absolute;
+	top: var(--big-space);
+	right: var(--big-space);
+	font-size: var(--tab-size);
+}
+#footer {
+	position: absolute;
+	bottom: 0;
+	height: var(--footer-height);
+}
+#header {
+	height: var(--header-height);
+}
+#header, #footer {
+	background-color: transparent;
+	color: var(--broken-white);
+	position: relative;
+	text-align: left;
+	font-size: var(--small-text-size);
+	width: inherit;
+}
+#header a {
+	background-color: inherit;
+	color: var(--broken-white);
+	font-weight: bold;
+}
+#header a:hover {
+	box-shadow: 0 0 var(--default-space) var(--broken-white);
+	background-color: inherit;
+	color: var(--hover-color);
+	border-radius: var(--default-radius);
+}
+#header div {
+	display: inline;
+	text-align: left;
+}
+#header>h1 {
+	width: 100%;
+	text-align: center;
+}
+#setup-downloadLayers-title {
+	font-weight: bold;
+	text-decoration: underline;
+}
+#title-logo {
+	width: var(--logo-width);
+	margin: var(--big-space) 0 0 0;
+}
+#translations-translator {
+	display: none;
+}
+#whiteboard-wrapper {
+	display: flex;
+	margin: 0 auto;
+	flex-direction: column;
+}
+#whiteboard,
+.whiteboard {
+	min-width: var(--whiteboard-width); /* Do not change, this var is generated from javascript */
+	min-height: var(--whiteboard-height); /* Do not change, this var is generated from javascript */
+	background-color: var(--broken-white);
+	color: inherit;
+	border-radius: var(--big-radius);
+	margin-left: var(--small-space);
+}
+#whiteboard canvas {
+	border-radius: var(--big-radius);
+}
+#whiteboard div {
+	position: absolute;
+	border-radius: var(--big-radius);
+}
+.canvas-wrapper.highlight {
+	background-color: var(--msgbox-bg-color);
+}
+#toolbox-body {
+	height: calc(100% - var(--tab-height) - var(--tab-margin) - var(--lowerbar-height-outbox));
+}
+#toolbox-blocks {
+	height: 100%;
+	background-repeat: repeat;
+}
+.shadowDiv {
+	border: var(--small-space) solid var(--border-color);
+}
+.invisible {
+	visibility: hidden;
+}
+input.unsupported {
+	width: 480px;
+}
+#fullscreen-button::before {
+	content: "□";
+}
+#toolbox-tabs-setup::before {
+	content: "⚙️";
+	color: transparent;
+	text-shadow: 0 0 0 var(--broken-white);
+}
+#toolbox-tabs-setup.tab.active::before {
+	text-shadow: 0 0 0 var(--bg-color);
+}
+#toolbox-debug-command-button::before {
+	content: "▲";
+	display: inline-block;
+	transform: rotate(90deg);
+}
+#view-tabs .tab {
+	min-width: 50px;
+}
+#view-tabs-maximize.tab {
+	display: none;
+	float: right;
+	margin-right: 0.5em;
+	min-width: auto;
+}
+#view-tabs-maximize::before {
+	content: "□";
+	color: transparent;
+	text-shadow: 0 0 0 var(--broken-white);
+}
+.flow #view-tabs-maximize,
+.level4 #view-tabs-maximize {
+	display: initial;
+}
+#view-tabs-flow.tab {
+	display: none;
+	float: right;
+	margin-right: 0.5em;
+	min-width: auto;
+}
+#view-tabs-flow::before {
+	content: "↝";
+	color: transparent;
+	text-shadow: 0 0 0 var(--broken-white);
+}
+.level1 #view-tabs-flow,
+.level2 #view-tabs-flow,
+.level3 #view-tabs-flow {
+	display: initial;
+}
+#body.view-maximized #view-tabs-maximize,
+.flow #view-tabs-flow.tab {
+	background-color: var(--tabs-bg-color);
+}
+#body.view-maximized #view-tabs-maximize::before,
+.flow #view-tabs-flow.tab::before {
+	color: var(--bg-color);
+	text-shadow: 0 0 0 var(--bg-color);
+}
+#toolbox-debug-command .button,
+#view-buttons .button {
+	font-size: inherit;
+	min-height: calc(var(--lowerbar-height) - var(--lowerbar-padding-top));
+	line-height: 1rem;
+	border: var(--minimal-border) solid transparent; /* So hover border will not take additional space */
+	border-radius: var(--small-radius);
+	padding: 0 var(--small-space);
+	background-color: transparent;
+}
+#toolbox-debug-command .button:hover,
+#view-buttons .button:hover {
+	border: var(--minimal-border) solid var(--bar-hover-color);
+	background-color: rgba(0, 0, 0, var(--hover-opacity));
+}
+#toolbox-debug-command .button:active,
+#view-buttons .button:active {
+	border: var(--minimal-border) solid var(--bar-active-color);
+	background-color: rgba(0, 0, 0, var(--active-opacity));
+}
+#button-undo::before {
+	content: "↶";
+	color: transparent;
+	text-shadow: 0 0 0 #bf810b;
+}
+#button-redo::before {
+	content: "↷";
+	color: transparent;
+	text-shadow: 0 0 0 #bf810b;
+}
+#button-execute::before {
+	content: "▲";
+	display: inline-block;
+	color: var(--begin-color);
+	transform: rotate(90deg);
+}
+#button-pause::before {
+	content: "⏸";
+	color: #bbd758;
+}
+#button-resume::before {
+	content: "⏭";
+	color: var(--begin-color);
+}
+#button-clear::before {
+	content: "↺";
+	color: #e33e3e;
+}
+#button-reset::before {
+	content: "❌";
+	color: transparent;
+	text-shadow: 0 0 0 #0000ff;
+	font-size: 1rem;
+}
+#whiteboard-tabs {
+	margin-bottom: max(50vh - (var(--whiteboard-height) + var(--header-height) + var(--tab-height) + var(--tab-margin)) / 2, 0);
+	text-align: center;
+}
+#whiteboard-tabs-download-button::before {
+	content: "📷";
+}
+@media screen and (orientation: portrait) {
+	#body {
+		display: grid;
+		grid-template: "whiteboard whiteboard" "toolbox view";
+		grid-template-rows: min(calc(var(--whiteboard-height) + var(--tab-height) + var(--tab-margin) + var(--row-margin) * 2), 50vh) auto;
+		grid-template-columns: var(--toolbox-width) auto;
+	}
+	#body.view-maximized {
+		grid-template: "whiteboard" "view";
+		grid-template-columns: auto;
+	}
+	#toolbox,
+	#view {
+		min-height: min(calc(100% - var(--whiteboard-height)), 50vh);
+	}
+	#toolbox {
+		grid-area: toolbox;
+	}
+	#view {
+		grid-area: view;
+		width: calc(100vw - var(--toolbox-width) - var(--big-space));
+		max-width: initial;
+		overflow: initial;
+	}
+	#body.view-maximized #view {
+		width: calc(100vw - var(--big-space));
+	}
+	#whiteboard-wrapper {
+		grid-area: whiteboard;
+	}
+	#whiteboard-tabs {
+		margin-bottom: 0;
+	}
+	#whiteboard {
+		margin: 0 auto;
+	}
+}
+@keyframes fadeIn {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+}
+/* Source: https://loading.io/css */
+.loadingWrapper > * { /* Do not use .loading as this way we can remove the class and the animation dissapears but teh content does not */
+	display: block;
+	position: absolute;
+	top: calc(50% - var(--loading-inner-size) / 2);
+	left: calc(50% - var(--loading-inner-size) / 2);
+	color: var(--broken-white);
+	font-weight: bold;
+	text-align: center;
+}
+.loading::after {
+	content: "";
+	display: block;
+	width: var(--loading-inner-size);
+	height: var(--loading-inner-size);
+	position: relative;
+	top: calc(var(--bigger-border) * -1);
+	left: calc(var(--bigger-border) * -1);
+	margin-left: calc(var(--loading-inner-size) / 2);
+	margin-top: calc(var(--loading-inner-size) / 1.5 * -1);
+	border-radius: 50%;
+	border: var(--bigger-border) solid var(--broken-white);
+	border-color: var(--broken-white) transparent var(--broken-white) transparent;
+	animation: loading var(--default-transition-time) linear infinite;
+}
+@keyframes loading {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
