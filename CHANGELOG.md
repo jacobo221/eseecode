@@ -1,4 +1,4 @@
-## 4.0 (2023-01-01)
+## 4.0 (2023-12-29)
 
  *Milestone reached: Flowchart, real grid resize, run backwards*
  *   New flowchart view. New url parameters flow= and flowtab=, and API calls showFlow() and showFlowTab()
@@ -43,7 +43,7 @@
  *   New URL param background= and its API call setWhiteboardBackground() to set a background image for the whiteboard
  *   New URL param guideimage= and guidesize= and its API calls setGuideImage() and setGuideSize() to set a custom image and size for the guide
  *   New URL param e= to allow base64 encoded params in it (circumvent mod_security conflicts)
- *   getX() and getY() anow return an integer to allow proper validation if "same coordinate" after moving around the guide
+ *   getX() and getY() now return an integer to allow proper validation if "same coordinate" after moving around the guide
  *   Custom instructions can now include the code in the instructions' definitions instead of delegating it to precode
  *   Default UI language to browser language
  *   Updated create.js

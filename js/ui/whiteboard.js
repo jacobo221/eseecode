@@ -562,16 +562,15 @@ $e.ui.whiteboardResizeHandler = () => {
 		whiteboardEl.style.transform = "";
 		return;
 	}
+	// Scale value cannot be calculated in CSS directly (because CSS has no way of running parseInt() on distance units), so we have to set it with javascript
 	const whiteboardWrapperStyle = getComputedStyle($e.ui.element.querySelector("#whiteboard-wrapper"));
 	const availableWidth = parseInt(whiteboardWrapperStyle.width) + parseInt(whiteboardWrapperStyle.marginLeft) + parseInt(whiteboardWrapperStyle.marginRight);
 	const whiteboardTabsStyle = getComputedStyle($e.ui.element.querySelector("#whiteboard-tabs"));
 	const availableHeight = parseInt(whiteboardWrapperStyle.height) - parseInt(whiteboardTabsStyle.height);
 	const scale_width = availableWidth / $e.backend.whiteboard.width;
 	const scale_height = availableHeight / $e.backend.whiteboard.width;
-	let scale = Math.min(scale_width, scale_height);
-	whiteboardEl.style.transform = "scale(" + scale + ")";
-	whiteboardEl.style.marginTop = "calc(var(--whiteboard-height) * (1 - " + scale + ") / 2 * -1)"; // Scale only scales the view of the element but not the space it takes, so move the whiteboard up/down to compensate for the empty space
-	whiteboardEl.style.marginLeft = window.innerWidth > window.innerHeight && window.innerWidth < parseInt(getComputedStyle($e.ui.element.querySelector("#toolbox")).width) + parseInt(getComputedStyle($e.ui.element.querySelector("#view")).width) + $e.backend.whiteboard.width * scale + $e.backend.whiteboard.width * (1 - scale) / 2 ? "calc(var(--whiteboard-width) * (1 - " + scale + ") / 2 * -1 + var(--minimal-border))" : "";
+	const scale = Math.min(scale_width, scale_height);
+	$e.ui.element.style.setProperty("--whiteboard-scale", scale);
 };
 
 /**

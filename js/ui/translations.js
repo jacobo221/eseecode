@@ -116,7 +116,7 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#translations-select").title = _("Select language");
 	$e.ui.element.querySelector("#themes-title").textContent = _("Select theme") + ": ";
 	$e.ui.element.querySelector("#themes-select").title = _("Select theme");
-	$e.ui.element.querySelector("#title-logo").title = _($e.platform.name.text);
+	$e.ui.element.querySelector("#logo").title = _($e.platform.name.text);
 	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.version.link) + "', '_blank')\"\">" + _($e.platform.version.text) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license.link) + "', '_blank')\">" + _($e.platform.license.text) + "</span></div>";
 	$e.ui.element.querySelector("#loadcode").value = _("Load code");
 	$e.ui.element.querySelector("#savecode").value = _("Save code");

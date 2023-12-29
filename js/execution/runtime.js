@@ -45,7 +45,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode) {
 	}
 	$e.execution.current.kill = false; // Must be set after $e.backend.reset()
 	$e.execution.current.breaktoui = false;
-	if (!inCode && !justPrecode && !immediate && $e.execution.api_prerun_callback) $e.execution.api_prerun();
+	if (!inCode && !justPrecode && !immediate && $e.execution.api_prerun_callback) $e.execution.api_prerun_callback();
 	let jsCode = "";
 	try {
 		jsCode += "\"use strict\";";

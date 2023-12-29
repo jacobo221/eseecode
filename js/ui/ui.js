@@ -304,7 +304,7 @@ $e.ui.reset = async () => {
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();
 	$e.ui.themes.resetMenu();
-	$e.ui.element.querySelector("#title").innerHTML = '<a href="' + $e.platform.logo.link + '" target="_blank"><img id="title-logo" src="' + $e.basepath + $e.platform.logo.text + '" title="" /></a>';
+	$e.ui.element.querySelector("#title").innerHTML = '<a href="' + $e.platform.logo.link + '" target="_blank" id="logo"><img src="' + $e.basepath + $e.platform.logo.text + '" title="" /></a>';
 	$e.ui.resetGridModeSelect();
 	$e.ide.blocks.changes.reset();
 	$e.ui.debug.resetBreakpointsHighlights();
@@ -575,7 +575,7 @@ $e.ui.undo = async (redo) => {
 		$e.ide.blocks.changes.undo(redo);
 		if ($e.modes.views.current.id == "level1") {
 			$e.session.runFrom = "level1_undo_block";
-			await $e.ide.execute(true, true);
+			await $e.ide.execute(false, true);
 		}
 	} else if (mode == "write") {
 		if (redo) {

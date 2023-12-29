@@ -128,8 +128,8 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		const destBlockPosition = destBlockEl.getBoundingClientRect();
 		const shadowBlockEl = $e.ide.blocks.clone(clickedBlockEl);
 		shadowBlockEl.classList.add("shadowBlock");
-		shadowBlockEl.style.top = originBlockPosition.top + "px";
-		shadowBlockEl.style.left = originBlockPosition.left + "px";
+		shadowBlockEl.style.top = originBlockPosition.top + window.scrollY + "px";
+		shadowBlockEl.style.left = originBlockPosition.left + window.scrollX + "px";
 		shadowBlockEl.style.transition = "opacity " + animation_duration + "s, top " + animation_duration + "s, left " + animation_duration + "s";
 		mainBodyEl.appendChild(shadowBlockEl);
 		setTimeout(() => {
@@ -375,7 +375,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 		if (level === "level1") {
 			$e.session.lastChange = new Date().getTime();
 			$e.session.runFrom = "level1_add_block";
-			await $e.ide.execute(true, true);
+			await $e.ide.execute(false, true);
 		} else if (action !== "setup" && action !== "add") {
 			$e.session.lastChange = new Date().getTime();
 		}

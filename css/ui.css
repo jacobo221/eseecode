@@ -276,7 +276,7 @@ span.tab-title {
 	height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 #view {
-	min-width: 350px;
+	min-width: var(--view-width);
 	overflow: hidden;
 	resize: horizontal;
 }
@@ -490,13 +490,10 @@ span.tab-title {
 	right: var(--big-space);
 	font-size: var(--tab-size);
 }
-#footer {
-	position: absolute;
-	bottom: 0;
-	height: var(--footer-height);
-}
 #header {
 	height: var(--header-height);
+	box-sizing: border-box;
+	padding: var(--big-space);
 }
 #header, #footer {
 	background-color: transparent;
@@ -510,28 +507,31 @@ span.tab-title {
 	background-color: inherit;
 	color: var(--broken-white);
 	font-weight: bold;
+	display: inline-block;
 }
 #header a:hover {
 	box-shadow: 0 0 var(--default-space) var(--broken-white);
 	background-color: inherit;
 	color: var(--hover-color);
-	border-radius: var(--default-radius);
+	border-radius: var(--small-radius);
 }
-#header div {
-	display: inline;
-	text-align: left;
-}
-#header>h1 {
+#header #title {
 	width: 100%;
 	text-align: center;
+}
+#header #logo {
+	font-size: 10px; /* Define a size smaller than the logo so the element is not highter than the contained logo */
+}
+#header #logo > img {
+	width: var(--logo-width);
+}
+#footer {
+	height: var(--footer-height);
+	box-sizing: border-box;
 }
 #setup-downloadLayers-title {
 	font-weight: bold;
 	text-decoration: underline;
-}
-#title-logo {
-	width: var(--logo-width);
-	margin: var(--big-space) 0 0 0;
 }
 #translations-translator {
 	display: none;
@@ -540,21 +540,29 @@ span.tab-title {
 	display: flex;
 	margin: 0 auto;
 	flex-direction: column;
+	overflow: hidden;
 }
-#whiteboard,
-.whiteboard {
-	min-width: var(--whiteboard-width); /* Do not change, this var is generated from javascript */
-	min-height: var(--whiteboard-height); /* Do not change, this var is generated from javascript */
+#whiteboard {
+	box-sizing: border-box;
+}
+#whiteboard {
+	min-width: calc(var(--whiteboard-width) * var(--whiteboard-scale)); /* Do not change, this var is generated from javascript */
+	min-height: calc(var(--whiteboard-height) * var(--whiteboard-scale)); /* Do not change, this var is generated from javascript */
 	background-color: var(--broken-white);
 	color: inherit;
 	border-radius: var(--big-radius);
 	margin-left: var(--small-space);
+	position: relative;
 }
-#whiteboard canvas {
+#whiteboard > div {
+	transform: scale(var(--whiteboard-scale));
+	transform-origin: top left;
+	position: absolute;
+	top: 0;
+	left: 0;
 	border-radius: var(--big-radius);
 }
-#whiteboard div {
-	position: absolute;
+#whiteboard > div > canvas {
 	border-radius: var(--big-radius);
 }
 .canvas-wrapper.highlight {
@@ -700,7 +708,7 @@ input.unsupported {
 	#body {
 		display: grid;
 		grid-template: "whiteboard whiteboard" "toolbox view";
-		grid-template-rows: min(calc(var(--whiteboard-height) + var(--tab-height) + var(--tab-margin) + var(--row-margin) * 2), 50vh) auto;
+		grid-template-rows: min(calc(var(--whiteboard-height) * var(--whiteboard-scale) + var(--tab-height) + var(--tab-margin) + var(--row-margin) * 2), 50vh) auto;
 		grid-template-columns: var(--toolbox-width) auto;
 	}
 	#body.view-maximized {

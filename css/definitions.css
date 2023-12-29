@@ -7,10 +7,11 @@
 	--loading-inner-size: 50px;
 	--header-height: 50px;
 	--logo-width: 150px;
-	--footer-height: 18px;
+	--footer-height: var(--big-space);
 	--tab-height: 24px;
 	--tab-margin: var(--default-space);
 	--toolbox-width: 250px;
+	--view-width: 350px;
 	--row-margin: 1em;
 	--view-buttons-edges-size: 75px;
 	--view-buttons-middle-size: 150px;
