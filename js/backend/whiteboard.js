@@ -540,7 +540,7 @@ $e.backend.whiteboard.animate = async (callback) => {
 		let countdown = count;
 		await new Promise(r => {
 			const transitionHandler = setInterval(() => {
-				if (countdown-- && currentInstruction === $e.execution.getProgramCounter()) {
+				if (countdown-- > 0 && currentInstruction === $e.execution.getProgramCounter()) {
 					callback(count - countdown, count, transitionTime);
 				} else {
 					clearInterval(transitionHandler);

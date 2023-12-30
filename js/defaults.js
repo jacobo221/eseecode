@@ -53,7 +53,7 @@ Object.assign($e, {
 	},
 	execution: {
 		stepSize: 1,
-		instructionsPause: 50,
+		instructionsPause: 300,
 		instructionsMinimumPause: 100,
 		instructionsRefresh: 50,
 		inputDefault: "",
