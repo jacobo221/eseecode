@@ -734,11 +734,11 @@ function lineAt(originx, originy, destinationx, destinationy) {
  * @param {Number} destinationy Y coordinate where the line ends
  * @example line(50, 50)
  */
-function line(destinationx, destinationy) {
+async function line(destinationx, destinationy) {
 	$e.execution.parseParameterTypes("line", arguments);
 	const coords = $e.backend.whiteboard.axis.user2systemCoords({ x: destinationx, y: destinationy });
 	$e.backend.whiteboard.layers.systemLineAt($e.backend.whiteboard.layers.current.guide, coords);
-	$e.backend.whiteboard.guides.move(coords);
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, coords);
 };
 
 /**
@@ -748,13 +748,13 @@ function line(destinationx, destinationy) {
  * @param {Number} pixels Amount of pixels to move forward
  * @example forward(50)
  */
-function forward(pixels) {
+async function forward(pixels) {
 	$e.execution.parseParameterTypes("forward", arguments);
 	const pos = {};
 	pos.x = $e.backend.whiteboard.layers.current.guide.x + pixels * Math.cos($e.backend.whiteboard.layers.current.guide.angle * Math.PI / 180) * Math.abs($e.backend.whiteboard.axis.scale.x);
 	pos.y = $e.backend.whiteboard.layers.current.guide.y + pixels * Math.sin($e.backend.whiteboard.layers.current.guide.angle * Math.PI / 180) * Math.abs($e.backend.whiteboard.axis.scale.y);
-	$e.backend.whiteboard.layers.systemLineAt($e.backend.whiteboard.layers.current.guide, pos);
-	$e.backend.whiteboard.guides.move(pos);
+	$e.backend.whiteboard.layers.systemLineAt($e.backend.whiteboard.layers.current.guide, pos); // Do not await this animation, so the line and the guide are animated at the same time
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, pos);
 };
 
 /**
@@ -767,7 +767,7 @@ function forward(pixels) {
  * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
  * @example arc(50, 270)
  */
-function arc(radius, degrees, follow, counterclockwise) {
+async function arc(radius, degrees, follow, counterclockwise) {
 	$e.execution.parseParameterTypes("arc", arguments);
 	let posx, posy;
 	let startradians, endradians;
@@ -812,17 +812,20 @@ function arc(radius, degrees, follow, counterclockwise) {
 	if (!$e.backend.whiteboard.layers.current.shaping) {
 		$e.backend.whiteboard.layers.current.context.closePath();
 	}
-
+	const pos = {
+		x: $e.backend.whiteboard.layers.current.guide.y,
+		y: $e.backend.whiteboard.layers.current.guide.x
+	};
 	if (follow) {
 		let COx, COy; // vector from center to origin
 		COx = $e.backend.whiteboard.layers.current.guide.x - posx;
 		COy = $e.backend.whiteboard.layers.current.guide.y - posy;
 		const rotateAngle = degrees * Math.PI / 180;
-		$e.backend.whiteboard.layers.current.guide.y = posy + Math.sin(rotateAngle) * COx + Math.cos(rotateAngle) * COy;
-		$e.backend.whiteboard.layers.current.guide.x = posx + Math.cos(rotateAngle) * COx - Math.sin(rotateAngle) * COy;
+		pos.x = posy + Math.sin(rotateAngle) * COx + Math.cos(rotateAngle) * COy;
+		pos.y = posx + Math.cos(rotateAngle) * COx - Math.sin(rotateAngle) * COy;
 	}
-	$e.backend.whiteboard.layers.current.guide.angle += degrees;
-	$e.backend.whiteboard.guides.draw();
+	const newAngle = $e.backend.whiteboard.layers.current.guide.angle + degrees;
+	await $e.backend.whiteboard.guides.setAngleAndMove(newAngle, pos);
 };
 
 /**
@@ -895,9 +898,9 @@ function endShape() {
  * @param {Number} angle Angle
  * @example turnRight(90)
  */
-function turnRight(angle) {
+async function turnRight(angle) {
 	$e.execution.parseParameterTypes("turnRight", arguments);
-	$e.backend.whiteboard.guides.setAngle($e.backend.whiteboard.layers.current.guide.angle + angle);
+	await $e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.layers.current.guide.angle + angle);
 };
 
 /**
@@ -907,9 +910,9 @@ function turnRight(angle) {
  * @param {Number} angle Angle
  * @example turnLeft(90)
  */
-function turnLeft(angle) {
+async function turnLeft(angle) {
 	$e.execution.parseParameterTypes("turnLeft", arguments);
-	$e.backend.whiteboard.guides.setAngle($e.backend.whiteboard.layers.current.guide.angle - angle);
+	await $e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.layers.current.guide.angle - angle);
 };
 
 /**
@@ -920,10 +923,10 @@ function turnLeft(angle) {
  * @param {Number} [angle=0] Angle to set to
  * @example turnReset(90)
  */
-function turnReset(angle) {
+async function turnReset(angle) {
 	$e.execution.parseParameterTypes("turnReset", arguments);
 	if (angle === undefined) angle = 0;
-	$e.backend.whiteboard.guides.setAngle($e.backend.whiteboard.axis.user2systemAngle(angle));
+	await $e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.axis.user2systemAngle(angle));
 };
 
 /**
@@ -1002,10 +1005,10 @@ function image(src, posx, posy, centered, width, height, rotation, flipX, flipY)
  * @param {Number} posy Y coordinate where the guide will be moved
  * @example goTo(50, 50)
  */
-function goTo(posx, posy) {
+async function goTo(posx, posy) {
 	$e.execution.parseParameterTypes("goTo", arguments);
 	const pos = $e.backend.whiteboard.axis.user2systemCoords({ x: posx, y: posy });
-	$e.backend.whiteboard.guides.move(pos);
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, pos);
 };
 
 /**
@@ -1014,8 +1017,8 @@ function goTo(posx, posy) {
  * @public
  * @example goToCenter()
  */
-function goToCenter() {
-	$e.backend.whiteboard.guides.move({ x: getLayerWidth() / 2, y: getLayerHeight() / 2 });
+async function goToCenter() {
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, { x: getLayerWidth() / 2, y: getLayerHeight() / 2 });
 };
 
 /**
@@ -1024,8 +1027,8 @@ function goToCenter() {
  * @public
  * @example goToUpLeft()
  */
-function goToUpLeft() {
-	$e.backend.whiteboard.guides.move({ x: 0, y: 0 });
+async function goToUpLeft() {
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, { x: 0, y: 0 });
 };
 
 /**
@@ -1034,8 +1037,8 @@ function goToUpLeft() {
  * @public
  * @example goToUpRight()
  */
-function goToUpRight() {
-	$e.backend.whiteboard.guides.move({ x: getLayerWidth(), y: 0 });
+async function goToUpRight() {
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, { x: getLayerWidth(), y: 0 });
 };
 
 /**
@@ -1044,8 +1047,8 @@ function goToUpRight() {
  * @public
  * @example goToLowLeft()
  */
-function goToLowLeft() {
-	$e.backend.whiteboard.guides.move({ x: 0, y: getLayerHeight() });
+async function goToLowLeft() {
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, { x: 0, y: getLayerHeight() });
 };
 
 /**
@@ -1054,8 +1057,8 @@ function goToLowLeft() {
  * @public
  * @example goToLowRight()
  */
-function goToLowRight() {
-	$e.backend.whiteboard.guides.move({ x: getLayerWidth(), y: getLayerHeight() });
+async function goToLowRight() {
+	await $e.backend.whiteboard.guides.setAngleAndMove(undefined, { x: getLayerWidth(), y: getLayerHeight() });
 };
 
 /**

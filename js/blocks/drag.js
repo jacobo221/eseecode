@@ -80,12 +80,13 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		$e.ui.debug.addBreakpointEventAccept(event);
 		return;
 	}
+	const level = $e.modes.views.current.id;
+	if (level === "level1" && $e.execution.isRunning()) return; // Wait for the previous block addition to finish, otherwise superseding animations will break the execution
 	$e.ui.unhighlight();
 	// At this point we cannot know if the user wants to drag the block or wants to set up the block, so we must take both and see later (when the event is mousemove or mouseup)
 	const clickedBlockEl = event.target.closest(".block:not(.subblock)");
 	if (!clickedBlockEl) return console.error("This should never happen in $e.ui.blocks.modifyEventStart");
 	if ($e.ui.blocks.getFloatingBlockAction()) $e.ui.blocks.modifyEventAccept(); // If two blocks are clicked too fast (before the animation is finished), make sure we add the previous one	const level = $e.modes.views.current.id;
-	const level = $e.modes.views.current.id;
 	const isToolbox = !!clickedBlockEl.closest("#toolbox");
 	$e.ui.blocks.cancelFloatingBlock();
 	if (isToolbox) {
@@ -375,7 +376,16 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 		if (level === "level1") {
 			$e.session.lastChange = new Date().getTime();
 			$e.session.runFrom = "level1_add_block";
-			await $e.ide.execute(false, true);
+			if ($e.execution.getProgramCounter() > 0) {
+				$e.ide.execute(false, true, true, $e.execution.getProgramCounter()); // Run immediately to the current position, then run the next instruction with animation
+				await new Promise(function waitUntilStepped(r) { // Wait until execution has reached the target step. We must run this async, otherwise it freezes the execution and doesn't return here
+					if (!$e.execution.isStepped()) setTimeout(() => waitUntilStepped(r), 10);
+					else r();
+				});
+				await $e.ide.executeOrResume(false);
+			} else {
+				await $e.ide.execute(false, true, false);
+			}
 		} else if (action !== "setup" && action !== "add") {
 			$e.session.lastChange = new Date().getTime();
 		}

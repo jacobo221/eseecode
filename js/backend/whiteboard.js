@@ -42,8 +42,7 @@ $e.backend.whiteboard.reset = async (runPrecode = true) => {
 	$e.backend.whiteboard.layers.switch(); // canvas-0 is the default
 	$e.backend.whiteboard.axis.update();
 	// reset guide	
-	$e.backend.whiteboard.guides.move($e.backend.whiteboard.axis.user2systemCoords({ x: 0, y: 0 }));
-	$e.backend.whiteboard.guides.setAngle($e.backend.whiteboard.axis.user2systemAngle(0));
+	$e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.axis.user2systemAngle(0), $e.backend.whiteboard.axis.user2systemCoords({ x: 0, y: 0 }));
 	// reset windows
 	Object.keys($e.backend.windows.available).forEach((id) => { // Use Object.keys() because for..in will give also Array.prototype polyfills in Safari 13
 		if ($e.backend.windows.available[id]) {
@@ -322,18 +321,34 @@ $e.backend.whiteboard.layers.setColor = (color, context) => {
  * @param {Array} destination Coordinates where the line ends
  * @example $e.backend.whiteboard.layers.systemLineAt({x: 200, y: 200}, {x: 50, y: 50})
  */
-$e.backend.whiteboard.layers.systemLineAt = (origin, destination) => {
+$e.backend.whiteboard.layers.systemLineAt = async (origin, destination) => {
+	const org = { x: origin.x, y: origin.y };
+	const pos = { x: destination.x, y: destination.y };
 	let shiftPixels = 0;
 	if ($e.backend.whiteboard.layers.current.context.lineWidth == 1) {
 		// We use half-pixels because otherwise setSize(1) draws lines 2px wide
 		shiftPixels = 0.5;
 	}
 	if (!$e.backend.whiteboard.layers.current.shaping) {
-		// shape should use forward() or line()
+		// Shape should use forward() or line()
 		$e.backend.whiteboard.layers.current.context.beginPath();
-		$e.backend.whiteboard.layers.current.context.moveTo(origin.x + shiftPixels, origin.y + shiftPixels);
+		org.x += shiftPixels;
+		org.y += shiftPixels;
+		$e.backend.whiteboard.layers.current.context.moveTo(org.x, org.y);
 	}
-	$e.backend.whiteboard.layers.current.context.lineTo(destination.x + shiftPixels, destination.y + shiftPixels);
+	pos.x += shiftPixels;
+	pos.y += shiftPixels;
+
+	await $e.backend.whiteboard.animate((countup, count) => {
+		const xInc = (pos.x - org.x) / count;
+		const yInc = (pos.y - org.y) / count;
+		const x = org.x + xInc * countup;
+		const y = org.y + yInc * countup;
+		$e.backend.whiteboard.layers.current.context.lineTo(x, y);
+		$e.backend.whiteboard.layers.current.context.stroke();
+	});
+
+	$e.backend.whiteboard.layers.current.context.lineTo(pos.x, pos.y);
 	if (!$e.backend.whiteboard.layers.current.shaping) {
 		$e.backend.whiteboard.layers.current.context.closePath();
 	}
@@ -397,17 +412,19 @@ $e.backend.whiteboard.layers.clear = (id) => {
  * @private
  * @param {Number} [id] Layer id. If unset use the currently active layer
  * @param {Number} [canvas] Canvas to use. If unset use the "guide" layer
+ * @param {Number} [forceOrg] Overwrite the guide's coordinates
+ * @param {Number} [forceAngle] Overwrite the guide's angle
  * @example $e.backend.whiteboard.guides.draw()
  */
-$e.backend.whiteboard.guides.draw = (id, canvas) => {
+$e.backend.whiteboard.guides.draw = (id, canvas, forceOrg, forceAngle) => {
 	if (id === undefined) id = $e.backend.whiteboard.layers.current.name;
 	const targetCanvas = $e.backend.whiteboard.layers.get(id);
 	const canvasWidth = $e.backend.whiteboard.width;
 	const canvasHeight = $e.backend.whiteboard.width;
 	let size = $e.execution.guide.size;
 	if (size < 0) size = 0;
-	const org = targetCanvas.guide;
-	const angle = targetCanvas.guide.angle;
+	const org = forceOrg !== undefined ? forceOrg : targetCanvas.guide;
+	const angle = forceAngle !== undefined ? forceAngle : targetCanvas.guide.angle;
 	if (canvas === undefined) {
 		if (!$e.ui.guideVisible) {
 			return;
@@ -479,26 +496,58 @@ $e.backend.whiteboard.guides.draw = (id, canvas) => {
 };
 
 /**
- * Moves the guide to the specified position
+ * Turns and moves the guide to the specified angle and position
  * @private
- * @param {Number} pos Coordinate
- * @example $e.backend.whiteboard.guides.move({x: 50, y: 50})
+ * @param {Number} [angle] Angle
+ * @param {Aeeay<Number, Number>} [pos] Position
+ * @example $e.backend.whiteboard.guides.setAngleAndMove(90, { x: 50, y: 50 })
  */
-$e.backend.whiteboard.guides.move = (pos) => {
+$e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whiteboard.layers.current.guide.angle, pos = $e.backend.whiteboard.layers.current.guide) => {
+
+	// We give the backend gthe final values so if the next instruction is run while the animation is still running, it uses the real final values
+	const orgAngle = $e.backend.whiteboard.layers.current.guide.angle;
+	$e.backend.whiteboard.layers.current.guide.angle = angle;
+	$e.backend.whiteboard.layers.current.guide.angle %= 360;
+	if ($e.backend.whiteboard.layers.current.guide.angle < 0) $e.backend.whiteboard.layers.current.guide.angle += 360;
+	const org = { x: $e.backend.whiteboard.layers.current.guide.x, y: $e.backend.whiteboard.layers.current.guide.y };
 	$e.backend.whiteboard.layers.current.guide.x = pos.x; // Make sure the value is integer
 	$e.backend.whiteboard.layers.current.guide.y = pos.y; // Make sure the value is integer
+
+	await $e.backend.whiteboard.animate((countup, count) => {
+		const angleInc = (angle - orgAngle) / count;
+		const forceAngle = orgAngle + angleInc * countup;
+		const xInc = (pos.x - org.x) / count;
+		const yInc = (pos.y - org.y) / count;
+		const x = org.x + xInc * countup;
+		const y = org.y + yInc * countup;
+		$e.backend.whiteboard.guides.draw(undefined, undefined, { x, y }, forceAngle);
+	});
+
 	$e.backend.whiteboard.guides.draw();
 };
 
 /**
- * Turns the guide to the specified angle
+ * Controls a whiteboard animation
  * @private
- * @param {Number} angle Angle
- * @example $e.backend.whiteboard.guides.setAngle(90)
+ * @param {Function} callback Function to run on every frame, receives countup (number of iteration, beginning with 1), count (total number of iterations expected) and transitionTime (total time the animation takes)
+ * @example $e.backend.whiteboard.animate((countup, count) => console.log(countup + "/" + count)))
  */
-$e.backend.whiteboard.guides.setAngle = (angle) => {
-	$e.backend.whiteboard.layers.current.guide.angle = angle;
-	$e.backend.whiteboard.layers.current.guide.angle %= 360;
-	if ($e.backend.whiteboard.layers.current.guide.angle < 0) $e.backend.whiteboard.layers.current.guide.angle += 360;
-	$e.backend.whiteboard.guides.draw();
+$e.backend.whiteboard.animate = async (callback) => {
+	const currentInstruction = $e.execution.getProgramCounter(); // We'll use this to abort mid-animation if the code has moved on
+	const transitionTime = $e.execution.instructionsPause - $e.execution.instructionsMinimumPause;
+	if ($e.execution.current.animate && $e.execution.instructionsRefresh < transitionTime) {
+		const count = transitionTime / $e.execution.instructionsRefresh;
+		let countdown = count;
+		await new Promise(r => {
+			const transitionHandler = setInterval(() => {
+				if (countdown-- && currentInstruction === $e.execution.getProgramCounter()) {
+					callback(count - countdown, count, transitionTime);
+				} else {
+					clearInterval(transitionHandler);
+					r();
+				}
+			}, $e.execution.instructionsRefresh);
+		});
+	}
+	$e.execution.current.animatedTime = transitionTime; // Report that the instructionsPause time has taken up part of the instructionsPause time
 };

@@ -8,7 +8,7 @@
  * @param {Boolean} [justPrecode] Whether or not to ignore the usercode and just run the precode
  * @example $e.execution.execute()
  */
-$e.execution.execute = async function(immediate, inCode, justPrecode) {
+$e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimation) {
 	if (!inCode) $e.execution.resetSandbox();
 	let code;
 	if (immediate || inCode) code = inCode; // Code from events runs without stepping or breakpoints
@@ -50,6 +50,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode) {
 	try {
 		jsCode += "\"use strict\";";
 		jsCode += "(async function() {";
+		jsCode += "$e.execution.current.animate = " + !skipAnimation + ";";
 		let instructions = Object.values($e.instructions.set);
 		if (!inCode && ($e.execution.precode || instructions.some(d => d.run))) { // Don't load precode again when running the code of an event
 			let customInstructionsCode = "";
@@ -93,6 +94,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode) {
 	$e.execution.traceInject();
 	await eval(jsCode);
 	$e.execution.current.stepped = undefined;
+	$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement
 	$e.execution.traceRestore();
 	$e.execution.updateSandboxChanges(oldWindowProperties, Object.getOwnPropertyNames(window)); // Do not reset yet (reset before next new execution), as there might be interaction to run with the last run code
 	$e.execution.current.usercode.running = false;
@@ -144,6 +146,15 @@ $e.execution.initProgramCounter = () => {
 	Object.entries($e.execution.current.monitors).forEach(([key, monitor]) => {
 		if ($e.isNumber(key, true)) monitor.count = 0;
 	});
+};
+
+/**
+ * Returns the current execution's program counter
+ * @private
+ * @example $e.execution.getProgramCounter()
+ */
+$e.execution.getProgramCounter = () => {
+	return $e.execution.current.programCounter;
 };
 
 /**
@@ -264,7 +275,8 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 
 	} else if ($e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block" && $e.execution.instructionsPause) { // We don't want to pause execution in level1/Touch
 
-		await new Promise(r => { $e.execution.current.pauseHandler = setTimeout(() => { r(); }, $e.execution.instructionsPause); });
+		await new Promise(r => { $e.execution.current.pauseHandler = setTimeout(() => { r(); }, $e.execution.instructionsPause - ($e.execution.current.animatedTime ? $e.execution.current.animatedTime : 0)); });
+		$e.execution.current.animated = 0;
 
 	} else if ($e.execution.current.breaktoui) {
 

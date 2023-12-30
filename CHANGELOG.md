@@ -1,3 +1,7 @@
+## 4.1 (2024-01-01)
+ *Milestone reached: Animate the guide movements*
+ *   Every guide movement is now animated
+
 ## 4.0 (2023-12-29)
 
  *Milestone reached: Flowchart, real grid resize, run backwards*

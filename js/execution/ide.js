@@ -17,8 +17,11 @@ $e.execution.updateInstructionsPause = () => {
  * @example $e.execution.updateStatus()
  */
 $e.execution.updateStatus = (status) => {
+	if ($e.execution.current.status === status) return;
 	if (typeof status != "string") console.error("Invalid status in updateStatus", status);
+	$e.ui.element.querySelector("#body").classList.remove($e.execution.current.status);
 	$e.execution.current.status = status;
+	$e.ui.element.querySelector("#body").classList.add(status);
 	$e.ui.updateViewButtonsVisibility();
 };
 
@@ -47,6 +50,15 @@ $e.execution.isRunning = () => {
  */
 $e.execution.isBreakpointed = () => {
 	return $e.execution.current.status == "breakpointed";
+};
+
+/**
+ * Checks if previous execution is stepped
+ * @private
+ * @example $e.execution.isStepped()
+ */
+$e.execution.isStepped = () => {
+	return $e.execution.current.status == "stepped";
 };
 
 /**
@@ -101,11 +113,10 @@ $e.execution.isKilled = () => {
  */
 $e.execution.stopAndWait = async function() {
 	$e.execution.stop();
-	const waitUntilStopped = (r) => {
+	await new Promise(function waitUntilStopped(r) { // Wait until execution has been successfully stopped. We must run this async, otherwise it halts execution
 		if ($e.execution.isEvaluating()) setTimeout(() => waitUntilStopped(r), 10);
 		else r();
-	};
-	await new Promise(waitUntilStopped); // Wait until execution has been successfully stopped. We must run this async, otherwise it halts execution
+	});
 };
 
 /**
@@ -120,10 +131,12 @@ $e.execution.pause = () => {
 /**
  * Resume the execution
  * @private
+ * @param {Boolean} [skipAnimation] Skips the animations
  * @example $e.execution.resume()
  */
-$e.execution.resume = () => {
+$e.execution.resume = (skipAnimation) => {
 	$e.execution.traceTruncate();
+	if (skipAnimation !== undefined) $e.execution.current.animate = !skipAnimation;
 	$e.execution.updateStatus("running");
 };
 

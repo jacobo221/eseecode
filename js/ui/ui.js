@@ -575,7 +575,7 @@ $e.ui.undo = async (redo) => {
 		$e.ide.blocks.changes.undo(redo);
 		if ($e.modes.views.current.id == "level1") {
 			$e.session.runFrom = "level1_undo_block";
-			await $e.ide.execute(false, true);
+			await $e.ide.execute(false, true, true);
 		}
 	} else if (mode == "write") {
 		if (redo) {

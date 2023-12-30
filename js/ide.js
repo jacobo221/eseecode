@@ -24,7 +24,7 @@ $e.ui.updateViewButtonsVisibility = (id = $e.modes.views.current.id) => {
 	$e.ui.element.querySelector("#button-pause").classList[$e.execution.isRunning() ? "remove" : "add"]("hide");
 	$e.ui.element.querySelector("#button-resume").classList[$e.execution.isFrozen() ? "remove" : "add"]("hide");
 	$e.ui.element.querySelector("#button-clear").classList[!$e.execution.isClean() ? "remove" : "add"]("hide");
-	$e.ui.element.querySelector("#toolbox-debug-execute-step-backwards").classList[$e.execution.current.programCounter > 0 && ($e.execution.isFrozen() || $e.execution.isFinished()) ? "remove" : "add"]("disabled");
+	$e.ui.element.querySelector("#toolbox-debug-execute-step-backwards").classList[$e.execution.getProgramCounter() > 0 && ($e.execution.isFrozen() || $e.execution.isFinished()) ? "remove" : "add"]("disabled");
 	$e.ui.element.querySelector("#toolbox-debug-execute-step-forward").classList[!$e.ide.codeIsEmpty() && !$e.execution.isRunning() && !$e.execution.isFinished() ? "remove" : "add"]("disabled");
 	$e.ui.element.querySelector("#toolbox-debug-breakpoint-add").classList[!$e.ide.codeIsEmpty() ? "remove" : "add"]("disabled");
 };
@@ -117,13 +117,14 @@ $e.ide.reset = async function() {
 /**
  * Resumes or runs the code
  * @private
+ * @param {Boolean} [skipAnimation] Skips the animations
  * @example $e.ide.executeOrResume()
  */
-$e.ide.executeOrResume = async function() {
+$e.ide.executeOrResume = async function(skipAnimation) {
 	if ($e.execution.isFrozen()) {
-		$e.execution.resume();
+		$e.execution.resume(skipAnimation);
 	} else {
-		await $e.ide.execute();
+		await $e.ide.execute(undefined, undefined, undefined, skipAnimation);
 	}
 };
 
@@ -132,12 +133,15 @@ $e.ide.executeOrResume = async function() {
  * @private
  * @param {Boolean} [immediate] Run immediately (disable breakpoints and pauses)
  * @param {Boolean} [keepTrace] Do not clear the trace stack
+ * @param {Boolean} [skipAnimation] Skips the animations
+ * @param {Number} [forceStepped] Pause execution at this point
  * @example $e.ide.execute()
  */
-$e.ide.execute = async function(immediate, keepTrace) {
+$e.ide.execute = async function(immediate, keepTrace, skipAnimation, forceStepped) {
 	$e.execution.stop();
 	if (!keepTrace) $e.execution.traceClear();
-	await $e.execution.execute(immediate, undefined, false);
+	if (forceStepped) $e.execution.current.stepped = forceStepped;
+	await $e.execution.execute(immediate, undefined, false, skipAnimation);
 };
 
 /**
@@ -150,15 +154,15 @@ $e.ide.runSteps = async function(steps = 1) {
 	if (steps instanceof Event) steps = 1; // It may be called directly from UI
 	if (steps === 0) return console.error("Step set to 0 in $e.execute.step()");
 	if (steps < 0) {
-		let stepped = $e.execution.current.programCounter + steps * $e.execution.stepSize; // We must get programCOunter before calling $e.ide.reset()
+		let stepped = $e.execution.getProgramCounter() + steps * $e.execution.stepSize; // We must get programCOunter before calling $e.ide.reset()
 		if (stepped < 0) stepped = 0;
 		await $e.backend.reset();
 		$e.execution.current.stepped = stepped; // We must set this after calling $e.backend.reset()
-		$e.ide.execute(false, true);
+		$e.ide.execute(false, true, true);
 	} else {
-		$e.execution.current.stepped = $e.execution.current.programCounter + steps * $e.execution.stepSize;
+		$e.execution.current.stepped = $e.execution.getProgramCounter() + steps * $e.execution.stepSize;
 		$e.execution.traceTruncate();
-		await $e.ide.executeOrResume();
+		await $e.ide.executeOrResume(false);
 	}
 }
 
