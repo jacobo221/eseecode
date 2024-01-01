@@ -524,10 +524,9 @@ function getRandomColor() {
  * @throws codeError
  * @example getRandomNumber(100)
  */
-function getRandomNumber(upperbound) {
+function getRandomNumber(upperbound = Number.MAX_VALUE) {
 	$e.execution.parseParameterTypes("getRandomNumber", arguments);
 	if (upperbound < 0) throw new $e.execution.codeError("getRandomNumber", _("Upperbound cannot be lower than 0, received:") + " " + upperbound);
-	if (upperbound === undefined) upperbound = Number.MAX_VALUE;
 	return Math.floor(Math.random() * upperbound); // [0,upperbound-1]
 };
 
@@ -765,67 +764,71 @@ async function forward(pixels) {
  * @param {Number} degrees Amount of degrees to arc
  * @param {Boolean} [follow=false] false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc
  * @param {Boolean} [counterclockwise=false] Move clockwise or counterclockwise
- * @example arc(50, 270)
+ * @example arc(50, 270)angle
  */
-async function arc(radius, degrees, follow, counterclockwise) {
+async function arc(radius, degrees = 360, follow, counterclockwise) {
+
 	$e.execution.parseParameterTypes("arc", arguments);
-	let posx, posy;
-	let startradians, endradians;
-	let move;
-	if (degrees === undefined) degrees = 360;
-	if (counterclockwise) {
-		degrees = -degrees;
-		move = 1;
-	} else {
-		move = -1;
-	}
+	
+	const guide = $e.backend.whiteboard.layers.current.guide;
+	const context = $e.backend.whiteboard.layers.current.context;
+	const origGuide = [ "x", "y", "angle" ].reduce((acc, key) => { acc[key] = guide[key]; return acc; }, {});
+
+	// Calculate final coordinates
+	if (counterclockwise) degrees = -degrees;
+	const move = counterclockwise ? 1 : -1;
+	let startDegrees = (guide.angle + (follow ? 90 * move : 0));
+	const startRadians = startDegrees * Math.PI / 180;	
+	const posx = guide.x + (follow ? radius * Math.cos((guide.angle - 90 * move) * Math.PI / 180) : 0);
+	const posy = guide.y + (follow ? radius * Math.sin((guide.angle - 90 * move) * Math.PI / 180) : 0);
+	let endDegrees = startDegrees + degrees
+	const endRadians = endDegrees * Math.PI / 180;
+	const origLineWidth = context.lineWidth;
+	const drawLineWidth = context.lineWidth > radius * 2 ? radius + origLineWidth / 2 : context.lineWidth; // If lineWidth is larger than radius*2 the line is drawn with negative color
+	if (origLineWidth !== drawLineWidth) radius = context.lineWidth / 2;
+	const shiftPixels = context.lineWidth === 1 ? 0.5 : 0; // We use half-pixels because otherwise setSize(1) draws lines 2px wide
+
+	// We give the backend the final values so if the next instruction is run while the animation is still running, it uses the real final values
 	if (follow) {
-		startradians = ($e.backend.whiteboard.layers.current.guide.angle + 90 * move) * Math.PI / 180;	
-		posx = $e.backend.whiteboard.layers.current.guide.x + radius * Math.cos(($e.backend.whiteboard.layers.current.guide.angle - 90 * move) * Math.PI / 180);
-		posy = $e.backend.whiteboard.layers.current.guide.y + radius * Math.sin(($e.backend.whiteboard.layers.current.guide.angle - 90 * move) * Math.PI / 180);
-	} else {
-		startradians = $e.backend.whiteboard.layers.current.guide.angle * Math.PI / 180;
-		posx = $e.backend.whiteboard.layers.current.guide.x;
-		posy = $e.backend.whiteboard.layers.current.guide.y;
-	}
-	endradians = startradians + degrees * Math.PI / 180;
-	if (!$e.backend.whiteboard.layers.current.shaping) {
-		$e.backend.whiteboard.layers.current.context.beginPath();
-	}
-	let oldLineWidth;
-	if ($e.backend.whiteboard.layers.current.context.lineWidth > radius * 2) { // if lineWidth is larger than radius*2 the line is drawn with negative color
-		oldLineWidth = $e.backend.whiteboard.layers.current.context.lineWidth;
-		$e.backend.whiteboard.layers.current.context.lineWidth = radius + oldLineWidth / 2;
-		radius = $e.backend.whiteboard.layers.current.context.lineWidth / 2;
-		
-	}
-	let shiftPixels = 0;
-	if ($e.backend.whiteboard.layers.current.context.lineWidth == 1) {
-		// We use half-pixels because otherwise setSize(1) draws lines 2px wide
-		shiftPixels = -0.5;
-	}
-	$e.backend.whiteboard.layers.current.context.arc(posx + shiftPixels, posy + shiftPixels, radius, startradians, endradians, counterclockwise);
-	$e.backend.whiteboard.layers.current.context.stroke();
-	if (oldLineWidth !== undefined) {
-		$e.backend.whiteboard.layers.current.context.lineWidth = oldLineWidth;
-	}
-	if (!$e.backend.whiteboard.layers.current.shaping) {
-		$e.backend.whiteboard.layers.current.context.closePath();
-	}
-	const pos = {
-		x: $e.backend.whiteboard.layers.current.guide.y,
-		y: $e.backend.whiteboard.layers.current.guide.x
-	};
-	if (follow) {
-		let COx, COy; // vector from center to origin
-		COx = $e.backend.whiteboard.layers.current.guide.x - posx;
-		COy = $e.backend.whiteboard.layers.current.guide.y - posy;
 		const rotateAngle = degrees * Math.PI / 180;
-		pos.x = posy + Math.sin(rotateAngle) * COx + Math.cos(rotateAngle) * COy;
-		pos.y = posx + Math.cos(rotateAngle) * COx - Math.sin(rotateAngle) * COy;
+		const COx = guide.x - posx; // Vector from center to origin
+		const COy = guide.y - posy; // Vector from center to origin
+		guide.y = posy + Math.sin(rotateAngle) * COx + Math.cos(rotateAngle) * COy;
+		guide.x = posx + Math.cos(rotateAngle) * COx - Math.sin(rotateAngle) * COy;
 	}
-	const newAngle = $e.backend.whiteboard.layers.current.guide.angle + degrees;
-	await $e.backend.whiteboard.guides.setAngleAndMove(newAngle, pos);
+	guide.angle = (guide.angle + degrees) % 360;
+
+	// Animate line and guide
+	await $e.backend.whiteboard.animate((context, countup, divisions) => {
+		context.lineWidth = drawLineWidth;
+		const startPartialArcRadians = startRadians + (endRadians - startRadians) / divisions * (countup - 1);
+		const endPartialArcRadians = startRadians + (endRadians - startRadians) / divisions * countup;
+		context.beginPath();
+		context.arc(posx + shiftPixels, posy + shiftPixels, radius, startPartialArcRadians, endPartialArcRadians, counterclockwise);
+		context.stroke();
+		const partialGuideDegrees = degrees / divisions * countup;
+		const destPos = follow ? (() => {
+			const partialGuideRadians = partialGuideDegrees * Math.PI / 180;
+			const COx = origGuide.x - posx; // Vector from center to origin
+			const COy = origGuide.y - posy; // Vector from center to origin
+			return {
+				y: posy + Math.sin(partialGuideRadians) * COx + Math.cos(partialGuideRadians) * COy,
+				x: posx + Math.cos(partialGuideRadians) * COx - Math.sin(partialGuideRadians) * COy
+			};
+		})() : undefined;
+		$e.backend.whiteboard.guides.draw(undefined, undefined, destPos, origGuide.angle + partialGuideDegrees);
+	});
+
+	// Draw real final arc
+	if (!$e.backend.whiteboard.layers.current.shaping) context.beginPath();
+	context.lineWidth = drawLineWidth;
+	context.arc(posx + shiftPixels, posy + shiftPixels, radius, startRadians, endRadians, counterclockwise);
+	context.stroke();
+	if (origLineWidth !== context.lineWidth) context.lineWidth = origLineWidth;
+	if (!$e.backend.whiteboard.layers.current.shaping) context.closePath();
+
+	// Draw final guide
+	$e.backend.whiteboard.guides.draw();
 };
 
 /**
@@ -923,9 +926,8 @@ async function turnLeft(angle) {
  * @param {Number} [angle=0] Angle to set to
  * @example turnReset(90)
  */
-async function turnReset(angle) {
+async function turnReset(angle = 0) {
 	$e.execution.parseParameterTypes("turnReset", arguments);
-	if (angle === undefined) angle = 0;
 	await $e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.axis.user2systemAngle(angle));
 };
 
@@ -1159,9 +1161,8 @@ function pop(id) {
  * @param {Number|String} [id] Layer id. If missing, currently active layer
  * @example clean()
  */
-function clean(id) {
+function clean(id = $e.backend.whiteboard.layers.current.name) {
 	$e.execution.parseParameterTypes("clean", arguments);
-	if (id === undefined) id = $e.backend.whiteboard.layers.current.name;
 	$e.backend.whiteboard.layers.clear(id);
 };
 
@@ -1178,7 +1179,7 @@ function clean(id) {
  * @throws Code execution exception
  * @example animate("stepForward()", 0.25)
  */
-function animate(command, seconds, count, timeoutHandlersIndex) {
+function animate(command, seconds = 0.5, count, timeoutHandlersIndex) {
 	$e.execution.parseParameterTypes("animate", arguments);
 	let returnValue;
 	if (typeof command === "string") {
@@ -1190,7 +1191,6 @@ function animate(command, seconds, count, timeoutHandlersIndex) {
 	} else if (typeof command === "function") {
 		command();
 	}
-	if (seconds === undefined) seconds = 0.5;
 	if (timeoutHandlersIndex === undefined) {
 		timeoutHandlersIndex = $e.execution.current.timeoutHandlers.length;
 	} else {
@@ -1209,11 +1209,8 @@ function animate(command, seconds, count, timeoutHandlersIndex) {
  * @param {Number} [delay=0.5]
  * @example animateLayers(0.1)
  */
-function animateLayers(delay) {
+function animateLayers(delay = 0.5) {
 	$e.execution.parseParameterTypes("animateLayers", arguments);
-	if (delay === undefined) {
-		delay = 0.5;
-	}
 	let layer = $e.backend.whiteboard.layers.bottom;
 	while (layer) {
 		hide(layer.name);
@@ -1621,11 +1618,7 @@ function windowInputShow(id) {
  * @param {Number} [yScale=1] Scale by which to multiply the y coordinates, originaly increasing downwards
  * @example changeAxis(200, 200)
  */
-function changeAxis(posx, posy, xScale, yScale) {
-	if (posx === undefined) posx = 0;
-	if (posy === undefined) posy = 0;
-	if (xScale === undefined) xScale = 1;
-	if (yScale === undefined) yScale = 1;
+function changeAxis(posx = 0, posy = 0, xScale = 1, yScale = 1) {
 	$e.backend.whiteboard.axis.change({ x: posx, y: posy }, { x: xScale, y: yScale });
 };
 
@@ -1690,10 +1683,9 @@ function output(text = "", newline = true) {
  * @throws codeError
  * @example input("line")
  */
-function input(type) {
+function input(type = "guess") {
 	$e.execution.parseParameterTypes("input", arguments);
 	if ($e.execution.current.inputPosition >= $e.execution.current.inputRaw.length) return undefined;
-	if (type === undefined) type = "guess";
 	let result;
 	if (type == "char") {
 		result = $e.execution.current.inputRaw[$e.execution.current.inputPosition];
@@ -1753,9 +1745,8 @@ function getInputPosition() {
  * @param {Number} [position=0] Position to go to
  * @example inputReset(10)
  */
-function inputReset(position) {
+function inputReset(position = 0) {
 	$e.execution.parseParameterTypes("inputReset", arguments);
-	if (position === undefined) position = 0;
 	$e.execution.current.inputPosition = position;
 };
 
@@ -2071,8 +2062,7 @@ async function ask(message, initial_value, timeout) {
  * @return {Number} Milliseconds to wait
  * @example wait(2000)
  */
-async function wait(milliseconds) {
-	if (milliseconds === undefined) milliseconds = 1000;
+async function wait(milliseconds = 1000) {
 	return await new Promise(r => setTimeout(() => r(), milliseconds));
 };
 

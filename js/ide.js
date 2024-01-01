@@ -19,6 +19,7 @@ $e.ide.loadBrowserURLParameters = async function(whitelist, blacklist, action = 
  * @example $e.ui.updateViewButtonsVisibility("debug")
  */
 $e.ui.updateViewButtonsVisibility = (id = $e.modes.views.current.id) => {
+	$e.ui.element.querySelector("#view-blocks-toggle").classList[$e.ide.codeIsEmpty() || id === "level4" ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-reset").classList[$e.ide.codeIsEmpty() || id != "level1" ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-execute").classList[$e.execution.isRunning() || $e.execution.isFrozen() || $e.ide.codeIsEmpty() ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-pause").classList[$e.execution.isRunning() ? "remove" : "add"]("hide");

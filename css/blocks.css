@@ -8,7 +8,7 @@
 	--block-border-color: #aaaaaa;
 	--block-shadow-color: #888888;
 	--block-shadow-hover-color: #000000;
-	--block-gradient: radial-gradient(at 30% 30%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 200%, rgba(0,0,0,0.95) 200%);
+	--block-gradient: radial-gradient(at 30% 30%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 200%);
 
 	--block-count-size: 14px;
 

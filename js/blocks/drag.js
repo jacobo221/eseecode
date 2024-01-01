@@ -128,7 +128,7 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		const destBlockEl = $e.ui.element.querySelector("#view-blocks").lastChild;
 		const destBlockPosition = destBlockEl.getBoundingClientRect();
 		const shadowBlockEl = $e.ide.blocks.clone(clickedBlockEl);
-		shadowBlockEl.classList.add("shadowBlock");
+		shadowBlockEl.classList.add("shadowBlock", "floating", "fromToolbox");
 		shadowBlockEl.style.top = originBlockPosition.top + window.scrollY + "px";
 		shadowBlockEl.style.left = originBlockPosition.left + window.scrollX + "px";
 		shadowBlockEl.style.transition = "opacity " + animation_duration + "s, top " + animation_duration + "s, left " + animation_duration + "s";

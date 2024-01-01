@@ -8,9 +8,7 @@
  * @return {String} Binary of the image
  * @example $e.ide.imagifyWhiteboard(document.body.createElement("a"))
  */
-$e.ide.imagifyWhiteboard = (gridVisible, guideVisible) => {
-	if (gridVisible === undefined) gridVisible = $e.ui.gridVisible;
-	if (guideVisible === undefined) guideVisible = $e.ui.guideVisible;
+$e.ide.imagifyWhiteboard = (gridVisible = $e.ui.gridVisible, guideVisible = $e.ui.guideVisible) => {
 	const canvas = document.createElement('canvas');
 	canvas.width = $e.backend.whiteboard.layers.available["grid"].canvas.width;
 	canvas.height = $e.backend.whiteboard.layers.available["grid"].canvas.height;
@@ -313,6 +311,32 @@ $e.ui.initGuide = () => {
 };
 
 /**
+ * Initializes the guide animation layer
+ * @private
+ * @example $e.ui.initGuideAnimate()
+ */
+$e.ui.initGuideAnimate = () => {
+	const canvasWidth = $e.backend.whiteboard.width;
+	const canvasHeight = $e.backend.whiteboard.width;
+	const name = "animate";
+	const el = document.createElement("div");
+	el.id = "canvas-wrapper-" + name;
+	el.classList.add("canvas-wrapper");
+	el.style.width = canvasWidth + "px";
+	el.style.height = canvasHeight + "px";
+	el.style.zIndex = parseInt(document.querySelector("#canvas-wrapper-guide").style.zIndex) - 1;
+	const canvas = document.createElement("canvas");
+	canvas.id = "canvas-animate";
+	canvas.classList.add("canvas");
+	canvas.width = canvasWidth;
+	canvas.height = canvasHeight;
+	el.appendChild(canvas);
+	$e.backend.whiteboard.element.appendChild(el);
+	$e.backend.whiteboard.layers.available[name] = { name: name, canvas: canvas, element: el };
+	// Guide animation canvas
+};
+
+/**
  * Hides/Shows the guide layer
  * @private
  * @param {Boolean} [visible=true] Show or hide the guide (default: show)
@@ -365,16 +389,7 @@ $e.ui.toggleCanvas = (id, force) => {
  * @param {Boolean} [discardOutbound=false] Discard if the guide is out of the whiteboard
  * @example $e.ui.drawDebugGuide(ctx, { x: 200, y: 200 }, id)
  */
-$e.ui.drawDebugGuide = (context, pos, id, shiftX, shiftY, discardOutbound) => {
-	if (shiftX === undefined) {
-		shiftX = 0;
-	}
-	if (shiftY === undefined) {
-		shiftY = 0;
-	}
-	if (discardOutbound === undefined) {
-		discardOutbound = false;
-	}
+$e.ui.drawDebugGuide = (context, pos, id, shiftX = 0, shiftY = 0, discardOutbound = false) => {
 	const canvasWidth = $e.backend.whiteboard.width;
 	const canvasHeight = $e.backend.whiteboard.width;
 	if ((pos.x < 0 || pos.x > canvasWidth || pos.y < 0 || pos.y > canvasHeight) && discardOutbound === false) {

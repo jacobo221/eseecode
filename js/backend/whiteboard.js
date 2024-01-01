@@ -38,11 +38,12 @@ $e.backend.whiteboard.reset = async (runPrecode = true) => {
 	$e.backend.whiteboard.element.width = $e.backend.whiteboard.width + "px";
 	$e.backend.whiteboard.element.height = $e.backend.whiteboard.width + "px";
 	$e.ui.initGuide();
+	$e.ui.initGuideAnimate();
 	$e.backend.whiteboard.layers.getOrCreate("grid").canvas.style.zIndex = -1; // canvas-0 is special
 	$e.backend.whiteboard.layers.switch(); // canvas-0 is the default
 	$e.backend.whiteboard.axis.update();
 	// reset guide	
-	$e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.axis.user2systemAngle(0), $e.backend.whiteboard.axis.user2systemCoords({ x: 0, y: 0 }));
+	$e.backend.whiteboard.guides.setAngleAndMove($e.backend.whiteboard.axis.user2systemAngle(0), $e.backend.whiteboard.axis.user2systemCoords({ x: 0, y: 0 }), false);
 	// reset windows
 	Object.keys($e.backend.windows.available).forEach((id) => { // Use Object.keys() because for..in will give also Array.prototype polyfills in Safari 13
 		if ($e.backend.windows.available[id]) {
@@ -271,8 +272,7 @@ $e.backend.whiteboard.layers.switch = (id) => {
  * @param {!HTMLElement} [context] Canvas context to take style difinitions from. If unset, currently active layer
  * @example $e.backend.whiteboard.layers.applyTextStyle(ctx)
  */
-$e.backend.whiteboard.layers.applyTextStyle = (context) => {
-	if (context === undefined) context = $e.backend.whiteboard.layers.current.context;
+$e.backend.whiteboard.layers.applyTextStyle = (context = $e.backend.whiteboard.layers.current.context) => {
 	const style = $e.backend.whiteboard.layers.current.style;
 	let font = "";
 	if (style.italic) font += "italic ";
@@ -289,9 +289,7 @@ $e.backend.whiteboard.layers.applyTextStyle = (context) => {
  * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
  * @example $e.backend.whiteboard.layers.setSize(2, ctx)
  */
-$e.backend.whiteboard.layers.setSize = (size, context) => {
-	if (size === undefined) size = $e.backend.whiteboard.layers.current.style.size;
-	if (context === undefined) context = $e.backend.whiteboard.layers.current.context;
+$e.backend.whiteboard.layers.setSize = (size = $e.backend.whiteboard.layers.current.style.size, context = $e.backend.whiteboard.layers.current.context) => {
 	$e.backend.whiteboard.layers.current.style.size = size;
 	if (size < 1) context.lineWidth = 1;
 	else context.lineWidth = size;
@@ -305,9 +303,7 @@ $e.backend.whiteboard.layers.setSize = (size, context) => {
  * @param {Number} [context] Canvas context to apply to. If unset applies to currently active layer
  * @example $e.backend.whiteboard.layers.setColor("#FF0000", ctx)
  */
-$e.backend.whiteboard.layers.setColor = (color, context) => {
-	if (color === undefined) color = $e.backend.whiteboard.layers.current.style.color;
-	if (context === undefined) context = $e.backend.whiteboard.layers.current.context;
+$e.backend.whiteboard.layers.setColor = (color = $e.backend.whiteboard.layers.current.style.color, context = $e.backend.whiteboard.layers.current.context) => {
 	$e.backend.whiteboard.layers.current.style.color = color;
 	context.fillStyle = color;
 	context.strokeStyle = color;
@@ -325,10 +321,7 @@ $e.backend.whiteboard.layers.systemLineAt = async (origin, destination) => {
 	const org = { x: origin.x, y: origin.y };
 	const pos = { x: destination.x, y: destination.y };
 	let shiftPixels = 0;
-	if ($e.backend.whiteboard.layers.current.context.lineWidth == 1) {
-		// We use half-pixels because otherwise setSize(1) draws lines 2px wide
-		shiftPixels = 0.5;
-	}
+	if ($e.backend.whiteboard.layers.current.context.lineWidth === 1) shiftPixels = 0.5; // We use half-pixels because otherwise setSize(1) draws lines 2px wide
 	if (!$e.backend.whiteboard.layers.current.shaping) {
 		// Shape should use forward() or line()
 		$e.backend.whiteboard.layers.current.context.beginPath();
@@ -339,15 +332,17 @@ $e.backend.whiteboard.layers.systemLineAt = async (origin, destination) => {
 	pos.x += shiftPixels;
 	pos.y += shiftPixels;
 
-	await $e.backend.whiteboard.animate((countup, count) => {
-		const xInc = (pos.x - org.x) / count;
-		const yInc = (pos.y - org.y) / count;
+	await $e.backend.whiteboard.animate((context, countup, divisions) => {
+		const xInc = (pos.x - org.x) / divisions;
+		const yInc = (pos.y - org.y) / divisions;
 		const x = org.x + xInc * countup;
 		const y = org.y + yInc * countup;
-		$e.backend.whiteboard.layers.current.context.lineTo(x, y);
-		$e.backend.whiteboard.layers.current.context.stroke();
+		context.moveTo(org.x, org.y)
+		context.lineTo(x, y);
+		context.stroke();
 	});
 
+	// Once the animation is finished draw the real final movement
 	$e.backend.whiteboard.layers.current.context.lineTo(pos.x, pos.y);
 	if (!$e.backend.whiteboard.layers.current.shaping) {
 		$e.backend.whiteboard.layers.current.context.closePath();
@@ -364,8 +359,7 @@ $e.backend.whiteboard.layers.systemLineAt = async (origin, destination) => {
  * @param {Number} [angle=0] Angle in which to write
  * @example $e.backend.whiteboard.layers.systemWriteAt("Hello!", 200, 200, 90)
  */
-$e.backend.whiteboard.layers.systemWriteAt = (text, pos, angle) => {
-	if (angle === undefined) angle = 0;
+$e.backend.whiteboard.layers.systemWriteAt = (text, pos, angle = 0) => {
 	// We must create a new canvas and merge, otherwise if writeAt was called in the middle of a shape it would break the shape
 	const canvasWidth = $e.backend.whiteboard.width;
 	const canvasHeight = $e.backend.whiteboard.width;
@@ -416,8 +410,7 @@ $e.backend.whiteboard.layers.clear = (id) => {
  * @param {Number} [forceAngle] Overwrite the guide's angle
  * @example $e.backend.whiteboard.guides.draw()
  */
-$e.backend.whiteboard.guides.draw = (id, canvas, forceOrg, forceAngle) => {
-	if (id === undefined) id = $e.backend.whiteboard.layers.current.name;
+$e.backend.whiteboard.guides.draw = (id = $e.backend.whiteboard.layers.current.name, canvas, forceOrg, forceAngle) => {
 	const targetCanvas = $e.backend.whiteboard.layers.get(id);
 	const canvasWidth = $e.backend.whiteboard.width;
 	const canvasHeight = $e.backend.whiteboard.width;
@@ -499,12 +492,13 @@ $e.backend.whiteboard.guides.draw = (id, canvas, forceOrg, forceAngle) => {
  * Turns and moves the guide to the specified angle and position
  * @private
  * @param {Number} [angle] Angle
- * @param {Aeeay<Number, Number>} [pos] Position
+ * @param {Array<Number, Number>} [pos] Position
+ * @param {Boolean} [animate=true] Animate the movement
  * @example $e.backend.whiteboard.guides.setAngleAndMove(90, { x: 50, y: 50 })
  */
-$e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whiteboard.layers.current.guide.angle, pos = $e.backend.whiteboard.layers.current.guide) => {
+$e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whiteboard.layers.current.guide.angle, pos = $e.backend.whiteboard.layers.current.guide, animate = true) => {
 
-	// We give the backend gthe final values so if the next instruction is run while the animation is still running, it uses the real final values
+	// We give the backend the final values so if the next instruction is run while the animation is still running, it uses the real final values
 	const orgAngle = $e.backend.whiteboard.layers.current.guide.angle;
 	$e.backend.whiteboard.layers.current.guide.angle = angle;
 	$e.backend.whiteboard.layers.current.guide.angle %= 360;
@@ -513,41 +507,43 @@ $e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whitebo
 	$e.backend.whiteboard.layers.current.guide.x = pos.x; // Make sure the value is integer
 	$e.backend.whiteboard.layers.current.guide.y = pos.y; // Make sure the value is integer
 
-	await $e.backend.whiteboard.animate((countup, count) => {
-		const angleInc = (angle - orgAngle) / count;
+	if (animate) await $e.backend.whiteboard.animate((context, countup, divisions) => {
+		const angleInc = (angle - orgAngle) / divisions;
 		const forceAngle = orgAngle + angleInc * countup;
-		const xInc = (pos.x - org.x) / count;
-		const yInc = (pos.y - org.y) / count;
+		const xInc = (pos.x - org.x) / divisions;
+		const yInc = (pos.y - org.y) / divisions;
 		const x = org.x + xInc * countup;
 		const y = org.y + yInc * countup;
 		$e.backend.whiteboard.guides.draw(undefined, undefined, { x, y }, forceAngle);
 	});
 
 	$e.backend.whiteboard.guides.draw();
+
 };
 
 /**
  * Controls a whiteboard animation
  * @private
- * @param {Function} callback Function to run on every frame, receives countup (number of iteration, beginning with 1), count (total number of iterations expected) and transitionTime (total time the animation takes)
- * @example $e.backend.whiteboard.animate((countup, count) => console.log(countup + "/" + count)))
+ * @param {Function} callback Function to run on every frame, receives countup (number of iteration, beginning with 1), divisions (total number of iterations expected) and transitionTime (total time the animation takes)
+ * @example $e.backend.whiteboard.animate((context, countup, divisions) => console.log(countup + "/" + divisions)))
  */
 $e.backend.whiteboard.animate = async (callback) => {
 	const currentInstruction = $e.execution.getProgramCounter(); // We'll use this to abort mid-animation if the code has moved on
-	const transitionTime = $e.execution.instructionsPause - $e.execution.instructionsMinimumPause;
-	if ($e.execution.current.animate && $e.execution.instructionsRefresh < transitionTime) {
-		const count = transitionTime / $e.execution.instructionsRefresh;
-		let countdown = count;
+	const transitionTime = $e.execution.instructionsPause > $e.execution.instructionsMinimumPause ? $e.execution.instructionsPause - $e.execution.instructionsMinimumPause : 0;
+	if ($e.execution.current.animate && $e.execution.instructionsAnimationFramePause < transitionTime) {
+		const divisions = parseInt(transitionTime / $e.execution.instructionsAnimationFramePause);
+		const animateContext = $e.backend.whiteboard.layers.available.animate.canvas.getContext("2d"); // Using a separate animation layer is essential so the final result is identical regardless of the execution happening with or without anmiation enabled
+		let countup = 0;
 		await new Promise(r => {
-			const transitionHandler = setInterval(() => {
-				if (countdown-- > 0 && currentInstruction === $e.execution.getProgramCounter()) {
-					callback(count - countdown, count, transitionTime);
-				} else {
-					clearInterval(transitionHandler);
-					r();
-				}
-			}, $e.execution.instructionsRefresh);
+			animateContext.lineWidth = $e.backend.whiteboard.layers.current.context.lineWidth;
+			animateContext.strokeStyle = $e.backend.whiteboard.layers.current.context.strokeStyle;
+			(function animateCallback() {
+				if (++countup > divisions || !$e.execution.isRunning() || currentInstruction !== $e.execution.getProgramCounter()) return r();
+				callback(animateContext, countup, divisions, transitionTime);
+				setTimeout(animateCallback, $e.execution.instructionsAnimationFramePause);
+			})();
 		});
+		animateContext.canvas.width = animateContext.canvas.width; // When the animation finishes clear the animation so only the real drawing is displayed, also in case the animation is interrupted
 	}
 	$e.execution.current.animatedTime = transitionTime; // Report that the instructionsPause time has taken up part of the instructionsPause time
 };

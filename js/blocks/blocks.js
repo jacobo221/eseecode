@@ -174,7 +174,8 @@ $e.ui.blocks.createAndPlaceBlock = (blockOrInstructionSetId, parentBlock, nextSi
 	} else {
 		instructionSetId = blockEl.dataset.instructionSetId;
 	}
-	$e.ui.blocks.initialize(blockEl, instructionSetId, params, options);
+	const isUpdate = blockOrInstructionSetId === blockEl;
+	$e.ui.blocks.initialize(blockEl, instructionSetId, isUpdate ? false : params, options);
 	if (parentBlock !== undefined) {
 		if (options.notIntoCode) {
 			parentBlock.insertBefore(blockEl, nextSibling);

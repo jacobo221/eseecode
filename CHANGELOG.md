@@ -1,6 +1,8 @@
 ## 4.1 (2024-01-01)
  *Milestone reached: Animate the guide movements*
  *   Every guide movement is now animated
+ *   Moved the block/flow toggle to a lateral position
+ *   Several fixes and cleanups
 
 ## 4.0 (2023-12-29)
 

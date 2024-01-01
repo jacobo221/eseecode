@@ -93,10 +93,10 @@ $e.ui.init = () =>  {
 					<button id="view-tabs-level2" class="tab"></button>\
 					<button id="view-tabs-level3" class="tab"></button>\
 					<button id="view-tabs-level4" class="tab"></button>\
-					<button id="view-tabs-flow" class="tab"></button>\
 					<button id="view-tabs-maximize" class="tab"></button>\
 				</div>\
 				<div id="view-content" class="program" translate="no">\
+					<button id="view-blocks-toggle" class="tab"></button>\
 					<div id="view-blocks" class="panel-column"></div>\
 					<div id="view-write" class="panel-column"></div>\
 				</div>\
@@ -145,7 +145,7 @@ $e.ui.init = () =>  {
 		"view-tabs-level3": () => $e.ui.switchViewModeFromUI("level3"),
 		"view-tabs-level4": () => $e.ui.switchViewModeFromUI("level4"),
 		"view-tabs-maximize": $e.ui.resizeView,
-		"view-tabs-flow": $e.ui.blocks.toggleFlow,
+		"view-blocks-toggle": $e.ui.blocks.toggleFlow,
 		"button-undo": $e.ui.undo,
 		"button-execute": $e.ui.execute,
 		"button-pause": $e.ui.pauseExecution,

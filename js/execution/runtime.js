@@ -50,7 +50,6 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	try {
 		jsCode += "\"use strict\";";
 		jsCode += "(async function() {";
-		jsCode += "$e.execution.current.animate = " + !skipAnimation + ";";
 		let instructions = Object.values($e.instructions.set);
 		if (!inCode && ($e.execution.precode || instructions.some(d => d.run))) { // Don't load precode again when running the code of an event
 			let customInstructionsCode = "";
@@ -73,7 +72,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		}
 		if (!justPrecode) {
 			const real_usercode = $e.execution.code2run(code, { inject: !immediate, realcode: true });
-			jsCode += "$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;";
+			jsCode += "$e.execution.current.animate = " + !skipAnimation + ";$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;$e.execution.current.animate = false;";
 			$e.last_execution = {};
 			$e.last_execution.linesCount = real_usercode.split("\n").length - 1;
 			if (!inCode && $e.execution.postcode) { // Don't load postcode again when running the code of an event
@@ -217,9 +216,10 @@ $e.execution.injected = (() => {
  */
 $e.execution.freeze = async () => {
 	await new Promise(r => {
-		setInterval(() => {
-			if ($e.execution.current.kill || !$e.execution.isFrozen()) r();
-		}, 1);
+		(function freezeCallback() {
+			if (!$e.execution.isFrozen() || $e.execution.current.kill) return r();
+			setTimeout(freezeCallback, 1);
+		})();
 	});
 	if ($e.execution.current.kill) throw "executionKilled";
 }
@@ -275,8 +275,10 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 
 	} else if ($e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block" && $e.execution.instructionsPause) { // We don't want to pause execution in level1/Touch
 
-		await new Promise(r => { $e.execution.current.pauseHandler = setTimeout(() => { r(); }, $e.execution.instructionsPause - ($e.execution.current.animatedTime ? $e.execution.current.animatedTime : 0)); });
-		$e.execution.current.animated = 0;
+		await new Promise(r => {
+			$e.execution.current.pauseHandler = setTimeout(r, $e.execution.instructionsPause - ($e.execution.current.animatedTime ? $e.execution.current.animatedTime : 0));
+		});
+		$e.execution.current.animatedTime = 0;
 
 	} else if ($e.execution.current.breaktoui) {
 

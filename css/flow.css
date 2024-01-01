@@ -110,6 +110,26 @@
 		
 }
 
+/* UI */
+
+#body.flow #view-blocks-toggle {
+	background-image: radial-gradient(at 80% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 200%);
+}
+#body.flow #view-blocks-toggle::before {
+	content: "↝";
+	display: inline-block;
+	transform: rotate(90deg);
+	color: transparent;
+	text-shadow: 0 0 0 var(--broken-white);
+}
+#body.flow #view-blocks-toggle:hover {
+	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 200%);
+	transform: none;
+}
+#body.flow #view-blocks-toggle:active {
+	background-image: radial-gradient(at 30% 50%, rgba(0,0,0,0) 20%, rgba(0,0,0,0.95) 200%);
+}
+
 /* Basics */
 
 /* We add #body to win CSS preference over blocks.css */
@@ -188,7 +208,7 @@
 	box-sizing: content-box;
 }
 #body.flow .toolbox-panel .block > .icon,
-#body.flow .block.floating.fromToolbox > .icon{
+#body.flow .block.floating.fromToolbox > .icon {
 	text-align: initial;
 	border: none;
 }
