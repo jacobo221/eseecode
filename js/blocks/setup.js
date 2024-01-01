@@ -649,18 +649,17 @@ $e.ui.blocks.setup.accept = () => {
 		if (failedParameterIndex >= 0) return $e.ui.msgBox.open(_("The value for parameter \"%s\" is invalid!", [ _(instruction.parameters[failedParameterIndex]	.name) ]));
 	}
 	const setupChanges = $e.ui.blocks.setup.changes (true);
+	const hasChanges = setupData.isAdd || setupChanges.length > 0;
 	if (setupData.isAdd) {
 		// Undo stack does not need to be updated, the block was already pushed to the stack when the setup dialog was opened
-		$e.session.lastChange = new Date().getTime();
 	} else if (setupChanges.length > 0) { // Update undo array if it is a "setup" action (not an "add" action)
-		$e.session.lastChange = new Date().getTime();
 		$e.ide.blocks.changes.push({
 			action: "setup",
 			blockEl: blockEl,
 			parameters: setupChanges,
 		});
 	}
-	$e.ui.refreshUndo();
+	if (hasChanges) $e.ide.blocks.changed();
 	// Update the block icon
 	$e.ui.blocks.paint(blockEl);
 	$e.ui.blocks.setup.current = undefined;

@@ -1,6 +1,21 @@
 "use strict";
 
 /**
+ * Tasks to run when the code changes
+ * @private
+ * @param {Boolean} [resetProgramCounter=true] If true, resets the program counter
+ * @example $e.ide.changed()
+ */
+$e.ide.changed = (resetProgramCounter = true) => {
+	$e.execution.stop();
+	if (resetProgramCounter) $e.execution.initProgramCounter(); // This is so stepped execution will start from the beginning
+	$e.session.lastChange = new Date().getTime();
+	$e.ui.unhighlight();
+	$e.ui.refreshUndo();
+	$e.ui.updateViewButtonsVisibility();
+};
+
+/**
  * Parses the parameters in the browser's URL
  * @private
  * @param {Array} [whitelist] Only load this specific parameters

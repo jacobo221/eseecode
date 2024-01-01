@@ -370,14 +370,14 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 		// Do nothing
 	} else return console.error("Invalid action in $e.ui.blocks.modifyEventAccept " + action);
 	if (action != "cancel") {
-		$e.execution.stop();
 		$e.session.updateOnViewSwitch = "blocks";
 		if (action === "add" || action === "move" || action === "setup") $e.ui.blocks.scrollToBlock(targetBlockEl);
 		if (level === "level1") {
-			$e.session.lastChange = new Date().getTime();
+			const lastStep = $e.execution.getProgramCounter(); // We need to save this as $e.execution.stop() will reser the programCounter
+			$e.execution.stop();
 			$e.session.runFrom = "level1_add_block";
 			if ($e.execution.getProgramCounter() > 0) {
-				$e.ide.execute(false, true, true, $e.execution.getProgramCounter()); // Run immediately to the current position, then run the next instruction with animation
+				$e.ide.execute(false, true, true, lastStep + 1); // Run immediately to the current position, then run the next instruction with animation
 				await new Promise(function waitUntilStepped(r) { // Wait until execution has reached the target step. We must run this async, otherwise it freezes the execution and doesn't return here
 					if (!$e.execution.isStepped()) setTimeout(() => waitUntilStepped(r), 10);
 					else r();
@@ -386,8 +386,8 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 			} else {
 				await $e.ide.execute(false, true, false);
 			}
-		} else if (action !== "setup" && action !== "add") {
-			$e.session.lastChange = new Date().getTime();
+		} else {
+			$e.execution.stop();
 		}
 		if (action != "setup") { // If action is setup it is up to $e.ui.blocks.setup.accept to update the undo/redo buttons or not
 			$e.ide.blocks.changes.push({
@@ -400,7 +400,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 				newNextSibling: (action === "move" ? sourceBlockEl : blockEl).nextSibling,
 				parameters: undefined,
 			});
-			if (action !== "add" || level === "level1" || (level === "level2" || level === "level3" && !addSetupResult)) $e.ui.refreshUndo(); // If the block has to be set up after addition, wait for the block to be confirmed in the setup dialog before displaying the undo button, as the block addition might still be cancelled
+			if (action !== "add" || level === "level1" || (level === "level2" || level === "level3" && !addSetupResult)) $e.ide.blocks.changed(level !== "level1"); // If the block has to be set up after addition, wait for the block to be confirmed in the setup dialog before displaying the undo button, as the block addition might still be cancelled
 		}
 	}
 	$e.ui.blocks.cancelFloatingBlock(action === "setup");

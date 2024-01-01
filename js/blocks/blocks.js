@@ -92,7 +92,6 @@ $e.ui.blocks.removeFromCode = (blockEl) => {
 	}
 	blockEl.parentNode.removeChild(blockEl);
 	if (!viewEl.firstChild) $e.ui.blocks.addBeginTip();
-	$e.ui.refreshUndo();
 };
 
 /**
@@ -106,14 +105,13 @@ $e.ui.blocks.duplicateInCodeFromUI = (blockEl) => {
 	newBlockEl.classList.remove("setupCandidate");
 	Array.from(newBlockEl.querySelectorAll(".setupCandidate")).forEach(el => el.classList.remove("setupCandidate"));
 	$e.ui.blocks.createAndPlaceBlock(newBlockEl, blockEl.parentNode, blockEl.nextSibling, false); // Insert after current block
-	$e.session.lastChange = new Date().getTime();
 	$e.ide.blocks.changes.push({
 		action: "add",
 		blockEl: newBlockEl,
 		newParentBlock: newBlockEl.parentNode,
 		newNextSibling: newBlockEl.nextSibling,
 	});
-	$e.ui.refreshUndo();
+	$e.ide.blocks.changed();
 };
 
 /**
@@ -123,7 +121,6 @@ $e.ui.blocks.duplicateInCodeFromUI = (blockEl) => {
  * @example $e.ui.blocks.deleteFromCodeFromUI(blockEl)
  */
 $e.ui.blocks.deleteFromCodeFromUI = (blockEl) => {
-	$e.session.lastChange = new Date().getTime();
 	$e.ide.blocks.changes.push({
 		action: "delete",
 		blockEl: blockEl,
@@ -131,7 +128,7 @@ $e.ui.blocks.deleteFromCodeFromUI = (blockEl) => {
 		sourceNextSibling: blockEl.nextSibling,
 	});
 	$e.ui.blocks.removeFromCode(blockEl);
-	$e.ui.refreshUndo();
+	$e.ide.blocks.changed();
 };
 
 /**
@@ -144,14 +141,13 @@ $e.ui.blocks.deleteFromCodeFromUI = (blockEl) => {
  */
 $e.ui.blocks.addIntoCodeFromUI = (instructionSetId, parentBlock, nextSibling = null) => {
 	const blockEl = $e.ui.blocks.createAndPlaceBlock(instructionSetId, parentBlock, nextSibling, undefined, { isSubblock: parentBlock.classList.contains("container") });
-	$e.session.lastChange = new Date().getTime();
 	$e.ide.blocks.changes.push({
 		action: "add",
 		blockEl: blockEl,
 		newParentBlock: parentBlock,
 		newNextSibling: nextSibling,
 	});
-	$e.ui.refreshUndo();
+	$e.ide.blocks.changed();
 };
 
 /**

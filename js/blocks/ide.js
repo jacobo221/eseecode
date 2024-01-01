@@ -171,3 +171,14 @@ $e.ide.blocks.toCode = (blockEl, indentation = "") => {
 	}
 	return code;
 };
+
+/**
+ * Run the necessary tasks when code changes
+ * @private
+ * @param {Boolean} [resetProgramCounter=true] If true, resets the program counter
+ * @example $e.ide.blocks.changed()
+ */
+$e.ide.blocks.changed = (resetProgramCounter = true) => {
+	$e.ide.changed(resetProgramCounter);
+	$e.session.updateOnViewSwitch = "block";
+};

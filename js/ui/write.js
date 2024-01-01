@@ -94,13 +94,9 @@ $e.ui.write.resetView = (code = "", resetCursor) => {
  * @example $e.ui.write.changed()
  */
 $e.ui.write.changed = (event) => {
-	$e.execution.stop();
+	$e.ide.changed();
 	$e.session.updateOnViewSwitch = "write";
-	$e.session.lastChange = new Date().getTime();
-	$e.ui.unhighlight();
 	$e.ui.debug.updateWriteBreakpoints(event);
-	$e.ui.refreshUndo();
-	$e.ui.updateViewButtonsVisibility();
 };
 
 /**

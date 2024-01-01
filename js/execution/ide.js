@@ -169,7 +169,7 @@ $e.execution.stop = () => {
 	if ($e.execution.current.pauseHandler) clearTimeout($e.execution.current.pauseHandler); // Stop if paused
 	$e.execution.current.kill = true;
 	clearTimeout($e.execution.current.breaktouiHandler);
-	$e.execution.updateStatus("stopped");
+	if (!$e.execution.isFinished()) $e.execution.updateStatus("stopped"); // Do not overwrite finished with stopped, as finished is used for stepped execution to display the correct buttons
 	$e.execution.stopAnimations();
 	$e.execution.stopSounds();
 };

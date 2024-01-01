@@ -260,7 +260,7 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 		await $e.debug.breakpointReached($e.execution.current.lastRunLineNumber, $e.execution.current.watchesChanged, true, hasChangedWatchesBreakpoints); // Variable changes are detected after running the instruction, so highlight the previous instruction
 		$e.execution.updateStatus("running");
 
-	} else if ($e.execution.monitors[lineNumber] && $e.session.runFrom != "level1_add_block") {
+	} else if ($e.execution.monitors[lineNumber] && $e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block") {
 
 		$e.execution.current.monitors[lineNumber].count++;
 		if ($e.execution.monitors[lineNumber].breakpoint) {
