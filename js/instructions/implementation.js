@@ -506,11 +506,11 @@ function getFont() {
  * @example getRandomColor()
  */
 function getRandomColor() {
-	let r = getRandomNumber(256).toString(16);
+	let r = parseInt(Math.random() * 256).toString(16);
 	if (r.length < 2) r = "0" + r;
-	let g = getRandomNumber(256).toString(16);
+	let g = parseInt(Math.random() * 256).toString(16);
 	if (g.length < 2) g = "0" + g;
-	let b = getRandomNumber(256).toString(16);
+	let b = parseInt(Math.random() * 256).toString(16);
 	if (b.length < 2) b = "0" + b;
 	return "#" + r + g + b;
 };
