@@ -770,7 +770,7 @@ input.unsupported {
 	#body {
 		display: grid;
 		grid-template: "whiteboard whiteboard" "toolbox view";
-		grid-template-rows: min(calc(var(--whiteboard-height) * var(--whiteboard-scale) + var(--tab-height) + var(--tab-margin) + var(--row-margin) * 2), 50vh) auto;
+		grid-template-rows: min(calc(max(100vh / 3, var(--whiteboard-height) * var(--whiteboard-scale)) + var(--tab-height) + var(--tab-margin) + var(--row-margin) * 2), 50vh) auto;
 		grid-template-columns: var(--toolbox-width) auto;
 	}
 	#body.view-maximized {
@@ -795,6 +795,7 @@ input.unsupported {
 	}
 	#whiteboard-wrapper {
 		grid-area: whiteboard;
+		width: 100%;
 	}
 	#whiteboard-tabs {
 		margin-bottom: 0;
