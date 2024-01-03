@@ -19,7 +19,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 			const viewEl = $e.ui.element.querySelector("#view-blocks");
 			code = $e.ide.blocks.toCode(viewEl.firstChild);
 		} else if (mode == "write") {
-			code = ace.edit("view-write").getValue();
+			code = $e.session.editor.getValue();
 			// Check and clean code before parsing
 			if (eseecodeLanguage) {
 				try {
@@ -31,13 +31,14 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 					if (lineNumber && lineNumber[2]) {
 						lineNumber = lineNumber[2];
 						$e.ui.highlight(lineNumber, "error");
-						ace.edit("view-write").gotoLine(lineNumber, 0, true);
+						$e.session.editor.gotoLine(lineNumber, 0, true);
 					}
 					return;
 				}
 				$e.ui.write.resetView(code, false);
 			}
 		}
+		if (code) $e.ide.autosave(code);
 		if (!justPrecode) await $e.backend.reset(false); // $e.backend.reset() calls $e.execution.execute() to load the precode, so prevent infinite loops
 		$e.debug.resetMonitors();
 		$e.ui.debug.resetLayers();
@@ -45,7 +46,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	}
 	$e.execution.current.kill = false; // Must be set after $e.backend.reset()
 	$e.execution.current.breaktoui = false;
-	if (!inCode && !justPrecode && !immediate && $e.execution.api_prerun_callback) $e.execution.api_prerun_callback();
+	if (!inCode && !justPrecode && !immediate && $e.execution.prerun) $e.execution.prerun();
 	let jsCode = "";
 	try {
 		jsCode += "\"use strict\";";
@@ -72,9 +73,8 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		}
 		if (!justPrecode) {
 			const real_usercode = $e.execution.code2run(code, { inject: !immediate, realcode: true });
-			jsCode += "$e.execution.current.animate = " + !skipAnimation + ";$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;$e.execution.current.animate = false;";
-			$e.last_execution = {};
-			$e.last_execution.linesCount = real_usercode.split("\n").length - 1;
+			jsCode += "$e.execution.current.animate = " + !skipAnimation + ";$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;";
+			$e.execution.current.linesCount = real_usercode.split("\n").length - 1;
 			if (!inCode && $e.execution.postcode) { // Don't load postcode again when running the code of an event
 				const real_postcode = $e.execution.code2run($e.execution.postcode, { realcode: true });
 				jsCode += ";$e.execution.current.postcode.running=true;" + real_postcode + ";";
@@ -93,7 +93,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	$e.execution.traceInject();
 	await eval(jsCode);
 	$e.execution.current.stepped = undefined;
-	$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement
+	$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement. It is necessary to have it here and not jsCode so t¡if the execution is stopped this is still done
 	$e.execution.traceRestore();
 	$e.execution.updateSandboxChanges(oldWindowProperties, Object.getOwnPropertyNames(window)); // Do not reset yet (reset before next new execution), as there might be interaction to run with the last run code
 	$e.execution.current.usercode.running = false;
@@ -101,7 +101,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	if ($e.modes.toolboxes.current.id == "debug") {
 		$e.ui.debug.resetLayers();
 	}
-	if (!inCode && !justPrecode && !immediate && $e.execution.api_postrun_callback) $e.execution.api_postrun_callback();
+	if (!inCode && !justPrecode && !immediate && $e.execution.postrun) $e.execution.postrun();
 };
 
 /**
@@ -273,10 +273,10 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 		await $e.execution.freeze();
 		$e.execution.updateStatus("running");
 
-	} else if ($e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block" && $e.execution.instructionsPause) { // We don't want to pause execution in level1/Touch
+	} else if ($e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block" && $e.execution.instructionsDelay) { // We don't want to pause execution in level1/Touch
 
 		await new Promise(r => {
-			$e.execution.current.pauseHandler = setTimeout(r, $e.execution.instructionsPause - ($e.execution.current.animatedTime ? $e.execution.current.animatedTime : 0));
+			$e.execution.current.pauseHandler = setTimeout(r, $e.execution.instructionsDelay - ($e.execution.current.animatedTime ? $e.execution.current.animatedTime : 0));
 		});
 		$e.execution.current.animatedTime = 0;
 
@@ -423,7 +423,7 @@ $e.execution.printError = (err) => {
 		const mode = $e.modes.views.current.type;
 		$e.ui.highlight(lineNumber, "error");
 		if (mode == "write") {
-			ace.edit("view-write").gotoLine(lineNumber, 0);
+			$e.session.editor.gotoLine(lineNumber, 0);
 		}
 		message = _("Error '%s' in line %s", [ err.name, lineNumber ]) + ": " + err.message;
 	} else if (err.stack) {

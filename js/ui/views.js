@@ -27,7 +27,7 @@ $e.ui.resizeView = (restore) => {
 		toolboxColumn.classList.add("hide");
 	}
 	$e.ui.switchToolboxMode($e.modes.views.current.id);
-	ace.edit("view-write").resize();
+	if ($e.session.editor) $e.session.editor.resize();
 };
 
 /**
@@ -61,7 +61,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 	const newView = $e.modes.views.available[id];
 	if (oldView.type == "write" && newView.type == "blocks") {
 		let code;
-		code = ace.edit("view-write").getValue();
+		code = $e.session.editor.getValue();
 		if (eseecodeLanguage) {
 			try {
 				program = eseecodeLanguage.parse(code);
@@ -72,7 +72,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 				if (!lineNumberMatch) return;
 				const lineNumber = lineNumberMatch[2];
 				$e.ui.highlight(lineNumber, "error");
-				ace.edit("view-write").gotoLine(lineNumber, 0, true);
+				$e.session.editor.gotoLine(lineNumber, 0, true);
 				return;
 			}
 		} else {
@@ -84,7 +84,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 	const oldViewEl = $e.ui.element.querySelector("#view-" + oldView.type);
 	let oldScrollTop;
 	if (oldView.type == "write") {
-		oldScrollTop = ace.edit("view-write").session.getScrollTop();
+		oldScrollTop = $e.session.editor.session.getScrollTop();
 	} else {
 		oldScrollTop = oldViewEl.scrollTop;
 	}
@@ -101,6 +101,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 	Object.values($e.modes.views.available).forEach(view => bodyEl.classList.remove(view.id)); // Remove level class if this is a level change
 	bodyEl.classList.add(id);
 	if (oldView.type == "blocks") {
+		$e.ui.blocks.multiselectToggle(false);
 		if (newView.type == "write") {
 			if ($e.session.updateOnViewSwitch && $e.session.updateOnViewSwitch !== "write") {
 				// Only reset the write view if changes were made in the blocks, this preserves the undo's
@@ -111,7 +112,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 				}
 				$e.ui.write.resetUndo();
 			}
-			ace.edit("view-write").session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakponts
+			$e.session.editor.session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakponts
 		}
 	} else if (oldView.type == "write") {
 		if (newView.type == "blocks") {
@@ -131,14 +132,14 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 	const newHeight = $e.ui.blocks.getPropertyByLevel(id, "height");
 	const scrollTop = oldScrollTop * newHeight / oldHeight;
 	if (newView.type == "write") {
-		ace.edit("view-write").session.setScrollTop(scrollTop);
+		$e.session.editor.session.setScrollTop(scrollTop);
 	} else {
 		newViewEl.scrollTop = oldScrollTop * newHeight / oldHeight;
 	}
 	// Update tabs
 	newView.tab.classList.add("active");
 	if (newView.type == "write") {
-		ace.edit("view-write").focus(); // If write mode, focus in the textarea. Do this after $e.ui.switchToolboxMode() in case the toolbox tries to steal focus
+		$e.session.editor.focus(); // If write mode, focus in the textarea. Do this after $e.ui.switchToolboxMode() in case the toolbox tries to steal focus
 	} else {
 		$e.ui.blocks.addBeginTip(); // Force to recheck since until now "view-blocks" element had display:none so height:0px and so the tip couldn't define to max height
 	}

@@ -98,35 +98,52 @@ $e.ui.blocks.removeFromCode = (blockEl) => {
  * Duplicates a block in the code
  * @private
  * @param {!HTMLElement} blockEl Block element to duplicate
+ * @param {Boolean} [combine] If true the change will be added to the last change
+ * @param {HTMLElement} [duplicateBefore] If set the new block will be added before this element
  * @example $e.ui.blocks.duplicateInCodeFromUI(blockEl)
  */
-$e.ui.blocks.duplicateInCodeFromUI = (blockEl) => {
+$e.ui.blocks.duplicateInCodeFromUI = (blockEl, combine, duplicateBefore) => {
 	const newBlockEl = $e.ide.blocks.clone(blockEl);
 	newBlockEl.classList.remove("setupCandidate");
 	Array.from(newBlockEl.querySelectorAll(".setupCandidate")).forEach(el => el.classList.remove("setupCandidate"));
-	$e.ui.blocks.createAndPlaceBlock(newBlockEl, blockEl.parentNode, blockEl.nextSibling, false); // Insert after current block
-	$e.ide.blocks.changes.push({
+	$e.ui.blocks.createAndPlaceBlock(newBlockEl, blockEl.parentNode, duplicateBefore ? duplicateBefore : blockEl.nextSibling, false); // Insert after current block
+	const undoItem = {
 		action: "add",
 		blockEl: newBlockEl,
 		newParentBlock: newBlockEl.parentNode,
 		newNextSibling: newBlockEl.nextSibling,
-	});
-	$e.ide.blocks.changed();
+	};
+	if (combine) {
+		$e.ide.blocks.changes.combine(undoItem);
+		// Remember to call $e.ide.blocks.changed() elsewhere when the combination is finished
+	} else {
+		$e.ide.blocks.changes.push(undoItem);
+		$e.ide.blocks.changed();
+	}
+	return newBlockEl;
 };
 
 /**
  * Removes a block from the code
  * @private
  * @param {!HTMLElement} blockEl Block element to remove
+ * @param {Boolean} [combine] If true the change will be added to the last change
  * @example $e.ui.blocks.deleteFromCodeFromUI(blockEl)
  */
-$e.ui.blocks.deleteFromCodeFromUI = (blockEl) => {
-	$e.ide.blocks.changes.push({
+$e.ui.blocks.deleteFromCodeFromUI = (blockEl, combine) => {
+	const undoItem = {
 		action: "delete",
 		blockEl: blockEl,
 		sourceParentBlock: blockEl.parentNode,
 		sourceNextSibling: blockEl.nextSibling,
-	});
+	};
+	if (combine) {
+		$e.ide.blocks.changes.combine(undoItem);
+		// Remember to call $e.ide.blocks.changed() elsewhere when the combination is finished
+	} else {
+		$e.ide.blocks.changes.push(undoItem);
+		$e.ide.blocks.changed();
+	}
 	$e.ui.blocks.removeFromCode(blockEl);
 	$e.ide.blocks.changed();
 };

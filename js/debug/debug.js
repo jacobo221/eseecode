@@ -58,10 +58,10 @@ $e.debug.analyzeVariable = (value, oldValue) => {
 /**
  * Initializes/Resets the instructions pause UI element
  * @private
- * @example $e.ui.debug.resetInstructionsPause()
+ * @example $e.ui.debug.resetInstructionsDelay()
  */
-$e.ui.debug.resetInstructionsPause = () => {
-	$e.ui.element.querySelector("#toolbox-debug-execute-instructionsPause-input").value = $e.execution.instructionsPause;
+$e.ui.debug.resetInstructionsDelay = () => {
+	$e.ui.element.querySelector("#toolbox-debug-execute-instructionsDelay-input").value = $e.execution.instructionsDelay;
 };
 
 /**
@@ -81,7 +81,7 @@ $e.ui.debug.enableAllNoneBreakpoints = () => {
 /**
  * Run debug command from UI toolbox
  * @private
- * @example $e.ui.debug.resetInstructionsPause()
+ * @example $e.ui.debug.command("forward(100)")
  */
 $e.ui.debug.command = (event) => {
 	event.preventDefault();

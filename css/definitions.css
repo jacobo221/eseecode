@@ -10,6 +10,7 @@
 	--footer-height: var(--big-space);
 	--tab-height: 24px;
 	--tab-margin: var(--default-space);
+	--blocks-tab-size: 50px;
 	--toolbox-width: 250px;
 	--view-width: 350px;
 	--row-margin: 1em;
@@ -30,7 +31,9 @@
 	--msgbox-bg-color: #e9e9e9;
 	--msgbox-color: #456789;
 	--msgbox-shadow-color: #5098f4;
-	--tabs-bg-color: var(--msgbox-bg-color);
+	--tab-bg-color: var(--msgbox-color);
+	--tab-active-bg-color: var(--msgbox-bg-color);
+	--blocks-tab-bg-color: #0bbf89;
 	--border-color: #666666;
 	--hover-color: #789abc;
 	--disabled-color: var(--border-color);

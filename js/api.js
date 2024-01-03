@@ -82,10 +82,12 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.showThemes(value);
 		} else if (key == "maximize") {
 			$e.api.maximize(value, action);
+		} else if (key == "style") {
+			$e.api.setStyle(value, action);
 		} else if (key == "flow") {
-			$e.api.showFlow(value, action);
-		} else if (key == "flowtab") {
 			$e.api.showFlowTab(value, action);
+		} else if (key == "multiselect") {
+			$e.api.showMultiselectTab(value, action);
 		} else if (key == "input") {
 			$e.api.setInput(value);
 		} else if (key == "axis") {
@@ -116,8 +118,12 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.uploadCode(value);
 		} else if (key == "execute") {
 			await $e.api.execute(value);
+		} else if (key == "delay") {
+			$e.api.setInstructionsDelay(value);
 		} else if (key == "pause") {
 			$e.api.setInstructionsPause(value);
+		} else if (key == "autosave") {
+			$e.api.setAutosaveInterval(value);
 		} else if (key == "stepsize") {
 			$e.api.setStepSize(value);
 		} else if (key == "breakpoints") {
@@ -162,7 +168,7 @@ $e.api.downloadCode = () => {
 	if (mode == "blocks") {
 		code = $e.ide.blocks.toCode($e.ui.element.querySelector("#view-blocks").firstChild);
 	} else if (mode == "write") {
-		code = ace.edit("view-write").getValue();
+		code = $e.session.editor.getValue();
 	}
 	return code;
 };
@@ -200,7 +206,7 @@ $e.api.execute = async function (value = true, immediate) {
  * @example $e.api.prerun(function() { alert("RUN!"); })
  */
 $e.api.prerun = async function (callback) {
-	$e.execution.$e.prerun = callback;
+	$e.execution.prerun = callback;
 };
 
 /**
@@ -211,7 +217,7 @@ $e.api.prerun = async function (callback) {
  * @example $e.api.postrun(function() { alert("DONE!"); })
  */
 $e.api.postrun = async function (callback) {
-	$e.execution.$e.postrun = callback;
+	$e.execution.postrun = callback;
 };
 
 /**
@@ -247,19 +253,14 @@ $e.api.maximize = (value) => {
 };
 
 /**
- * Switches to flow view
+ * Switches between code and flow styles
  * @since 4.0
  * @public
- * @param {Boolean} [displayFlow] If true, switches to flow view
- * @example $e.api.showFlow()
+ * @param {String} style Blocks style
+ * @example $e.api.setStyle()
  */
-$e.api.showFlow = (value) => {
-	if ($e.confirmYes(value)) {
-		value = true;
-	} else {
-		value = false;
-	}
-	$e.ui.blocks.toggleFlow(value);
+$e.api.setStyle = (value) => {
+	if (value === "flow") $e.ui.blocks.flowToggle(true);
 };
 
 /**
@@ -324,39 +325,36 @@ $e.api.getOuput = () => {
 };
 
 /**
- * Gets the number of lines of code in the last execution
+ * Gets the number of lines of code in the current/last execution
  * @since 3.0
  * @public
- * @return {Number} Number of lines of code in the last execution
+ * @return {Number} Number of lines of code in the current/last execution
  * @example $e.api.getLastExecutionCodeLinesCount()
  */
 $e.api.getLastExecutionCodeLinesCount = () => {
-	if (!$e.last_execution) return false;
-	return $e.last_execution.linesCount;
+	return $e.execution.current.linesCount;
 };
 
 /**
- * Gets the number of instructions run in the last execution
+ * Gets the number of instructions run in the last completed execution
  * @since 3.0
  * @public
- * @return {Number} Number of instructions run in the last execution
+ * @return {Number} Number of instructions run in the last completed execution
  * @example $e.api.getLastExecutionInstuctionsCount()
  */
 $e.api.getLastExecutionInstuctionsCount = () => {
-	if (!$e.last_execution) return false;
-	return $e.last_execution.instructionsCount;
+	return $e.execution.current.instructionsCount;
 };
 
 /**
- * Gets the exection time in the last execution
+ * Gets the exection time in the last completed execution
  * @since 3.0
  * @public
- * @return {Number} Execution time of code in the last execution
+ * @return {Number} Execution time of code in the last completed execution
  * @example $e.api.getLastExecutionTime()
  */
 $e.api.getLastExecutionTime = () => {
-	if (!$e.last_execution) return false;
-	return $e.last_execution.time;
+	return $e.execution.current.time;
 };
 
 /**
@@ -630,7 +628,7 @@ $e.api.setInstructions = (value, action = true) => {
 		}
 	});
 	if (action) $e.ui.blocks.initToolbox($e.modes.toolboxes.current.id, $e.modes.toolboxes.current.element);
-	ace.edit("view-write").setOptions({readOnly: !!$e.session.disableCode});
+	$e.session.editor.setOptions({readOnly: !!$e.session.disableCode});
 };
 
 /**
@@ -770,14 +768,25 @@ $e.api.setViewTabs = (value) => {
 };
 
 /**
- * Shows/Hides flow tabs
+ * Shows/Hides flow tab
  * @since 4.0
  * @public
- * @param {Boolean} value Whether to display the flow tabs or not
+ * @param {Boolean} value Whether to display the flow tab or not
  * @example $e.api.setFlowTabs(false)
  */
 $e.api.showFlowTab = (value) => {
-	document.querySelector("#view-tabs-flow").classList[!$e.confirmYes(value) ? "add" : "remove"]("hide");
+	document.querySelector("#view-blocks-tabs-flow").classList[!$e.confirmYes(value) ? "add" : "remove"]("hide");
+};
+
+/**
+ * Shows/Hides multiselect tab
+ * @since 4.1
+ * @public
+ * @param {Boolean} value Whether to display the multiselect tab or not
+ * @example $e.api.showMultiselectTab(false)
+ */
+$e.api.showMultiselectTab = (value) => {
+	document.querySelector("#view-blocks-tabs-multiselect").classList[!$e.confirmYes(value) ? "add" : "remove"]("hide");
 };
 
 /**
@@ -836,6 +845,28 @@ $e.api.switchView = (id, action = true) => {
 	}
 	$e.modes.views.current = $e.modes.views.available[id];
 	if (action) $e.ui.switchViewMode();
+};
+
+/**
+ * Autosave code
+ * @since 4.1
+ * @private
+ * @param {String} [forceCode] If contains code this is the code that will be autosaved
+ * @example $e.api.autosave()
+ */
+$e.api.autosave = (forceCode) => {
+	$e.ide.autosave();
+};
+
+/**
+ * Autosave code
+ * @since 4.1
+ * @private
+ * @param {Number} value Seconds between autosaves
+ * @example $e.api.setAutosaveInterval()
+ */
+$e.api.setAutosaveInterval = (value) => {
+	$e.setup.autosaveInterval = value;
 };
 
 /**
@@ -1001,15 +1032,26 @@ $e.api.showThemes = (value, action = true) => {
 };
 
 /**
- * Pauses every instruction for a certain amount of time
+ * Time each instruction delays the execution
+ * @since 4.1
+ * @public
+ * @param {Number} value Time to spend on each instruction, in milliseconds
+ * @example $e.api.setInstructionsDelay(500)
+ */
+$e.api.setInstructionsDelay = (milliseconds) => {
+	$e.execution.instructionsDelay = parseInt(milliseconds);
+	$e.ui.debug.resetInstructionsDelay();
+};
+
+/**
+ * Pauses after every instruction for a certain amount of time
  * @since 3.0
  * @public
- * @param {Number} value Time to pause each instruction, in milliseconds
+ * @param {Number} value Time to pause after each instruction, in milliseconds
  * @example $e.api.setInstructionsPause(500)
  */
 $e.api.setInstructionsPause = (milliseconds) => {
-	$e.execution.instructionsPause = parseInt(milliseconds);
-	$e.ui.debug.resetInstructionsPause();
+	$e.execution.instructionsMinimumPause = parseInt(milliseconds);
 };
 
 /**

@@ -1,13 +1,18 @@
-## 4.1 (2024-01-01)
- *Milestone reached: Animate the guide movements*
+## 4.1 (2024-01-03)
+ *Milestone reached: Animate the guide movements, multiselect blocks, autosave*
  *   Every guide movement is now animated
- *   Moved the block/flow toggle to a lateral position
+ *   Multiselection of blocks to move, duplicate or delete them
+ *   Hold shift key while multiselecting two blocks to select all blocks in between. New API call showMultiselectTab() and URL parameter multiselect= to display/hide this functionality
+ *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds
+ *   New API call setInstructionsDelay() and URL parameter delay= to define how long each instruction delays the execution. Substracting setInstructionsPause() to setInstructionsDelay() will be the time spend animating the instruction
+ *   Renamed API call showFlow to setStyle("flow") and parameter flow= to style=flow, and flowtab= to flow=
+ *   Moved the code/flow toggle to a lateral position
  *   Several fixes and cleanups
 
 ## 4.0 (2023-12-29)
 
  *Milestone reached: Flowchart, real grid resize, run backwards*
- *   New flowchart view. New url parameters flow= and flowtab=, and API calls showFlow() and showFlowTab()
+ *   New flowchart style. New url parameters flow= and flowtab=, and API calls showFlow() and showFlowTab()
  *   Grid can now be any resolution, not only 400x400. New url parameter whiteboardresolution=, and API calls getWhiteboardResolution() and setWhiteboardResolution() 
  *   Stepped execution can now run backwards. Stepped executions do not trigger breakpoints (but do update monitors). Stepped execution now works independently to regular execution, so a new API call runSteps() exists, and API call setExecutionStep() and URL parameter step= have been deprecated in favour of setStepSize() and stepsize=
  *   Allow to always pause the execution, even if running with no delay

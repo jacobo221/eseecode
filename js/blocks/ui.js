@@ -21,12 +21,216 @@ $e.ui.blocks.scrollToBlock = (blockEl, scrollEl = $e.ui.element.querySelector("#
 /**
  * Toggles between flow view and blocks view
  * @private
- * @example $e.ui.blocks.toggleFlow()
+ * @example $e.ui.blocks.flowToggle()
  */
-$e.ui.blocks.toggleFlow = () => {
+$e.ui.blocks.flowToggle = () => {
 	const bodyEl = $e.ui.element.querySelector("#body");
 	const displayFlow = $e.ide.blocks.flowVisible = !bodyEl.classList.contains("flow");
 	bodyEl.classList[displayFlow ? "add" : "remove"]("flow");
+	const buttonEl = $e.ui.element.querySelector("#view-blocks-tabs-flow");
+	buttonEl.classList[displayFlow ? "add" : "remove"]("toggled");
+	$e.ui.blocks.multiselectToggle(false);
+};
+
+/**
+ * Toggles between multiple and single blocks selection
+ * @private
+ * @param {Boolean} [multiple] If true enable multiple select, if false disable mutipleselect, otherwise toggle
+ * @example $e.ui.blocks.multiselectToggle()
+ */
+$e.ui.blocks.multiselectToggle = (multiple) => {
+	if (multiple !== true && multiple !== false) multiple = !$e.ide.blocks.multiselect; // Ignore Event
+	const buttonEl = $e.ui.element.querySelector("#view-blocks-tabs-multiselect");
+	const multiselect = $e.ide.blocks.multiselect = multiple;
+	const viewEl = $e.ui.element.querySelector("#view-blocks");
+	if (multiselect) {
+		buttonEl.classList.add("toggled");
+		viewEl.classList.add("multiselect");
+	} else {
+		buttonEl.classList.remove("toggled");
+		viewEl.classList.remove("multiselect");
+	}
+	if (multiple === false) $e.ui.blocks.unselectAllBlocks();
+};
+
+/**
+ * Toggles view blocks multiselect buttons
+ * @private
+ * @param {Boolean} visible If true, make butons visible, otherwise hide them
+ * @example $e.ui.blocks.toggleMultiselectButtons(true)
+ */
+$e.ui.blocks.toggleMultiselectButtons = (visible) => {
+	const buttons = Array.from($e.ui.element.querySelectorAll("#view-blocks-tabs-move, #view-blocks-tabs-duplicate, #view-blocks-tabs-remove"));
+	if (visible) {
+		buttons.forEach(tabEl => tabEl.classList.remove("hide"));
+	} else {
+		buttons.forEach(tabEl => tabEl.classList.add("hide"));
+	}
+};
+
+/**
+ * Unselects all blocks
+ * @private
+ * @example $e.ui.blocks.unselectAllBlocks()
+ */
+$e.ui.blocks.unselectAllBlocks = () => {
+	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
+	selectedBlocks.forEach(blockEl => blockEl.classList.remove("selected"));
+	$e.ide.blocks.lastSelected = undefined;
+	$e.ui.blocks.toggleMultiselectButtons(false);
+};
+
+/**
+ * Selects or unselect a block in a multiselection
+ * @private
+ * @param {Object} event Event
+ * @example $e.ui.blocks.selectBlock()
+ */
+$e.ui.blocks.selectBlock = (event) => {
+	const oldSelectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
+	const blockEl = event.target.closest(".block:not(.subblock)");
+	const selected = !blockEl.classList.contains("selected");
+	if (selected && oldSelectedBlocks[0] && !Array.from(oldSelectedBlocks[0].parentNode.children).includes(blockEl)) { // Selected blocks must be siblings, otherwise overwrite the selection with just this block
+		oldSelectedBlocks.forEach(blockEl => blockEl.classList.remove("selected"));
+		$e.ide.blocks.lastSelected = undefined;
+	}
+	if (selected) {
+		const nowSelectedBlocks = [];
+		if (event.shiftKey && $e.ide.blocks.lastSelected) {
+			const siblingBlocks = Array.from(blockEl.parentNode.children);
+			const thisSelectedIndex = siblingBlocks.indexOf(blockEl);
+			const lastSelectedIndex = siblingBlocks.indexOf($e.ide.blocks.lastSelected);
+			const firstIndex = thisSelectedIndex < lastSelectedIndex ? thisSelectedIndex : lastSelectedIndex;
+			const lastIndex = thisSelectedIndex > lastSelectedIndex ? thisSelectedIndex : lastSelectedIndex;
+			for (let i = firstIndex; i <= lastIndex; i++) nowSelectedBlocks.push(siblingBlocks[i]);
+		} else {
+			nowSelectedBlocks.push(blockEl);
+		}
+		nowSelectedBlocks.forEach(blockEl => blockEl.classList.add("selected"));
+		$e.ui.blocks.toggleMultiselectButtons(true);
+		$e.ide.blocks.lastSelected = blockEl;
+	} else {
+		blockEl.classList.remove("selected");
+		if (oldSelectedBlocks.length <= 1) {
+			$e.ui.blocks.toggleMultiselectButtons(false);
+			$e.ide.blocks.lastSelected = undefined;
+		}
+	}
+};
+
+/**
+ * Cancels movement of multiple blocks
+ * @private
+ * @param {Object} event Event
+ * @example $e.ui.blocks.moveBlocksEventCancel()
+ */
+$e.ui.blocks.moveBlocksEventCancel = (event) => {
+	if (event.type !== "keydown") {
+		if (!event.isPrimary) return;
+		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
+	}
+	$e.ui.blocks.moveBlocksStop();
+};
+
+/**
+ * Stops an asynchronous move blocks event
+ * @private
+ * @example $e.ui.blocks.moveBlocksStop()
+ */
+$e.ui.blocks.moveBlocksStop = () => {
+	$e.session.moveBlocksHandler = undefined;
+	const viewContentEl = $e.ui.element.querySelector("#view-content");
+	viewContentEl.classList.remove("moveBlocksHandler");
+	viewContentEl.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept);
+	document.body.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel);
+	$e.ui.blocks.multiselectToggle(false);
+};
+
+/**
+ * Starts movement of multiple blocks from UI
+ * @private
+ * @example $e.ui.blocks.moveBlocksEventStart()
+ */
+$e.ui.blocks.moveBlocksEventStart = () => {
+	$e.session.moveBlocksHandler = true; // Semaphor so keyboard shortcurs and events on blocks will not be handled
+	const viewContentEl = $e.ui.element.querySelector("#view-content");
+	viewContentEl.classList.add("moveBlocksHandler");
+	viewContentEl.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept); // click is also triggered by touchstart
+	document.body.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel); // click is also triggered by touchstart
+};
+
+/**
+ * Moves multiple blocks after the clicked block
+ * @private
+ * @param {Object} event Event
+ * @example $e.ui.blocks.moveBlocksEventAccept()
+ */
+$e.ui.blocks.moveBlocksEventAccept = (event) => {
+	const clickedBlockEl = event.target.closest(".block");
+	if (!clickedBlockEl) return $e.ui.blocks.moveBlocksStop();
+	if (clickedBlockEl.classList.contains("selected") && clickedBlockEl.nextSibling && clickedBlockEl.nextSibling.classList.contains("selected")) return $e.ui.blocks.moveBlocksStop();
+	let destParentNode = clickedBlockEl.parentNode;
+	let destNextSibling = clickedBlockEl.nextSibling;
+	if (clickedBlockEl.classList.contains(".subblock")) {
+		const firstSubblock = clickedBlockEl.querySelector(".subblock");
+		destParentNode = firstSubblock;
+		destNextSibling = firstSubblock.firstChild;
+	} else if (clickedBlockEl.classList.contains(".subblock")) {
+		destParentNode = clickedBlockEl;
+		destNextSibling = clickedBlockEl.firstChild;
+	}
+	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
+	selectedBlocks.forEach((blockEl, i) => {
+		const combine = i > 0;
+		const undoSubitem = {
+			sourceParentBlock: blockEl.parentNode,
+			sourceNextSibling: blockEl.nextSibling,
+			action: "move",
+			blockEl: blockEl,
+			newParentBlock: clickedBlockEl.parentNode,
+			newNextSibling: clickedBlockEl.nextSibling,
+		};
+		$e.ui.blocks.insertIntoCode(blockEl, destParentNode, destNextSibling);
+		if (combine) {
+			$e.ide.blocks.changes.combine(undoSubitem);
+		} else {
+			$e.ide.blocks.changes.push(undoSubitem);
+		}
+	});
+	$e.ide.blocks.changed(); // Must be called after the last undo is added in the combine item
+	$e.ui.blocks.multiselectToggle(false);
+	$e.ui.blocks.moveBlocksStop();
+};
+
+/**
+ * Duplicates multiple blocks from UI
+ * @private
+ * @example $e.ui.blocks.duplicateBlocks()
+ */
+$e.ui.blocks.duplicateBlocks = () => {
+	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
+	selectedBlocks.forEach((blockEl, i) => {
+		let duplicateBefore = blockEl;
+		while (duplicateBefore && duplicateBefore.classList.contains("selected")) duplicateBefore = duplicateBefore.nextSibling; // Duplicate groups of blocks after the end of teh group
+		$e.ui.blocks.duplicateInCodeFromUI(blockEl, i > 0, duplicateBefore);
+	});
+	$e.ide.blocks.changed(); // Must be called after the last undo is added in the combine item
+	$e.ui.blocks.multiselectToggle(false);
+};
+
+/**
+ * Deletes multiple blocks from UI
+ * @private
+ * @example $e.ui.blocks.removeBlocks()
+ */
+$e.ui.blocks.removeBlocks = () => {
+	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
+	selectedBlocks.forEach((blockEl, i) => {
+		blockEl.classList.remove("selected"); // Unselect so if they are restored with undo they do not appear as selected
+		$e.ui.blocks.deleteFromCodeFromUI(blockEl, i > 0);
+	});
+	$e.ide.blocks.changed(); // Must be called after the last undo is added in the combine item
+	$e.ui.blocks.multiselectToggle(false);
 };
 
 /**

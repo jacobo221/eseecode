@@ -1,13 +1,13 @@
 "use strict";
 
 /**
- * Gets the instructionsPause value from the setup and updates in the $e class
+ * Gets the instructionsDelay value from the setup and updates in the $e class
  * @private
- * @example $e.execution.updateInstructionsPause()
+ * @example $e.execution.updateInstructionsDelay()
  */
-$e.execution.updateInstructionsPause = () => {
-	$e.execution.instructionsPause = parseInt($e.ui.element.querySelector("#toolbox-debug-execute-instructionsPause-input").value);
-	if ($e.execution.instructionsPause < 0) $e.execution.instructionsPause = 0;
+$e.execution.updateInstructionsDelay = () => {
+	$e.execution.instructionsDelay = parseInt($e.ui.element.querySelector("#toolbox-debug-execute-instructionsDelay-input").value);
+	if ($e.execution.instructionsDelay < 0) $e.execution.instructionsDelay = 0;
 };
 
 /**
@@ -185,8 +185,8 @@ $e.execution.end = () => {
 		const executionInstructions = $e.execution.current.programCounter;
 		$e.ui.element.querySelector("#toolbox-debug-execute-stats").innerHTML = _("Instructions executed") + ": " + executionInstructions + "<br />" + _("Execution time") + ": " + executionTime + " " + _("secs");
 		if (!$e.execution.precode.running && !$e.execution.current.postcode.running) {
-			$e.last_execution.time = executionTime;
-			$e.last_execution.instructionsCount = executionInstructions;
+			$e.execution.current.time = executionTime;
+			$e.execution.current.instructionsCount = executionInstructions;
 		}
 	}
 	$e.execution.current.kill = true;

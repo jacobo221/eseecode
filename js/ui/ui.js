@@ -280,7 +280,8 @@ $e.ui.resetFileMenu = () => {
  */
 $e.ui.reset = async () => {
 	$e.ui.element.style.opacity = 0; // We make it invisible but displayed so the heights, widths, etc are calculated. Set back to visible from within $e.ui.reset()
-	if (!$e.backend.whiteboard.element) { // First load
+	const firstLoad = !$e.backend.whiteboard.element;
+	if (firstLoad) { // First load
 		$e.ui.init();
 		$e.backend.whiteboard.element = $e.ui.element.querySelector("#whiteboard");
 		$e.ui.toolboxWindow = $e.ui.element.querySelector("#toolbox-window");
@@ -300,6 +301,9 @@ $e.ui.reset = async () => {
 			}
 		});
 		$e.ui.toggleFullscreenIcon();
+		setInterval(() => {
+			if ($e.session.lastAutosave < $e.session.lastChange) $e.ide.autosave();
+		}, $e.setup.autosaveInterval);
 	}
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();
@@ -346,6 +350,7 @@ $e.ui.reset = async () => {
 	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer));
 	$e.session.updateOnViewSwitch = false;
 	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "execute", "maximize" ]);
+	if (!$e.ide.hasAutosave()) $e.ui.element.querySelector("#restorecode").classList.add("disabled");
 	$e.ui.themes.current.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
 	$e.ide.loadBrowserURLParameters([ "theme" ], undefined, true);
 	$e.session.lastChange = 0;
@@ -399,7 +404,7 @@ $e.ui.highlight = (lineNumber, reason = "stepped") => {
 			style = "ace_step";
 		}
 		$e.ui.write.selectTextareaLine(displayLineNumber, displayLineNumber, style);
-		ace.edit("view-write").scrollToLine(displayLineNumber, true, true);
+		$e.session.editor.scrollToLine(displayLineNumber, true, true);
 	}
 	$e.ide.highlight(lineNumber, reason);
 };
@@ -414,8 +419,8 @@ $e.ui.unhighlight = () => {
 	if (!line) return;
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	viewEl.querySelectorAll(".highlight").forEach(el => el.classList.remove("highlight", "highlight-breakpoint", "highlight-error")); // by the time we have to unhighlight it the block might not exist anymore
-	const markers = ace.edit("view-write").session.getMarkers(false);
-	Object.values(markers).forEach(marker => ace.edit("view-write").session.removeMarker(marker.id));
+	const markers = $e.session.editor.session.getMarkers(false);
+	Object.values(markers).forEach(marker => $e.session.editor.session.removeMarker(marker.id));
 	$e.ide.unhighlight();
 };
 
@@ -428,7 +433,10 @@ $e.ui.unhighlight = () => {
 $e.ui.keyboardShortcuts = async (event) => {
 	let isShortcut = false;
 	if (event.key == "Escape") {
-		if ($e.session.breakpointHandler) {
+		if ($e.session.moveBlocksHandler) {
+			isShortcut = true;
+			$e.ui.blocks.moveBlocksEventCancel(event);
+		} else if ($e.session.breakpointHandler) {
 			isShortcut = true;
 			$e.ui.debug.addBreakpointEventCancel(event);
 		} else if ($e.ui.element.querySelector(".msgBoxWrapper")) {
@@ -442,6 +450,7 @@ $e.ui.keyboardShortcuts = async (event) => {
 			isShortcut = true;
 			$e.ui.blocks.cancelFloatingBlock();
 		}
+		$e.ui.blocks.multiselectToggle();
 	} else if (event.ctrlKey && event.key == "o") { // CTRL+O
 		if ($e.ui.disableKeyboardShortcuts) return;
 		isShortcut = true;
@@ -579,9 +588,9 @@ $e.ui.undo = async (redo) => {
 		}
 	} else if (mode == "write") {
 		if (redo) {
-			ace.edit("view-write").session.getUndoManager().redo();
+			$e.session.editor.session.getUndoManager().redo();
 		} else {
-			ace.edit("view-write").session.getUndoManager().undo();
+			$e.session.editor.session.getUndoManager().undo();
 		}
 	}
 	$e.ui.refreshUndo();
@@ -604,7 +613,7 @@ $e.ui.redo = () => {
 $e.ui.refreshUndo = () => {
 	let hasUndo, hasRedo;
 	if ($e.modes.views.current.type === "write") {
-		const aceUndoManager =  ace.edit("view-write").session.getUndoManager();
+		const aceUndoManager =  $e.session.editor.session.getUndoManager();
 		hasUndo = aceUndoManager.hasUndo();
 		hasRedo = aceUndoManager.hasRedo();
 	} else {

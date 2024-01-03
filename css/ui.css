@@ -221,7 +221,7 @@ div.ace_gutter-cell {
 	margin: var(--tab-margin) 0 0 0;
 	padding: var(--small-space) var(--small-space) 0 var(--small-space);
 	border: var(--minimal-border) solid var(--text-color);
-	background-color: var(--msgbox-color);
+	background-color: var(--tab-bg-color);
 	color: var(--text-color);
 	text-align: center;
 	text-decoration: none;
@@ -243,7 +243,7 @@ div.ace_gutter-cell {
 }
 .tab.active,
 .tab.active:hover {
-	background-color: var(--tabs-bg-color);
+	background-color: var(--tab-active-bg-color);
 	color: var(--bg-color);
 }
 .tab.disabled {
@@ -332,11 +332,13 @@ span.tab-title {
 #view-write {
 	position: relative;
 }
+#view-content.moveBlocksHandler,
 #view-content.addBreakpointHandler,
 #view-content.addBreakpointHandler .ace_content {
 	cursor: crosshair;
 	filter: invert(90%);
 }
+#view-content.moveBlocksHandler label,
 #view-content.addBreakpointHandler label { /* This is explicitly mentioned as in Firefox 119 it will otherwise leave the default cursor on labels for some strange reason, but we do not want to reapply the invert(90%) filter again */
 	cursor: crosshair;
 }
@@ -389,16 +391,16 @@ span.tab-title {
 	text-align: center;
 	margin-top: var(--default-space);
 }
-#toolbox-debug-execute-instructionsPause-before::before {
+#toolbox-debug-execute-instructionsDelay-before::before {
 	content: "🐢";
 	display: inline-block;
 	transform: scaleX(-1);
 	font-size: 2em;
 }
-#toolbox-debug-execute-instructionsPause-input {
+#toolbox-debug-execute-instructionsDelay-input {
 	direction: rtl;
 }
-#toolbox-debug-execute-instructionsPause-after::after {
+#toolbox-debug-execute-instructionsDelay-after::after {
 	content: "🐎";
 	display: inline-block;
 	transform: scaleX(-1);
@@ -456,9 +458,15 @@ span.tab-title {
 	text-align: center;
 	position: relative;
 }
+#toolbox-setup > div {
+	margin-top: 1.5em;
+}
 #toolbox-debug input[type="number"],
 #toolbox-setup input[type="number"] {
 	width: var(--input-min-size);
+}
+#restorecode {
+	margin-left: 2em;
 }
 #toolbox-setup-author {
 	position: absolute;
@@ -624,35 +632,74 @@ input.unsupported {
 .level4 #view-tabs-maximize {
 	display: initial;
 }
-#view-blocks-toggle {
+#view-blocks-tabs {
 	position: absolute;
 	z-index: 1;
-	top: var(--tab-margin);
+	top: 0;
 	right: 0;
-	height: 50px;
-	width: 50px;
-	font-size: 25px;
-	background-color: #0bbf89;
-	border: var(--smaller-border) solid var(--broken-white);
-	border-right: 0;
+	display: flex;
+	flex-direction: column;
+}
+#view-blocks-tabs > .tab {
+	margin-top: var(--tab-margin);
+	height: var(--blocks-tab-size);
+	width: var(--blocks-tab-size);
+	font-size: 30px;
+	background-color: var(--blocks-tab-bg-color);
+	border-color: var(--broken-white);
+	border-width: var(--smaller-border) 0 var(--smaller-border) var(--smaller-border);
 	border-radius: 50% 0 0 50%;
 	background-image: radial-gradient(at 30% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 200%);
 }
-#view-blocks-toggle::before {
-	content: "◱";
+#view-blocks-tabs > .tab::before {
 	display: inline-block;
 	color: var(--broken-white);
 	font-weight: bold;
 }
-#view-blocks-toggle:hover {
+#view-blocks-tabs > .tab:hover {
 	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 200%);
-	transform: none;
 }
-#view-blocks-toggle:active {
+#view-blocks-tabs > .tab:active {
 	background-image: radial-gradient(at 80% 50%, rgba(0,0,0,0) 20%, rgba(0,0,0,0.95) 200%);
 }
+#view-blocks-tabs > .tab.toggled {
+	background-image: radial-gradient(at 80% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 200%);
+}
+#view-blocks-tabs > .tab.toggled:hover {
+	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 200%);
+}
+#view-blocks-tabs > .tab.toggled:active {
+	background-image: radial-gradient(at 30% 50%, rgba(0,0,0,0) 20%, rgba(0,0,0,0.95) 200%);
+}
+#view-blocks-tabs-flow::before {
+	content: "◫";
+	transform: rotate(90deg);
+}
+#view-blocks-tabs-multiselect::before {
+	content: "⋅";
+}
+#view-blocks-tabs-multiselect.toggled::before {
+	content: "⋮";
+}
+.level1 #view-blocks-tabs-multiselect {
+	display: none;
+}
+#view-blocks-tabs-move.tab, /* Add .tab to overwrite #view-blocks-tabs > .tab */
+#view-blocks-tabs-duplicate.tab,
+#view-blocks-tabs-remove.tab {
+	background-color: var(--tab-bg-color);
+}
+#view-blocks-tabs-move::before {
+	content: "⇅";
+}
+#view-blocks-tabs-duplicate::before {
+	content: "⎘";
+}
+#view-blocks-tabs-remove::before {
+	content: "🗑";
+}
 #body.view-maximized #view-tabs-maximize {
-	background-color: var(--tabs-bg-color);
+	background-color: var(--tab-bg-color);
 }
 #body.view-maximized #view-tabs-maximize::before {
 	color: var(--bg-color);

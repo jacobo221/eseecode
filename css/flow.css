@@ -112,22 +112,20 @@
 
 /* UI */
 
-#body.flow #view-blocks-toggle {
-	background-image: radial-gradient(at 80% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 200%);
+
+#body.flow #view-blocks.multiselect .block > .icon {
+	border-style: dashed;
 }
-#body.flow #view-blocks-toggle::before {
-	content: "↝";
+#body.flow #view-blocks.multiselect .block:hover > .icon {
+	border-style: dotted;
+}
+
+#body.flow #view-blocks-tabs-flow::before {
+	content: "⤝";
 	display: inline-block;
-	transform: rotate(90deg);
+	transform: rotate(-90deg);
 	color: transparent;
 	text-shadow: 0 0 0 var(--broken-white);
-}
-#body.flow #view-blocks-toggle:hover {
-	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.95) 200%);
-	transform: none;
-}
-#body.flow #view-blocks-toggle:active {
-	background-image: radial-gradient(at 30% 50%, rgba(0,0,0,0) 20%, rgba(0,0,0,0.95) 200%);
 }
 
 /* Basics */
@@ -231,6 +229,19 @@
 #body.level3.flow .view-panel .block > .icon { /* Do not include the setupBlockIcon */
 	background-image: var(--block-gradient);
 	background-size: 100% 100%;
+}
+
+#body.flow .view-panel .block.setupCandidate,
+#body.flow .view-panel .block.selected {
+	filter: none;
+}
+#body.flow .view-panel .block.setupCandidate > .icon,
+#body.flow .view-panel .block.selected > .icon,
+#body.flow .view-panel .block.container.selected .icon {
+	filter: invert(100%);
+}
+#body.flow .view-panel .block.setupCandidate > .icon {
+	border-radius: var(--huge-radius);
 }
 
 /* Labels */

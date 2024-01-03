@@ -7,12 +7,55 @@
  * @example $e.ide.changed()
  */
 $e.ide.changed = (resetProgramCounter = true) => {
-	$e.execution.stop();
-	if (resetProgramCounter) $e.execution.initProgramCounter(); // This is so stepped execution will start from the beginning
+	if (resetProgramCounter) {
+		$e.execution.stop();
+		$e.execution.initProgramCounter(); // This is so stepped execution will start from the beginning
+	}
 	$e.session.lastChange = new Date().getTime();
 	$e.ui.unhighlight();
 	$e.ui.refreshUndo();
 	$e.ui.updateViewButtonsVisibility();
+};
+
+/**
+ * Autosave code
+ * @private
+ * @param {String} [forceCode] If contains code this is the code that will be autosaved
+ * @example $e.ide.autosave()
+ */
+$e.ide.autosave = (forceCode = true) => {
+	const mode = $e.modes.views.current.type;
+	let code;
+	if (typeof forceCode === "string") {
+		code = forceCode;
+	} else if (mode === "write") {
+		code = $e.session.editor.getValue();
+	} else {
+		code = $e.ide.blocks.toCode($e.ui.element.querySelector("#view-blocks").firstChild);
+	}
+	if (forceCode || code) localStorage.setItem("code", code); // Do not overwrite stored code if it is empty, unless forced store has been requested
+	$e.session.lastAutosave = Date.now();
+};
+
+/**
+ * Returns if there is autosaved code available
+ * @private
+ * @example $e.ide.hasAutosave()
+ */
+$e.ide.hasAutosave = () => {
+	const code = localStorage.getItem("code");
+	return !!code;
+};
+
+/**
+ * Load autosaved code
+ * @private
+ * @example $e.ide.loadAutosave()
+ */
+$e.ide.loadAutosave = () => {
+	const code = localStorage.getItem("code");
+	if (code) $e.ide.uploadCode(code);
+	$e.ui.element.querySelector("#restorecode").classList.add("disabled");
 };
 
 /**
@@ -34,7 +77,7 @@ $e.ide.loadBrowserURLParameters = async function(whitelist, blacklist, action = 
  * @example $e.ui.updateViewButtonsVisibility("debug")
  */
 $e.ui.updateViewButtonsVisibility = (id = $e.modes.views.current.id) => {
-	$e.ui.element.querySelector("#view-blocks-toggle").classList[$e.ide.codeIsEmpty() || id === "level4" ? "add" : "remove"]("hide");
+	$e.ui.element.querySelector("#view-blocks-tabs").classList[$e.ide.codeIsEmpty() || id === "level4" ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-reset").classList[$e.ide.codeIsEmpty() || id != "level1" ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-execute").classList[$e.execution.isRunning() || $e.execution.isFrozen() || $e.ide.codeIsEmpty() ? "add" : "remove"]("hide");
 	$e.ui.element.querySelector("#button-pause").classList[$e.execution.isRunning() ? "remove" : "add"]("hide");
@@ -91,7 +134,7 @@ $e.ide.getFunctionsByType = (type) => {
  * @example $e.ide.hasUndoRedo()
  */
 $e.ide.hasUndoRedo = () => {
-	const aceUndoManager =  ace.edit("view-write").session.getUndoManager();
+	const aceUndoManager =  $e.session.editor.session.getUndoManager();
 	return $e.ide.blocks.hasUndo() || $e.ide.blocks.hasRedo() || aceUndoManager.hasUndo() || aceUndoManager.hasRedo();
 };
 
@@ -112,8 +155,9 @@ $e.ide.resetUndo = () => {
  * @example $e.ide.codeIsEmpty()
  */
 $e.ide.codeIsEmpty = () => {
-	if ($e.modes.views.current.type === "write") {
-		return !ace.edit("view-write").getValue();
+	const mode = $e.modes.views.current.type;
+	if (mode === "write") {
+		return !$e.session.editor.getValue();
 	} else {
 		return $e.ui.blocks.codeIsEmpty();
 	}

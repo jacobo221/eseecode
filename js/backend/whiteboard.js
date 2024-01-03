@@ -529,7 +529,7 @@ $e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whitebo
  */
 $e.backend.whiteboard.animate = async (callback) => {
 	const currentInstruction = $e.execution.getProgramCounter(); // We'll use this to abort mid-animation if the code has moved on
-	const transitionTime = $e.execution.instructionsPause > $e.execution.instructionsMinimumPause ? $e.execution.instructionsPause - $e.execution.instructionsMinimumPause : 0;
+	const transitionTime = $e.execution.instructionsDelay > $e.execution.instructionsMinimumPause ? $e.execution.instructionsDelay - $e.execution.instructionsMinimumPause : 0;
 	if ($e.execution.current.animate && $e.execution.instructionsAnimationFramePause < transitionTime) {
 		const divisions = parseInt(transitionTime / $e.execution.instructionsAnimationFramePause);
 		const animateContext = $e.backend.whiteboard.layers.available.animate.canvas.getContext("2d"); // Using a separate animation layer is essential so the final result is identical regardless of the execution happening with or without anmiation enabled
@@ -545,5 +545,5 @@ $e.backend.whiteboard.animate = async (callback) => {
 		});
 		animateContext.canvas.width = animateContext.canvas.width; // When the animation finishes clear the animation so only the real drawing is displayed, also in case the animation is interrupted
 	}
-	$e.execution.current.animatedTime = transitionTime; // Report that the instructionsPause time has taken up part of the instructionsPause time
+	$e.execution.current.animatedTime = transitionTime; // Report that the instructionsDelay time has taken up part of the instructionsDelay time
 };

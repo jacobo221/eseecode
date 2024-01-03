@@ -17,6 +17,18 @@ $e.ide.blocks.changes.push = (undoItem) => {
 }
 
 /**
+ * Add a new change into the last undo in the stack
+ * @private
+ * @param {Object} undoSubitem Change description to add into the last undo in the stack
+ * @example $e.ide.blocks.changes.combine(undoItem)
+ */
+$e.ide.blocks.changes.combine = (undoSubitem) => {
+	let lastUndo = $e.ide.blocks.changes.stack[$e.ide.blocks.changes.stack.length - 1];
+	if (!Array.isArray(lastUndo)) lastUndo = $e.ide.blocks.changes.stack[$e.ide.blocks.changes.stack.length - 1] = [ lastUndo ];
+	lastUndo.push(undoSubitem);
+}
+
+/**
  * Removes the last item in the undo stack
  * @private
  * @example $e.ide.blocks.changes.pop 
@@ -63,45 +75,49 @@ $e.ide.blocks.changes.hasRedo = () => {
  * @example $e.ide.blocks.changes.undo()
  */
 $e.ide.blocks.changes.undo = (redo) => {
-	const undoItem = $e.ide.blocks.changes.stack[$e.ide.blocks.changes.current + (redo ? 1 : 0)];
+	let undoItem = $e.ide.blocks.changes.stack[$e.ide.blocks.changes.current + (redo ? 1 : 0)];
 	if (!undoItem) return console.error("This should not happen in $e.ide.blocks.changes.undo");
-	const blockEl = undoItem.blockEl;
-	if (undoItem.action == "setup") {
-		const newParmIndex = redo ? 2 : 1;
-		undoItem.parameters.forEach(parameter => {
-			const key = "param" + parameter[0];
-			if (parameter[newParmIndex] !== "") {
-				blockEl.dataset[key] = parameter[newParmIndex];
+	if (!Array.isArray(undoItem)) undoItem = [ undoItem ];
+	if (!redo) undoItem = undoItem.slice().reverse(); // slice() is there to create a new array so that reverse() doesn't mutate the original one
+	undoItem.forEach(undoSubitem => {
+		const blockEl = undoSubitem.blockEl;
+		if (undoSubitem.action == "setup") {
+			const newParmIndex = redo ? 2 : 1;
+			undoSubitem.parameters.forEach(parameter => {
+				const key = "param" + parameter[0];
+				if (parameter[newParmIndex] !== "") {
+					blockEl.dataset[key] = parameter[newParmIndex];
+				} else {
+					delete blockEl.dataset[key];
+				}
+			});
+			$e.ui.blocks.paint(blockEl);
+		} else if (undoSubitem.action == "move") {
+			let useParent, useNextSibling;
+			if (redo) {
+				useParent = undoSubitem.newParentBlock;
+				useNextSibling = undoSubitem.newNextSibling;
 			} else {
-				delete blockEl.dataset[key];
+				useParent = undoSubitem.sourceParentBlock;
+				useNextSibling = undoSubitem.sourceNextSibling;
 			}
-		});
-		$e.ui.blocks.paint(blockEl);
-	} else if (undoItem.action == "move") {
-		let useParent, useNextSibling;
-		if (redo) {
-			useParent = undoItem.newParentBlock;
-			useNextSibling = undoItem.newNextSibling;
+			$e.ui.blocks.insertIntoCode(blockEl, useParent, useNextSibling);
+		} else if (undoSubitem.action == "add") {
+			if (redo) {
+				$e.ui.blocks.insertIntoCode(blockEl, undoSubitem.newParentBlock, undoSubitem.newNextSibling);
+			} else {
+				$e.ui.blocks.removeFromCode(blockEl);
+			}
+		} else if (undoSubitem.action == "delete") {
+			if (redo) {
+				$e.ui.blocks.removeFromCode(blockEl);
+			} else {
+				$e.ui.blocks.insertIntoCode(blockEl, undoSubitem.sourceParentBlock, undoSubitem.sourceNextSibling);
+			}
 		} else {
-			useParent = undoItem.sourceParentBlock;
-			useNextSibling = undoItem.sourceNextSibling;
+			console.error("Invalid undo action: " + change.action);
 		}
-		$e.ui.blocks.insertIntoCode(blockEl, useParent, useNextSibling);
-	} else if (undoItem.action == "add") {
-		if (redo) {
-			$e.ui.blocks.insertIntoCode(blockEl, undoItem.newParentBlock, undoItem.newNextSibling);
-		} else {
-			$e.ui.blocks.removeFromCode(blockEl);
-		}
-	} else if (undoItem.action == "delete") {
-		if (redo) {
-			$e.ui.blocks.removeFromCode(blockEl);
-		} else {
-			$e.ui.blocks.insertIntoCode(blockEl, undoItem.sourceParentBlock, undoItem.sourceNextSibling);
-		}
-	} else {
-		console.error("Invalid undo action: " + change.action);
-	}
+	});
 
 	if (redo) {
 		$e.ide.blocks.changes.current++;

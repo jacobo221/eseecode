@@ -171,7 +171,7 @@ $e.ui.debug.updateWriteBreakpoints = (event) => {
 		if (event.data.action === "insertText") {
 			if (event.data.range.start.row === breakpointLine - 1 && event.data.range.start.row !== event.data.range.end.row) {
 				// The breakpoint line has been split, update breakpoint
-				if (!ace.edit("view-write").session.getLine(breakpointLine-1).replace(/\s/g, '').length) {
+				if (!$e.session.editor.session.getLine(breakpointLine-1).replace(/\s/g, '').length) {
 					// Only move breakpoint if we are moving the instruction line down, not if we are splitting it
 					$e.ui.debug.updateModifiedBreakpoint(breakpointLine, breakpointLine + event.data.range.end.row - event.data.range.start.row);
 				}
@@ -245,7 +245,7 @@ $e.ui.debug.addBreakpointEventAccept = (event) => {
 	$e.ui.debug.addBreakpointEventStop();
 	let line;
 	if ($e.modes.views.current.type == "write") {
-		line = ace.edit("view-write").selection.getCursor()["row"] + 1;
+		line = $e.session.editor.selection.getCursor()["row"] + 1;
 	} else {
 		let target = event.target;
 		while (target !== null && target.id.match(/^block-[0-9]+$/) === null) {
@@ -271,8 +271,10 @@ $e.ui.debug.addBreakpointEventAccept = (event) => {
  * @example $e.ui.debug.addBreakpointEventCancel()
  */
 $e.ui.debug.addBreakpointEventCancel = (event) => {
-	if (!event.isPrimary) return;
-	if (event && event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
+	if (event.type !== "keydown") {
+		if (!event.isPrimary) return;
+		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
+	}
 	$e.ui.debug.addBreakpointEventStop();
 };
 
@@ -328,7 +330,7 @@ $e.ui.debug.addOrUpdateBreakpointInUI = (line, replaceLine) => {
 		}
 		if ($e.execution.monitors[line].breakpoint) {
 			if ($e.modes.views.current.type == "write") {
-				ace.edit("view-write").session.setBreakpoint(line - 1, "ace-breakpoint");
+				$e.session.editor.session.setBreakpoint(line - 1, "ace-breakpoint");
 			} else {
 				const viewEl = $e.ui.element.querySelector("#view-blocks");
 				const blockEl = $e.ide.blocks.getByPosition(viewEl, line);
@@ -377,9 +379,9 @@ $e.ui.debug.updateModifiedBreakpoint = (oldLine, line) => {
 	$e.debug.modifyBreakpoint(oldLine, line);
 	if ($e.modes.views.current.type == "write") {
 		if ($e.execution.monitors[line].breakpoint) {
-			ace.edit("view-write").session.setBreakpoint(line - 1, "ace-breakpoint");
+			$e.session.editor.session.setBreakpoint(line - 1, "ace-breakpoint");
 		}
-		ace.edit("view-write").session.clearBreakpoint(oldLine - 1);
+		$e.session.editor.session.clearBreakpoint(oldLine - 1);
 	} else {
 		const viewEl = $e.ui.element.querySelector("#view-blocks");
 		let blockEl;
@@ -446,7 +448,7 @@ $e.ui.debug.updateBlocksBreakpoints = (blockEl, action) => {
  * @example $e.ui.debug.resetBreakpointsHighlights()
  */
 $e.ui.debug.resetBreakpointsHighlights = () => {
-	ace.edit("view-write").session.clearBreakpoints();
+	if ($e.session.editor) $e.session.editor.session.clearBreakpoints();
 	if ($e.ui.blocks.codeIsEmpty()) return;
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	Object.keys($e.execution.monitors).forEach(key => {
@@ -466,9 +468,9 @@ $e.ui.debug.toggleBreakpointInUI = (line) => {
 	$e.ui.debug.toggleBreakpoint(line);
 	if ($e.modes.views.current.type == "write") {
 		if ($e.execution.monitors[line].breakpoint) {
-			ace.edit("view-write").session.setBreakpoint(line - 1, "ace-breakpoint");
+			$e.session.editor.session.setBreakpoint(line - 1, "ace-breakpoint");
 		} else {
-			ace.edit("view-write").session.clearBreakpoint(line - 1);
+			$e.session.editor.session.clearBreakpoint(line - 1);
 		}
 	} else {
 		const viewEl = $e.ui.element.querySelector("#view-blocks");
@@ -513,7 +515,7 @@ $e.ui.debug.updateRemovedBreakpointFromUI = (line) => {
 $e.ui.debug.updateRemovedBreakpoint = (line) => {
 	$e.debug.updateRemovedBreakpoint(line);
 	if ($e.modes.views.current.type == "write") {
-		ace.edit("view-write").session.clearBreakpoint(line-1);
+		$e.session.editor.session.clearBreakpoint(line-1);
 	} else {
 		const blockEl = $e.ide.blocks.getByPosition($e.ui.element.querySelector("#view-blocks").firstChild, line - 1);
 		if (blockEl) blockEl.classList.remove("highlight");

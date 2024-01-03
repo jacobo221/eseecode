@@ -2,7 +2,7 @@
 
 // Main initialization
 /**
- * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{String},icons:Array{*}},execution:{stepSize:Number,instructionsPause:Number,instructionsMinimumPause:Number,instructionsAnimationFramePause:Number,precode:String,monitors:Array<{breakpoint:Boolean}>,postcode:String,inputDefault:String,basepath:String,guides:{imageUrl:String,size:Integer},breaktouiInterval:Number,current:{stepped:Number,sandboxProperties:Array<String>,animate:Boolean,animatedTime:Number,precode:{running:Boolean,standby:Boolean},usercode:{running:Boolean},postcode:{running:Boolean},guideCache:{imageUrl:String,imageObj:Object},highlight:{lineNumber:Number,reason:String},monitors:Array<{value:*,oldValue:*,count:Number}>,inputRaw:String,inputPosition:Number,watchesChanged:Array<String>,layersChanged:Array<Number|String>,programCounter:Number,startTime:Number,trace:{stack:Array<*>,current:Integer,replaced:Array<{name:String,original:Function}>},timeoutHandlers:Array<{*}>,audioHandlers:Array<Number>,pauseHandler:Number,status:String,kill:Boolean,breaktoui:Boolean,breaktouiHandler:Number}},ide:{last_id:Number,blocks:{changes:{stack:Array<{*}>,current:Number},flowVisible:Boolean},write:Object},handlers:{keyboard:{key:Number,lastKey:String},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnViewSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,ready:String,kill:Boolean},session:{editor:Object,breakpointHandler:{Boolean|Number},lastRunLineNumber:Number,runFrom:String,disableCode:Boolean},backend:{whiteboard:{element:HTMLElement,width:Number,height:Number,axis:{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>},layers:{available:Object,current:Object,top:Object,bottom:Object},guides:Object,axis:Object},windows:{available:Array<HTMLElement>,current:HTMLElement},io:Object,sound:Object},events:Object},ui:Array<{element:Object,loading:Object,msgBox:Object,maxDragForSetup:Number,blocks:{styles:Object,forceSetup:boolean,setup:{current:Object},floating:{blockEl:HTMLElement,sourceBlockEl:HTMLElement,movesCount:Number,mouse:{x:Number,y:Number}}},write:Object,debug:Object,translations:{available:Array<{id:String,name:String,menuVisible:Boolean}>,current:Array<*>},themes:{available:Array<{id:String,name:String}>,current:Array<*>,menuVisible:Boolean},minWindowHeight:Number,codeFileName:String,toolboxWindow:HTMLElement,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,disableKeyboardShortcuts:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean}>,debug:Object,setup:{defaultView:String,defaultToolbox:String,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,tabSize:Number},modes:{views:{current:Object,available:Object},toolboxes:{current:Object,available:Object}}},api:Object}
+ * @type platform:{name:{text:String,link:String},version:{text:String,link:String},logo:{text:String,link:String},author:{text:String,link:String},license:{text:String,link:String}},instructions:{set:Array<{*}>,custom:Array<{*}>,categories:Array{String},icons:Array{*}},execution:{stepSize:Number,instructionsDelay:Number,instructionsMinimumPause:Number,instructionsAnimationFramePause:Number,precode:String,monitors:Array<{breakpoint:Boolean}>,postcode:String,prerun:Function,postrun:Function,inputDefault:String,basepath:String,guides:{imageUrl:String,size:Integer},breaktouiInterval:Number,current:{stepped:Number,sandboxProperties:Array<String>,animate:Boolean,animatedTime:Number,precode:{running:Boolean,standby:Boolean},usercode:{running:Boolean},postcode:{running:Boolean},guideCache:{imageUrl:String,imageObj:Object},highlight:{lineNumber:Number,reason:String},monitors:Array<{value:*,oldValue:*,count:Number}>,inputRaw:String,inputPosition:Number,watchesChanged:Array<String>,layersChanged:Array<Number|String>,programCounter:Number,startTime:Number,trace:{stack:Array<*>,current:Integer,replaced:Array<{name:String,original:Function}>},timeoutHandlers:Array<{*}>,audioHandlers:Array<Number>,pauseHandler:Number,status:String,kill:Boolean,breaktoui:Boolean,breaktouiHandler:Number}},ide:{last_id:Number,blocks:{changes:{stack:Array<{*}>,current:Number},flowVisible:Boolean,multiselect:Boolean,lastSelected:HTMLElement},write:Object},handlers:{keyboard:{key:Number,lastKey:String},pointer:{x:Number,y:Number,lastX:Number,lastY:Number,pressed:Boolean}},updateOnViewSwitch:Boolean,lastChange:Number,lastRun:Number,lastSave:Number,lastAutosave:Number,ready:String,kill:Boolean},session:{editor:Object,breakpointHandler:{Boolean|Number},moveBlocksHandler:Boolean,lastRunLineNumber:Number,time:Number,instructionsCount:Number,linesCount:Number,runFrom:String,disableCode:Boolean},backend:{whiteboard:{element:HTMLElement,width:Number,height:Number,axis:{origin:Array<{x:Number,y:Number}>,scale:Array<{x:Number,y:Number}>,userSelection:Number,predefined:Array<{name:String,x:Number,y:Number,scale:Array<{x:Number,y:Number}>,initial:Boolean}>},layers:{available:Object,current:Object,top:Object,bottom:Object},guides:Object,axis:Object},windows:{available:Array<HTMLElement>,current:HTMLElement},io:Object,sound:Object},events:Object},ui:Array<{element:Object,loading:Object,msgBox:Object,maxDragForSetup:Number,blocks:{styles:Object,forceSetup:boolean,setup:{current:Object},floating:{blockEl:HTMLElement,sourceBlockEl:HTMLElement,movesCount:Number,mouse:{x:Number,y:Number}}},write:Object,debug:Object,translations:{available:Array<{id:String,name:String,menuVisible:Boolean}>,current:Array<*>},themes:{available:Array<{id:String,name:String}>,current:Array<*>,menuVisible:Boolean},minWindowHeight:Number,codeFileName:String,toolboxWindow:HTMLElement,downloadLayersInterval:Number,downloadLayersColumns:Number,preventExit:Boolean,disableKeyboardShortcuts:Boolean,scrollTimeout:Object,guideVisible:Boolean,gridVisible:Boolean,gridStep:Number,setupType:String,filemenuVisible:Boolean}>,debug:Object,setup:{defaultView:String,defaultToolbox:String,defaultFontSize:Number,defaultFontWidth:Number,undoDepth:Number,tabSize:Number,autosaveInterval:Number},modes:{views:{current:Object,available:Object},toolboxes:{current:Object,available:Object}}},api:Object}
  */
 
 (() => {
@@ -53,7 +53,7 @@ Object.assign($e, {
 	},
 	execution: {
 		stepSize: 1,
-		instructionsPause: 200,
+		instructionsDelay: 200,
 		instructionsMinimumPause: 100,
 		instructionsAnimationFramePause: 17, // This is 60Hz which is what a human eye can perceive
 		inputDefault: "",
@@ -85,6 +85,8 @@ Object.assign($e, {
 			postcode: {
 				running: false,
 			},
+			prerun: undefined,
+			postrun: undefined,
 			inputRaw: "",
 			inputPosition: 0,
 			programCounter: -1,
@@ -109,6 +111,9 @@ Object.assign($e, {
 			breaktoui: false,
 			breaktouiHandler: undefined,
 			lastRunLineNumber: -1,
+			linesCount: undefined,
+			time: undefined,
+			instructionsCount: undefined,
 		},
 	},
 	ide: {
@@ -119,6 +124,8 @@ Object.assign($e, {
 				current: -1,
 			},
 			flowVisible: false,
+			multiselect: false,
+			lastSelected: undefined,
 		},
 		write: {},
 	},
@@ -142,8 +149,10 @@ Object.assign($e, {
 		lastChange: 0,
 		lastRun: 0,
 		lastSave: 0,
+		lastAutosave: 0,
 		ready: false, // This overwriteConsos the value from eseecode.js, both are set to false to indicate it is loading
 		breakpointHandler: undefined,
+		moveBlocksHandler: undefined,
 		runFrom: undefined,
 	},
 	backend: {
@@ -232,6 +241,7 @@ Object.assign($e, {
 		defaultFontWidth: 6,
 		undoDepth: 20,
 		tabSize: 4,
+		autosaveInterval: 60,
 	},
 	modes: {
 		views: {

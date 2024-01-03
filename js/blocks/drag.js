@@ -76,18 +76,28 @@ $e.ui.blocks.cancelFloatingBlock = (eventOrIsSetup = false) => {
 $e.ui.blocks.modifyEventStart = (event) => {
 	if (!event.isPrimary) return;
 	if (event && event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
+	event.stopPropagation();
+	if ($e.session.moveBlocksHandler) {
+		$e.ui.blocks.moveBlocksEventAccept(event);
+		return;
+	}
 	if ($e.session.breakpointHandler) {
 		$e.ui.debug.addBreakpointEventAccept(event);
 		return;
 	}
+	const clickedBlockEl = event.target.closest(".block:not(.subblock)");
+	if (!clickedBlockEl) return console.error("This should never happen in $e.ui.blocks.modifyEventStart");
+	const isToolbox = !!clickedBlockEl.closest("#toolbox");
 	const level = $e.modes.views.current.id;
+	if (!isToolbox && $e.ide.blocks.multiselect) {
+		if (level === "level1") return;
+		$e.ui.blocks.selectBlock(event);
+		return;
+	}
 	if (level === "level1" && $e.execution.isRunning()) return; // Wait for the previous block addition to finish, otherwise superseding animations will break the execution
 	$e.ui.unhighlight();
 	// At this point we cannot know if the user wants to drag the block or wants to set up the block, so we must take both and see later (when the event is mousemove or mouseup)
-	const clickedBlockEl = event.target.closest(".block:not(.subblock)");
-	if (!clickedBlockEl) return console.error("This should never happen in $e.ui.blocks.modifyEventStart");
 	if ($e.ui.blocks.getFloatingBlockAction()) $e.ui.blocks.modifyEventAccept(); // If two blocks are clicked too fast (before the animation is finished), make sure we add the previous one	const level = $e.modes.views.current.id;
-	const isToolbox = !!clickedBlockEl.closest("#toolbox");
 	$e.ui.blocks.cancelFloatingBlock();
 	if (isToolbox) {
 		// Cancel adding block if it is disabled
@@ -377,7 +387,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 			$e.execution.stop();
 			$e.session.runFrom = "level1_add_block";
 			if ($e.execution.getProgramCounter() > 0) {
-				$e.ide.execute(false, true, true, lastStep + 1); // Run immediately to the current position, then run the next instruction with animation
+				$e.ide.execute(false, true, true, lastStep); // Run immediately to the current position, then run the next instruction with animation
 				await new Promise(function waitUntilStepped(r) { // Wait until execution has reached the target step. We must run this async, otherwise it freezes the execution and doesn't return here
 					if (!$e.execution.isStepped()) setTimeout(() => waitUntilStepped(r), 10);
 					else r();

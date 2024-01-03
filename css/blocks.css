@@ -219,7 +219,19 @@
 	filter: invert(100%);
 	border-radius: var(--huge-radius); /* Keep this below .view-panel .block:last-child */
 }
-.view-panel .block.setupCandidate.subblock > .icon {
+.view-panel .block.subblock.setupCandidate,
+.view-panel .block.subblock.setupCandidate > .icon {
+	border-radius: var(--small-radius);
+}
+.view-panel .block.subblock.setupCandidate > .icon {
+	filter: contrast(100%);
+}
+.view-panel .block.selected,
+.view-panel .block.selected > .icon {
+	filter: invert(100%);
+	border-radius: var(--small-radius);
+}
+.view-panel .block.subblock.selected > .icon {
 	filter: contrast(100%);
 }
 .block .countdown {
@@ -236,6 +248,12 @@
 	font-weight: bold;
 	color: var(--broken-white);
 	background-color: var(--error-color);
+}
+#view-blocks.multiselect .block > .icon {
+	border: var(--flow-border-size) dashed var(--flow-color);
+}
+#view-blocks.multiselect .block:hover > .icon {
+	border-style: dotted;
 }
 #view-blocks-tip {
 	padding: 50% var(--big-space);
@@ -288,9 +306,6 @@
 .view-panel,
 .toolbox-panel {
 	cursor: default;
-}
-.addBreakpointHandler .view-panel {
-	cursor: crosshair;
 }
 .toolbox-panel .block {
 	display: inline-block;

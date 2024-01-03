@@ -730,7 +730,7 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "executespeed":
             currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-execute-instructionsPause-input";
+            currentGuideStep.argument = "toolbox-debug-execute-instructionsDelay-input";
             break;
         case "breakpoints":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {

@@ -118,8 +118,9 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#themes-select").title = _("Select theme");
 	$e.ui.element.querySelector("#logo").title = _($e.platform.name.text);
 	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.version.link) + "', '_blank')\"\">" + _($e.platform.version.text) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license.link) + "', '_blank')\">" + _($e.platform.license.text) + "</span></div>";
-	$e.ui.element.querySelector("#loadcode").value = _("Load code");
-	$e.ui.element.querySelector("#savecode").value = _("Save code");
+	$e.ui.element.querySelector("#loadcode").textContent = _("Load code");
+	$e.ui.element.querySelector("#savecode").textContent = _("Save code");
+	$e.ui.element.querySelector("#restorecode").textContent = _("Restore");
 	$e.ui.element.querySelector("#whiteboard").title = _("Whiteboard");
 	$e.ui.element.querySelector("#view-blocks").title = _("View Blocks");
 	$e.ui.element.querySelector("#view-write").title = _("View Write");
@@ -130,6 +131,11 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#button-reset").title = _("Reset");
 	$e.ui.element.querySelector("#button-redo").title = _("Redo");
 	$e.ui.element.querySelector("#view-tabs-title").textContent = _("Views") + ": ";
+	$e.ui.element.querySelector("#view-blocks-tabs-flow").title = _("Toggle between code style and flow style");
+	$e.ui.element.querySelector("#view-blocks-tabs-multiselect").title = _("Toggle between single block and multiple block selection");
+	$e.ui.element.querySelector("#view-blocks-tabs-move").title = _("Move selected blocks");
+	$e.ui.element.querySelector("#view-blocks-tabs-duplicate").title = _("Duplicate selected blocks");
+	$e.ui.element.querySelector("#view-blocks-tabs-remove").title = _("Remove selected blocks");
 	$e.ui.element.querySelector("#toolbox-tabs-setup").title = _("Setup");
 	$e.ui.element.querySelector("#toolbox-tabs-debug").textContent = _("Debug");
 	$e.ui.element.querySelector("#toolbox-tabs-window").textContent = _("Window");
@@ -152,7 +158,7 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#toolbox-debug-execute-stats").textContent = "";
 	$e.ui.element.querySelector("#toolbox-debug-execute-step-backwards").title = _("Run backwards to undo the last instruction");
 	$e.ui.element.querySelector("#toolbox-debug-execute-step-forward").title = _("Run only the next instruction");
-	$e.ui.element.querySelector("#toolbox-debug-execute-instructionsPause").title = _("Execution speed");
+	$e.ui.element.querySelector("#toolbox-debug-execute-instructionsDelay").title = _("Execution speed");
 	$e.ui.element.querySelector("#toolbox-debug-command-input").title = _("Command");
 	$e.ui.element.querySelector("#toolbox-debug-command-button").title = _("Run");
 	$e.ui.element.querySelector("#toolbox-setup").title = _("Setup toolbox");

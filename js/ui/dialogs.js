@@ -130,7 +130,7 @@ $e.ui.msgBox.close = () => {
 		if (id > 0) {
 			$e.ui.element.querySelector("#msgBoxWrapper" + (id - 1)).focus();
 		} else if ($e.modes.views.current.type === "write") {
-			ace.edit("view-write").focus();
+			$e.session.editor.focus();
 		}
 	}
 };

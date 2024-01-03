@@ -39,8 +39,8 @@ $e.ui.init = () =>  {
 						<div class="separator"></div>\
 						<div id="toolbox-debug-execute-execution-title" class="toolbox-title"><span id="toolbox-debug-execute-execution-title-name" class="toolbox-title-name"></span><span id="toolbox-debug-execute-execution-help" class="toolbox-help"></span></div>\
 						<div id="toolbox-debug-execute-step-buttons" class="toolbox-cell">\
-							<div id="toolbox-debug-execute-instructionsPause">\
-								<span id="toolbox-debug-execute-instructionsPause-before"></span><input id="toolbox-debug-execute-instructionsPause-input" type="range" min="1" max="1000" value="' + $e.execution.instructionsPause + '" onchange="$e.execution.updateInstructionsPause()" /><span id="toolbox-debug-execute-instructionsPause-after"></span>\
+							<div id="toolbox-debug-execute-instructionsDelay">\
+								<span id="toolbox-debug-execute-instructionsDelay-before"></span><input id="toolbox-debug-execute-instructionsDelay-input" type="range" min="1" max="1000" value="' + $e.execution.instructionsDelay + '" /><span id="toolbox-debug-execute-instructionsDelay-after"></span>\
 							</div>\
 							<div id="toolbox-debug-execute-step">\
 								<button id="toolbox-debug-execute-step-backwards" class="button"></button>\
@@ -50,37 +50,34 @@ $e.ui.init = () =>  {
 						<div id="toolbox-debug-execute-stats" class="toolbox-cell"></div>\
 					</div>\
 					<div id="toolbox-setup" class="panel-column">\
-						<br />\
 						<div id="translations">\
-							<div id="translations-translator"></div><br />\
+							<div id="translations-translator"></div>\
 							<div id="translations-switch">\
 								<span id="translations-title"></span>\
-								<select id="translations-select" onChange="$e.ui.translations.switch(this.value)"></select>\
+								<select id="translations-select"></select>\
 							</div>\
 						</div>\
-						<br />\
 						<div id="themes">\
 							<div id="themes-switch">\
 								<span id="themes-title"></span>\
-								<select id="themes-select" onChange="$e.ui.themes.switch(this.value)"></select>\
+								<select id="themes-select"></select>\
 							</div>\
 						</div>\
-						<br />\
 						<div id="filemenu">\
-							<input type="button" id="loadcode" name="loadfile" />\
-							<input type="button" id="savecode" name="savefile" />\
+							<button id="loadcode" class="button"></button>\
+							<button id="savecode" class="button"></button>\
+							<button id="restorecode" class="button"></button>\
 						</div>\
-						<br />\
 						<div id="setup-grid">\
 							<input id="setup-grid-enable" type="checkbox" checked /><label id="setup-grid-divisions-title" for="setup-grid-enable"></label>\
-							<input id="setup-grid-divisions" type="number" onchange="$e.ui.updateGridDivisions()" value="15" /><br /><select id="setup-grid-coordinates" onchange="$e.ui.changeAxis()"></select><br />\
+							<input id="setup-grid-divisions" type="number" value="15" /><br />\
+							<select id="setup-grid-coordinates"></select><br />\
 							<label id="setup-guide-enable-title" for="setup-guide-enable"></label><input id="setup-guide-enable" type="checkbox" checked />\
 						</div>\
-						<br />\
 						<div id="toolbox-setup-author"></div>\
 					</div>\
 				</div>\
-				<div id="toolbox-debug-command"><form id="toolbox-debug-command-form" onsubmit="$e.ui.debug.command();return false;">\
+				<div id="toolbox-debug-command"><form id="toolbox-debug-command-form">\
 					<input id="toolbox-debug-command-input" type="text" />\
 					<button id="toolbox-debug-command-button" class="button"></button>\
 				</form></div>\
@@ -96,7 +93,13 @@ $e.ui.init = () =>  {
 					<button id="view-tabs-maximize" class="tab"></button>\
 				</div>\
 				<div id="view-content" class="program" translate="no">\
-					<button id="view-blocks-toggle" class="tab"></button>\
+					<div id="view-blocks-tabs" class="tabs">\
+						<button id="view-blocks-tabs-flow" class="tab"></button>\
+						<button id="view-blocks-tabs-multiselect" class="tab"></button>\
+						<button id="view-blocks-tabs-move" class="tab hide"></button>\
+						<button id="view-blocks-tabs-duplicate" class="tab hide"></button>\
+						<button id="view-blocks-tabs-remove" class="tab hide"></button>\
+					</div>\
 					<div id="view-blocks" class="panel-column"></div>\
 					<div id="view-write" class="panel-column"></div>\
 				</div>\
@@ -130,14 +133,21 @@ $e.ui.init = () =>  {
 		"toolbox-tabs-debug": () => $e.ui.switchToolboxMode("debug"),
 		"loadcode": $e.ui.loadCode,
 		"savecode": $e.ui.saveCode,
+		"restorecode": $e.ide.loadAutosave,
+		"translations-select": (event) => $e.ui.translations.switch(event.target.value),
+		"themes-select": (event) => $e.ui.themes.switch(event.target.value),
 		"setup-grid-enable": $e.ui.toggleGrid,
 		"setup-guide-enable": $e.toggleGuideFromUI,
+		"setup-grid-coordinates": $e.ui.changeAxis,
+		"setup-grid-divisions": $e.ui.updateGridDivisions,
 		"toolbox-debug-layers-title-toggles-checkbox": $e.ui.debug.selectAllNoneLayers,
 		"toolbox-debug-breakpoint-add": $e.ui.debug.addBreakpoint,
 		"toolbox-debug-watch-add": $e.ui.debug.addWatch,
 		"toolbox-debug-analyzer-title-toggles-checkbox": $e.ui.debug.enableAllNoneBreakpoints,
+		"toolbox-debug-execute-instructionsDelay-input": $e.execution.updateInstructionsDelay,
 		"toolbox-debug-execute-step-backwards": () => $e.ide.runSteps(-1),
 		"toolbox-debug-execute-step-forward": $e.ide.runSteps,
+		"toolbox-debug-command-form": () => { $e.ui.debug.command(); return false; },
 		"toolbox-debug-command-button": $e.ui.debug.command,
 		"view-tabs-restore-toolbox": $e.ui.restoreToolbox,
 		"view-tabs-level1": () => $e.ui.switchViewModeFromUI("level1"),
@@ -145,7 +155,11 @@ $e.ui.init = () =>  {
 		"view-tabs-level3": () => $e.ui.switchViewModeFromUI("level3"),
 		"view-tabs-level4": () => $e.ui.switchViewModeFromUI("level4"),
 		"view-tabs-maximize": $e.ui.resizeView,
-		"view-blocks-toggle": $e.ui.blocks.toggleFlow,
+		"view-blocks-tabs-flow": $e.ui.blocks.flowToggle,
+		"view-blocks-tabs-multiselect": $e.ui.blocks.multiselectToggle,
+		"view-blocks-tabs-move": $e.ui.blocks.moveBlocksEventStart,
+		"view-blocks-tabs-duplicate": $e.ui.blocks.duplicateBlocks,
+		"view-blocks-tabs-remove": $e.ui.blocks.removeBlocks,
 		"button-undo": $e.ui.undo,
 		"button-execute": $e.ui.execute,
 		"button-pause": $e.ui.pauseExecution,
@@ -156,6 +170,9 @@ $e.ui.init = () =>  {
 		"whiteboard-tabs-download-button": $e.ui.downloadWhiteboard,
 	}).forEach(([ id, call ]) => {
 		const el = $e.ui.element.querySelector("#" + id);
-		el.addEventListener(el.type == "checkbox" ? "change" : "click", call);
+		let listenerType = "click";
+		if (el.type == "checkbox" || el.type == "range" || el.tagName == "SELECT") listenerType = "change";
+		else if (el.tagName == "FORM") listenerType = "submit";
+		el.addEventListener(listenerType, call);
 	}), 0); // Make it asynchronous so it gives time for the DOM to be created
 };
