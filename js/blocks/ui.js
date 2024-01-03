@@ -202,6 +202,8 @@ $e.ui.blocks.moveBlocksEventMove = (event) => {
  * @example $e.ui.blocks.moveBlocksEventAccept()
  */
 $e.ui.blocks.moveBlocksEventAccept = (event) => {
+	if (event.isPrimary !== undefined && !event.isPrimary) return;
+	$e.ui.blocks.moveBlocksEventMove(event);
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	const clickedBlockEl = viewEl.querySelector(".block.placeholder-before, .block.placeholder-after")
 	if (!clickedBlockEl) return $e.ui.blocks.multiselectToggle(false);
