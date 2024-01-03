@@ -526,7 +526,7 @@ $e.ui.translations.current = {
 		"Toggle between single block and multiple block selection": "Cambia entre selección de bloques simple o múltiple",
 		"Duplicate selected blocks": "Duplica los bloques seleccionados",
 		"Remove selected blocks": "Elimina los bloques seleccionados",
-		"Restore": "Recuperar",
+		"Restore code": "Recuperar codi",
 		"Move selected blocks": "Mueve los bloques seleccionados",
 	}
 };

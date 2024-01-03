@@ -7,9 +7,9 @@
  * @example $e.ui.blocks.getFloatingBlockAction()
  */
 $e.ui.blocks.getFloatingBlockAction = () => {
-	if (!$e.ui.blocks.floating) return false;
-	const isToolbox = !$e.ui.blocks.floating.sourceBlockEl;
-	const blockEl = $e.ui.blocks.floating.blockEl;
+	if (!$e.ui.blocks.dragging || !$e.ui.blocks.dragging.blockEl) return false;
+	const isToolbox = !$e.ui.blocks.dragging.sourceBlockEl;
+	const blockEl = $e.ui.blocks.dragging.blockEl;
 	if (isToolbox) {
 		if ($e.modes.views.current.id == "level1") return "add";
 		else if (blockEl.classList.contains("addCandidate")) return "add";
@@ -30,10 +30,10 @@ $e.ui.blocks.getFloatingBlockAction = () => {
  * @example $e.ui.blocks.cleanFloatingBlockVisualEffects()
  */
 $e.ui.blocks.cleanFloatingBlockVisualEffects = (isMoving = false) => {
-	if (!$e.ui.blocks.floating) return;
-	const blockEl = $e.ui.blocks.floating.blockEl;
-	const sourceBlockEl = $e.ui.blocks.floating.sourceBlockEl;
-	const sourceSetupBlockEl = $e.ui.blocks.floating.sourceSetupBlockEl;
+	if (!$e.ui.blocks.dragging || !$e.ui.blocks.dragging.blockEl) return;
+	const blockEl = $e.ui.blocks.dragging.blockEl;
+	const sourceBlockEl = $e.ui.blocks.dragging.sourceBlockEl;
+	const sourceSetupBlockEl = $e.ui.blocks.dragging.sourceSetupBlockEl;
 	const oldPlaceholderEl = $e.ui.element.querySelector(".placeholder-before, .placeholder-after");
 	if (sourceBlockEl) sourceBlockEl.classList.remove("deleteCandidate", "setupCandidate", "moveCandidate", "addCandidate", "cancelCandidate");
 	if (sourceSetupBlockEl) sourceSetupBlockEl.classList.remove("setupCandidate");
@@ -63,7 +63,7 @@ $e.ui.blocks.cancelFloatingBlock = (eventOrIsSetup = false) => {
 	document.body.removeEventListener("pointercancel", $e.ui.blocks.cancelFloatingBlock);
 	if (eventOrIsSetup !== true) { // Event or false
 		$e.ui.blocks.cleanFloatingBlockVisualEffects();
-		$e.ui.blocks.floating = undefined;
+		$e.ui.blocks.dragging = undefined;
 	}
 };
 
@@ -108,23 +108,25 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		if (level == "level1") return; // In level1 blocks are not moved
 	}
 	const blockEl = $e.ide.blocks.clone(clickedBlockEl)
-	$e.ui.blocks.floating = {
+	$e.ui.blocks.dragging = {
 		mouse: { x: undefined, y: undefined },
 		movesCount: 0,
 		blockEl: blockEl,
 		sourceSetupBlockEl: undefined,
 		sourceSubblockEl: undefined,
-	}
+		lastPointedBlock: undefined,
+		lastPointedAfter: undefined,
+	};
 	if (!isToolbox) {
 		const sourceSetupBlockEl = event.target.closest(".block");
-		$e.ui.blocks.floating.sourceBlockEl = clickedBlockEl;
-		$e.ui.blocks.floating.sourceSetupBlockEl = sourceSetupBlockEl;
+		$e.ui.blocks.dragging.sourceBlockEl = clickedBlockEl;
+		$e.ui.blocks.dragging.sourceSetupBlockEl = sourceSetupBlockEl;
 		blockEl.classList.add("setupCandidate"); // Initially assume the block action is "setup"
 		sourceSetupBlockEl.classList.add("setupCandidate"); // Initially assume the block action is "setup"
 	} else {
 		// Remove countdown from floating block
-		const blockCountEl = $e.ui.blocks.floating.blockEl.querySelector(".countdown");
-		if (blockCountEl) $e.ui.blocks.floating.blockEl.removeChild(blockCountEl);
+		const blockCountEl = $e.ui.blocks.dragging.blockEl.querySelector(".countdown");
+		if (blockCountEl) $e.ui.blocks.dragging.blockEl.removeChild(blockCountEl);
 	}
 	blockEl.id = $e.backend.newblockId();
 	blockEl.removeEventListener("pointerdown", $e.ui.blocks.modifyEventStart);
@@ -154,16 +156,14 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		mainBodyEl.appendChild(blockEl); // We add it to #body so the .levelX class applies, which we need to get the block's size
 		// Try to drag the block pinned from the same position it was clicked
 		const clickedBlockElRect = clickedBlockEl.getBoundingClientRect();
-		$e.ui.blocks.floating.mouse.x = event.pageX - clickedBlockElRect.left - window.scrollX;
-		if ($e.isNumber($e.ui.blocks.floating.mouse.x) && $e.ui.blocks.floating.mouse.x > 0) {
-			$e.ui.blocks.floating.mouse.y = event.pageY - clickedBlockElRect.top - window.scrollY;
+		$e.ui.blocks.dragging.mouse.x = event.pageX - clickedBlockElRect.left - window.scrollX;
+		if ($e.isNumber($e.ui.blocks.dragging.mouse.x) && $e.ui.blocks.dragging.mouse.x > 0) {
+			$e.ui.blocks.dragging.mouse.y = event.pageY - clickedBlockElRect.top - window.scrollY;
 		} else {
 			// Android WebView (for embedding in Android app), doesn't take into acount scroll in getBoundingClientRect() when zooming
-			$e.ui.blocks.floating.mouse.x = undefined;
+			$e.ui.blocks.dragging.mouse.x = undefined;
 		}
 		blockEl.classList.add("floating");
-		$e.ui.blocks.floating.lastPointedBlock = undefined;
-		$e.ui.blocks.floating.lastPointedAfter = undefined;
 		$e.ui.blocks.modifyEventMove(event);
 		// firefox is unable to use the mouse event handler if it is called from HTML handlers, so here we go
 		document.body.addEventListener("pointermove", $e.ui.blocks.modifyEventMove);
@@ -173,32 +173,12 @@ $e.ui.blocks.modifyEventStart = (event) => {
 };
 
 /**
- * Moves a block with the mouse movemement
+ * Returns the pointer block and whether it is pointed before or after the block in a pointer movement
  * @private
  * @param {Object} event Event
- * @example document.body.removeEventListener("pointermove", $e.ui.blocks.modifyEventMove)
+ * @example $e.ui.blocks.getMovePointedBlock(event)
  */
-$e.ui.blocks.modifyEventMove = (event) => {
-
-	if (event.isPrimary !== undefined && !event.isPrimary) return;
-
-	if ($e.modes.views.current.id == "level1") return console.error("Invalid call to $e.ui.blocks.modifyEventMove from mode " + $e.modes.views.current.id); // This funcion is never triggered in level1
-
-	// Position the floating block
-	const blockEl = $e.ui.blocks.floating.blockEl;
-	let blockRect = blockEl.getBoundingClientRect();
-	const blockHeight = blockRect.height;
-	const blockWidth = blockRect.width;
-	if ($e.ui.blocks.floating.mouse.x !== undefined) {
-		blockEl.style.left = event.pageX - $e.ui.blocks.floating.mouse.x + "px";
-		blockEl.style.top = event.pageY - $e.ui.blocks.floating.mouse.y + "px";
-	} else {
-		blockEl.style.left = event.pageX - blockWidth / 2 + "px";
-		blockEl.style.top = event.pageY - blockHeight / 2 + "px";
-	}
-
-	$e.ui.blocks.floating.movesCount++; // If the block is dragged far and back, the user was not trying to setup the block, they just thought twice about moving the block
-
+$e.ui.blocks.getMovePointedBlock = (event) => {
 	// Calculate where the block would be dropped
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	let pointedBlock = $e.ui.blocks.getDropBlockFromPosition($e.obtainPosition(event));
@@ -208,9 +188,9 @@ $e.ui.blocks.modifyEventMove = (event) => {
 		pointingAfter = event.pageY >= pointedBlockRect.top + pointedBlockRect.height / 2;
 	}
 
-	if (pointedBlock === $e.ui.blocks.floating.lastPointedBlock && pointingAfter === $e.ui.blocks.floating.lastPointingAfter) return; // Do not us $e.ui.element.querySelector(".placeholder-before, .placeholder-after") as the pointed element might be quite different to the block eventually used
-	$e.ui.blocks.floating.lastPointedBlock = pointedBlock;
-	$e.ui.blocks.floating.lastPointedAfter = pointingAfter;
+	if (pointedBlock === $e.ui.blocks.dragging.lastPointedBlock && pointingAfter === $e.ui.blocks.dragging.lastPointingAfter) return; // Do not us $e.ui.element.querySelector(".placeholder-before, .placeholder-after") as the pointed element might be quite different to the block eventually used
+	$e.ui.blocks.dragging.lastPointedBlock = pointedBlock;
+	$e.ui.blocks.dragging.lastPointedAfter = pointingAfter;
 
 	if (pointedBlock === false) { // Pointing outside of the code view
 		
@@ -265,13 +245,48 @@ $e.ui.blocks.modifyEventMove = (event) => {
 
 	} else {
 		console.error("This pointedBlock value should not happen in $e.ui.blocks.modifyEventMove", pointedBlock);
+		return;
 	}
+	
+	return { pointedBlock, pointingAfter };
+};
+
+/**
+ * Moves a block with the pointer movemement
+ * @private
+ * @param {Object} event Event
+ * @example document.body.removeEventListener("pointermove", $e.ui.blocks.modifyEventMove)
+ */
+$e.ui.blocks.modifyEventMove = (event) => {
+
+	if (event.isPrimary !== undefined && !event.isPrimary) return;
+
+	if ($e.modes.views.current.id == "level1") return console.error("Invalid call to $e.ui.blocks.modifyEventMove from mode " + $e.modes.views.current.id); // This funcion is never triggered in level1
+
+	// Position the floating block
+	const blockEl = $e.ui.blocks.dragging.blockEl;
+	let blockRect = blockEl.getBoundingClientRect();
+	const blockHeight = blockRect.height;
+	const blockWidth = blockRect.width;
+	if ($e.ui.blocks.dragging.mouse.x !== undefined) {
+		blockEl.style.left = event.pageX - $e.ui.blocks.dragging.mouse.x + "px";
+		blockEl.style.top = event.pageY - $e.ui.blocks.dragging.mouse.y + "px";
+	} else {
+		blockEl.style.left = event.pageX - blockWidth / 2 + "px";
+		blockEl.style.top = event.pageY - blockHeight / 2 + "px";
+	}
+
+	$e.ui.blocks.dragging.movesCount++; // If the block is dragged far and back, the user was not trying to setup the block, they just thought twice about moving the block
+
+	const pointedBlockDetails = $e.ui.blocks.getMovePointedBlock(event);
+	if (!pointedBlockDetails) return;
+	const { pointedBlock, pointingAfter } = pointedBlockDetails;
 
 	// Clean previous movement visual traces
 	$e.ui.blocks.cleanFloatingBlockVisualEffects(true);
 
 	// Apply the adequate visual effects
-	const sourceBlockEl = $e.ui.blocks.floating.sourceBlockEl;
+	const sourceBlockEl = $e.ui.blocks.dragging.sourceBlockEl;
 	const isToolbox = !sourceBlockEl;
 	if (isToolbox) blockEl.classList.add("fromToolbox");
 	if (pointedBlock === undefined) { 
@@ -294,7 +309,7 @@ $e.ui.blocks.modifyEventMove = (event) => {
 
 	} else if (pointedBlock) {
 
-		if ($e.ui.blocks.floating.movesCount === 1 && blockEl.classList.contains("container")) blockEl.style.setProperty("--block-code-height-in-code", sourceBlockEl.getBoundingClientRect().height + "px"); // This is a trick to preserve the subblocks' height when the container is floating (example: while(false){if(true){goToCenter()}else{}}goToCenter() while dragging the if() the height would break in the floating block's empty subblock
+		if ($e.ui.blocks.dragging.movesCount === 1 && blockEl.classList.contains("container")) blockEl.style.setProperty("--block-code-height-in-code", sourceBlockEl.getBoundingClientRect().height + "px"); // This is a trick to preserve the subblocks' height when the container is floating (example: while(false){if(true){goToCenter()}else{}}goToCenter() while dragging the if() the height would break in the floating block's empty subblock
 		
 		// Add the placeholder to the calculated block
 		const placeholderClass = pointingAfter ? "placeholder-after" : "placeholder-before";
@@ -307,9 +322,9 @@ $e.ui.blocks.modifyEventMove = (event) => {
 				(!pointingAfter && pointedBlock === sourceBlockEl.nextElementSibling) ||
 				sourceBlockEl.contains(pointedBlock)
 			) { // Nothing changed: Note that moving a block right above or below has no effect
-				if ($e.ui.blocks.floating.movesCount <= $e.ui.maxDragForSetup) {
+				if ($e.ui.blocks.dragging.movesCount <= $e.ui.maxDragForSetup) {
 					blockEl.classList.add("setupCandidate");
-					const sourceSetupBlockEl = $e.ui.blocks.floating.sourceSetupBlockEl;
+					const sourceSetupBlockEl = $e.ui.blocks.dragging.sourceSetupBlockEl;
 					sourceSetupBlockEl.classList.add("setupCandidate");
 				} else {
 					blockEl.classList.add("cancelCandidate");
@@ -340,8 +355,8 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	let action = $e.ui.blocks.getFloatingBlockAction();
 	if (!action) return; // If the floatingBlock has already been added there's nothing to do here (this could happen if two blocks are added consecutively too quickly, before the first block's animation has finished)
-	const blockEl = $e.ui.blocks.floating.blockEl;
-	const sourceBlockEl = $e.ui.blocks.floating.sourceBlockEl;
+	const blockEl = $e.ui.blocks.dragging.blockEl;
+	const sourceBlockEl = $e.ui.blocks.dragging.sourceBlockEl;
 	const sourceParentBlock = sourceBlockEl ? sourceBlockEl.parentNode : undefined;
 	const sourceNextSibling = sourceBlockEl ? sourceBlockEl.nextSibling : undefined;
 	let targetBlockEl = blockEl; // Assume we will be acting on blockEl, change it in the few cases when we are not
@@ -374,8 +389,8 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 		targetBlockEl = sourceBlockEl;
 		$e.ui.blocks.removeFromCode(targetBlockEl);
 	} else if (action === "setup") {
-		targetBlockEl = $e.ui.blocks.floating.sourceSetupBlockEl;
-		if ($e.ui.blocks.floating.movesCount > $e.ui.maxDragForSetup || !$e.ui.blocks.setup.open(targetBlockEl, false)) action = "cancel";
+		targetBlockEl = $e.ui.blocks.dragging.sourceSetupBlockEl;
+		if ($e.ui.blocks.dragging.movesCount > $e.ui.maxDragForSetup || !$e.ui.blocks.setup.open(targetBlockEl, false)) action = "cancel";
 	} else if (action === "cancel") {
 		// Do nothing
 	} else return console.error("Invalid action in $e.ui.blocks.modifyEventAccept " + action);
@@ -426,7 +441,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
  */
 $e.ui.blocks.getDropBlockFromPosition = ({ x, y }) => {
 
-	$e.ui.blocks.floating.blockEl.style.pointerEvents = "none"; // Disable pointer events so it does not disturb document.elementFromPoint
+	if ($e.ui.blocks.dragging.blockEl) $e.ui.blocks.dragging.blockEl.style.pointerEvents = "none"; // Disable pointer events so it does not disturb document.elementFromPoint
 	let pointedEl = document.elementFromPoint(x, y);
 	if (!pointedEl || !document.querySelector("#view-blocks").contains(pointedEl)) return false; // The pointed block is not in the view-blocks element nor the view-blocks element itself
 
@@ -463,7 +478,7 @@ $e.ui.blocks.getDropBlockFromPosition = ({ x, y }) => {
 		});
 		distance += inc;
 	}
-	$e.ui.blocks.floating.blockEl.style.pointerEvents = ""; // Re-enable pointer events so it can be used to be added to the view
+	if ($e.ui.blocks.dragging.blockEl) $e.ui.blocks.dragging.blockEl.style.pointerEvents = ""; // Re-enable pointer events so it can be used to be added to the view
 	
 	return pointedBlock;
 

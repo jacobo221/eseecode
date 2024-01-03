@@ -15,6 +15,7 @@ $e.ide.changed = (resetProgramCounter = true) => {
 	$e.ui.unhighlight();
 	$e.ui.refreshUndo();
 	$e.ui.updateViewButtonsVisibility();
+	$e.ui.element.querySelector("#restorecode").classList.add("disabled");
 };
 
 /**

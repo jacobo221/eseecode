@@ -120,7 +120,7 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.version.link) + "', '_blank')\"\">" + _($e.platform.version.text) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license.link) + "', '_blank')\">" + _($e.platform.license.text) + "</span></div>";
 	$e.ui.element.querySelector("#loadcode").textContent = _("Load code");
 	$e.ui.element.querySelector("#savecode").textContent = _("Save code");
-	$e.ui.element.querySelector("#restorecode").textContent = _("Restore");
+	$e.ui.element.querySelector("#restorecode").textContent = _("Restore code");
 	$e.ui.element.querySelector("#whiteboard").title = _("Whiteboard");
 	$e.ui.element.querySelector("#view-blocks").title = _("View Blocks");
 	$e.ui.element.querySelector("#view-write").title = _("View Write");

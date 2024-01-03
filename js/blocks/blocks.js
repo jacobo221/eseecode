@@ -302,7 +302,7 @@ $e.ui.blocks.insertIntoCode = (blockEl, parentNode = null, nextSibling = null) =
 	const instruction = $e.instructions.set[instructionSetId];
 	$e.ui.blocks.removeBeginTip(); // Before adding first block delete view tip if it exists
 	if ($e.isNumber(instruction.maxInstances)) {
-		if (!$e.ui.blocks.getFloatingBlockAction() == "move") { // Make sure the block is not being moved instead of added)
+		if (!$e.ui.blocks.getDragginBlockAction() == "move") { // Make sure the block is not being moved instead of added)
 			instruction.countInstances++;
 			$e.ui.blocks.updateCount(instructionSetId);
 		}

@@ -303,7 +303,7 @@ $e.ui.reset = async () => {
 		$e.ui.toggleFullscreenIcon();
 		setInterval(() => {
 			if ($e.session.lastAutosave < $e.session.lastChange) $e.ide.autosave();
-		}, $e.setup.autosaveInterval);
+		}, $e.setup.autosaveInterval * 1000);
 	}
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();

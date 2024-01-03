@@ -38,7 +38,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 				$e.ui.write.resetView(code, false);
 			}
 		}
-		if (code) $e.ide.autosave(code);
+		if (code && $e.session.lastChange) $e.ide.autosave(code); // Only overwrite autosaved code if the user has entered code, thus not taking statements initial code for autosave
 		if (!justPrecode) await $e.backend.reset(false); // $e.backend.reset() calls $e.execution.execute() to load the precode, so prevent infinite loops
 		$e.debug.resetMonitors();
 		$e.ui.debug.resetLayers();

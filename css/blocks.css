@@ -249,10 +249,12 @@
 	color: var(--broken-white);
 	background-color: var(--error-color);
 }
-#view-blocks.multiselect .block > .icon {
+#view-blocks.multiselect:not(.moveBlocksHandler) .block.container,
+#view-blocks.multiselect:not(.moveBlocksHandler) .block:not(.subblock) > .icon {
 	border: var(--flow-border-size) dashed var(--flow-color);
 }
-#view-blocks.multiselect .block:hover > .icon {
+#view-blocks.multiselect:not(.moveBlocksHandler) .block.container:hover,
+#view-blocks.multiselect:not(.moveBlocksHandler) .block:not(.subblock):hover > .icon {
 	border-style: dotted;
 }
 #view-blocks-tip {
@@ -432,6 +434,10 @@
 	margin-left: calc(var(--row-margin) / 2);
 	height: 0.5em;
 	animation: fadeIn var(--default-transition-time);
+}
+#view-blocks.moveBlocksHandler .block.placeholder-before::before,
+#view-blocks.moveBlocksHandler .block.placeholder-after::after {
+	filter: invert(100%);
 }
 .setupBlock .visualValue {
 	display: initial;

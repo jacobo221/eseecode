@@ -113,10 +113,10 @@
 /* UI */
 
 
-#body.flow #view-blocks.multiselect .block > .icon {
+#body.flow #view-blocks.multiselect:not(.moveBlocksHandler) .block > .icon {
 	border-style: dashed;
 }
-#body.flow #view-blocks.multiselect .block:hover > .icon {
+#body.flow #view-blocks.multiselect:not(.moveBlocksHandler) .block:hover > .icon {
 	border-style: dotted;
 }
 

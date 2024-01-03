@@ -50,6 +50,7 @@ $e.ui.blocks.multiselectToggle = (multiple) => {
 		buttonEl.classList.remove("toggled");
 		viewEl.classList.remove("multiselect");
 	}
+	$e.ui.blocks.moveBlocksStop();
 	if (multiple === false) $e.ui.blocks.unselectAllBlocks();
 };
 
@@ -129,7 +130,7 @@ $e.ui.blocks.moveBlocksEventCancel = (event) => {
 		if (!event.isPrimary) return;
 		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
 	}
-	$e.ui.blocks.moveBlocksStop();
+	$e.ui.blocks.multiselectToggle(false);
 };
 
 /**
@@ -139,11 +140,13 @@ $e.ui.blocks.moveBlocksEventCancel = (event) => {
  */
 $e.ui.blocks.moveBlocksStop = () => {
 	$e.session.moveBlocksHandler = undefined;
-	const viewContentEl = $e.ui.element.querySelector("#view-content");
-	viewContentEl.classList.remove("moveBlocksHandler");
-	viewContentEl.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept);
+	const viewEl = $e.ui.element.querySelector("#view-blocks");
+	viewEl.classList.remove("moveBlocksHandler");
+	const oldPlaceholderEl = viewEl.querySelector(".placeholder-before, .placeholder-after");
+	if (oldPlaceholderEl) oldPlaceholderEl.classList.remove("placeholder-before", "placeholder-after");
+	viewEl.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept);
+	viewEl.removeEventListener("pointermove", $e.ui.blocks.moveBlocksEventMove);
 	document.body.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel);
-	$e.ui.blocks.multiselectToggle(false);
 };
 
 /**
@@ -153,10 +156,43 @@ $e.ui.blocks.moveBlocksStop = () => {
  */
 $e.ui.blocks.moveBlocksEventStart = () => {
 	$e.session.moveBlocksHandler = true; // Semaphor so keyboard shortcurs and events on blocks will not be handled
-	const viewContentEl = $e.ui.element.querySelector("#view-content");
-	viewContentEl.classList.add("moveBlocksHandler");
-	viewContentEl.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept); // click is also triggered by touchstart
+	const viewEl = $e.ui.element.querySelector("#view-blocks");
+	viewEl.classList.add("moveBlocksHandler");
+	$e.ui.blocks.dragging = {
+		lastPointedBlock: undefined,
+		lastPointedAfter: undefined,
+	}
+	viewEl.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept); // click is also triggered by touchstart
+	viewEl.addEventListener("pointermove", $e.ui.blocks.moveBlocksEventMove); // click is also triggered by touchstart
 	document.body.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel); // click is also triggered by touchstart
+};
+
+/**
+ * Moves multiple blocks from UI
+ * @private
+ * @example $e.ui.blocks.moveBlocksEventMove(event)
+ */
+$e.ui.blocks.moveBlocksEventMove = (event) => {
+
+	if (event.isPrimary !== undefined && !event.isPrimary) return;
+
+	if ($e.modes.views.current.id == "level1") return console.error("Invalid call to $e.ui.blocks.moveBlocksEventMove from mode " + $e.modes.views.current.id); // This funcion is never triggered in level1
+
+	const pointedBlockDetails = $e.ui.blocks.getMovePointedBlock(event);
+	if (!pointedBlockDetails) return;
+	const { pointedBlock, pointingAfter } = pointedBlockDetails;
+
+	const oldPlaceholderEl = $e.ui.element.querySelector(".placeholder-before, .placeholder-after");
+	if (oldPlaceholderEl) oldPlaceholderEl.classList.remove("placeholder-before", "placeholder-after");
+
+	if (
+		!pointedBlock ||
+		pointedBlock.classList.contains("selected") ||
+		(pointingAfter && pointedBlock.nextSibling && pointedBlock.nextSibling.classList.contains("selected")) ||
+		(!pointingAfter && pointedBlock.previousSibling && pointedBlock.previousSibling.classList.contains("selected"))
+	) return; // Nothing to do as there would be no changes
+	const placeholderClass = pointingAfter ? "placeholder-after" : "placeholder-before";
+	pointedBlock.classList.add(placeholderClass);
 };
 
 /**
@@ -166,18 +202,18 @@ $e.ui.blocks.moveBlocksEventStart = () => {
  * @example $e.ui.blocks.moveBlocksEventAccept()
  */
 $e.ui.blocks.moveBlocksEventAccept = (event) => {
-	const clickedBlockEl = event.target.closest(".block");
-	if (!clickedBlockEl) return $e.ui.blocks.moveBlocksStop();
-	if (clickedBlockEl.classList.contains("selected") && clickedBlockEl.nextSibling && clickedBlockEl.nextSibling.classList.contains("selected")) return $e.ui.blocks.moveBlocksStop();
+	const viewEl = $e.ui.element.querySelector("#view-blocks");
+	const clickedBlockEl = viewEl.querySelector(".block.placeholder-before, .block.placeholder-after")
+	if (!clickedBlockEl) return $e.ui.blocks.multiselectToggle(false);
 	let destParentNode = clickedBlockEl.parentNode;
-	let destNextSibling = clickedBlockEl.nextSibling;
-	if (clickedBlockEl.classList.contains(".subblock")) {
+	let destNextSibling = clickedBlockEl.classList.contains("placeholder-before") ? clickedBlockEl : clickedBlockEl.nextSibling;
+	if (clickedBlockEl.classList.contains("container")) {
 		const firstSubblock = clickedBlockEl.querySelector(".subblock");
 		destParentNode = firstSubblock;
-		destNextSibling = firstSubblock.firstChild;
-	} else if (clickedBlockEl.classList.contains(".subblock")) {
+		destNextSibling = firstSubblock.querySelector(".block");
+	} else if (clickedBlockEl.classList.contains("subblock")) {
 		destParentNode = clickedBlockEl;
-		destNextSibling = clickedBlockEl.firstChild;
+		destNextSibling = clickedBlockEl.querySelector(".block");
 	}
 	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
 	selectedBlocks.forEach((blockEl, i) => {
@@ -199,7 +235,6 @@ $e.ui.blocks.moveBlocksEventAccept = (event) => {
 	});
 	$e.ide.blocks.changed(); // Must be called after the last undo is added in the combine item
 	$e.ui.blocks.multiselectToggle(false);
-	$e.ui.blocks.moveBlocksStop();
 };
 
 /**

@@ -332,13 +332,13 @@ span.tab-title {
 #view-write {
 	position: relative;
 }
-#view-content.moveBlocksHandler,
+#view-blocks.moveBlocksHandler,
 #view-content.addBreakpointHandler,
 #view-content.addBreakpointHandler .ace_content {
 	cursor: crosshair;
 	filter: invert(90%);
 }
-#view-content.moveBlocksHandler label,
+#view-blocks.moveBlocksHandler label,
 #view-content.addBreakpointHandler label { /* This is explicitly mentioned as in Firefox 119 it will otherwise leave the default cursor on labels for some strange reason, but we do not want to reapply the invert(90%) filter again */
 	cursor: crosshair;
 }
