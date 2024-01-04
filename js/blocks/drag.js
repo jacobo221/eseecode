@@ -78,7 +78,7 @@ $e.ui.blocks.modifyEventStart = (event) => {
 	if (event && event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
 	event.stopPropagation();
 	if ($e.session.moveBlocksHandler) {
-		$e.ui.blocks.moveBlocksEventAccept(event);
+		$e.ui.blocks.multipleMoveEventAccept(event);
 		return;
 	}
 	if ($e.session.breakpointHandler) {
@@ -91,7 +91,7 @@ $e.ui.blocks.modifyEventStart = (event) => {
 	const level = $e.modes.views.current.id;
 	if (!isToolbox && $e.ide.blocks.multiselect) {
 		if (level === "level1") return;
-		$e.ui.blocks.selectBlock(event);
+		$e.ui.blocks.select(event);
 		return;
 	}
 	if (level === "level1" && $e.execution.isRunning()) return; // Wait for the previous block addition to finish, otherwise superseding animations will break the execution
@@ -396,7 +396,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 	} else return console.error("Invalid action in $e.ui.blocks.modifyEventAccept " + action);
 	if (action != "cancel") {
 		$e.session.updateOnViewSwitch = "blocks";
-		if (action === "add" || action === "move" || action === "setup") $e.ui.blocks.scrollToBlock(targetBlockEl);
+		if (action === "add" || action === "move" || action === "setup") $e.ui.blocks.scrollTo(targetBlockEl);
 		if (level === "level1") {
 			const lastStep = $e.execution.getProgramCounter(); // We need to save this as $e.execution.stop() will reser the programCounter
 			$e.execution.stop();

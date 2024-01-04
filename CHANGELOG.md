@@ -1,4 +1,4 @@
-## 4.1 (2024-01-03)
+## 4.1 (2024-01-04)
  *Milestone reached: Animate the guide movements, multiselect blocks, autosave*
  *   Every guide movement is now animated
  *   Multiselection of blocks to move, duplicate or delete them

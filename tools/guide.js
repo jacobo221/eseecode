@@ -542,7 +542,7 @@ async function guideNextStep(currentGuideStep, silent) {
                 block = block.nextSibling;
             }
             if (element) {
-                iframe.contentWindow.$e.ui.blocks.scrollToBlock(element, toolboxEl);
+                iframe.contentWindow.$e.ui.blocks.scrollTo(element, toolboxEl);
                 // Inject floatingBlock before going to next step
                 var currentMode = iframe.contentWindow.$e.modes.views.current;
                 if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
@@ -558,7 +558,7 @@ async function guideNextStep(currentGuideStep, silent) {
             var blockEl = iframe.contentWindow.$e.ide.blocks.getByPosition(viewEl, currentGuideStep.argument)
             if (blockEl) {
                 // Scroll to this block
-                iframe.contentWindow.$e.ui.blocks.scrollToBlock(blockEl);
+                iframe.contentWindow.$e.ui.blocks.scrollTo(blockEl);
                 // Inject floatingBlock before going to next step
                 var currentMode = iframe.contentWindow.$e.modes.views.current;
                 if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {

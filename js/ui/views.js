@@ -101,7 +101,6 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 	Object.values($e.modes.views.available).forEach(view => bodyEl.classList.remove(view.id)); // Remove level class if this is a level change
 	bodyEl.classList.add(id);
 	if (oldView.type == "blocks") {
-		$e.ui.blocks.multiselectToggle(false);
 		if (newView.type == "write") {
 			if ($e.session.updateOnViewSwitch && $e.session.updateOnViewSwitch !== "write") {
 				// Only reset the write view if changes were made in the blocks, this preserves the undo's

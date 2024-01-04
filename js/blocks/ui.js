@@ -5,9 +5,9 @@
  * @private
  * @param {!HTMLElement} blockEl Block
  * @param {!HTMLElement} [scrollEl] Element to scroll, by default it is the view blocks element
- * @example $e.ui.blocks.scrollToBlock($e.ui.element.querySelector("#block-1231231231")
+ * @example $e.ui.blocks.scrollTo($e.ui.element.querySelector("#block-1231231231")
  */
-$e.ui.blocks.scrollToBlock = (blockEl, scrollEl = $e.ui.element.querySelector("#view-blocks")) => {
+$e.ui.blocks.scrollTo = (blockEl, scrollEl = $e.ui.element.querySelector("#view-blocks")) => {
 	let blockHeight;
 	if (blockEl.getBoundingClientRect().height) blockHeight = blockEl.getBoundingClientRect().height;
 	else blockHeight = blockEl.getBoundingClientRect().bottom - blockEl.getBoundingClientRect().top;
@@ -35,23 +35,31 @@ $e.ui.blocks.flowToggle = () => {
 /**
  * Toggles between multiple and single blocks selection
  * @private
- * @param {Boolean} [multiple] If true enable multiple select, if false disable mutipleselect, otherwise toggle
+ * @param {Event|Boolean} [multipleOrEvent] If true enable multiselect, if false disable multiselect, otherwise toggle
  * @example $e.ui.blocks.multiselectToggle()
  */
-$e.ui.blocks.multiselectToggle = (multiple) => {
-	if (multiple !== true && multiple !== false) multiple = !$e.ide.blocks.multiselect; // Ignore Event
+$e.ui.blocks.multiselectToggle = (multipleOrEvent = !$e.ide.blocks.multiselect) => {
+	console.trace()
+	let multiselect;
+	if (multipleOrEvent instanceof Event) {
+		multiselect = !$e.ide.blocks.multiselect;
+	} else {
+		multiselect = multipleOrEvent;
+	}
 	const buttonEl = $e.ui.element.querySelector("#view-blocks-tabs-multiselect");
-	const multiselect = $e.ide.blocks.multiselect = multiple;
+	$e.ide.blocks.multiselect = multiselect;
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	if (multiselect) {
 		buttonEl.classList.add("toggled");
 		viewEl.classList.add("multiselect");
+		document.body.addEventListener("pointerdown", $e.ui.blocks.multiselectEventCancel);
 	} else {
 		buttonEl.classList.remove("toggled");
 		viewEl.classList.remove("multiselect");
+		$e.ui.blocks.multipleMoveCancel();
+		$e.ui.blocks.unselectAll();
+		document.body.removeEventListener("pointerdown", $e.ui.blocks.multiselectEventCancel);
 	}
-	$e.ui.blocks.moveBlocksStop();
-	if (multiple === false) $e.ui.blocks.unselectAllBlocks();
 };
 
 /**
@@ -70,11 +78,26 @@ $e.ui.blocks.toggleMultiselectButtons = (visible) => {
 };
 
 /**
+ * Cancels selection of multiple blocks
+ * @private
+ * @param {Object} event Event
+ * @example $e.ui.blocks.multiselectEventCancel()
+ */
+$e.ui.blocks.multiselectEventCancel = (event) => {
+	if (event.type !== "keydown") {
+		if (!event.isPrimary) return;
+		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
+	}
+	if (event.target.closest("#view-content")) return; // Ignore within view-content (because view-blocks tabs are contained in view-content) as this trigger is also listening in document-body so it would cancel all triggers within view-blocks
+	$e.ui.blocks.multiselectToggle(false);
+};
+
+/**
  * Unselects all blocks
  * @private
- * @example $e.ui.blocks.unselectAllBlocks()
+ * @example $e.ui.blocks.unselectAll()
  */
-$e.ui.blocks.unselectAllBlocks = () => {
+$e.ui.blocks.unselectAll = () => {
 	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
 	selectedBlocks.forEach(blockEl => blockEl.classList.remove("selected"));
 	$e.ide.blocks.lastSelected = undefined;
@@ -85,9 +108,9 @@ $e.ui.blocks.unselectAllBlocks = () => {
  * Selects or unselect a block in a multiselection
  * @private
  * @param {Object} event Event
- * @example $e.ui.blocks.selectBlock()
+ * @example $e.ui.blocks.select()
  */
-$e.ui.blocks.selectBlock = (event) => {
+$e.ui.blocks.select = (event) => {
 	const oldSelectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
 	const blockEl = event.target.closest(".block:not(.subblock)");
 	const selected = !blockEl.classList.contains("selected");
@@ -120,41 +143,26 @@ $e.ui.blocks.selectBlock = (event) => {
 };
 
 /**
- * Cancels movement of multiple blocks
- * @private
- * @param {Object} event Event
- * @example $e.ui.blocks.moveBlocksEventCancel()
- */
-$e.ui.blocks.moveBlocksEventCancel = (event) => {
-	if (event.type !== "keydown") {
-		if (!event.isPrimary) return;
-		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
-	}
-	$e.ui.blocks.multiselectToggle(false);
-};
-
-/**
  * Stops an asynchronous move blocks event
  * @private
- * @example $e.ui.blocks.moveBlocksStop()
+ * @example $e.ui.blocks.multipleMoveCancel()
  */
-$e.ui.blocks.moveBlocksStop = () => {
+$e.ui.blocks.multipleMoveCancel = () => {
 	$e.session.moveBlocksHandler = undefined;
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	viewEl.classList.remove("moveBlocksHandler");
 	const oldPlaceholderEl = viewEl.querySelector(".placeholder-before, .placeholder-after");
 	if (oldPlaceholderEl) oldPlaceholderEl.classList.remove("placeholder-before", "placeholder-after");
-	viewEl.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept);
-	viewEl.removeEventListener("pointermove", $e.ui.blocks.moveBlocksEventMove);
-	document.body.removeEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel);
+	viewEl.removeEventListener("pointerdown", $e.ui.blocks.multipleMoveEventAccept);
+	viewEl.removeEventListener("pointermove", $e.ui.blocks.multipleMoveEventMove);
 };
 
 /**
  * Starts movement of multiple blocks from UI
  * @private
- * @example $e.ui.blocks.moveBlocksEventStart()
+ * @example $e.ui.blocks.multiipleMoveEventStart()
  */
-$e.ui.blocks.moveBlocksEventStart = () => {
+$e.ui.blocks.multiipleMoveEventStart = () => {
 	$e.session.moveBlocksHandler = true; // Semaphor so keyboard shortcurs and events on blocks will not be handled
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	viewEl.classList.add("moveBlocksHandler");
@@ -162,21 +170,20 @@ $e.ui.blocks.moveBlocksEventStart = () => {
 		lastPointedBlock: undefined,
 		lastPointedAfter: undefined,
 	}
-	viewEl.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventAccept); // click is also triggered by touchstart
-	viewEl.addEventListener("pointermove", $e.ui.blocks.moveBlocksEventMove); // click is also triggered by touchstart
-	document.body.addEventListener("pointerdown", $e.ui.blocks.moveBlocksEventCancel); // click is also triggered by touchstart
+	viewEl.addEventListener("pointerdown", $e.ui.blocks.multipleMoveEventAccept); // click is also triggered by touchstart
+	viewEl.addEventListener("pointermove", $e.ui.blocks.multipleMoveEventMove); // click is also triggered by touchstart
 };
 
 /**
  * Moves multiple blocks from UI
  * @private
- * @example $e.ui.blocks.moveBlocksEventMove(event)
+ * @example $e.ui.blocks.multipleMoveEventMove(event)
  */
-$e.ui.blocks.moveBlocksEventMove = (event) => {
+$e.ui.blocks.multipleMoveEventMove = (event) => {
 
 	if (event.isPrimary !== undefined && !event.isPrimary) return;
 
-	if ($e.modes.views.current.id == "level1") return console.error("Invalid call to $e.ui.blocks.moveBlocksEventMove from mode " + $e.modes.views.current.id); // This funcion is never triggered in level1
+	if ($e.modes.views.current.id == "level1") return console.error("Invalid call to $e.ui.blocks.multipleMoveEventMove from mode " + $e.modes.views.current.id); // This funcion is never triggered in level1
 
 	const pointedBlockDetails = $e.ui.blocks.getMovePointedBlock(event);
 	if (!pointedBlockDetails) return;
@@ -199,11 +206,11 @@ $e.ui.blocks.moveBlocksEventMove = (event) => {
  * Moves multiple blocks after the clicked block
  * @private
  * @param {Object} event Event
- * @example $e.ui.blocks.moveBlocksEventAccept()
+ * @example $e.ui.blocks.multipleMoveEventAccept()
  */
-$e.ui.blocks.moveBlocksEventAccept = (event) => {
+$e.ui.blocks.multipleMoveEventAccept = (event) => {
 	if (event.isPrimary !== undefined && !event.isPrimary) return;
-	$e.ui.blocks.moveBlocksEventMove(event);
+	$e.ui.blocks.multipleMoveEventMove(event);
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	const clickedBlockEl = viewEl.querySelector(".block.placeholder-before, .block.placeholder-after")
 	if (!clickedBlockEl) return $e.ui.blocks.multiselectToggle(false);
@@ -242,9 +249,9 @@ $e.ui.blocks.moveBlocksEventAccept = (event) => {
 /**
  * Duplicates multiple blocks from UI
  * @private
- * @example $e.ui.blocks.duplicateBlocks()
+ * @example $e.ui.blocks.multipleDuplicate()
  */
-$e.ui.blocks.duplicateBlocks = () => {
+$e.ui.blocks.multipleDuplicate = () => {
 	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
 	selectedBlocks.forEach((blockEl, i) => {
 		let duplicateBefore = blockEl;
@@ -258,9 +265,9 @@ $e.ui.blocks.duplicateBlocks = () => {
 /**
  * Deletes multiple blocks from UI
  * @private
- * @example $e.ui.blocks.removeBlocks()
+ * @example $e.ui.blocks.multipleRemove()
  */
-$e.ui.blocks.removeBlocks = () => {
+$e.ui.blocks.multipleRemove = () => {
 	const selectedBlocks = Array.from($e.ui.element.querySelectorAll("#view-blocks .block.selected"));
 	selectedBlocks.forEach((blockEl, i) => {
 		blockEl.classList.remove("selected"); // Unselect so if they are restored with undo they do not appear as selected

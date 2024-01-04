@@ -392,7 +392,7 @@ $e.ui.highlight = (lineNumber, reason = "stepped") => {
 			blockEl.classList.add("highlight");
 			if (reason === "error") blockEl.classList.add("highlight-error");
 			else if (reason === "breakpointed") blockEl.classList.add("highlight-breakpoint");
-			$e.ui.blocks.scrollToBlock(blockEl);
+			$e.ui.blocks.scrollTo(blockEl);
 		}
 	} else if (mode == "write") {
 		let style;
@@ -435,7 +435,7 @@ $e.ui.keyboardShortcuts = async (event) => {
 	if (event.key == "Escape") {
 		if ($e.session.moveBlocksHandler) {
 			isShortcut = true;
-			$e.ui.blocks.moveBlocksEventCancel(event);
+			// It is cancelled within multiselectToggle later in this function
 		} else if ($e.session.breakpointHandler) {
 			isShortcut = true;
 			$e.ui.debug.addBreakpointEventCancel(event);
@@ -450,7 +450,6 @@ $e.ui.keyboardShortcuts = async (event) => {
 			isShortcut = true;
 			$e.ui.blocks.cancelFloatingBlock();
 		}
-		$e.ui.blocks.multiselectToggle();
 	} else if (event.ctrlKey && event.key == "o") { // CTRL+O
 		if ($e.ui.disableKeyboardShortcuts) return;
 		isShortcut = true;
@@ -486,7 +485,9 @@ $e.ui.keyboardShortcuts = async (event) => {
 			}
 		}
 	}
-	if (!isShortcut) {
+	if (isShortcut) {
+		$e.ui.blocks.multiselectToggle(false);
+	} else {
 		// Not a valid eSeeCode shortcut, call the keyboard handler for the user code to parse it
 		$e.backend.events.keyboard(event);
 	}
@@ -601,8 +602,8 @@ $e.ui.undo = async (redo) => {
  * @private
  * @example $e.ui.redo()
  */
-$e.ui.redo = () => {
-	$e.ui.undo(true);
+$e.ui.redo = async () => {
+	await $e.ui.undo(true);
 };
 
 /**
