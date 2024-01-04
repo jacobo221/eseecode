@@ -39,7 +39,6 @@ $e.ui.blocks.flowToggle = () => {
  * @example $e.ui.blocks.multiselectToggle()
  */
 $e.ui.blocks.multiselectToggle = (multipleOrEvent = !$e.ide.blocks.multiselect) => {
-	console.trace()
 	let multiselect;
 	if (multipleOrEvent instanceof Event) {
 		multiselect = !$e.ide.blocks.multiselect;
