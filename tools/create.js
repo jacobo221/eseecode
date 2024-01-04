@@ -45,7 +45,6 @@
 			"Force block setup when adding instructions in Drag mode.": "Forzar la configuración de bloques al agregar instrucciones en el modo de arrastre.",
 			"Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default.": "Selecciona cómo ver la configuración de bloques. En la vista de arrastre, los bloques siempre se configuran visualmente de forma predeterminada, pero en la vista de construcción, puedes decidir si mostrar la configuración de texto de forma predeterminada o la interfaz visual de forma predeterminada.",
 			"Decide whether the code console should be maximized initially.": "Decide si la consola de código debe estar maximizada inicialmente.",
-			"Set the amount of milliseconds to delay every time an instruction is executed.": "Establece la cantidad de milisegundos para el retraso cada vez que se ejecuta una instrucción.",
 			"Pause execution every time an instruction is run, to help debugging.": "Pausar la ejecución cada vez que se ejecuta una instrucción, para ayudar en la depuración.",
 			"Comma-separated list variables to observe.<br>Example: index,question,answer": "Lista de variables separadas por comas para observar.<br>Ejemplo: índice, pregunta, respuesta",
 			"Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25": "Lista de puntos de interrupción (número de línea) y/o puntos de observación (interrumpir cuando cambia el valor de la variable), separados por comas.<br>Ejemplo: índice,4,10, pregunta, respuesta, 25",
@@ -83,8 +82,25 @@
 			"Share": "Compartir",
 			"Resolution": "Resolución",
 			"Resolution in the whiteboard, the number applies to both width and height": "Resolución de la pizarra, el número se aplica a la resolución horizontal y a la vertical",
-			"Display flow chart?": "¿Mostrar diagrama de flujo?",
-			"Display the blocks as a flow chart initially": "Mostrar inicialmente los bloques como diagrama de flujo",
+			"Autosave periodicity (in seconds)": "Periodicidad del autoguardado (en segundos)",
+			"The user code will be internally autosaved with this frequency. Set to 0 to disable.": "El código de usuario se autoguardará internamente con esta frecuencia. 0 para deshabilitar.",
+			"Blocks display style": "Estilo de visualización de los bloques",
+			"Style in which the blocks are displayed.": "Estilo con el que se visualizarán los bloques.",
+			"Display blocks style toggle": "Mostrar el selector de estilo de bloques",
+			"Allow to switch style.": "Permitir cambiar el estilo de visualización de los bloques.",
+			"Allow blocks multiselect": "Permitir seleccionar múltiples bloques",
+			"Allow to select multiple blocks to perform actions.": "Permitir seleccionar múltiples bloques para realizar acciones.",
+			"Set the amount of milliseconds gap between two instructions. Some of this time will be use to animate whiteboard movements and some to distinct the end of a movement with the beginning of the next (see the next configuration item).": "Establece la cantidad de milisegundos entre la ejecución de dos instrucciones. Parte de este tiempo se usará para animar el movimiento en la pizarra y parte para distinguir el final del movimiento de una instrucción del inicio del movimiento de la siguiente instrucción (ver el siguiente elemento de configuración).",
+			"Milliseconds of pause between instructions": "Milisegundos de pausa entre dos instrucciones",
+			"Set the amount of milliseconds to pause execution between two instructions. This time must be contained within the time defined in the previous configuration item. Combining the two one can achieve no movement animation, no pause, or any combination in between.": "Establece la cantidad de milisegundos que se pausa la ejecución entre dos instrucciones. Este tiempo debe estar contenido dentro del tiempo definido en el anterior elemento de configuración. Combinando los dos se puede conseguir que no haya animación de los movimientos, que no haya pausa entre instrucciones, o cualquier combinación entre las dos.",
+			"Amount of instructions run on every stepped execution": "Número de instrucciones a ejecutar en cada ejecución paso a paso",
+			"Define the amount of instructions that will be run every time the user requests to execute one step forward/backwards from the debug panel.": "Define el número de instrucciones que se ejecutan hacia adelante o hacia atrás cada vez que se solicita la ejecución de un paso en el panel de depuración.",
+			"Display button to restore autosaved code": "Mostrar botón para restaurar el último código autoguardado",
+			"Allow to restore the last autosaved code.": "Permitir restaurar el último código autoguardado.",
+			"Restore autosaved code at initialization": "Al iniciar restaurar el último código autoguardado.",
+			"Load the last autosaved code at initialization.": "Al iniciar restaurar el último código autoguardado.",
+			"Autosaved code expration (in seconds)": "Caducidad del código autoguardado (en segundos)",
+			"Time after which autosaved code cannot be restored. Set to 0 to never expire.": "Tiempo a partir del cual el código autoguardado no se puede restaurar. Poner 0 para no caducar nunca",
 		},
 		"ca": {
 			"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
@@ -130,7 +146,6 @@
 			"Force block setup when adding instructions in Drag mode.": "Força la configuració de blocs en afegir instruccions en el mode d'arrossegament.",
 			"Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default.": "Selecciona com veure la configuració de blocs. A la vista d'arrossegament, els blocs sempre es configuren visualment de forma predeterminada, però a la vista de construcció, pots decidir si mostrar la configuració de text de forma predeterminada o la interfície visual de forma predeterminada.",
 			"Decide whether the code console should be maximized initially.": "Decideix si la consola de codi ha d'estar a la màxima grandària inicialment.",
-			"Set the amount of milliseconds to delay every time an instruction is executed.": "Estableix la quantitat de milisegons d'espera cada vegada que s'executa una instrucció.",
 			"Pause execution every time an instruction is run, to help debugging.": "Pausa l'execució cada vegada que s'executa una instrucció, per ajudar a la depuració.",
 			"Comma-separated list variables to observe.<br>Example: index,question,answer": "Llista de variables separades per comes per observar.<br>Exemple: índex, pregunta, resposta",
 			"Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25": "Llista de punts d'aturada (número de línia) i/o punts de vigilància (aturada quan canvia el valor de la variable), separats per comes.<br>Exemple: índex,4,10, pregunta, resposta, 25",
@@ -168,8 +183,25 @@
 			"Share": "Compartir",
 			"Resolution": "Resolució",
 			"Resolution in the whiteboard, the number applies to both width and height": "Resolució a la pissarra, el número aplica a la resolució horitzontal i a la vertical",
-			"Display flow chart?": "Mostrar diagrama de flux?",
-			"Display the blocks as a flow chart initially": "Mostrar inicialment els blocs com a diagrama de flux",
+			"Autosave periodicity (in seconds)": "Periodicitat de l'autoguardat (en segons)",
+			"The user code will be internally autosaved with this frequency. Set to 0 to disable.": "El codi d'usuari es guardarà automàticament amb aquesta freqüència internament. Estableix 0 per desactivar-ho.",
+			"Blocks display style": "Estil de visualització dels blocs",
+			"Style in which the blocks are displayed.": "Estil amb què es visualitzaran els blocs.",
+			"Display blocks style toggle": "Mostrar el selector d'estil de blocs",
+			"Allow to switch style.": "Permetre canviar l'estil de visualització dels blocs.",
+			"Allow blocks multiselect": "Permetre seleccionar múltiples blocs",
+			"Allow to select multiple blocks to perform actions.": "Permetre seleccionar múltiples blocs per realitzar accions.",
+			"Set the amount of milliseconds gap between two instructions. Some of this time will be use to animate whiteboard movements and some to distinct the end of a movement with the beginning of the next (see the next configuration item).": "Estableix la quantitat de mil·lisegons entre l'execució de dues instruccions. Part d'aquest temps s'utilitzarà per animar el moviment a la pissarra i part per distingir el final d'un moviment amb l'inici del següent (veure l'element de configuració següent).",
+			"Milliseconds of pause between instructions": "Mil·lisegons de pausa entre dues instruccions",
+			"Set the amount of milliseconds to pause execution between two instructions. This time must be contained within the time defined in the previous configuration item. Combining the two one can achieve no movement animation, no pause, or any combination in between.": "Estableix la quantitat de mil·lisegons que es pausa l'execució entre dues instruccions. Aquest temps ha d'estar contingut dins del temps definit en l'element de configuració anterior. Combinant els dos es pot aconseguir que no hi hagi animació dels moviments, que no hi hagi pausa entre instruccions, o qualsevol combinació entre els dos.",
+			"Amount of instructions run on every stepped execution": "Nombre d'instruccions a executar en cada execució pas a pas",
+			"Define the amount of instructions that will be run every time the user requests to execute one step forward/backwards from the debug panel.": "Defineix el nombre d'instruccions que s'executen cap endavant o cap enrere cada vegada que l'usuari sol·licita l'execució d'un pas al panell de depuració.",
+			"Display button to restore autosaved code": "Mostrar botó per restaurar l'últim codi autoguardat",
+			"Allow to restore the last autosaved code.": "Permetre restaurar l'últim codi autoguardat.",
+			"Restore autosaved code at initialization": "En iniciar, restaurar l'últim codi autoguardat.",
+			"Load the last autosaved code at initialization.": "En iniciar, carregar l'últim codi autoguardat.",
+			"Autosaved code expration (in seconds)": "Caducitat del codi autoguardat (en segons)",
+			"Time after which autosaved code cannot be restored. Set to 0 to never expire.": "Temps a partir del qual el codi autoguardat no es pot restaurar. Posar 0 per no caducar mai.",
 		}
 	});
 	
@@ -194,52 +226,61 @@
 	var mainURL;
 	var setupItems = {
 		"Introduction": {
-			"introduction": { type: "html", html: _("Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it."), skipParameterInURL: true }
+			"introduction": { type: "html", html: _("Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it."), skipParameterInURL: true, },
 		},
 		"Application settings": {
-			lang: { title: "Language", type: "select", options: $_eseecode.ui.translations, sort: true, initial: "default", help: "Set the language you want for eSeeCode's user interface." },
-			translations: { title: "Display translations menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the translations should be visible or hidden." },
-			theme: { title: "Theme", type: "select", options: $_eseecode.ui.themes, initial: "default", sort: true, help: "Set the theme you want for eSeeCode's user interface." },
-			themes: { title: "Display themes menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the themes should be visible or hidden." },
-			filemenu: { title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden." },
-			fullscreenmenu: { title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden." },
-			preventexit: { title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage)." }
+			lang: { title: "Language", type: "select", options: $_eseecode.ui.translations, sort: true, initial: "default", help: "Set the language you want for eSeeCode's user interface.", },
+			translations: { title: "Display translations menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the translations should be visible or hidden.", advanced: true, },
+			theme: { title: "Theme", type: "select", options: $_eseecode.ui.themes, initial: "default", sort: true, help: "Set the theme you want for eSeeCode's user interface.", },
+			themes: { title: "Display themes menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the themes should be visible or hidden.", advanced: true, },
+			filemenu: { title: "Display file menu?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the buttons \"Load\" and \"Save\" should be visible or hidden.", advanced: true, },
+			fullscreenmenu: { title: "Display fullscreen button?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the fullscreen button should be visible or hidden.", advanced: true, },
+			preventexit: { title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage).", },
+			autosave: { title: "Autosave periodicity (in seconds)", type: "number", initial: "60", help: "The user code will be internally autosaved with this frequency. Set to 0 to disable.", advanced: true, },
+			autosaveexpire: { title: "Autosaved code expration (in seconds)", type: "number", initial: "0", help: "Time after which autosaved code cannot be restored. Set to 0 to never expire.", advanced: true, },
+			restore: { title: "Display button to restore autosaved code", type: "checkbox", initial: "true", help: "Allow to restore the last autosaved code.", advanced: true, },
+			autorestore: { title: "Restore autosaved code at initialization", type: "checkbox", initial: "false", help: "Load the last autosaved code at initialization.", },
 		},
 		"Programming environment": {
-			view: { title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially." },
-			viewtabs: { title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available." },
-			flow: { title: "Display flow chart?", type: "select", options: ["Yes", "No"], initial: "No", help: "Display the blocks as a flow chart initially" },
-			forceblocksetup: { title: "Force block setup", type: "checkbox", initial: "true", help: "Force block setup when adding instructions in Drag mode." },
-			blocksetup: { title: "Block setup style", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default." },
-			maximize: { title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially." },
-			pause: { title: "Milliseconds of delay between instructions", type: "number", initial: "500", help: "Set the amount of milliseconds to delay every time an instruction is executed." },
-			observe: { title: "List of variables to observe", type: "text", initial: "", help: "Comma-separated list variables to observe.<br>Example: index,question,answer" },
-			breakpoints: { title: "List of breakpoints and watchpoints", type: "text", initial: "", help: "Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25" },
+			view: { title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially.", },
+			viewtabs: { title: "View tabs to display", type: "multiple", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch;Drag;Build;Code", help: "Select which views will be available.", advanced: true, },
+			style: { title: "Blocks display style", type: "select", options: ["Code", "Flow"], initial: "Code", help: "Style in which the blocks are displayed.", },
+			styletabs: { title: "Display blocks style toggle", type: "checkbox", initial: "true", help: "Allow to switch style.", advanced: true, },
+			multiselect: { title: "Allow blocks multiselect", type: "checkbox", initial: "true", help: "Allow to select multiple blocks to perform actions.", advanced: true, },
+			forceblocksetup: { title: "Force block setup", type: "checkbox", initial: "true", help: "Force block setup when adding instructions in Drag mode.", advanced: true, },
+			blocksetup: { title: "Block setup style", type: "select", options: ["Visual", "Text"], initial: "Text", help: "Select how to view the setup of blocks. In Drag view blocks are always setup in visually by default, but in Build view you can decide whether to display the text setup by default or the visual interface by default.", advanced: true, },
+			maximize: { title: "Display code console maximized?", type: "select", options: ["Yes", "No"], initial: "No", help: "Decide whether the code console should be maximized initially.", },
+			delay: { title: "Milliseconds of delay between instructions", type: "number", initial: "200", help: "Set the amount of milliseconds gap between two instructions. Some of this time will be use to animate whiteboard movements and some to distinct the end of a movement with the beginning of the next (see the next configuration item).", advanced: true, },
+			pause: { title: "Milliseconds of pause between instructions", type: "number", initial: "100", help: "Set the amount of milliseconds to pause execution between two instructions. This time must be contained within the time defined in the previous configuration item. Combining the two one can achieve no movement animation, no pause, or any combination in between.", advanced: true, },
+			observe: { title: "List of variables to observe", type: "text", initial: "", help: "Comma-separated list variables to observe.<br>Example: index,question,answer", advanced: true, },
+			breakpoints: { title: "List of breakpoints and watchpoints", type: "text", initial: "", help: "Comma-separated list of breakpoints (line number) and/or watchpoints (break when variable's value changes).<br>Example: index,4,10,question,answer,25", advanced: true, },
+			stepsize: { title: "Amount of instructions run on every stepped execution", type: "number", initial: "1", help: "Define the amount of instructions that will be run every time the user requests to execute one step forward/backwards from the debug panel.", advanced: true, },
 		},
 		"Whiteboard": {
-			background: { title: "Whiteboard background", type: "text", help: "Display an image as background in all whiteboard layers. The image can be a public URL or an image name (which must be uploaded)" },
-			guide: { title: "Display guide?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden." },
-			guideimage: { title: "Custom image for guide?", type: "text", help: "Display a custom image instead of the default guide. The image can be a public URL or an image name (which must be uploaded)" },
-			guidesize: { title: "Size of the guide", type: "number", initial: "20", help: "Size of the guide in pixels (size is used for both width and height)" },
-			grid: { title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden." },
-			griddivisions: { title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid." },
-			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>" },
-			whiteboardresolution: { title: "Resolution", type: "number", initial: 400, help: "Resolution in the whiteboard, the number applies to both width and height" },
+			background: { title: "Whiteboard background", type: "text", help: "Display an image as background in all whiteboard layers. The image can be a public URL or an image name (which must be uploaded)", },
+			guide: { title: "Display guide?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the guide (the cursor in the whiteboard) will be visible or hidden.", advanced: true, },
+			guideimage: { title: "Custom image for guide?", type: "text", help: "Display a custom image instead of the default guide. The image can be a public URL or an image name (which must be uploaded)", },
+			guidesize: { title: "Size of the guide", type: "number", initial: "20", help: "Size of the guide in pixels (size is used for both width and height)", },
+			grid: { title: "Display grid?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether the grid (the lines in the whiteboard) will be visible or hidden.", },
+			griddivisions: { title: "Amount of grid lines?", type: "number", initial: "15", help: "Set the amount of lines in the grid.", },
+			axis: { title: "Axis", type: "select", options: ["Computer console", "Mathematical simple", "Mathematical centered"], initial: "Mathematical centered", help: "Select which coordinates you want:<br /><ul><li>Computer console: Origin is at upper left corner, increments right and downwards</li><li>Mathematical simple: Origin is at lower left corner, increments right and upwards</li><li>Mathematical centered: Origin is centered, increments right and upwards</li></ul>", },
+			whiteboardresolution: { title: "Resolution", type: "number", initial: 400, help: "Resolution in the whiteboard, the number applies to both width and height", advanced: true, },
 		},
 		"Instructions": {
-			custominstructions: { title: "Additional instructions' specifications", type: "custominstructions", initial: "{}", help: "Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)" },
-			instructions: { title: "Do you want to use a subset of instructions? If so, select which instructions to make available", type: "instructions", options: function() { return $_eseecode.instructions.set; }, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>" }, // Use function for options since the set it is pointing to changes every time custominstructions is updated
-			basepath: { title: "Base path for media", type: "text", initial: "", help: "Base path to prefix to relative paths for the sources of image() and sound() instructions" },
+			custominstructions: { title: "Additional instructions' specifications", type: "custominstructions", initial: "{}", help: "Additional instructions to add to the programming environment, available to the users. The icon can be a public URL or an image name (which must be uploaded)", advanced: true, },
+			instructions: { title: "Do you want to use a subset of instructions? If so, select which instructions to make available", type: "instructions", options: function() { return $_eseecode.instructions.set; }, initial: "", help: "Here you can choose a subset of intructions to be available to the user (all others will be disabled).<ul style=\"text-align:justify;\"></li><li>Add them by selecting an instruction in the first column and clicking the \"Add\" button. You can add an instruction several times.</li><li>Double-click any instruction in the buttom column to set up its parameters, the amount of times the instruction can be used and whether or not the user can set up its parameters. Remember to click \"Apply\" to apply after you finish setting up every instruction.</li><li>Move up and down any instruction in the bottom column by selecting it and clicking the \"Up\" or \"Down\" buttons.</li><li>You can remove an instruction from the right column by selecting it and clicking the \"Remove\"button.</li><li>Click the \"Add spacer\" button to add a separator to the instructions in the bottom column. The separator will be added at the end, remember to move it up with the \"Up\" button.</li></ul>" }, // Use function for options since the set it is pointing to changes every time custominstructions is upda,ted
+			basepath: { title: "Base path for media", type: "text", initial: "", help: "Base path to prefix to relative paths for the sources of image() and sound() instructions", advanced: true, },
 		},
 		"Code": {
-			precode: { title: "Code to preload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code." },
-			code: { title: "Code to load as user code (displayed to the user)", type: "textarea", initial: "", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it." },
-			execute: { title: "Execute the user code", type: "checkbox", initial: "false", help: "Decide whether or not to run the user code immediately after loading eSeeCode." },
-			postcode: { title: "Code to postload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run everytime after the user code." },
-			input: { title: "Input", type: "textarea", initial: "", help: "Set the input that will appear in the I/O toolbox." }
+			precode: { title: "Code to preload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run immediately after loading eSeeCode and everytime before the user code.", advanced: true, },
+			code: { title: "Code to load as user code (displayed to the user)", type: "textarea", initial: "", help: "The code you write here will be shown as part of the solution, so the user can view it and modify it.", },
+			execute: { title: "Execute the user code", type: "checkbox", initial: "false", help: "Decide whether or not to run the user code immediately after loading eSeeCode.", advanced: true, },
+			postcode: { title: "Code to postload (hidden to the user)", type: "textarea", initial: "", help: "The code you write here will be hidden to the user but will be run everytime after the user code.", advanced: true, },
+			input: { title: "Input", type: "textarea", initial: "", help: "Set the input that will appear in the I/O toolbox.", },
+
 		},
 		"Share": {
-			links: { type: "html", skipParameterInURL: true }
+			links: { type: "html", skipParameterInURL: true, },
 		}
 		
 	}
@@ -346,6 +387,7 @@
 		let div = document.createElement("DIV");
 		div.className = "page_field";
 		parentDiv.appendChild(div);
+		if (setupPage[key].advanced) div.classList.add("advanced");
 		if (setupPage[key].category) div.dataset.category = setupPage[key].category;
 		if (setupPage[key].title) {
 			var title = document.createElement("DIV");
@@ -1348,7 +1390,7 @@
 		}
 		var optionIndex = target.index;
 		setupDiv.querySelector("#setupDivIndex").value = optionIndex;
-		toolbox(setupDiv);
+		dialog(setupDiv);
 	}
 
 	function changeParametersApply(selectId) {

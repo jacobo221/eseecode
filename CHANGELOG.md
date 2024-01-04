@@ -3,9 +3,9 @@
  *   Every guide movement is now animated
  *   Multiselection of blocks to move, duplicate or delete them
  *   Hold shift key while multiselecting two blocks to select all blocks in between. New API call showMultiselectTab() and URL parameter multiselect= to display/hide this functionality
- *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds
+ *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds. New API call restoreAutosave() and showRestore() with URL params restore= and autorestore= to display/hide the restore button and to restore the autosaved code. New API call setAutosaveExpiration() and URL parameter autosaveexpire= to define the expiration in seconds of autosave code
  *   New API call setInstructionsDelay() and URL parameter delay= to define how long each instruction delays the execution. Substracting setInstructionsPause() to setInstructionsDelay() will be the time spend animating the instruction
- *   Renamed API call showFlow to setStyle("flow") and parameter flow= to style=flow, and flowtab= to flow=
+ *   Renamed API call showFlow to setStyle("flow") and parameter flow= to style=flow, and flowtab= to styletabs=
  *   Moved the code/flow toggle to a lateral position
  *   Several fixes and cleanups
 

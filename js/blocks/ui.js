@@ -8,13 +8,18 @@
  * @example $e.ui.blocks.scrollTo($e.ui.element.querySelector("#block-1231231231")
  */
 $e.ui.blocks.scrollTo = (blockEl, scrollEl = $e.ui.element.querySelector("#view-blocks")) => {
-	let blockHeight;
-	if (blockEl.getBoundingClientRect().height) blockHeight = blockEl.getBoundingClientRect().height;
-	else blockHeight = blockEl.getBoundingClientRect().bottom - blockEl.getBoundingClientRect().top;
-	if (blockEl.offsetTop < scrollEl.scrollTop) {
-		$e.ui.smoothScroll(scrollEl, blockEl.offsetTop - 10);
-	} else if (blockEl.offsetTop + blockHeight > scrollEl.scrollTop + scrollEl.clientHeight) {
-		$e.ui.smoothScroll(scrollEl, blockEl.offsetTop - scrollEl.clientHeight + blockHeight + 10);
+	const blockRect = blockEl.getBoundingClientRect();
+	const blockHeight = blockRect.height ? blockRect.height : blockRect.bottom - blockRect.top;
+	let blockOffsetTop = 0;
+	let pathBlock = blockEl;
+	while (pathBlock.classList.contains("block")) {
+		blockOffsetTop += pathBlock.offsetTop;
+		pathBlock = pathBlock.parentNode;
+	}
+	if (blockOffsetTop < scrollEl.scrollTop) {
+		$e.ui.smoothScroll(scrollEl, blockOffsetTop - 10);
+	} else if (blockOffsetTop + blockHeight > scrollEl.scrollTop + scrollEl.clientHeight) {
+		$e.ui.smoothScroll(scrollEl, blockOffsetTop - scrollEl.clientHeight + blockHeight + 10);
 	}
 };
 

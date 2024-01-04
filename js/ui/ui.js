@@ -288,7 +288,7 @@ $e.ui.reset = async () => {
 		$e.ui.themes.init();
 		$e.instructions.init();
 		$e.ide.initCategories();
-		$e.ide.loadBrowserURLParameters(undefined, [ "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ]); // Prepare the environment except execution and UI elements that are loaded later
+		$e.ide.loadBrowserURLParameters(undefined, [ "autorestore", "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ]); // Prepare the environment except execution and UI elements that are loaded later
 		$e.ui.initializeSetup();
 		window.addEventListener("resize", $e.ui.write.windowResizeHandler);
 		if ($e.ui.whiteboardResizeInterval) clearInterval($e.ui.whiteboardResizeInterval);
@@ -301,9 +301,11 @@ $e.ui.reset = async () => {
 			}
 		});
 		$e.ui.toggleFullscreenIcon();
-		setInterval(() => {
-			if ($e.session.lastAutosave < $e.session.lastChange) $e.ide.autosave();
-		}, $e.setup.autosaveInterval * 1000);
+		if ($e.setup.autosaveInterval && $e.setup.autosaveInterval > 0) {
+			setInterval(() => {
+				if ($e.session.lastAutosave < $e.session.lastChange) $e.ide.autosave();
+			}, $e.setup.autosaveInterval * 1000);
+		}
 	}
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();
@@ -349,8 +351,8 @@ $e.ui.reset = async () => {
 	document.body.addEventListener("keyup", $e.backend.events.keyboard, false);
 	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer));
 	$e.session.updateOnViewSwitch = false;
-	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "execute", "maximize" ]);
-	if (!$e.ide.hasAutosave()) $e.ui.element.querySelector("#restorecode").classList.add("disabled");
+	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "autorestore", "execute", "maximize" ]);
+	if (!$e.ide.hasAutosave()) $e.ui.enableRestore(false);
 	$e.ui.themes.current.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
 	$e.ide.loadBrowserURLParameters([ "theme" ], undefined, true);
 	$e.session.lastChange = 0;
@@ -633,3 +635,23 @@ $e.ui.refreshUndo = () => {
 	}
 	$e.ui.updateViewButtonsVisibility();
 };
+
+/**
+ * Show/Hide restore button
+ * @private
+ * @param {Boolean} [show] Whether to show or hide the restore button
+ * @example $e.ui.showRestore()
+ */
+$e.ui.showRestore = (show = true) => {
+	$e.ui.element.querySelector("#restorecode").classList[show ? "remove" : "add"]("disabled");
+}
+
+/**
+ * Enable/Disable restore button
+ * @private
+ * @param {Boolean} [enable] Whether to show or hide the restore button
+ * @example $e.ui.enableRestore()
+ */
+$e.ui.enableRestore = (enable = true) => {
+	$e.ui.element.querySelector("#restorecode").classList[enable ? "remove" : "add"]("disabled");
+}

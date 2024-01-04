@@ -46,7 +46,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		encodedParamsSearch.forEach((k, v) => url_params.append(k, v));
 	}
 
-	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
+	let prerequisites = [ "autorestore", "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
 	Array.from(url_params).sort((a, b) => prerequisites.indexOf(b[0]) - prerequisites.indexOf(a[0])).forEach(async function(param) {
 		const key = param[0].toLowerCase();
 		let value = param[1];
@@ -84,7 +84,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.maximize(value, action);
 		} else if (key == "style") {
 			$e.api.setStyle(value, action);
-		} else if (key == "flow") {
+		} else if (key == "styletabs") {
 			$e.api.showFlowTab(value, action);
 		} else if (key == "multiselect") {
 			$e.api.showMultiselectTab(value, action);
@@ -124,6 +124,12 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.setInstructionsPause(value);
 		} else if (key == "autosave") {
 			$e.api.setAutosaveInterval(value);
+		} else if (key == "autosaveexpire") {
+			$e.api.setAutosaveExpiration(value);
+		} else if (key == "restore") {
+			$e.api.showRestore(value);
+		} else if (key == "autorestore") {
+			$e.api.restoreAutosave(value);
 		} else if (key == "stepsize") {
 			$e.api.setStepSize(value);
 		} else if (key == "breakpoints") {
@@ -260,7 +266,7 @@ $e.api.maximize = (value) => {
  * @example $e.api.setStyle()
  */
 $e.api.setStyle = (value) => {
-	if (value === "flow") $e.ui.blocks.flowToggle(true);
+	if (typeof value === "string" && value.toLowerCase() === "flow") $e.ui.blocks.flowToggle(true);
 };
 
 /**
@@ -859,7 +865,7 @@ $e.api.autosave = (forceCode) => {
 };
 
 /**
- * Autosave code
+ * Define autosave periodicity
  * @since 4.1
  * @private
  * @param {Number} value Seconds between autosaves
@@ -867,6 +873,41 @@ $e.api.autosave = (forceCode) => {
  */
 $e.api.setAutosaveInterval = (value) => {
 	$e.setup.autosaveInterval = value;
+};
+
+/**
+ * Define autosave expiration
+ * @since 4.1
+ * @private
+ * @param {Number} value Seconds after which autosaved codes expire. Set to 0 to never expire
+ * @example $e.api.setAutosaveExpiration()
+ */
+$e.api.setAutosaveExpiration = (value) => {
+	$e.setup.autosaveExpiration = value;
+};
+
+/**
+ * Shows/Hides the restore button
+ * @since 4.1
+ * @public
+ * @param {Boolean|String} value Whether to show or hide the restore button
+ * @example $e.api.showRestore(false)
+ */
+$e.api.showRestore = (value) => {
+	value = typeof value == "string" ? value.toLowerCase() : value;
+	$e.ui.showRestore(!$e.confirmNo(value));
+};
+
+/**
+ * Restores the lasts autosaved code
+ * @since 4.1
+ * @public
+ * @param {Boolean|String} value Whether to restore now the last autosaved code or not
+ * @example $e.api.restoreAutosave(true)
+ */
+$e.api.restoreAutosave = (value) => {
+	value = typeof value == "string" ? value.toLowerCase() : value;
+	$e.ide.loadAutosave(!$e.confirmNo(value));
 };
 
 /**

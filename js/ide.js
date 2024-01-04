@@ -15,7 +15,7 @@ $e.ide.changed = (resetProgramCounter = true) => {
 	$e.ui.unhighlight();
 	$e.ui.refreshUndo();
 	$e.ui.updateViewButtonsVisibility();
-	$e.ui.element.querySelector("#restorecode").classList.add("disabled");
+	$e.ui.enableRestore(false);
 };
 
 /**
@@ -34,8 +34,13 @@ $e.ide.autosave = (forceCode = true) => {
 	} else {
 		code = $e.ide.blocks.toCode($e.ui.element.querySelector("#view-blocks").firstChild);
 	}
-	if (forceCode || code) localStorage.setItem("code", code); // Do not overwrite stored code if it is empty, unless forced store has been requested
-	$e.session.lastAutosave = Date.now();
+	const now = Date.now();
+	if (forceCode || code) {
+		const path = window.location.pathname;
+		localStorage.setItem("autosave_" + path, code); // Do not overwrite stored code if it is empty, unless forced store has been requested
+		localStorage.setItem("autosave_timestamp_" + path, now);
+	}
+	$e.session.lastAutosave = now;
 };
 
 /**
@@ -44,7 +49,14 @@ $e.ide.autosave = (forceCode = true) => {
  * @example $e.ide.hasAutosave()
  */
 $e.ide.hasAutosave = () => {
-	const code = localStorage.getItem("code");
+	const path = window.location.pathname;
+	const timestamp = localStorage.getItem("autosave_timestamp_" + path);
+	if ($e.setup.setAutosaveExpiration && Date.now() > timestamp + $e.setup.setAutosaveExpiration) {
+		localStorage.removeItem("autosave_timestamp_" + path);
+		localStorage.removeItem("autosave_" + path);
+		return false;
+	}
+	const code = localStorage.getItem("autosave_" + path);
 	return !!code;
 };
 
@@ -54,9 +66,16 @@ $e.ide.hasAutosave = () => {
  * @example $e.ide.loadAutosave()
  */
 $e.ide.loadAutosave = () => {
-	const code = localStorage.getItem("code");
-	if (code) $e.ide.uploadCode(code);
-	$e.ui.element.querySelector("#restorecode").classList.add("disabled");
+	const path = window.location.pathname;
+	const timestamp = localStorage.getItem("autosave_timestamp_" + path);
+	if ($e.setup.setAutosaveExpiration && Date.now() > timestamp + $e.setup.setAutosaveExpiration) {
+		localStorage.removeItem("autosave_timestamp_" + path);
+		localStorage.removeItem("autosave_" + path);
+	} else {
+		const code = localStorage.getItem("autosave_" + path);
+		if (code) $e.ide.uploadCode(code);
+	}
+	$e.ui.showRestore(false);
 };
 
 /**

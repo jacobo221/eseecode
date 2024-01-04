@@ -188,7 +188,7 @@ $e.ui.blocks.getMovePointedBlock = (event) => {
 		pointingAfter = event.pageY >= pointedBlockRect.top + pointedBlockRect.height / 2;
 	}
 
-	if (pointedBlock === $e.ui.blocks.dragging.lastPointedBlock && pointingAfter === $e.ui.blocks.dragging.lastPointingAfter) return; // Do not us $e.ui.element.querySelector(".placeholder-before, .placeholder-after") as the pointed element might be quite different to the block eventually used
+	if (pointedBlock !== false && pointedBlock === $e.ui.blocks.dragging.lastPointedBlock && pointingAfter === $e.ui.blocks.dragging.lastPointingAfter) return; // Don't skip when pointedBlock === false because otherwise scroll won't work. Do not us $e.ui.element.querySelector(".placeholder-before, .placeholder-after") as the pointed element might be quite different to the block eventually used
 	$e.ui.blocks.dragging.lastPointedBlock = pointedBlock;
 	$e.ui.blocks.dragging.lastPointedAfter = pointingAfter;
 

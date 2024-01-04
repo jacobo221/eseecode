@@ -255,7 +255,7 @@ $e.ui.blocks.setup.style = (visual = true) => {
 	const blockEl = setupData.blockEl;
 	const instruction = $e.instructions.set[blockEl.dataset.instructionSetId];
 	const instructionParameters = instruction.parameters;
-	if (!instructionParameters || instructionParameters.length === 0) return console.error("This should not happen in $e.ui.blocks.setup.style");
+	if (!instructionParameters || instructionParameters.length === 0) return; // This could be the "else" instruciton
 	setupData.parameters.forEach((setupDataParameter, i) => {
 		let value = setupDataParameter.value.new;
 		if (value === "" || value === "undefined" || value === undefined) {
