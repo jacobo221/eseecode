@@ -183,6 +183,6 @@ $e.ide.write.synthaxHighlight = (code) => {
 	});
 	let output = root.innerHTML;
 	Object.entries(styles).forEach(([ key, value ]) => output = output.replace(new RegExp("class=\\\"" + key + "\\\"", "g"), "style=\"" + value + "\""));
-	output = output.replaceAll(" style=\"\"", "");
+	output = output.replaceAll(" style=\"\"", "").replaceAll("<span></span>", "");
 	return output;
 };
