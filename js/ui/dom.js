@@ -15,7 +15,7 @@ $e.ui.init = () =>  {
 					<button id="toolbox-tabs-window" class="tab"></button>\
 					<button id="toolbox-tabs-debug" class="tab"></button>\
 				</div>\
-				<div id="toolbox-body">\
+				<div id="toolbox-content">\
 					<div id="toolbox-blocks" class="panel-column"></div>\
 					<div id="toolbox-write" class="panel-column"></div>\
 					<div id="toolbox-window" class="panel-column"></div>\
@@ -51,11 +51,11 @@ $e.ui.init = () =>  {
 					</div>\
 					<div id="toolbox-setup" class="panel-column">\
 						<div id="translations">\
-							<div id="translations-translator"></div>\
 							<div id="translations-switch">\
 								<span id="translations-title"></span>\
 								<select id="translations-select"></select>\
 							</div>\
+							<div id="translations-translator"></div>\
 						</div>\
 						<div id="themes">\
 							<div id="themes-switch">\
@@ -66,7 +66,6 @@ $e.ui.init = () =>  {
 						<div id="filemenu">\
 							<button id="loadcode" class="button"></button>\
 							<button id="savecode" class="button"></button>\
-							<button id="restorecode" class="button"></button>\
 						</div>\
 						<div id="setup-grid">\
 							<input id="setup-grid-enable" type="checkbox" checked /><label id="setup-grid-divisions-title" for="setup-grid-enable"></label>\
@@ -133,7 +132,6 @@ $e.ui.init = () =>  {
 		"toolbox-tabs-debug": () => $e.ui.switchToolboxMode("debug"),
 		"loadcode": $e.ui.loadCode,
 		"savecode": $e.ui.saveCode,
-		"restorecode": $e.ide.loadAutosave,
 		"translations-select": (event) => $e.ui.translations.switch(event.target.value),
 		"themes-select": (event) => $e.ui.themes.switch(event.target.value),
 		"setup-grid-enable": $e.ui.toggleGrid,

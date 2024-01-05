@@ -95,12 +95,12 @@
 			"Set the amount of milliseconds to pause execution between two instructions. This time must be contained within the time defined in the previous configuration item. Combining the two one can achieve no movement animation, no pause, or any combination in between.": "Establece la cantidad de milisegundos que se pausa la ejecución entre dos instrucciones. Este tiempo debe estar contenido dentro del tiempo definido en el anterior elemento de configuración. Combinando los dos se puede conseguir que no haya animación de los movimientos, que no haya pausa entre instrucciones, o cualquier combinación entre las dos.",
 			"Amount of instructions run on every stepped execution": "Número de instrucciones a ejecutar en cada ejecución paso a paso",
 			"Define the amount of instructions that will be run every time the user requests to execute one step forward/backwards from the debug panel.": "Define el número de instrucciones que se ejecutan hacia adelante o hacia atrás cada vez que se solicita la ejecución de un paso en el panel de depuración.",
-			"Display button to restore autosaved code": "Mostrar botón para restaurar el último código autoguardado",
-			"Allow to restore the last autosaved code.": "Permitir restaurar el último código autoguardado.",
 			"Restore autosaved code at initialization": "Al iniciar restaurar el último código autoguardado.",
 			"Load the last autosaved code at initialization.": "Al iniciar restaurar el último código autoguardado.",
 			"Autosaved code expration (in seconds)": "Caducidad del código autoguardado (en segundos)",
 			"Time after which autosaved code cannot be restored. Set to 0 to never expire.": "Tiempo a partir del cual el código autoguardado no se puede restaurar. Poner 0 para no caducar nunca",
+			"Exercise id": "Identificador del ejercicio",
+			"Identify this exercise (if set, autosaved code in this exercise will only be restored for this exercise)": "Identifica el ejercicio (de esta manera el código autoguardado para este ejercicio solo se restaurará en este ejercicio)",
 		},
 		"ca": {
 			"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
@@ -196,12 +196,12 @@
 			"Set the amount of milliseconds to pause execution between two instructions. This time must be contained within the time defined in the previous configuration item. Combining the two one can achieve no movement animation, no pause, or any combination in between.": "Estableix la quantitat de mil·lisegons que es pausa l'execució entre dues instruccions. Aquest temps ha d'estar contingut dins del temps definit en l'element de configuració anterior. Combinant els dos es pot aconseguir que no hi hagi animació dels moviments, que no hi hagi pausa entre instruccions, o qualsevol combinació entre els dos.",
 			"Amount of instructions run on every stepped execution": "Nombre d'instruccions a executar en cada execució pas a pas",
 			"Define the amount of instructions that will be run every time the user requests to execute one step forward/backwards from the debug panel.": "Defineix el nombre d'instruccions que s'executen cap endavant o cap enrere cada vegada que l'usuari sol·licita l'execució d'un pas al panell de depuració.",
-			"Display button to restore autosaved code": "Mostrar botó per restaurar l'últim codi autoguardat",
-			"Allow to restore the last autosaved code.": "Permetre restaurar l'últim codi autoguardat.",
 			"Restore autosaved code at initialization": "En iniciar, restaurar l'últim codi autoguardat.",
 			"Load the last autosaved code at initialization.": "En iniciar, carregar l'últim codi autoguardat.",
 			"Autosaved code expration (in seconds)": "Caducitat del codi autoguardat (en segons)",
 			"Time after which autosaved code cannot be restored. Set to 0 to never expire.": "Temps a partir del qual el codi autoguardat no es pot restaurar. Posar 0 per no caducar mai.",
+			"Exercise id": "Identificador de l'exercici",
+			"Identify this exercise (if set, autosaved code in this exercise will only be restored for this exercise)": "Identifica l'exercici (d'aquesta manera el codi autoguardat per aquest exercici només es restaurarà en aquest exercici)",
 		}
 	});
 	
@@ -238,8 +238,8 @@
 			preventexit: { title: "Warn on exit if used has entered code?", type: "select", options: ["Yes", "No"], initial: "Yes", help: "Decide whether or not eSeeCode should require confirmation before being closed (or before changing the webpage).", },
 			autosave: { title: "Autosave periodicity (in seconds)", type: "number", initial: "60", help: "The user code will be internally autosaved with this frequency. Set to 0 to disable.", advanced: true, },
 			autosaveexpire: { title: "Autosaved code expration (in seconds)", type: "number", initial: "0", help: "Time after which autosaved code cannot be restored. Set to 0 to never expire.", advanced: true, },
-			restore: { title: "Display button to restore autosaved code", type: "checkbox", initial: "true", help: "Allow to restore the last autosaved code.", advanced: true, },
 			autorestore: { title: "Restore autosaved code at initialization", type: "checkbox", initial: "false", help: "Load the last autosaved code at initialization.", },
+			exercise: { title: "Exercise id", type: "text", help: "Identify this exercise (if set, autosaved code in this exercise will only be restored for this exercise)", },
 		},
 		"Programming environment": {
 			view: { title: "Initial view", type: "select", options: ["Touch", "Drag", "Build", "Code"], initial: "Touch", help: "Select the view which will be displayed initially.", },

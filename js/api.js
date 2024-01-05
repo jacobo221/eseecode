@@ -46,7 +46,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		encodedParamsSearch.forEach((k, v) => url_params.append(k, v));
 	}
 
-	let prerequisites = [ "autorestore", "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
+	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
 	Array.from(url_params).sort((a, b) => prerequisites.indexOf(b[0]) - prerequisites.indexOf(a[0])).forEach(async function(param) {
 		const key = param[0].toLowerCase();
 		let value = param[1];
@@ -126,10 +126,10 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.setAutosaveInterval(value);
 		} else if (key == "autosaveexpire") {
 			$e.api.setAutosaveExpiration(value);
-		} else if (key == "restore") {
-			$e.api.showRestore(value);
 		} else if (key == "autorestore") {
 			$e.api.restoreAutosave(value);
+		} else if (key == "exercise") {
+			$e.api.setExercise(value);
 		} else if (key == "stepsize") {
 			$e.api.setStepSize(value);
 		} else if (key == "breakpoints") {
@@ -887,18 +887,6 @@ $e.api.setAutosaveExpiration = (value) => {
 };
 
 /**
- * Shows/Hides the restore button
- * @since 4.1
- * @public
- * @param {Boolean|String} value Whether to show or hide the restore button
- * @example $e.api.showRestore(false)
- */
-$e.api.showRestore = (value) => {
-	value = typeof value == "string" ? value.toLowerCase() : value;
-	$e.ui.showRestore(!$e.confirmNo(value));
-};
-
-/**
  * Restores the lasts autosaved code
  * @since 4.1
  * @public
@@ -907,7 +895,18 @@ $e.api.showRestore = (value) => {
  */
 $e.api.restoreAutosave = (value) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	$e.ide.loadAutosave(!$e.confirmNo(value));
+	$e.setup.autorestore = !$e.confirmNo(value);
+};
+
+/**
+ * Define exercise id
+ * @since 4.1
+ * @private
+ * @param {String} value Exercise id
+ * @example $e.api.setExercise()
+ */
+$e.api.setExercise = (value) => {
+	$e.setup.exercise = value;
 };
 
 /**

@@ -3,10 +3,12 @@
  *   Every guide movement is now animated
  *   Multiselection of blocks to move, duplicate or delete them
  *   Hold shift key while multiselecting two blocks to select all blocks in between. New API call showMultiselectTab() and URL parameter multiselect= to display/hide this functionality
- *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds. New API call restoreAutosave() and showRestore() with URL params restore= and autorestore= to display/hide the restore button and to restore the autosaved code. New API call setAutosaveExpiration() and URL parameter autosaveexpire= to define the expiration in seconds of autosave code
+ *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds. New API call restoreAutosave() with URL parameter autorestore= to restore the autosaved code on initialization. New API call setAutosaveExpiration() and URL parameter autosaveexpire= to define the expiration in seconds of autosave code
  *   New API call setInstructionsDelay() and URL parameter delay= to define how long each instruction delays the execution. Substracting setInstructionsPause() to setInstructionsDelay() will be the time spend animating the instruction
+ *   New API call setExercise() and URL parameter exercise= to define an id for the exercise, which for now is only used by autosave to determine which autosaved code to restore
  *   Renamed API call showFlow to setStyle("flow") and parameter flow= to style=flow, and flowtab= to styletabs=
- *   Moved the code/flow toggle to a lateral position
+ *   Now let is used internally for variables instead of var so variables are scoped as they are in most languages and errors appear if used before declaration in the same function
+ *   Moved the code/flow toggle to a lateral position and other small UI improvements
  *   Several fixes and cleanups
 
 ## 4.0 (2023-12-29)

@@ -25,8 +25,18 @@
 	
 }
 
-#toolbox-blocks,
-#view-blocks {
+button,
+input,
+select,
+textarea {
+	background-color: var(--bg-color) !important;
+	border-color: var(--text-color);
+	color: var(--text-color) !important;
+}
+
+#toolbox-content,
+#view-content,
+#toolbox-blocks {
 	background-image: unset !important;
 }
 .panel-column {
@@ -35,12 +45,35 @@
 .tab {
 	color: var(--bg-color);
 }
-.tab-active {
+.tab.active {
 	color: var(--text-color);
+}
+#toolbox-tabs-setup.tab.active::before {
+	text-shadow: 0 0 0 var(--text-color);
+}
+.toolbox-title,
+#toolbox-io-output {
+	background-color: var(--bg-color) !important;
+	border-color: var(--text-color);
+	color: var(--text-color) !important;
+}
+#view-buttons,
+#toolbox-debug-command {
+	background-color: var(--bg-color);
+	background-image: none;
 }
 .tab-button,
 .tab-button:hover {
 	color: var(--msgbox-bg-color);
+}
+#whiteboard {
+	background-color: unset !important;
+}
+#canvas-wrapper-grid {
+	filter: sepia(1);
+}
+.link {
+	color: var(--text-color);
 }
 .msgBox {
 	color: var(--text-color);

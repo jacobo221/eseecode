@@ -406,11 +406,12 @@
 		str += "for (";
 		if (init !== null) {
 			if (typeof(init.type) === "undefined") {
-				str += "var ";
+				str += "let ";
 
 				for (let i = 0, len = init.length; i < len; i++) {
-					if (i !== 0)
+					if (i !== 0) {
 						str += ", ";
+					}
 
 					str += init[i].makeWrite("", "", options);
 				}
@@ -454,7 +455,7 @@
 		var body = this.body;
 		if (left !== null) {
 			if (left.type === "VariableDeclarator") {
-				str += "var " + left.makeWrite("", "", options);
+				str += "let " + left.makeWrite("", "", options);
 			} else {
 				str += left.makeWrite("", "", options);
 			}
@@ -521,7 +522,7 @@
 		str += $e.execution.injectCode(options,this.loc.start.line);
 		var type = this.kind;
 		if (options.realcode && type === "array") {
-			str += "var ";
+			str += "let ";
 		} else {
 			str += this.kind + " ";
 		}

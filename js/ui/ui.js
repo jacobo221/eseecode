@@ -12,7 +12,7 @@ $e.ui.initElements = () => {
 	let canvas, ctx, el, width, height, src;
 	canvas = document.createElement("canvas");
 	ctx = canvas.getContext("2d");
-	el = $e.ui.element.querySelector("#view-blocks");
+	el = $e.ui.element.querySelector("#view-content");
 	width = el.parentNode.offsetWidth; // Use parent in case it had display:none at this moment
 	height = el.parentNode.offsetHeight;
 	if (height === 0) height = 800; // Sometimes we reach this point before the browser has finished loading the DOM
@@ -43,12 +43,12 @@ $e.ui.initElements = () => {
 		ctx.closePath();
 	}
 	src = canvas.toDataURL();
-	el.style.backgroundImage = "url(" + src + ")";
+	el.style.setProperty("--view-bg-image", "url(" + src + ")");
 
 	// Toolbox background
 	canvas = document.createElement("canvas");
 	ctx = canvas.getContext("2d");
-	el = $e.ui.element.querySelector("#toolbox-blocks");
+	el = $e.ui.element.querySelector("#toolbox-content");
 	width = el.parentNode.clientWidth; // Use parent in case it had display:none at this moment
 	height = el.parentNode.clientHeight;
 	canvas.width = width;
@@ -81,7 +81,7 @@ $e.ui.initElements = () => {
 		ctx.stroke();
 	}
 	src = canvas.toDataURL();
-	el.style.backgroundImage = "url(" + src + ")";
+	el.style.setProperty("--toolbox-bg-image", "url(" + src + ")");
 };
 
 /**
@@ -288,7 +288,7 @@ $e.ui.reset = async () => {
 		$e.ui.themes.init();
 		$e.instructions.init();
 		$e.ide.initCategories();
-		$e.ide.loadBrowserURLParameters(undefined, [ "autorestore", "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ]); // Prepare the environment except execution and UI elements that are loaded later
+		$e.ide.loadBrowserURLParameters(undefined, [ "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ]); // Prepare the environment except execution and UI elements that are loaded later
 		$e.ui.initializeSetup();
 		window.addEventListener("resize", $e.ui.write.windowResizeHandler);
 		if ($e.ui.whiteboardResizeInterval) clearInterval($e.ui.whiteboardResizeInterval);
@@ -351,8 +351,8 @@ $e.ui.reset = async () => {
 	document.body.addEventListener("keyup", $e.backend.events.keyboard, false);
 	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer));
 	$e.session.updateOnViewSwitch = false;
-	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "autorestore", "execute", "maximize" ]);
-	if (!$e.ide.hasAutosave()) $e.ui.enableRestore(false);
+	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "execute", "maximize" ]);
+	if (firstLoad && $e.setup.autorestore) $e.ide.loadAutosave();
 	$e.ui.themes.current.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
 	$e.ide.loadBrowserURLParameters([ "theme" ], undefined, true);
 	$e.session.lastChange = 0;
@@ -635,23 +635,3 @@ $e.ui.refreshUndo = () => {
 	}
 	$e.ui.updateViewButtonsVisibility();
 };
-
-/**
- * Show/Hide restore button
- * @private
- * @param {Boolean} [show] Whether to show or hide the restore button
- * @example $e.ui.showRestore()
- */
-$e.ui.showRestore = (show = true) => {
-	$e.ui.element.querySelector("#restorecode").classList[show ? "remove" : "add"]("disabled");
-}
-
-/**
- * Enable/Disable restore button
- * @private
- * @param {Boolean} [enable] Whether to show or hide the restore button
- * @example $e.ui.enableRestore()
- */
-$e.ui.enableRestore = (enable = true) => {
-	$e.ui.element.querySelector("#restorecode").classList[enable ? "remove" : "add"]("disabled");
-}

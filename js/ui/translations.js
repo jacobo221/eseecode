@@ -37,10 +37,10 @@ $e.ui.translations.switch = (lang, run) => {
 			$e.ui.switchViewMode();
 			$e.ui.switchToolboxMode();
 			const elementTranslator = $e.ui.element.querySelector("#translations-translator");
-			if (translation._translator && elementTranslator) {
-				const translatorHTML = translation._translator;
-				if (translator._translatorLink) {
-					translatorHTML = "<span class=\"link\" onclick=\"window.open('" + translation._translatorLink + "', '_blank')\">" + translatorHTML + "</span>";
+			if (translation.translator && elementTranslator) {
+				const translatorHTML = translation.translator;
+				if (translation.translatorLink) {
+					translatorHTML = "<span class=\"link\" onclick=\"window.open('" + translation.translatorLink + "', '_blank')\">" + translatorHTML + "</span>";
 				}
 				elementTranslator.innerHTML = _("Translated to %s by %s", [translation.name, translatorHTML]);
 			}
@@ -112,15 +112,12 @@ $e.ui.translations.addStaticText = () => {
 		$e.ui.element.querySelector("#view-tabs-" + levelId).textContent = _(levelText);
 		$e.ui.element.querySelector("#view-tabs-" + levelId).title = _("Double click to maximize/restore");
 	});
-	$e.ui.element.querySelector("#translations-title").textContent = _("Select language") + ": ";
-	$e.ui.element.querySelector("#translations-select").title = _("Select language");
-	$e.ui.element.querySelector("#themes-title").textContent = _("Select theme") + ": ";
-	$e.ui.element.querySelector("#themes-select").title = _("Select theme");
+	$e.ui.element.querySelector("#translations-switch").title = _("Language");
+	$e.ui.element.querySelector("#themes-switch").title = _("Theme");
 	$e.ui.element.querySelector("#logo").title = _($e.platform.name.text);
 	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.version.link) + "', '_blank')\"\">" + _($e.platform.version.text) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license.link) + "', '_blank')\">" + _($e.platform.license.text) + "</span></div>";
-	$e.ui.element.querySelector("#loadcode").textContent = _("Load code");
-	$e.ui.element.querySelector("#savecode").textContent = _("Save code");
-	$e.ui.element.querySelector("#restorecode").textContent = _("Restore code");
+	$e.ui.element.querySelector("#loadcode").textContent = _("Open");
+	$e.ui.element.querySelector("#savecode").textContent = _("Download");
 	$e.ui.element.querySelector("#whiteboard").title = _("Whiteboard");
 	$e.ui.element.querySelector("#view-blocks").title = _("View Blocks");
 	$e.ui.element.querySelector("#view-write").title = _("View Write");
@@ -165,7 +162,7 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#toolbox-io-input-title").textContent = _("Input");
 	$e.ui.element.querySelector("#toolbox-io-output-title").textContent = _("Output");
 	$e.ui.element.querySelector("#setup-grid-enable").title = _("Toggle grid");
-	$e.ui.element.querySelector("#setup-grid-divisions-title").textContent = _("Grid divisions") + ": ";
+	$e.ui.element.querySelector("#setup-grid-divisions-title").textContent = _("Whiteboard divisions") + ": ";
 	$e.ui.element.querySelector("#setup-grid-divisions").title = _("Grid inter-line space");
 	$e.ui.element.querySelector("#setup-guide-enable-title").textContent = _("Guide") + ":";
 	$e.ui.element.querySelector("#whiteboard-tabs-download-button").title = _("Download as an image");

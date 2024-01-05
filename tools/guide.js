@@ -53,7 +53,7 @@ add_translations({
         "you are being taken back to the previous step": "se te está llevando al paso anterior",
         "Step": "Paso",
         "You stepped away from the instructions, you have to back up in the tutorial": "No has seguido correctamente las instrucciones, debes volver atrás en el tutorial",
-        "Due to security limitations on most modern browsers this guide does not work running it directly from the disk": "Debido a limitaciones de seguridad en la mayoría de navegadores modernos esta guóa no funcionará abriéndola directamente desde el disco duro",
+        "Due to security limitations on most modern browsers this guide does not work running it directly from the disk": "Debido a limitaciones de seguridad en la mayoría de navegadores modernos esta guía no funcionará abriéndola directamente desde el disco duro",
     }
 });
 
@@ -870,7 +870,7 @@ function translateToHTMLElement(code) {
         "title": "title",
         "fullscreen": "fullscreen-button",
         "camera": "whiteboard-tabs-download-button",
-        "toolbox": "toolbox-body",
+        "toolbox": "toolbox-content",
         "dialogs": "toolbox-tabs",
         "views": "view-tabs",
         "view": "view-tabdiv",

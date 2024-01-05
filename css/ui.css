@@ -200,15 +200,24 @@ div.ace_gutter-cell {
 	position: relative;
 	width: inherit;
 	height: 100%;
-	background-color: var(--bg-color);
 	color: inherit;
 	overflow: auto;
 	border: var(--minimal-border) solid var(--border-color);
 	border-top-width: 0;
 	border-bottom-width: 0;
 }
-#toolbox .panel-column {
+#toolbox-content {
+	background-image: linear-gradient(rgba(155, 155, 155, 0.7), rgb(130, 130, 130)), var(--toolbox-bg-image);
+}
+#toolbox-blocks {
+	background-image: var(--toolbox-bg-image);
+}
+#toolbox-content .panel-column {
 	overflow-x: hidden;
+	border-top-left-radius: var(--big-radius);
+}
+#view-content {
+	background-image: var(--view-bg-image);
 }
 .separator {
 	border-bottom: var(--minimal-border) solid var(--broken-white);
@@ -274,6 +283,35 @@ span.tab-title {
 	display: flex;
 	min-height: calc(100vh - var(--header-height) - var(--footer-height));
 	height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+#loadcode,
+#savecode {
+	min-width: 6em;
+	height: 4em;
+}
+#translations-select,
+#themes-select {
+	min-width: 10em;
+}
+#translations-title::before {
+	content: "🔤";
+	margin-right: 0.5em;
+	font-size: 1.5em;
+}
+#themes-title::before {
+	content: "🎨";
+	margin-right: 0.5em;
+	font-size: 1.5em;
+}
+#loadcode::before {
+	content: "📂";
+	display: block;
+	font-size: 2em;
+}
+#savecode::before {
+	content: "📥";
+	display: block;
+	font-size: 2em;
 }
 #view {
 	min-width: var(--view-width);
@@ -350,10 +388,6 @@ span.tab-title {
 }
 #toolbox > div {
 	width: inherit;
-}
-#toolbox .panel-column {
-	background-color: var(--msgbox-bg-color);
-	border-top-left-radius: var(--big-radius);;
 }
 .textblock {
 	border: var(--minimal-border) solid var(--block-border-color);
@@ -465,9 +499,6 @@ span.tab-title {
 #toolbox-setup input[type="number"] {
 	width: var(--input-min-size);
 }
-#restorecode {
-	margin-left: 2em;
-}
 #toolbox-setup-author {
 	position: absolute;
 	bottom: 0;
@@ -491,6 +522,9 @@ span.tab-title {
 }
 #filemenu {
 	width: auto;
+}
+#filemenu > *:not(:first-child) {
+	margin-left: 0.5em;
 }
 #filemenu input:hover {
 	box-shadow: 0 0 var(--default-space) var(--broken-white);
@@ -579,7 +613,7 @@ span.tab-title {
 .canvas-wrapper.highlight {
 	background-color: var(--msgbox-bg-color);
 }
-#toolbox-body {
+#toolbox-content {
 	height: calc(100% - var(--tab-height) - var(--tab-margin) - var(--lowerbar-height-outbox));
 }
 #toolbox-blocks {
@@ -765,6 +799,9 @@ input.unsupported {
 }
 #whiteboard-tabs-download-button::before {
 	content: "📷";
+	display: block;
+	margin-top: -0.2em;
+	font-size: 1.5em;
 }
 @media screen and (orientation: portrait) {
 	#body {
