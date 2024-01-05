@@ -4,6 +4,7 @@
  *   Multiselection of blocks to move, duplicate or delete them
  *   Hold shift key while multiselecting two blocks to select all blocks in between. New API call showMultiselectTab() and URL parameter multiselect= to display/hide this functionality
  *   Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds. New API call restoreAutosave() with URL parameter autorestore= to restore the autosaved code on initialization. New API call setAutosaveExpiration() and URL parameter autosaveexpire= to define the expiration in seconds of autosave code
+ *   Code is now copied with synthax highlight
  *   New API call setInstructionsDelay() and URL parameter delay= to define how long each instruction delays the execution. Substracting setInstructionsPause() to setInstructionsDelay() will be the time spend animating the instruction
  *   New API call setExercise() and URL parameter exercise= to define an id for the exercise, which for now is only used by autosave to determine which autosaved code to restore
  *   Renamed API call showFlow to setStyle("flow") and parameter flow= to style=flow, and flowtab= to styletabs=

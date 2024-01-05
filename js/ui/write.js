@@ -69,6 +69,9 @@ $e.ui.write.resetView = (code = "", resetCursor) => {
 			fixedWidthGutter: true,
 			animatedScroll: true,
 		});
+		$e.ui.element.querySelector("#view-write").addEventListener("copy", (event) => {
+			if (event.clipboardData) event.clipboardData.setData("text/html", $e.ide.write.synthaxHighlight(event.clipboardData.getData("text/plain")));
+		});
 	}
 	const cursorPosition = $e.session.editor.getCursorPosition();
 	$e.session.editor.setHighlightActiveLine(true);
@@ -107,4 +110,79 @@ $e.ui.write.changed = (event) => {
 $e.ui.write.resetUndo = () => {
 	const UndoManager = ace.require("ace/undomanager").UndoManager; 
 	$e.session.editor.session.setUndoManager(new UndoManager());
+};
+
+/**
+ * Add HTML synthax highlight to a code
+ * @private
+ * @example $e.ui.write.synthaxHighlight()
+ */
+// Reference: https://stackoverflow.com/a/73471460
+$e.ide.write.synthaxHighlight = (code) => {
+	const styles = {
+		"ace_layer ace_text-layer": "",
+		"ace_line_group": "",
+		"ace_line": "",
+		"ace_paren ace_lparen": "color: rgb(0, 0, 0)",
+		"ace_paren ace_rparen": "color: rgb(0, 0, 0)",
+		"ace_identifier": "color: rgb(0, 0, 0)",
+		"ace_storage ace_type": "color: rgb(147, 15, 128)",
+		"ace_constant ace_language [a-z_]*": "color: rgb(88, 92, 246)",
+		"ace_constant ace_buildin": "color: rgb(88, 72, 246)",
+		"ace_constant ace_language": "color: rgb(88, 92, 246)",
+		"ace_constant ace_library": "color: rgb(6, 150, 14)",
+		"ace_invalid": "background-color: rgb(153, 0, 0; color: white",
+		"ace_support ace_function": "color: rgb(60, 76, 114)",
+		"ace_support ace_constant": "color: rgb(6, 150, 14);",
+		"ace_support ace_type": "color: rgb(109, 121, 222)",
+		"ace_support ace_clas": "color: rgb(109, 121, 222)",
+		"ace_support ace_other": "color: rgb(109, 121, 222)",
+		"ace_variable ace_parameter": "font-style: italic; color: #FD971F",
+		"ace_keyword ace_operator": "color: rgb(104, 118, 135)",
+		"ace_comment": "color: #236e24",
+		"ace_comment ace_doc": "color: #236e24",
+		"ace_comment ace_doc ace_tag": "color: #236e24",
+		"ace_constant ace_numeric": "color: rgb(0, 0, 205)",
+		"ace_variable": "color: rgb(49, 132, 149)",
+		"ace_variable ace_language": "color: rgb(49, 132, 149)",
+		"ace_xml-pe": "color: rgb(104, 104, 91)",
+		"ace_entity ace_name ace_function": "color: #0000A2",
+		"ace_heading": "color: rgb(12, 7, 255)",
+		"ace_list": "color:rgb(185, 6, 144)",
+		"ace_storage": "color: rgb(147, 15, 128)",
+		"ace_keyword": "color: rgb(147, 15, 128)",
+		"ace_meta ace_tag": "color: rgb(147, 15, 128)",
+		"ace_string ace_regex": "color: rgb(255, 0, 0)",
+		"ace_string": "color: #1A1AA6",
+		"ace_entity ace_other ace_attribute-name": "color: #994409",
+	}; // From js/libs/ace/theme-chrome.js
+	const tokenizer = $e.session.editor.session.getMode().getTokenizer();
+	const Text = ace.require("ace/layer/text").Text;
+	const root = document.createElement("div");
+	const rootText = new Text(root);
+	code.replaceAll("\r", "").replaceAll("\t", "    ").split("\n").forEach(line => {
+		const tokens = tokenizer.getLineTokens(line, "start");
+		const leadingSpacesCount = (line.match(/^\s*/) || [])[0].length;
+		const lineGroupEl = document.createElement("div");
+		lineGroupEl.className = "ace_line_group";
+		const lineEl = document.createElement("div");
+		lineEl.className = "ace_line";
+		const spaceSpan = document.createElement("span");
+		if (tokens && tokens.tokens.length) {
+			const outputLines = [];
+			rootText.$renderSimpleLine(outputLines, tokens.tokens);
+			spaceSpan.innerHTML = "&nbsp;".repeat(leadingSpacesCount);
+			lineEl.insertBefore(spaceSpan, lineEl.children[0]);
+			lineEl.innerHTML += outputLines.join("");
+		} else {
+			spaceSpan.innerHTML = "&nbsp;";
+			lineEl.appendChild(spaceSpan);
+		}
+		lineGroupEl.appendChild(lineEl);
+		root.children[0].appendChild(lineGroupEl);
+	});
+	let output = root.innerHTML;
+	Object.entries(styles).forEach(([ key, value ]) => output = output.replace(new RegExp("class=\\\"" + key + "\\\"", "g"), "style=\"" + value + "\""));
+	output = output.replaceAll(" style=\"\"", "");
+	return output;
 };

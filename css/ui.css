@@ -364,6 +364,7 @@ span.tab-title {
 	width: 100%;
 	height: calc(100% - var(--tab-height) - var(--tab-margin) - var(--lowerbar-height-outbox));
 }
+#view-content,
 #view-content .panel-column {
 	border-top-right-radius: var(--big-radius);
 }

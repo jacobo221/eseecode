@@ -28,4 +28,8 @@
 
 #body[data-level="level1"] .block, #body[data-level="level2"] .block, #body[data-level="level3"] .block {
 	background-image: radial-gradient(at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 180%, rgba(0,0,0,0.95) 200%);
-  }
+}
+
+#body * {
+	border-radius: 0 !important;
+}
