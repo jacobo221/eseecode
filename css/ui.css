@@ -207,7 +207,7 @@ div.ace_gutter-cell {
 	border-bottom-width: 0;
 }
 #toolbox-content {
-	background-image: linear-gradient(rgba(155, 155, 155, 0.7), rgb(130, 130, 130)), var(--toolbox-bg-image);
+	background-image: linear-gradient(rgba(200, 200, 200, 0.7) 70%, rgb(130, 130, 130)), var(--toolbox-bg-image);
 }
 #toolbox-blocks {
 	background-image: var(--toolbox-bg-image);
@@ -392,6 +392,7 @@ span.tab-title {
 }
 .textblock {
 	border: var(--minimal-border) solid var(--block-border-color);
+	background-image: linear-gradient(90deg, rgba(155,155,155,0) 50%, rgba(255,255,255,0.5) 80%, rgb(255, 255, 255) 100%);
 }
 #toolbox-write .textblock.first-in-category {
 	margin-top: var(--default-space);
@@ -476,7 +477,8 @@ span.tab-title {
 }
 #toolbox-io-input,
 #toolbox-io-output {
-	width: max(calc(var(--toolbox-width) - var(--button-small-size)), 100px);
+	box-sizing: border-box;
+	width: 100%;
 	min-height: 150px;
 	resize: vertical;
 	background-color: var(--broken-white);

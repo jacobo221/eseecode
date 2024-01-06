@@ -43,7 +43,7 @@ $e.ui.translations.current = {
 		"Interactive window": "Ventana interactiva",
 		"Debug dialog": "Ventana de depuración",
 		"Show/Hide": "Ver/Ocultar",
-		"Break/No": "Parar/No",
+		"Break?": "¿Parar?",
 		"Layers": "Capas",
 		"Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands": "Aquí puedes:\n * analizar el orden de capas\n * ver una capa verla sola con su guía\n * mostrar/ocultar capas\n * establecer la capa activa\n * ejecutar comandos",
 		"Layer": "Capa",

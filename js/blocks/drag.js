@@ -77,14 +77,8 @@ $e.ui.blocks.modifyEventStart = (event) => {
 	if (!event.isPrimary) return;
 	if (event && event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
 	event.stopPropagation();
-	if ($e.session.moveBlocksHandler) {
-		$e.ui.blocks.multipleMoveEventAccept(event);
-		return;
-	}
-	if ($e.session.breakpointHandler) {
-		$e.ui.debug.addBreakpointEventAccept(event);
-		return;
-	}
+	if ($e.session.moveBlocksHandler) return $e.ui.blocks.multipleMoveEventAccept(event);
+	if ($e.session.breakpointHandler) return $e.ui.debug.addBreakpointEventAccept(event);
 	const clickedBlockEl = event.target.closest(".block:not(.subblock)");
 	if (!clickedBlockEl) return console.error("This should never happen in $e.ui.blocks.modifyEventStart");
 	const isToolbox = !!clickedBlockEl.closest("#toolbox");
@@ -244,8 +238,7 @@ $e.ui.blocks.getMovePointedBlock = (event) => {
 		}
 
 	} else {
-		console.error("This pointedBlock value should not happen in $e.ui.blocks.modifyEventMove", pointedBlock);
-		return;
+		return console.error("This pointedBlock value should not happen in $e.ui.blocks.modifyEventMove", pointedBlock);
 	}
 	
 	return { pointedBlock, pointingAfter };
@@ -442,7 +435,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 $e.ui.blocks.getDropBlockFromPosition = ({ x, y }) => {
 
 	if ($e.ui.blocks.dragging.blockEl) $e.ui.blocks.dragging.blockEl.style.pointerEvents = "none"; // Disable pointer events so it does not disturb document.elementFromPoint
-	let pointedEl = document.elementFromPoint(x, y);
+	let pointedEl = document.elementFromPoint(x - window.scrollX, y - window.scrollY);
 	if (!pointedEl || !document.querySelector("#view-blocks").contains(pointedEl)) return false; // The pointed block is not in the view-blocks element nor the view-blocks element itself
 
 	const getDroppableBlockFromElement = (el) => el.closest(".block");

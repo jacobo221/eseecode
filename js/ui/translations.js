@@ -146,7 +146,7 @@ $e.ui.translations.addStaticText = () => {
 	$e.ui.element.querySelector("#toolbox-debug-layers-title-toggles-name").textContent =  _("Show/Hide");
 	$e.ui.element.querySelector("#toolbox-debug-layers-help").title = _("Here you can:\n * analyze the order of layers\n * view a layer alone and its guide\n * toggle layer visibility\n * set the active layer\n * run commands");
 	$e.ui.element.querySelector("#toolbox-debug-analyzer-title-name").textContent = _("Analyze");
-	$e.ui.element.querySelector("#toolbox-debug-analyzer-title-toggles-name").textContent = _("Break/No");
+	$e.ui.element.querySelector("#toolbox-debug-analyzer-title-toggles-name").textContent = _("Break?");
 	$e.ui.element.querySelector("#toolbox-debug-breakpoint-add").textContent = "➕ " + _("Breakpoint");
 	$e.ui.element.querySelector("#toolbox-debug-watch-add").textContent = "➕ " + _("Watch");
 	$e.ui.element.querySelector("#toolbox-debug-analyzer-help").title = _("Here you can:\n * mark a line to stop the program at that point\n * watch values of variables\n * stop the program when a watched variable is updated");

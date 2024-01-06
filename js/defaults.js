@@ -25,7 +25,7 @@ Object.assign($e, {
 			link: undefined,
 		},
 		version: {
-			text: "4.1",
+			text: "4.0",
 			link: "CHANGELOG.md",
 		},
 		logo: {

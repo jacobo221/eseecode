@@ -786,7 +786,7 @@ $e.api.showFlowTab = (value) => {
 
 /**
  * Shows/Hides multiselect tab
- * @since 4.1
+ * @since 4.0
  * @public
  * @param {Boolean} value Whether to display the multiselect tab or not
  * @example $e.api.showMultiselectTab(false)
@@ -855,7 +855,7 @@ $e.api.switchView = (id, action = true) => {
 
 /**
  * Autosave code
- * @since 4.1
+ * @since 4.0
  * @private
  * @param {String} [forceCode] If contains code this is the code that will be autosaved
  * @example $e.api.autosave()
@@ -866,7 +866,7 @@ $e.api.autosave = (forceCode) => {
 
 /**
  * Define autosave periodicity
- * @since 4.1
+ * @since 4.0
  * @private
  * @param {Number} value Seconds between autosaves
  * @example $e.api.setAutosaveInterval()
@@ -877,7 +877,7 @@ $e.api.setAutosaveInterval = (value) => {
 
 /**
  * Define autosave expiration
- * @since 4.1
+ * @since 4.0
  * @private
  * @param {Number} value Seconds after which autosaved codes expire. Set to 0 to never expire
  * @example $e.api.setAutosaveExpiration()
@@ -888,7 +888,7 @@ $e.api.setAutosaveExpiration = (value) => {
 
 /**
  * Restores the lasts autosaved code
- * @since 4.1
+ * @since 4.0
  * @public
  * @param {Boolean|String} value Whether to restore now the last autosaved code or not
  * @example $e.api.restoreAutosave(true)
@@ -900,7 +900,7 @@ $e.api.restoreAutosave = (value) => {
 
 /**
  * Define exercise id
- * @since 4.1
+ * @since 4.0
  * @private
  * @param {String} value Exercise id
  * @example $e.api.setExercise()
@@ -1073,7 +1073,7 @@ $e.api.showThemes = (value, action = true) => {
 
 /**
  * Time each instruction delays the execution
- * @since 4.1
+ * @since 4.0
  * @public
  * @param {Number} value Time to spend on each instruction, in milliseconds
  * @example $e.api.setInstructionsDelay(500)
