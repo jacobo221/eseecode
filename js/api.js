@@ -424,12 +424,11 @@ $e.api.restart = () => {
  */
 $e.api.setAxis = (value, action = true) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
-	const axis = undefined;
 	if ($e.isNumber(value, true) && $e.backend.whiteboard.axis.predefined[value]) {
 		$e.backend.whiteboard.axis.userSelection = value;
 	} else {
 		$e.backend.whiteboard.axis.predefined.some((coords, i) => {
-			if (value == $coords.name.toLowerCase()) {
+			if (value == coords.name.toLowerCase()) {
 				$e.backend.whiteboard.axis.userSelection = i;
 				return true;
 			}

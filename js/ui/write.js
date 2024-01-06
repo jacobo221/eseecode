@@ -37,7 +37,6 @@ $e.ui.write.insertText = (event) => {
 	const instructionSetId = el.dataset.instructionSetId;
 	let text = $e.instructions.getParameters(instructionSetId).strings.code;
 	
-	const instruction = $e.instructions.set[el.dataset.instructionSetId];
 	if (text.endsWith(" {")) {
 		text += " \n}";
 	}

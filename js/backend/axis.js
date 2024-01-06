@@ -127,7 +127,6 @@ $e.backend.whiteboard.axis.update = () => {
  */
 $e.backend.whiteboard.axis.getIndexInPredefined = (pos = $e.backend.whiteboard.axis.origin, scale = $e.backend.whiteboard.axis.scale) => {
 	const gridModes = $e.backend.whiteboard.axis.predefined;
-	const foundPredefined = false;
 	return gridModes.findIndex((gridMode) => {
 		const compare_this = [ gridMode.origin.x, gridMode.origin.y, gridMode.scale.x, gridMode.scale.y ];
 		const compare_with = [ pos.x,             pos.y,             scale.x,          scale.y          ];

@@ -245,7 +245,6 @@ $e.ide.uploadCode = (code, run, type) => {
 	const mode = $e.modes.views.current.type;
 	let program;
 	// Always start by trying to load the code into the current level
-	let switchToMode;
 	let codeParseable = true;
 	if (eseecodeLanguage) {
 		try {
