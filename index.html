@@ -5,7 +5,7 @@
 	<title>eSeeCode</title>
 	<meta name="author" content="Jacobo Vilella Vilahur" />
 	<meta name="description" content="Easy computer programming eLearning development platform for schools and fun" />
-	<meta name="keywords" content="esee,code,eesecode,programming,school" />
+	<meta name="keywords" content="esee,code,eseecode,programming,school" />
 	<link rel="manifest" href="manifest.json">
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, interactive-widget=overlays-content" />
 	<meta name="application-name" content="eSeeCode">
@@ -27,20 +27,45 @@
 
 		// Test if the browser supports ECMAScript 2017, CSS Grid and PointerEvent
 		eval("(async function() {})()");
-		if (typeof URLSearchParams == "undefined" || typeof JSON === "undefined" || !Array.prototype.map || !("PointerEvent" in window) || typeof CSS === "undefined" || !CSS.supports || !CSS.supports("display", "grid") || !CSS.supports("width", "max-content")) throw new Error("incompatbile browser");
+		if (
+			typeof URLSearchParams == "undefined" ||
+			typeof JSON === "undefined" ||
+			!Array.prototype.map ||
+			!("PointerEvent" in window) ||
+			typeof CSS === "undefined" ||
+			!CSS.supports ||
+			!CSS.supports("display", "grid") ||
+			!CSS.supports("width", "max-content")
+		) throw new Error("incompatbile browser");
 
 		// Shorthands for debugging
-		function ñ() { console.log.apply(this, arguments); } function ññ() { console.log.apply(this, Array.from(arguments).map(arg => { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
+		function ñ() { console.log.apply(this, arguments); }
+		function ññ() { console.log.apply(this, Array.from(arguments).map(arg => { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
 
 		// Run
-		var el = document.createElement("script");
-		el.type = "text/javascript";
-		var v = (new URLSearchParams(window.location.search)).get('v');
-		if (v === "") v = new Date().getTime(); // ?v= is passed without value
-		el.src = "js/eseecode.js" + (v ? '?v=' + v : '');
-		document.body.appendChild(el);
-
+		function init(el, v) {
+			var el = document.createElement("script");
+			el.type = "text/javascript";
+			el.src = "js/eseecode.js" + (v ? '?v=' + v : '');
+			document.body.appendChild(el);
+		}
+		var v = (new URLSearchParams(window.location.search)).get("v");
+		if (v === "") v = Date.now(); // ?v= is passed without value
+		if (v) {
+			v(el, v);
+		} else {
+			// No explicit v= parameter, default to the version number so when there is a version bump all files are refreshed
+			window.$e = {};
+			const el = document.createElement("script");
+			el.onload = function() {
+				document.title = $e.platform.name;
+				init(el, $e.platform.version);
+			};
+			el.setAttribute("src", "js/init.js?=" + Date().now()); // We want to make sure the file containing the version number is always refreshed
+			document.head.appendChild(el);
+		}
 	} catch (error) {
+		console.error(error);
 		const timeToRedirect = 10;
 		document.body.innerHTML = "<p><b>The latest eSeeCode version is not compatible with your browser!</b></p>";
 		document.body.innerHTML += "<p>Please use one of the following browsers:<ul><li>Chrome >= 57</li><li>Edge >= 79</li><li>Firefox >= 66</li><li>Safari >= 13</li><li>Opera >= 44</li></ul></p>";

@@ -1,4 +1,4 @@
-## 4.0 (2023-01-06)
+## 4.0 (2023-01-07)
 
 *Milestone reached: Flowchart, real grid resize, animate the guide movements, multiselect blocks, run backwards, autosave*
 * New flowchart style. New url parameters style= and styletabs=, and API calls setStyle() and showFlowTab()

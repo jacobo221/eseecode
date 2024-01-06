@@ -3,12 +3,12 @@
 $e.ui.themes.current = {
 	id: "retro",
 	name: "Retro",
-	version: "0.1",
-	compatible: "4.0",
-	author: "Jacobo Vilella Vilahur",
-	copyright: "GPLv3",
-	email: "jvilella@eseecode.com",
-	website: "https://www.eseecode.com",
+	version: "0.2",
+	compatible: $e.platform.version,
+	author: $e.platform.author,
+	copyright: $e.platform.license,
+	email: $e.platform.email,
+	website: $e.platform.website,
 	files: [ "definitions.css" ],
 };
 
