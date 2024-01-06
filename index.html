@@ -61,7 +61,7 @@
 				document.title = $e.platform.name;
 				init(el, $e.platform.version);
 			};
-			el.setAttribute("src", "js/init.js?=" + Date().now()); // We want to make sure the file containing the version number is always refreshed
+			el.setAttribute("src", "js/init.js?=" + Date.now()); // We want to make sure the file containing the version number is always refreshed
 			document.head.appendChild(el);
 		}
 	} catch (error) {
