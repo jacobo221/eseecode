@@ -1,4 +1,10 @@
 "use strict";
+
+(() => {
+    Object.assign($e, {
+        api: {},
+    });
+})();
 	
 window.addEventListener("message", async (event) => {
 
@@ -991,7 +997,7 @@ $e.api.resume = () => {
  * @example $e.api.updateSavedTime()
  */
 $e.api.updateSavedTime = () => {
-	$e.session.lastSave = new Date().getTime();
+	$e.session.lastSave = Date.now();
 };
 
 /**

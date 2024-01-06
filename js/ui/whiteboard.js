@@ -38,7 +38,7 @@ $e.ide.downloadWhiteboard = (onlyReturn, gridVisible, guideVisible) => {
 	const dataUrl = canvas.toDataURL();
 	const dataTuple = $e.dataURItoB64(dataUrl);
 	const data = dataTuple.data;
-	const filename = "canvas-" + new Date().getTime() + "." + dataTuple.mimetype.split("/")[1];
+	const filename = "canvas-" + Date.now() + "." + dataTuple.mimetype.split("/")[1];
 	const mimetype = dataTuple.mimetype;
 	if (!onlyReturn) $e.ide.saveFile(data, filename, mimetype);
 	return { canvas: canvas, dataUrl: dataUrl, binary: data, filename: filename, mimetype: mimetype };
@@ -52,7 +52,7 @@ $e.ide.downloadWhiteboard = (onlyReturn, gridVisible, guideVisible) => {
  */
 $e.ui.downloadLayers = (animation) => {
 	// Create one layer GIF to measure how long it takes
-	const start = new Date().getTime();
+	const start = Date.now();
 	let estimatedTime;
 	if (animation) {
 		const encoder = new GIFEncoder();
@@ -70,7 +70,7 @@ $e.ui.downloadLayers = (animation) => {
 		const tempCtx = tempCanvas.getContext("2d");
 		tempCtx.drawImage($e.backend.whiteboard.layers.current.canvas, 0, 0, canvasWidth, canvasHeight);
 	}
-	const finish = new Date().getTime();
+	const finish = Date.now();
 	const secondsPerLayer = (finish - start) / 1000;
 	estimatedTime = Math.ceil(secondsPerLayer * $e.backend.whiteboard.layers.available.length);
 	if (estimatedTime >= 3) {
@@ -209,7 +209,7 @@ $e.ide.imagifyLayers = (animation, setup) => {
 		ctx.font = "20px Arial";
 		ctx.strokeStyle = "#99AAAAAA";
 		if ($e.ui.element.querySelector("#toolbox-debug-command-input").value != "nocaption") {
-			ctx.strokeText(_("Made with %s", [ $e.platform.web.text ]), shiftX + whiteboardWidth / 4, shiftY + whiteboardHeight - 20);
+			ctx.strokeText(_("Made with %s", [ $e.platform.signature ]), shiftX + whiteboardWidth / 4, shiftY + whiteboardHeight - 20);
 		}
 		if (animation) {
 			encoder.addFrame(ctx);
@@ -247,7 +247,7 @@ $e.ide.downloadLayers = (grid) => {
 	}
 	const dataTuple = $e.dataURItoB64(image);
 	const data = dataTuple.data;
-	const filename = "layers-" + new Date().getTime() + "." + dataTuple.mimetype.split("/")[1];
+	const filename = "layers-" + Date.now() + "." + dataTuple.mimetype.split("/")[1];
 	const mimetype = dataTuple.mimetype;
 	$e.ide.saveFile(data, filename, mimetype);
 };

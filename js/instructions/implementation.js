@@ -1997,7 +1997,7 @@ function getYear() {
  * @example getTimestamp()
  */
 function getTimestamp() {
-	return new Date().getTime();
+	return Date.now();
 };
 
 /**

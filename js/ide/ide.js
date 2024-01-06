@@ -11,7 +11,7 @@ $e.ide.changed = (resetProgramCounter = true) => {
 		$e.execution.stop();
 		$e.execution.initProgramCounter(); // This is so stepped execution will start from the beginning
 	}
-	$e.session.lastChange = new Date().getTime();
+	$e.session.lastChange = Date.now();
 	$e.ui.unhighlight();
 	$e.ui.refreshUndo();
 	$e.ui.updateViewButtonsVisibility();
@@ -360,5 +360,5 @@ $e.ide.saveFile = (data64, filename, mimetype) => {
 		oWin.close();
 		$e.ui.msgBox.close();
 	}
-	$e.session.lastSave = new Date().getTime();
+	$e.session.lastSave = Date.now();
 };

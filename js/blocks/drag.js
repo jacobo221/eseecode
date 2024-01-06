@@ -150,9 +150,9 @@ $e.ui.blocks.modifyEventStart = (event) => {
 		mainBodyEl.appendChild(blockEl); // We add it to #body so the .levelX class applies, which we need to get the block's size
 		// Try to drag the block pinned from the same position it was clicked
 		const clickedBlockElRect = clickedBlockEl.getBoundingClientRect();
-		$e.ui.blocks.dragging.mouse.x = event.pageX - clickedBlockElRect.left - window.scrollX;
+		$e.ui.blocks.dragging.mouse.x = event.clientX - clickedBlockElRect.left;
 		if ($e.isNumber($e.ui.blocks.dragging.mouse.x) && $e.ui.blocks.dragging.mouse.x > 0) {
-			$e.ui.blocks.dragging.mouse.y = event.pageY - clickedBlockElRect.top - window.scrollY;
+			$e.ui.blocks.dragging.mouse.y = event.clientY - clickedBlockElRect.top;
 		} else {
 			// Android WebView (for embedding in Android app), doesn't take into acount scroll in getBoundingClientRect() when zooming
 			$e.ui.blocks.dragging.mouse.x = undefined;
@@ -435,7 +435,7 @@ $e.ui.blocks.modifyEventAccept = async (event) => {
 $e.ui.blocks.getDropBlockFromPosition = ({ x, y }) => {
 
 	if ($e.ui.blocks.dragging.blockEl) $e.ui.blocks.dragging.blockEl.style.pointerEvents = "none"; // Disable pointer events so it does not disturb document.elementFromPoint
-	let pointedEl = document.elementFromPoint(x - window.scrollX, y - window.scrollY);
+	let pointedEl = document.elementFromPoint(x, y);
 	if (!pointedEl || !document.querySelector("#view-blocks").contains(pointedEl)) return false; // The pointed block is not in the view-blocks element nor the view-blocks element itself
 
 	const getDroppableBlockFromElement = (el) => el.closest(".block");

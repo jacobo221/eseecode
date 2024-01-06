@@ -310,7 +310,7 @@ $e.ui.reset = async () => {
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();
 	$e.ui.themes.resetMenu();
-	$e.ui.element.querySelector("#title").innerHTML = '<a href="' + $e.platform.logo.link + '" target="_blank" id="logo"><img src="' + $e.basepath + $e.platform.logo.text + '" title="" /></a>';
+	$e.ui.element.querySelector("#title").innerHTML = '<a href="' + $e.platform.website + '" target="_blank" id="logo"><img src="' + $e.basepath + $e.platform.logo + '" title="" /></a>';
 	$e.ui.resetGridModeSelect();
 	$e.ide.blocks.changes.reset();
 	$e.ui.debug.resetBreakpointsHighlights();
@@ -358,7 +358,7 @@ $e.ui.reset = async () => {
 	$e.session.lastChange = 0;
 	const testUntilReady = () => {
 		if ($e.ui.translations.current.loaded && $e.ui.themes.current.loaded) {
-			$e.session.ready = new Date().getTime();
+			$e.session.ready = Date.now();
 			$e.ide.loadBrowserURLParameters([ "toolbox" ], undefined, true);
 			$e.ui.element.style.visibility = ""; // Remove the visiblity = "hidden" set in eseecode.js to improve the loading animation
 			$e.ui.element.style.opacity = 1;

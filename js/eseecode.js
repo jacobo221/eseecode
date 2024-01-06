@@ -6,16 +6,17 @@
 	if (document.readyState === "complete") return window.addEventListener("load", () => $eseecodeLoader(eseecodeEl));
 
 	// Do not run twice
-	if (window.$e) return false;
+	if (window.$e && $e.session) return false;
 
 	// Create the main object
-	if (!window.$e) window.$e = { session: {}, ui: {} };
+	if (!window.$e) window.$e = {};
+	$e = Object.assign({ session: {}, ui: {} }, $e);
 
 	// Now we run the sync function, so the initial sychronous call returns
 	(async function() {
 		$e.session.ready = false; // Mark that it is being loaded
 
-		$e.cache_token = new URLSearchParams(window.location.search).get('v');
+		$e.cache_token = new URLSearchParams(window.location.search).get("v");
 
 		const scripts = document.querySelectorAll("script");
 		const scriptPath = scripts[scripts.length - 1].src;
@@ -82,7 +83,7 @@
 			if (type == "css") el.rel = "stylesheet";
 			if (count) el.onload = count;
 			if (error) el.onerror = error;
-			el.setAttribute(type == "js" ? "src" : "href", fullPath + ($e.cache_token ? '?v=' + $e.cache_token : ''));
+			el.setAttribute(type == "js" ? "src" : "href", fullPath + ($e.cache_token ? "?v=" + $e.cache_token : ""));
 			headEl.appendChild(el);
 			loadedFiles.push(path);
 		}
@@ -93,7 +94,13 @@
 				"definitions.css", /* This a theme file, so use theme-relative path */
 				"ui.css", /*Load the CSS as soon as possible to style the progress animation. This a theme file, so use theme-relative path */
 				"js/polyfills.js",
-				"js/defaults.js",
+				"js/init.js",
+				"js/instructions/init.js",
+				"js/execution/init.js",
+				"js/ide/init.js",
+				"js/backend/init.js",
+				"js/ui/init.js",
+				"js/debug/init.js",
 			], [
 				// Depends on js/defaults.js
 				"themes/installed.js",
@@ -103,7 +110,7 @@
 				"js/backend/backend.js",
 				"js/backend/axis.js",
 				"js/backend/whiteboard.js",
-				"js/ide.js",
+				"js/ide/ide.js",
 				"js/execution/runtime.js",
 				"js/execution/ide.js",
 				"js/blocks/blocks.js",

@@ -181,7 +181,7 @@ $e.execution.stop = () => {
  */
 $e.execution.end = () => {
 	if ($e.execution.current.startTime !== undefined) { // When running precode initially startTime is not set so use this to detect if it is just precode we're running and in this case act as if nothing happened
-		const executionTime = ((new Date().getTime()) - $e.execution.current.startTime) / 1000;
+		const executionTime = (Date.now() - $e.execution.current.startTime) / 1000;
 		const executionInstructions = $e.execution.current.programCounter;
 		$e.ui.element.querySelector("#toolbox-debug-execute-stats").innerHTML = _("Instructions executed") + ": " + executionInstructions + "<br />" + _("Execution time") + ": " + executionTime + " " + _("secs");
 		if (!$e.execution.precode.running && !$e.execution.current.postcode.running) {

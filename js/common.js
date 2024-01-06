@@ -139,9 +139,9 @@ $e.obtainPosition = (reference) => {
 	} else if (reference instanceof Event) {
 		const event = reference;
 		if (event.type.startsWith("touch")) {
-			return { x: event.targetTouches[0].pageX, y: event.targetTouches[0].pageY };
+			return { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY };
 		} else { 
-			return { x: event.pageX, y: event.pageY };
+			return { x: event.clientX, y: event.clientY };
 		}
 	} else {
 		console.error("Unknown reference in obtainPosition: ", reference);

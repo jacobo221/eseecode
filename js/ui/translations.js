@@ -114,8 +114,8 @@ $e.ui.translations.addStaticText = () => {
 	});
 	$e.ui.element.querySelector("#translations-switch").title = _("Language");
 	$e.ui.element.querySelector("#themes-switch").title = _("Theme");
-	$e.ui.element.querySelector("#logo").title = _($e.platform.name.text);
-	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.version.link) + "', '_blank')\"\">" + _($e.platform.version.text) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license.link) + "', '_blank')\">" + _($e.platform.license.text) + "</span></div>";
+	$e.ui.element.querySelector("#logo").title = _($e.platform.name);
+	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.changelog) + "', '_blank')\"\">" + _($e.platform.version) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license_link) + "', '_blank')\">" + _($e.platform.license) + "</span></div>";
 	$e.ui.element.querySelector("#loadcode").textContent = _("Open");
 	$e.ui.element.querySelector("#savecode").textContent = _("Download");
 	$e.ui.element.querySelector("#whiteboard").title = _("Whiteboard");

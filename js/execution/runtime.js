@@ -87,7 +87,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		return;
 	}
 	if (inCode === undefined || inCode === null) {
-		$e.session.lastRun = new Date().getTime();
+		$e.session.lastRun = Date.now();
 	}
 	const oldWindowProperties = Object.getOwnPropertyNames(window);
 	$e.execution.traceInject();
@@ -139,7 +139,7 @@ $e.execution.initProgramCounter = () => {
 		// Precode/Postcode is run as is with no checks and without altering $e.execution variables
 		return;
 	}
-	$e.execution.current.startTime = new Date().getTime();
+	$e.execution.current.startTime = Date.now();
 	$e.execution.current.programCounter = -1;
 	$e.execution.current.lastRunLineNumber = -1;
 	Object.entries($e.execution.current.monitors).forEach(([key, monitor]) => {
