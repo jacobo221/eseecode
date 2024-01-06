@@ -17,7 +17,7 @@ $e.ui.translations.switch = (lang, run) => {
 	lang = lang.toLowerCase();
 	const headElement = document.querySelector("head");
 	const translationsPath = "translations";
-	const translationPath = $e.basepath + "/" + translationsPath + "/" + lang + ".js";
+	const translationPath = $e.basepath + "/" + translationsPath + "/" + lang + ".js" + ($e.cache_token ? "?v=" + $e.cache_token : "");
 	// Remove the previous theme
 	const headElements = headElement.children;
 	Array.from(headElements).forEach(element => {

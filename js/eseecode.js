@@ -16,7 +16,7 @@
 	(async function() {
 		$e.session.ready = false; // Mark that it is being loaded
 
-		$e.cache_token = new URLSearchParams(window.location.search).get("v");
+		$e.cache_token = new URLSearchParams(document.currentScript.src.split("?").slice(1).join("?")).get("v");
 
 		const scripts = document.querySelectorAll("script");
 		const scriptPath = scripts[scripts.length - 1].src;
