@@ -191,3 +191,5 @@ $e.ui.translations.translate = (text, params) => {
 	}
 	return translated;
 };
+
+window._ = $e.ui.translations.translate; // Shorthand so we can just use _() instead of $e.ui.translation.translate()

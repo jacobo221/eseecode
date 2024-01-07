@@ -89,7 +89,7 @@
 		}
 		const updateProgress = (from, to, steps, countdown, event) => { if (!progressEl.dataset.locked) progressEl.textContent = Math.floor(to - (to - from) / steps * countdown) + "%"; };
 		const failedProgress = (countdown, error) => { console.error("Failure", error); progressEl.dataset.locked = true; progressEl.textContent = "Failed!"; progressEl.classList.remove("loading"); };
-		const files_to_load =[
+		const files_to_load = [
 			[
 				"definitions.css", /* This a theme file, so use theme-relative path */
 				"ui.css", /*Load the CSS as soon as possible to style the progress animation. This a theme file, so use theme-relative path */
@@ -162,7 +162,6 @@
 				subfiles.forEach(file => loadFile(file, headEl, counter.count, counter.kill));
 				await new Promise(r => counter.wait(r));
 			}
-			window._ = $e.ui.translations.translate; // Shorthand so we can just use _() instead of $e.ui.translation.translate()
 			// All files loaded, start application
 			$e.ui.reset();
 			wrapperProgressEl.parentNode.removeChild(wrapperProgressEl);
