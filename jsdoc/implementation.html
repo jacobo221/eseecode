@@ -3,98 +3,6 @@
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class _global_.">
-					<caption>Field Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Field Attributes</th>
-							<th scope="col">Field Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#array">array</a></b>
-								</div>
-								<div class="description">Allows to declare a variable containing several values</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#fill">fill</a></b>
-								</div>
-								<div class="description">Fills the shape described within its block</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#function">function</a></b>
-								</div>
-								<div class="description">Allows to encapsulate groups of instructions</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#if">if</a></b>
-								</div>
-								<div class="description">Allows to branch the code</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#repeat">repeat</a></b>
-								</div>
-								<div class="description">Allows to iterate a specific amount of times
-It updates a variable repeatCount which starts at 0 and increments on every iteration</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#var">var</a></b>
-								</div>
-								<div class="description">Allows to declare a variable</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="#while">while</a></b>
-								</div>
-								<div class="description">Allows to iterate based on a condition</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
-			
-
-<!-- ============================== methods summary ======================== -->
-			
-				
-				
 				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class _global_.">
 					<caption>Method Summary</caption>
 					<thead>
@@ -129,7 +37,16 @@ It will run a code on every specified time until the code returns false or an am
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#arc">arc</a></b>(radius, degrees, follow, counterclockwise)
 								</div>
-								<div class="description">Draws an arc</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#ask">ask</a></b>(message, initial_value, timeout)
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -174,7 +91,7 @@ It will run a code on every specified time until the code returns false or an am
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#forward">forward</a></b>(pixels)
 								</div>
-								<div class="description">Moves the guide forward</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -301,16 +218,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#getKeyboardKey">getKeyboardKey</a></b>()
 								</div>
-								<div class="description">Returns the value of the key in the keyboard is being pressed</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#getKeyboardKeycode">getKeyboardKeycode</a></b>()
-								</div>
-								<div class="description">Returns the code of the key in the keyboard is being pressed</div>
+								<div class="description">Returns the value of the key that is being pressed in the keyboard</div>
 							</td>
 						</tr>
 					
@@ -319,16 +227,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#getKeyboardLastKey">getKeyboardLastKey</a></b>()
 								</div>
-								<div class="description">Returns the value of the last key in the keyboard that was being pressed</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="#getKeyboardLastKeycode">getKeyboardLastKeycode</a></b>()
-								</div>
-								<div class="description">Returns the code of the last key in the keyboard that was being pressed and reset</div>
+								<div class="description">Returns the value of the last key in the keyboard that was being pressed and marks it as processed so the next call to getKeyboardLastKey() doesn't give it again</div>
 							</td>
 						</tr>
 					
@@ -400,7 +299,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#getMilliseconds">getMilliseconds</a></b>()
 								</div>
-								<div class="description">Returns the character represented by a key code</div>
+								<div class="description">Returns the current millisecond within the current second in time</div>
 							</td>
 						</tr>
 					
@@ -607,7 +506,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goTo">goTo</a></b>(posx, posy)
 								</div>
-								<div class="description">Moves the guide to a specific position</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -616,7 +515,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goToCenter">goToCenter</a></b>()
 								</div>
-								<div class="description">Moves the guide to the center of the whiteboard</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -625,7 +524,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goToLowLeft">goToLowLeft</a></b>()
 								</div>
-								<div class="description">Moves the guide to the lower-left of the whiteboard</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -634,7 +533,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goToLowRight">goToLowRight</a></b>()
 								</div>
-								<div class="description">Moves the guide to the lower-right of the whiteboard</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -643,7 +542,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goToUpLeft">goToUpLeft</a></b>()
 								</div>
-								<div class="description">Moves the guide to the upper-left corner of the whiteboard</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -652,7 +551,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#goToUpRight">goToUpRight</a></b>()
 								</div>
-								<div class="description">Moves the guide to the upper-right corner of the whiteboard</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -697,7 +596,7 @@ Angle 0 is when the guide is looking horizontally right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#line">line</a></b>(destinationx, destinationy)
 								</div>
-								<div class="description">Draws a line from current guide position to a specified coodinate</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -745,6 +644,15 @@ Upper layers overlap lower layers</div>
 								</div>
 								<div class="description">Pushes a layer down in the layers order
 Upper layers overlap lower layers</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#say">say</a></b>(message, timeout)
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -823,6 +731,15 @@ Upper layers overlap lower layers</div>
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#sound">sound</a></b>(source, background, loop, audioHandlersIndex)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#stop">stop</a></b>()
 								</div>
 								<div class="description">Stops the execution of any future code</div>
@@ -852,7 +769,7 @@ Upper layers overlap lower layers</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#turnLeft">turnLeft</a></b>(angle)
 								</div>
-								<div class="description">Turns the guide left</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -861,8 +778,7 @@ Upper layers overlap lower layers</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#turnReset">turnReset</a></b>(angle)
 								</div>
-								<div class="description">Turns the guide to it's original angle
-The original angle is the guide looking horizontally to the right</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -871,7 +787,7 @@ The original angle is the guide looking horizontally to the right</div>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="#turnRight">turnRight</a></b>(angle)
 								</div>
-								<div class="description">Turns the guide right</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -935,6 +851,15 @@ The original angle is the guide looking horizontally to the right</div>
 								<div class="fixedFont"><b><a href="#use">use</a></b>(id)
 								</div>
 								<div class="description">Switches the currently active layer, returns the layer name</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="#wait">wait</a></b>(milliseconds)
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -1227,6 +1152,9 @@ The original angle is the guide looking horizontally to the right</div>
 					<div class="description">
 						Allows to declare a variable containing several values
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1257,6 +1185,9 @@ The original angle is the guide looking horizontally to the right</div>
 					</div>
 					<div class="description">
 						Fills the shape described within its block
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1289,6 +1220,9 @@ The original angle is the guide looking horizontally to the right</div>
 					<div class="description">
 						Allows to encapsulate groups of instructions
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1319,6 +1253,9 @@ The original angle is the guide looking horizontally to the right</div>
 					</div>
 					<div class="description">
 						Allows to branch the code
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1352,6 +1289,9 @@ The original angle is the guide looking horizontally to the right</div>
 						Allows to iterate a specific amount of times
 It updates a variable repeatCount which starts at 0 and increments on every iteration
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1383,6 +1323,9 @@ It updates a variable repeatCount which starts at 0 and increments on every iter
 					<div class="description">
 						Allows to declare a variable
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1413,6 +1356,9 @@ It updates a variable repeatCount which starts at 0 and increments on every iter
 					</div>
 					<div class="description">
 						Allows to iterate based on a condition
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1453,6 +1399,9 @@ It updates a variable repeatCount which starts at 0 and increments on every iter
 					<div class="description">
 						Starts an animation, returns an animation handler
 It will run a code on every specified time until the code returns false or an amount of times is specified
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1535,6 +1484,9 @@ It will run a code on every specified time until the code returns false or an am
 					<div class="description">
 						Animate layers by displaying them one at a time
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1579,14 +1531,13 @@ It will run a code on every specified time until the code returns false or an am
 					
 					</div>
 					<div class="description">
-						Draws an arc
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">arc(50, 270)</pre>
 					
 					
 					
@@ -1595,38 +1546,83 @@ It will run a code on every specified time until the code returns false or an am
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>radius</b>
+									<b>radius</b>
 									
 								</dt>
-								<dd>Radius of the arc</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>degrees</b>
+									<b>degrees</b>
 									
 								</dt>
-								<dd>Amount of degrees to arc</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Boolean}</span> <b>follow</b>
-									<i>Optional, Default: false</i>
+									<b>follow</b>
+									
 								</dt>
-								<dd>false = arc around the guide, true = arc following the guide's position and angle and move the guide to the end of the arc</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Boolean}</span> <b>counterclockwise</b>
-									<i>Optional, Default: false</i>
+									<b>counterclockwise</b>
+									
 								</dt>
-								<dd>Move clockwise or counterclockwise</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="ask"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>ask</b>(message, initial_value, timeout)
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
+						
+					</div>
+					
+					
+					
 						
 							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>message</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>initial_value</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>timeout</b>
+									
+								</dt>
+								<dd></dd>
+							
 							</dl>
-							</dl>
+						
+						
 						
 						
 						
@@ -1644,6 +1640,9 @@ It will run a code on every specified time until the code returns false or an am
 					</div>
 					<div class="description">
 						Defines the beginning of a shape definition
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1679,6 +1678,9 @@ It will run a code on every specified time until the code returns false or an am
 					</div>
 					<div class="description">
 						Changes the axis of the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1751,6 +1753,9 @@ It will run a code on every specified time until the code returns false or an am
 					<div class="description">
 						Deletes all content in a layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1769,6 +1774,12 @@ It will run a code on every specified time until the code returns false or an am
 									<i>Optional</i>
 								</dt>
 								<dd>Layer id. If missing, currently active layer</dd>
+							
+								<dt>
+									<b>$e.backend.whiteboard.layers.current.name</b>
+									
+								</dt>
+								<dd></dd>
 							
 							</dl>
 						
@@ -1796,6 +1807,9 @@ It will run a code on every specified time until the code returns false or an am
 					</div>
 					<div class="description">
 						Defines the end of a shape definition
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1830,14 +1844,13 @@ It will run a code on every specified time until the code returns false or an am
 					
 					</div>
 					<div class="description">
-						Moves the guide forward
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">forward(50)</pre>
 					
 					
 					
@@ -1846,20 +1859,14 @@ It will run a code on every specified time until the code returns false or an am
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>pixels</b>
+									<b>pixels</b>
 									
 								</dt>
-								<dd>Amount of pixels to move forward</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -1878,6 +1885,9 @@ It will run a code on every specified time until the code returns false or an am
 					<div class="description">
 						Returns the layer's guide's position's angle
 Angle 0 is when the guide is looking horizontally right
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -1932,6 +1942,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the arccosine of an angle
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -1984,6 +1997,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the arcsine of an angle
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2038,6 +2054,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the arctangent of an angle
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2091,6 +2110,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Gets whether the future text will be bold in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2125,6 +2147,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the character corresponding to a key code
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2179,6 +2204,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Gets the color of the future draw lines and text in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2213,6 +2241,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the cosine of an angle
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2267,6 +2298,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current day of the month
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2309,6 +2343,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Gets the font name of the future text in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2343,6 +2380,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the current hour
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2386,6 +2426,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current input position
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2428,6 +2471,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Gets whether the future text will be italic in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2461,7 +2507,10 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Returns the value of the key in the keyboard is being pressed
+						Returns the value of the key that is being pressed in the keyboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2495,48 +2544,6 @@ Angle 0 is when the guide is looking horizontally right
 
 					<hr />
 				
-					<a name="getKeyboardKeycode"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{Number|Boolean}</span>
-					<b>getKeyboardKeycode</b>()
-					
-					</div>
-					<div class="description">
-						Returns the code of the key in the keyboard is being pressed
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">getKeyboardKeycode()</pre>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>2.4</dd>
-							</dl>
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Number|Boolean}</span> Code of the key being pressed, false if none is being pressed</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
 					<a name="getKeyboardLastKey"> </a>
 					<div class="fixedFont">
 					
@@ -2545,7 +2552,10 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Returns the value of the last key in the keyboard that was being pressed
+						Returns the value of the last key in the keyboard that was being pressed and marks it as processed so the next call to getKeyboardLastKey() doesn't give it again
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2579,48 +2589,6 @@ Angle 0 is when the guide is looking horizontally right
 
 					<hr />
 				
-					<a name="getKeyboardLastKeycode"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{Number|Boolean}</span>
-					<b>getKeyboardLastKeycode</b>()
-					
-					</div>
-					<div class="description">
-						Returns the code of the last key in the keyboard that was being pressed and reset
-						
-						
-					</div>
-					
-					
-					
-					<pre class="code">getKeyboardLastKeycode()</pre>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>2.4</dd>
-							</dl>
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Number|Boolean}</span> Code of the last key that was pressed, false if none has been pressed yet</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
 					<a name="getKeyboardPressed"> </a>
 					<div class="fixedFont">
 					
@@ -2630,6 +2598,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Checks if a key in the keyboard is being pressed
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2672,6 +2643,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns whether the layer exists
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2728,6 +2702,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the height of the layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2769,6 +2746,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns as a value the image visible in the specified layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2823,6 +2803,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the layer name
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2875,6 +2858,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns if the specified layer is visible or hidden
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -2929,6 +2915,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the width of the layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -2969,7 +2958,10 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Returns the character represented by a key code
+						Returns the current millisecond within the current second in time
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3013,6 +3005,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current minute
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3055,6 +3050,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current month
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3096,6 +3094,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the color in a certain coordinate in the current layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3162,6 +3163,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the horitzontal position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3203,6 +3207,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the vertical position of the pointer the last time it was clicked (mouse or touch gesture) in the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3246,6 +3253,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Checks whether the pointer (mouse or touch gesture) is over the whiteboard
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3287,6 +3297,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Checks whether the pointer (mouse or touch panel) is being pressed (click if its a mouse, touch if its a tocuh device)
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3330,6 +3343,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the horitzontal position of the pointer (mouse or touch gesture) in the whiteboard
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3371,6 +3387,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the vertical position of the pointer (mouse or touch gesture) in the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3414,6 +3433,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns a random color
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3456,6 +3478,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns a positive random integer number
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3474,6 +3499,12 @@ Angle 0 is when the guide is looking horizontally right
 									<i>Optional</i>
 								</dt>
 								<dd>The highest number desired, excluding this number</dd>
+							
+								<dt>
+									<b>Number.MAX_VALUE</b>
+									
+								</dt>
+								<dd></dd>
 							
 							</dl>
 						
@@ -3518,6 +3549,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns a color from RGB components
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3584,6 +3618,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current second
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3625,6 +3662,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the sine of an angle
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3679,6 +3719,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Gets the size of the future draw lines and text in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3713,6 +3756,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the square root of the number
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3767,6 +3813,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the tangent of an angle
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3820,6 +3869,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns a timestamp of the current hour
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3862,6 +3914,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current day of the week
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -3903,6 +3958,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Returns the layer's guide's position's X coordinate
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -3957,6 +4015,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the layer's guide's position's Y coordinate
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4010,6 +4071,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Returns the current year
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4050,14 +4114,13 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to a specific position
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">goTo(50, 50)</pre>
 					
 					
 					
@@ -4066,26 +4129,20 @@ Angle 0 is when the guide is looking horizontally right
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>posx</b>
+									<b>posx</b>
 									
 								</dt>
-								<dd>X coordinate where the guide will be moved</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>posy</b>
+									<b>posy</b>
 									
 								</dt>
-								<dd>Y coordinate where the guide will be moved</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4102,25 +4159,18 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to the center of the whiteboard
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">goToCenter()</pre>
-					
-					
-					
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4137,25 +4187,18 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to the lower-left of the whiteboard
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">goToLowLeft()</pre>
-					
-					
-					
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4172,25 +4215,18 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to the lower-right of the whiteboard
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">goToLowRight()</pre>
-					
-					
-					
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4207,25 +4243,18 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to the upper-left corner of the whiteboard
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">goToUpLeft()</pre>
-					
-					
-					
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4242,25 +4271,18 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Moves the guide to the upper-right corner of the whiteboard
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
 					
 					
 					
-					<pre class="code">goToUpRight()</pre>
-					
-					
-					
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4278,6 +4300,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Hides a layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -4330,6 +4355,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Puts an image in the specified position of the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -4435,6 +4463,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Reads from the input area
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4491,6 +4522,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Sets the position of the input pointer to a fixed place
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4535,14 +4569,13 @@ Angle 0 is when the guide is looking horizontally right
 					
 					</div>
 					<div class="description">
-						Draws a line from current guide position to a specified coodinate
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">line(50, 50)</pre>
 					
 					
 					
@@ -4551,26 +4584,20 @@ Angle 0 is when the guide is looking horizontally right
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>destinationx</b>
+									<b>destinationx</b>
 									
 								</dt>
-								<dd>X coordinate where the line ends</dd>
+								<dd></dd>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>destinationy</b>
+									<b>destinationy</b>
 									
 								</dt>
-								<dd>Y coordinate where the line ends</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -4588,6 +4615,9 @@ Angle 0 is when the guide is looking horizontally right
 					</div>
 					<div class="description">
 						Draws a line from a coordinate to another using user coordinates
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -4653,6 +4683,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Writes in the output area
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4705,6 +4738,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Deletes a layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4720,9 +4756,9 @@ Angle 0 is when the guide is looking horizontally right
 							
 								<dt>
 									<span class="light fixedFont">{String|Number}</span> <b>id</b>
-									<i>Optional, Default: "$e.top"</i>
+									<i>Optional</i>
 								</dt>
-								<dd>Id of the layer to affect</dd>
+								<dd>Id of the layer to affect. By default, the top layer</dd>
 							
 							</dl>
 						
@@ -4761,6 +4797,9 @@ Angle 0 is when the guide is looking horizontally right
 					<div class="description">
 						Pulls a layer up in the layers order
 Upper layers overlap lower layers
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -4825,6 +4864,9 @@ Upper layers overlap lower layers
 						Pushes a layer down in the layers order
 Upper layers overlap lower layers
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -4877,6 +4919,51 @@ Upper layers overlap lower layers
 
 					<hr />
 				
+					<a name="say"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>say</b>(message, timeout)
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>message</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>timeout</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="setAxis"> </a>
 					<div class="fixedFont">
 					
@@ -4886,6 +4973,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Changes the axis of the whiteboard
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -4961,6 +5051,9 @@ Upper layers overlap lower layers
 					<div class="description">
 						Sets the bold property in future text writes in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5006,6 +5099,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Sets the color of the future draw lines and text in the currently active layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5053,6 +5149,9 @@ Upper layers overlap lower layers
 					<div class="description">
 						Sets the font to use in future text writes in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5098,6 +5197,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Sets the italic property in future text writes in the currently active layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5145,6 +5247,9 @@ Upper layers overlap lower layers
 					<div class="description">
 						Sets the size of the future draw lines and text in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5190,6 +5295,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Shows a layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5242,6 +5350,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Creates a clone of the current layer in another layer, returns the layer name
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5296,6 +5407,63 @@ Upper layers overlap lower layers
 
 					<hr />
 				
+					<a name="sound"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>sound</b>(source, background, loop, audioHandlersIndex)
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>source</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>background</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>loop</b>
+									
+								</dt>
+								<dd></dd>
+							
+								<dt>
+									<b>audioHandlersIndex</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="stop"> </a>
 					<div class="fixedFont">
 					
@@ -5305,6 +5473,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Stops the execution of any future code
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5340,6 +5511,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Stop playing an audio file in the background
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5386,6 +5560,9 @@ Upper layers overlap lower layers
 					</div>
 					<div class="description">
 						Sets the layer transparency
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5447,14 +5624,13 @@ Upper layers overlap lower layers
 					
 					</div>
 					<div class="description">
-						Turns the guide left
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">turnLeft(90)</pre>
 					
 					
 					
@@ -5463,20 +5639,14 @@ Upper layers overlap lower layers
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>angle</b>
+									<b>angle</b>
 									
 								</dt>
-								<dd>Angle</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -5493,15 +5663,13 @@ Upper layers overlap lower layers
 					
 					</div>
 					<div class="description">
-						Turns the guide to it's original angle
-The original angle is the guide looking horizontally to the right
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">turnReset(90)</pre>
 					
 					
 					
@@ -5510,20 +5678,14 @@ The original angle is the guide looking horizontally to the right
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>angle</b>
-									<i>Optional, Default: 0</i>
+									<b>angle</b>
+									
 								</dt>
-								<dd>Angle to set to</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>2.1</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -5540,14 +5702,13 @@ The original angle is the guide looking horizontally to the right
 					
 					</div>
 					<div class="description">
-						Turns the guide right
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
-					
-					
-					
-					<pre class="code">turnRight(90)</pre>
 					
 					
 					
@@ -5556,20 +5717,14 @@ The original angle is the guide looking horizontally to the right
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Number}</span> <b>angle</b>
+									<b>angle</b>
 									
 								</dt>
-								<dd>Angle</dd>
+								<dd></dd>
 							
 							</dl>
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>1.0</dd>
-							</dl>
-							</dl>
 						
 						
 						
@@ -5587,6 +5742,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Stops an animation
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5634,6 +5792,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Unsets the bold property in future text writes in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5668,6 +5829,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Sets the draw color to be transparent in the currently active layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5704,6 +5868,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Resets the font to use in future text writes in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5739,6 +5906,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Unsets the italic property in future text writes in the currently active layer
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -5773,6 +5943,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Resets the size of the future draw lines and text in the currently active layer
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5815,6 +5988,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Switches the currently active layer, returns the layer name
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5859,6 +6035,45 @@ The original angle is the guide looking horizontally to the right
 
 					<hr />
 				
+					<a name="wait"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>wait</b>(milliseconds)
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>milliseconds</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
 					<a name="windowButtonCreate"> </a>
 					<div class="fixedFont">
 					
@@ -5868,6 +6083,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Creates an existing window button
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -5957,6 +6175,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Edits an existing window button
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6039,6 +6260,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Hides a window button
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6084,6 +6308,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Deletes a window button
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6131,6 +6358,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Shows a window button if it was hidden
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6176,6 +6406,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Removes all elements in a window
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6223,6 +6456,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Hides the current window
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6268,6 +6504,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Creates a window embedded image
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6369,6 +6608,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Edits an existing window embedded image
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6463,6 +6705,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Hides a window image
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6508,6 +6753,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Deletes a window image
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6555,6 +6803,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Shows a window image if it was hidden
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6600,6 +6851,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Creates a window input box
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6683,6 +6937,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Edits an existing window input box
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6759,6 +7016,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Returns the value in the window input box
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6812,6 +7072,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Hides a window input box
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6858,6 +7121,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Deletes a window input box
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -6903,6 +7169,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Edits an existing window input box
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -6956,6 +7225,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Shows a window input box if it was hidden
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7002,6 +7274,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Shows the current window
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7047,6 +7322,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Creates a window static text
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -7154,6 +7432,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Edits an existing window static text
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7254,6 +7535,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Returns the text in the window static text
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7307,6 +7591,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Hides a window static text
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7352,6 +7639,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Deletes a window static text
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -7399,6 +7689,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Shows a window static text if it was hidden
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7444,6 +7737,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Changes the active window
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -7491,6 +7787,9 @@ The original angle is the guide looking horizontally to the right
 					<div class="description">
 						Writes text at guide's position
 						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
+						
 						
 					</div>
 					
@@ -7536,6 +7835,9 @@ The original angle is the guide looking horizontally to the right
 					</div>
 					<div class="description">
 						Writes text at a specific position
+						
+							<br />
+							<i>Defined in: </i> &lt;/tmp/tmp.o2B6xsUrsD.js&gt;.
 						
 						
 					</div>
@@ -7593,5 +7895,5 @@ The original angle is the guide looking horizontally to the right
 				
 			
 			
-<!-- ============================== event details ========================= -->
+<!-- ============================== event details ========================= -->		
 </body></html>
