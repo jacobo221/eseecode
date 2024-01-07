@@ -15,6 +15,7 @@
 * Improved block setup dialog UI
 * Highlight where the block is going to be dropped, blur the block if it is going to be removed if dropped
 * If a block is moved and then returned to its position, don't open block setup dialog
+* Match exactly Code view text with Build view blocks
 * Code is autosaved on every run and periodically when the code has been changed. Autosave can be requested through API call autosave(). New API call setAutosaveInterval() and URL parameter autosave= to define the time between autosaves, in seconds. New API call restoreAutosave() with URL parameter autorestore= to restore the autosaved code on initialization. New API call setAutosaveExpiration() and URL parameter autosaveexpire= to define the expiration in seconds of autosave code
 * Code is now copied with synthax highlight
 * Output box now allows to select and copy its content

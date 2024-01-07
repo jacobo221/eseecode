@@ -10,6 +10,9 @@ div.ace_gutter-cell {
 .ace_text-layer {
 	padding-left: var(--default-space) !important;
 }
+.ace_line {
+	height: calc(var(--block-small-size) + 2 * var(--minimal-border)) !important; /* Overwrite element defined height to be consistent among different browser engines and match build view blocks */
+}
 .ace-breakpoint { 
 	border-radius: var(--bigger-border) 0 0 var(--bigger-border);
 	box-shadow: 0 0 var(--minimal-space) var(--minimal-space) var(--monitor-color) inset; 
