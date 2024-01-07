@@ -31,6 +31,7 @@
 * Two new themes: Psychedelic and Retro
 * Default and sharp themes updated
 * URL param "dialog" has been renamed to "toolbox", and API calls switchDialog() and getDialog() have been renamed to switchToolbox() and getToolbox()
+* Updates the guide and tutorials
 * Base code deeply updated, refreshed and reworked. Dropped support for IE and browsers older than 2019
 * Fix: getKeyboardLastKey() wasn't working
 * Small fixes in some instructions' metainfo

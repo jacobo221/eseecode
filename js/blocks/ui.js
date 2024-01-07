@@ -26,11 +26,12 @@ $e.ui.blocks.scrollTo = (blockEl) => {
 /**
  * Toggles between flow view and blocks view
  * @private
+ * @param {Boolean} [flow] If true force flow style
  * @example $e.ui.blocks.flowToggle()
  */
-$e.ui.blocks.flowToggle = () => {
+$e.ui.blocks.flowToggle = (flow) => {
 	const bodyEl = $e.ui.element.querySelector("#body");
-	const displayFlow = $e.ide.blocks.flowVisible = !bodyEl.classList.contains("flow");
+	const displayFlow = $e.ide.blocks.flowVisible = flow === true || !bodyEl.classList.contains("flow");
 	bodyEl.classList[displayFlow ? "add" : "remove"]("flow");
 	const buttonEl = $e.ui.element.querySelector("#view-blocks-tabs-flow");
 	buttonEl.classList[displayFlow ? "add" : "remove"]("toggled");

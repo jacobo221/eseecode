@@ -333,6 +333,7 @@
 #body.flow .block.container.function-container,
 #body.flow .block.container.fill-container {
 	border: var(--flow-line-size) solid var(--flow-color);
+	padding-bottom: 0;
 }
 #body.flow .toolbox-panel .block.container.function-container,
 #body.flow .block.container.fill-container.function.fromToolbox,
@@ -351,7 +352,7 @@
 	display: block;
 	height: var(--flow-symbol-size);
 	width: 100%;
-	background: var(--flow-background-arrow-down-full);
+	background: var(--flow-background-arrow-extension-bottom-vertical);
 }
 
 #body.flow .block.container.conditional {

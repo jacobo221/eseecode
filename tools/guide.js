@@ -302,7 +302,7 @@ function verify(system, currentGuideStep) {
             handler = currentGuideStep.argument;
             break;
     }
-    var validation = (system == "code" ? normalizeCode(currentGuideStep.argument) : currentGuideStep.argument) == handler();
+    var validation = (system === "code" ? normalizeCode(currentGuideStep.argument) : currentGuideStep.argument) == handler().replace(/\r/g, "");
     if (!validation) {
         guideStepBack(currentGuideStep);
     } else {
@@ -358,11 +358,14 @@ function guideDraggingBlockEnd() {
 function guideGetHumanSteps() {
     var humanSteps = [];
     // First see if the guide programmer has defined manually the human steps
+    var lastHumanStepIndex;
     for (var tempGuideIndex = 0; tempGuideIndex < guideSteps.length; tempGuideIndex++) {
         var tempGuideStep = guideSteps[tempGuideIndex];
         if (tempGuideStep.humanStep) {
+            lastHumanStepIndex = tempGuideIndex;
             humanSteps[humanSteps.length] = { index: tempGuideIndex, title: tempGuideStep.humanStep };
         }
+        tempGuideStep.lastHumanStepIndex = lastHumanStepIndex;
     }
     // If no human steps have been defined manually, try to guess them
     if (!humanSteps.length) {
@@ -386,6 +389,7 @@ function guideGetHumanSteps() {
                 case "toolboxes":
                 case "view":
                 case "views":
+                case "style":
                 case "whiteboard":
                 case "pieces":
                 case "window":
@@ -428,7 +432,7 @@ async function guideGoToStep(stepNumber) {
     }
     // Reproduce all the steps
     // Only reproduce this types of step, and in this order
-    [ "view", "toolbox", "grid", "gridstep", "guide", "filemenu", "lang", "input", "axis", "fullscreenmenu", "instructions", "precode", "code", "breakpoints", "watches" ].forEach(async function(key) {
+    [ "view", "style", "toolbox", "grid", "gridstep", "guide", "filemenu", "lang", "input", "axis", "fullscreenmenu", "instructions", "precode", "code", "breakpoints", "watches" ].forEach(async function(key) {
         await guideNextStep({ type: key, argument: mashupGuide[key] }, true);
     });
     if (iframe.contentWindow.$e.api.getView() == "touch") {
@@ -439,6 +443,10 @@ async function guideGoToStep(stepNumber) {
 }
 
 function guideStepBack(currentGuideStep) {
+    if (!steppingBack) { // This is a hack because stepping back is not really working in many cases yet
+        window.location.href = window.location.href.split("#")[0] + "#step" + currentGuideStep.lastHumanStepIndex;
+        window.location.reload();
+    }
     var ttBox;
     if (!steppingBack) {
         iframe.contentWindow.$e.api.stop();
@@ -446,7 +454,7 @@ function guideStepBack(currentGuideStep) {
         ttDeactivate();
         ttActivate({ text: ((currentGuideStep.type == "verify" && currentGuideStep.text !== undefined)?currentGuideStep.text:"You didn't follow the step correctly. Please pay attention to the instructions."), action: "clickMessage" });
     }
-    if (currentGuideStep.type == "verify") {
+    if (currentGuideStep.type == "verify" || currentGuideStep.type == "verifycode") {
         var backupCode = currentGuideStep.correction;
         if (backupCode === undefined) {
             for (var i = currentGuideIndex - 1; i >= 0; i--) {
@@ -456,9 +464,7 @@ function guideStepBack(currentGuideStep) {
                 }
             }
         }
-        if (backupCode === undefined) {
-            backupCode = "";   
-        }
+        if (backupCode === undefined) backupCode = "";
         var runNow = (iframe.contentWindow.$e.api.getView() == "touch");
         iframe.contentWindow.$e.api.uploadCode(backupCode, runNow);
     } else if (currentGuideStep.type == "verifybreakpoints") {
@@ -644,6 +650,7 @@ async function guideNextStep(currentGuideStep, silent) {
             return;
             break;
         case "view":
+        case "style":
         case "toolbox":
         case "grid":
         case "gridstep":
@@ -807,9 +814,13 @@ async function guideNextStep(currentGuideStep, silent) {
         case "verifyinput":
             element = undefined;
             skipElement = true;
-            setTimeout(function() {
-                verify("input", currentGuideStep);
-            }, 300); // Wait for the Touch mode animation to be finished
+            verify("input", currentGuideStep);
+            return;
+            break;
+        case "verifyoutput":
+            element = undefined;
+            skipElement = true;
+            verify("output", currentGuideStep);
             return;
             break;
         case "verifybreakpoints":
@@ -837,6 +848,7 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "sleep":
             await new Promise(r => setTimeout(r, currentGuideStep.argument ? currentGuideStep.argument : 200));
+            currentGuideStep.runNext();
             return;
             break;
         default:
@@ -857,7 +869,7 @@ async function guideNextStep(currentGuideStep, silent) {
                 element = currentGuideStep.argument();
             }
             if (!element) {
-                console.error("Invalid step type", currentGuideStep.type);
+                console.error("Invalid step type", currentGuideStep.type, currentGuideStep);
             }
             break;
     }
@@ -897,6 +909,7 @@ function translateToHTMLElement(code) {
         "dragbutton": "view-tabs-level2",
         "buildbutton": "view-tabs-level3",
         "codebutton": "view-tabs-level4",
+        "stylebutton": "view-blocks-tabs-flow",
         "title": "title",
         "fullscreen": "fullscreen-button",
         "camera": "whiteboard-tabs-download-button",
@@ -938,8 +951,8 @@ function translateToHTMLElement(code) {
         "pieces": "toolbox-tabs-pieces",
         "window": "toolbox-tabs-window",
         "io": "toolbox-tabs-io",
-        "input": "toolbox-io-input",
-        "output": "toolbox-io-output",
+        "inputarea": "toolbox-io-input",
+        "outputarea": "toolbox-io-output",
         "debug": "toolbox-tabs-debug",
         "pausesetup": "toolbox-debug-execute-step",
         "debugcommand": "toolbox-debug-command-input",
@@ -977,7 +990,12 @@ function loadGuide(iframeId, src, lang) {
 
             async function waitForAPIReady() {
                 while (!iframe.contentWindow.$e.api.isReady || !iframe.contentWindow.$e.api.isReady()) await new Promise(r => setTimeout(r, 200));
-                guideRestart();
+                var step = parseInt(window.location.hash.substring("#step".length));
+                if (step) {
+                    guideGoToStep(step);
+                } else {
+                    guideRestart();
+                }
             }
 
             doc = iframe.contentWindow.document;
@@ -1036,7 +1054,7 @@ function loadGuide(iframeId, src, lang) {
             src = (srcUrl.origin && srcUrl.origin != "null" ? srcUrl.origin : '')  + srcUrl.pathname + '?' + srcParams + (srcUrl.hash ? '#' + srcUrl.hash : '');
         }
         iframe.src = src; // Reload the iframe so the iframe's onload trigger is run
-        if ((window.performance.navigation && window.performance.navigation.type === 1) || window.performance.getEntriesByType('navigation').map(nav => nav.type).includes('reload')) iframe.contentWindow.location.reload(); // This is to force triggering event "load" when page is refreshed
+        if (window.performance.getEntriesByType('navigation').map(nav => nav.type).includes('reload')) iframe.contentWindow.location.reload(); // This is to force triggering event "load" when page is refreshed
     });
 }
 

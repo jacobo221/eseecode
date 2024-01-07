@@ -332,9 +332,9 @@ $e.api.getLayersAsAnimation = (milliseconds) => {
  * @since 2.3
  * @public
  * @return {String} Output in the I/O
- * @example $e.api.getOuput()
+ * @example $e.api.getOutput()
  */
-$e.api.getOuput = () => {
+$e.api.getOutput = () => {
 	return $e.ui.element.querySelector("#toolbox-io-output").textContent;
 };
 

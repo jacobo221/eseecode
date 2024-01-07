@@ -12,15 +12,15 @@
         { type: "pagetitle", text: "eSeeCode tutorial: Touch view" },
         { type: "fullscreenmenu", argument: "true" },
         { type: "view", argument: "touch" },
-        { type: "info", text: "This tutorial will show you the basics about using the Touch view", timeout: 5 },
+        { type: "info", text: "This tutorial will show you the basics about using the Touch view", timeout: 5, humanStep: "Intro" },
         { type: "whiteboard", text: "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction", position: "inside", action: "clickMessage" },
-        { type: "toolbox", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage" },
+        { type: "toolbox", text: "Here you will find all available instructions to move the guide in the whiteboard", position: "inside", action: "clickMessage", humanStep: "Environment" },
         { type: "view", text: "Here you will see the code you are creating", position: "inside", action: "clickMessage" },
         { type: "info", text: "How about drawing a square?<br />Let's try it!" },
         { type: "toolboxInstruction", argument: "forward1", text: "Let's begin drawing: Move the guide forward by clicking this instruction" },
         { type: "verify", argument: "forward(100)", text: "You clicked the wrong button!" },
         { type: "whiteboard", text: "Observe how the guide has moved and the drawing has began", position: "above", action: "clickMessage" },
-        { type: "toolboxInstruction", argument: "turnLeft1", text: "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction" },
+        { type: "toolboxInstruction", argument: "turnLeft1", text: "Now let's rotate it by 90 degrees to prepare for the next movement by clicking this instruction", humanStep: "Basic instructions" },
         { type: "verify", argument: "forward(100);turnLeft(90)", text: "You clicked the wrong button!" },
         { type: "toolboxInstruction", argument: "setColor1", text: "Now to try something different let's change the color for the future" },
         { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');", text: "You clicked the wrong button!" },
@@ -34,18 +34,20 @@
         { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);", text: "You clicked the wrong button!" },
         { type: "toolboxInstruction", argument: "turnLeft1", text: "And rotate again..." },
         { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);", text: "You clicked the wrong button!" },
-        { type: "toolboxInstruction", argument: "forward2", text: "Let's move forward to draw the fourth and last side of this square" },
+        { type: "toolboxInstruction", argument: "forward2", text: "Let's move forward to draw the fourth and last side of this square", humanStep: "Undo" },
         { type: "info", text: "Ooops! Sorry I told you to click the wrong instruction!<br />This forward doesn't move forward enough to close the square...<br />Let's undo the last instruction" },
         { type: "undoButton", text: "At any moment you can undo the last instruction by pressing this button", position: "above" },
         { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);", text: "You clicked the wrong button!" },
         { type: "toolboxInstruction", argument: "forward1", text: "Now let's do it right and move forward to close the square" },
         { type: "verify", argument: "forward(100);turnLeft(90);setColor('#FF0000');forward(100);turnLeft(90);setSize(4);forward(100);turnLeft(90);forward(100);", text: "You clicked the wrong button!" },
         { type: "whiteboard", text: "With this code we've been able to draw a square", position: "above", action: "clickMessage" },
-        { type: "info", text: "Congratulations!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial" }
+        { type: "info", text: "Congratulations!<br />You have finished this tutorial!", embed: "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>", run: "nextTutorial", humanStep: "End" }
     ];
     
     add_translations({
         ca: {
+            "Intro": "Intro",
+            "End": "Final",
             "This tutorial will show you the basics about using the Touch view": "Aquest tutorial et mostrarà els conceptes bàsics sobre com utilitzar la vista Toca",
             "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction": "Això és el pissarra. Tot el que fem acabarà dibuixant alguna cosa aquí<br />Pots veure la guia al mig. La guia et mostra on començarà la pròxima instrucció i en quina direcció",
             "Here you will find all available instructions to move the guide in the whiteboard": "Aquí trobaràs totes les instruccions disponibles per moure la guia al pissarra",
@@ -71,6 +73,8 @@
             "Other tutorials recommended:<br /><b><a href=\"drag.html\">Drag view</a></b><br /><a href=\"ui.html\">User interface</a>": "Altres tutorials recomanats:<br /><b><a href=\"drag.html\">Vista Mou</a></b><br /><a href=\"ui.html\">Interfície d'usuari</a>",
         },
         es: {
+            "Intro": "Intro",
+            "End": "Final",
             "This tutorial will show you the basics about using the Touch view": "Este tutorial te mostrará los conceptos básicos sobre cómo utilizar la vista Toca",
             "This is the Whiteboard. Everything we do will end up drawing something here<br />You can see the guide in the middle. The guide shows you were the next instruction will begin drawing and in which direction": "Esto es la pizarra. Todo lo que hagamos se reflejará aquí<br />Puedes ver la guía en el centro. La guía te muestra dónde comenzará a dibujar la próxima instrucción y en qué dirección",
             "Here you will find all available instructions to move the guide in the whiteboard": "Aquí encontrarás todas las instrucciones disponibles para mover la guía en la pizarra",

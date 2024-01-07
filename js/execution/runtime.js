@@ -262,7 +262,7 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 
 	} else if ($e.execution.monitors[lineNumber] && $e.session.runFrom != "level1_add_block" && $e.session.runFrom != "level1_undo_block") {
 
-		$e.execution.current.monitors[lineNumber].count++;
+		if ($e.execution.current.monitors[lineNumber]) $e.execution.current.monitors[lineNumber].count++;
 		if ($e.execution.monitors[lineNumber].breakpoint) {
 			await $e.debug.breakpointReached(lineNumber);
 		}
