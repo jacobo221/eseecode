@@ -527,7 +527,48 @@ async function guideNextStep(currentGuideStep, silent) {
         currentGuideStep.runNext = guideFinishStep;
     }
     currentGuideStep.type = currentGuideStep.type.toLowerCase();
-    if (currentGuideStep.wait) await new Promise(r => setTimeout(r, currentGuideStep.wait !== true ? currentGuideStep.wait : 200))
+    if (currentGuideStep.wait) await new Promise(r => setTimeout(r, currentGuideStep.wait !== true ? currentGuideStep.wait : 200));
+    switch (currentGuideStep.type) {
+        case "breakpointadd":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-breakpoint-add";
+            break;
+        case "watchadd":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-watch-add";
+            break;
+        case "watchaddinput":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "watchAddInput";
+            break;
+        case "breakpoint":
+        case "watch":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument;
+            break;
+        case "breakpointtoggle":
+        case "watchtoggle":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-break";
+            break;
+        case "breakpointremove":
+        case "watchremove":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-remove";
+            break;
+        case "breakpointupdate":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-analyzer-breakpoint-" + currentGuideStep.argument + "-edit";
+            break;
+        case "breakpointcount":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-analyzer-breakpoint-" + currentGuideStep.argument + "-count";
+            break;
+        case "executespeed":
+            currentGuideStep.type = "htmlelement";
+            currentGuideStep.argument = "toolbox-debug-execute-instructionsDelay-input";
+            break;
+    }
     switch (currentGuideStep.type) {
         case "toolboxinstruction":
             var instruction = currentGuideStep.argument;
@@ -692,45 +733,6 @@ async function guideNextStep(currentGuideStep, silent) {
             skipElement = true;
             setTimeout(currentGuideStep.runNext, 120);
             return;
-            break;
-        case "breakpointadd":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-breakpoint-add";
-            break;
-        case "watchadd":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-watch-add";
-            break;
-        case "watchaddinput":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "watchAddInput";
-            break;
-        case "breakpoint":
-        case "watch":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument;
-            break;
-        case "breakpointtoggle":
-        case "watchtoggle":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-break";
-            break;
-        case "breakpointremove":
-        case "watchremove":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-remove";
-            break;
-        case "breakpointupdate":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-breakpoint-" + currentGuideStep.argument + "-edit";
-            break;
-        case "breakpointcount":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-breakpoint-" + currentGuideStep.argument + "-count";
-            break;
-        case "executespeed":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-execute-instructionsDelay-input";
             break;
         case "breakpoints":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {
