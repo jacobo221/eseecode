@@ -95,14 +95,14 @@ $e.ide.blocks.getPosition = (currentBlock, targetBlock) => {
 /**
  * Returns the position-th element in element. In count it returns the amount of blocks parsed in case the element wasn't found. If position == -1 the size of the element block and its siblings is returned in count
  * @private
- * @param {!HTMLElement} element Block in which to search for
  * @param {Number} position Block position to return the block from, first block is 1
- * @return {HTMLElement} The block in the position-th position in the code
- * @example $e.ide.blocks.getByPosition($e.ui.element.querySelector("#view-blocks").firstChild, 12)
+ * @param {HTMLElement} element Block in which to search for
+ * @example $e.ide.blocks.getByPosition(12)
  */
-$e.ide.blocks.getByPosition = (element, position) => {
+$e.ide.blocks.getByPosition = (position) => {
 	if ($e.ui.blocks.codeIsEmpty()) return undefined;
-	return element.querySelectorAll(".block:not(.container)")[position - 1];
+	const viewEl = $e.ui.element.querySelector("#view-blocks")
+	return viewEl.querySelectorAll(".block:not(.container)")[position - 1];
 };
 
 /**

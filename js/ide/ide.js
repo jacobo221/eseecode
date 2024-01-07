@@ -277,7 +277,7 @@ $e.ide.uploadCode = (code, run, type) => {
 			}
 			$e.ui.updateViewButtonsVisibility();
 		} else {
-			$e.ui.switchViewMode("code");
+			$e.ui.switchView("code");
 			$e.ui.write.resetView(code);
 		}
 	}

@@ -532,7 +532,7 @@ $e.ui.blocks.setup.style = (visual = true) => {
 				removeButtonEl.type = "button"; // By default BUTTON in FORM is type=submit, so when pressing enter this button would be triggered
 				removeButtonEl.textContent = "-";
 				removeButtonEl.classList.add("remove");
-				removeButtonEl.addEventListener("click", removeHandler); // click is also triggered by touchstart
+				removeButtonEl.addEventListener("click", removeHandler); // Click is also triggered by touchstart
 				subparameterContainerEl.appendChild(removeButtonEl);
 				wrapperEl.appendChild(subparameterContainerEl);
 				enableRemoveButton = setupDataParameter.subparameters.length > 1; // There are two or more parameters so the first parameter can be removed
@@ -552,7 +552,7 @@ $e.ui.blocks.setup.style = (visual = true) => {
 			addButtonEl.type = "button"; // By default BUTTON in FORM is type=submit, so when pressing enter this button would be triggered
 			addButtonEl.textContent = "+";
 			addButtonEl.classList.add("add", "invisible"); // Use visibility:hidden instead of display:none so it will position correctly when shown
-			addButtonEl.addEventListener("click", addHandler); // click is also triggered by touchstart
+			addButtonEl.addEventListener("click", addHandler); // Click is also triggered by touchstart
 			addButtonContainerEl.appendChild(addButtonEl);
 			setupVisualEl.appendChild(addButtonContainerEl);
 		} else if (instructionParameter.type == "var") {

@@ -8,6 +8,7 @@
 * Stepped execution can now run backwards. Stepped executions do not trigger breakpoints (but do update monitors). Stepped execution now works independently to regular execution, so a new API call runSteps() exists, and API call setExecutionStep() and URL parameter step= have been deprecated in favour of setStepSize() and stepsize=
 * New API call setInstructionsDelay() and URL parameter delay= to define how long each instruction delays the execution. Substracting setInstructionsPause() to setInstructionsDelay() will be the time spend animating the instruction
 * New API call setExercise() and URL parameter exercise= to define an id for the exercise, which for now is only used by autosave to determine which autosaved code to restore
+* New API calls isStatus() to check the current or last execution status, closeMsgbox() to close the platform dialog, scrollToBlock() to scroll toolbox or view to make a block visible, getBlockByPosition() to obtain the block element in a certain position
 * Every guide movement is now animated
 * Multiselection of blocks to move, duplicate or delete them
 * Hold shift key while multiselecting two blocks to select all blocks in between. New API call showMultiselectTab() and URL parameter multiselect= to display/hide this functionality

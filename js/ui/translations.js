@@ -34,7 +34,7 @@ $e.ui.translations.switch = (lang, run) => {
 			$e.ui.resetGridModeSelect();
 			$e.ui.translations.resetMenu();
 			$e.ui.themes.resetMenu();
-			$e.ui.switchViewMode();
+			$e.ui.switchView();
 			$e.ui.switchToolboxMode();
 			const elementTranslator = $e.ui.element.querySelector("#translations-translator");
 			if (translation.translator && elementTranslator) {

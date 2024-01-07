@@ -51,7 +51,6 @@ $e.isBoolean = (value, parseString) => {
 $e.isNumber = (value, parseString) => {
 	if (parseString !== true && typeof value == "string") return false;
 	return !isNaN(parseFloat(value)) && isFinite(value);
-	
 };
 
 /**

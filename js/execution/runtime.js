@@ -255,7 +255,7 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 		await $e.execution.freeze();
 		$e.execution.updateStatus("running");
 
-	} else if (hasChangedWatchesBreakpoints = $e.execution.current.watchesChanged.some(w => $e.execution.monitors[w].breakpoint)) {
+	} else if (hasChangedWatchesBreakpoints = $e.execution.current.watchesChanged.some(w => $e.execution.monitors[w] && $e.execution.monitors[w].breakpoint)) {
 
 		await $e.debug.breakpointReached($e.execution.current.lastRunLineNumber, $e.execution.current.watchesChanged, true, hasChangedWatchesBreakpoints); // Variable changes are detected after running the instruction, so highlight the previous instruction
 		$e.execution.updateStatus("running");

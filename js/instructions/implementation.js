@@ -29,9 +29,9 @@ function windowButtonEdit(id, text, posx, posy, action, width, height) {
 		button = oldButton.cloneNode(true); // Clone to remove handlers
 		oldButton.parentNode.replaceChild(button, oldButton);
 		if (typeof action === "string") {
-			button.addEventListener("click", () => $e.execution.execute(true, action)); // click is also triggered by touchstart
+			button.addEventListener("click", () => $e.execution.execute(true, action)); // Click is also triggered by touchstart
 		} else if (typeof action === "function") {
-			button.addEventListener("click", action); // click is also triggered by touchstart
+			button.addEventListener("click", action); // Click is also triggered by touchstart
 		}
 	}
 };
@@ -111,9 +111,9 @@ function windowImageEdit(id, canvasId, posx, posy, width, height, onclick, onmou
 		}
 		if (onclick) {
 			if (typeof onclick === "string") {
-				img.addEventListener("pointerup", () => $e.execution.execute(true, onclick)); // click is also triggered by touchstart
+				img.addEventListener("pointerup", () => $e.execution.execute(true, onclick)); // Click is also triggered by touchstart
 			} else if (typeof onclick === "function") {
-				img.addEventListener("pointerup", onclick); // click is also triggered by touchstart
+				img.addEventListener("pointerup", onclick); // Click is also triggered by touchstart
 			}
 		}
 		if (onmouseout) {

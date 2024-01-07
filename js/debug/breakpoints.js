@@ -227,8 +227,8 @@ $e.ui.debug.addBreakpointEventStart = () => {
 	$e.session.breakpointHandler = true; // Semaphor so keyboard shortcurs and events on blocks will not be handled
 	const viewContentEl = $e.ui.element.querySelector("#view-content");
 	viewContentEl.classList.add("addBreakpointHandler");
-	viewContentEl.addEventListener("pointerdown", $e.ui.debug.addBreakpointEventAccept); // click is also triggered by touchstart
-	document.body.addEventListener("pointerdown", $e.ui.debug.addBreakpointEventCancel); // click is also triggered by touchstart
+	viewContentEl.addEventListener("pointerdown", (event) => setTimeout(() => $e.ui.debug.addBreakpointEventAccept(event), 1)); // Delay so that the cursor is moved in Ace first. Click is also triggered by touchstart
+	document.body.addEventListener("pointerdown", $e.ui.debug.addBreakpointEventCancel); // Click is also triggered by touchstart
 };
 
 /**
@@ -275,6 +275,7 @@ $e.ui.debug.addBreakpointEventCancel = (event) => {
 		if (!event.isPrimary) return;
 		if (event.button !== undefined && event.button !== 0) return; // If it's a mouse click attend only to left button
 	}
+	if (event.target.closest("#view-content")) return; // Ignore because it has been called within an addBreakpointEventAccept event, because addBreakpointEventCancel is attached to document.body
 	$e.ui.debug.addBreakpointEventStop();
 };
 
@@ -332,8 +333,7 @@ $e.ui.debug.addOrUpdateBreakpointInUI = (line, replaceLine) => {
 			if ($e.modes.views.current.type == "write") {
 				$e.session.editor.session.setBreakpoint(line - 1, "ace-breakpoint");
 			} else {
-				const viewEl = $e.ui.element.querySelector("#view-blocks");
-				const blockEl = $e.ide.blocks.getByPosition(viewEl, line);
+				const blockEl = $e.ide.blocks.getByPosition(line);
 				if (blockEl) blockEl.classList.add("highlight");
 			}
 		}
@@ -383,13 +383,12 @@ $e.ui.debug.updateModifiedBreakpoint = (oldLine, line) => {
 		}
 		$e.session.editor.session.clearBreakpoint(oldLine - 1);
 	} else {
-		const viewEl = $e.ui.element.querySelector("#view-blocks");
 		let blockEl;
 		if ($e.execution.monitors[line].breakpoint) {
-			blockEl = $e.ide.blocks.getByPosition(viewEl, line);
+			blockEl = $e.ide.blocks.getByPosition(line);
 			if (blockEl) blockEl.classList.remove("highlight");
 		}
-		blockEl = $e.ide.blocks.getByPosition(viewEl, oldLine);
+		blockEl = $e.ide.blocks.getByPosition(oldLine);
 		if (blockEl) blockEl.classList.remove("highlight");
 	}
 	const blockEl = $e.ui.element.querySelector("#toolbox-debug-analyzer-breakpoint-" + oldLine);
@@ -450,10 +449,9 @@ $e.ui.debug.updateBlocksBreakpoints = (blockEl, action) => {
 $e.ui.debug.resetBreakpointsHighlights = () => {
 	if ($e.session.editor) $e.session.editor.session.clearBreakpoints();
 	if ($e.ui.blocks.codeIsEmpty()) return;
-	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	Object.keys($e.execution.monitors).forEach(key => {
 		if (!$e.isNumber(breakpointLine, true)) return;
-		const blockEl = $e.ide.blocks.getByPosition(viewEl, key);
+		const blockEl = $e.ide.blocks.getByPosition(key);
 		blockEl.classList.remove("highlight");
 	});
 };
@@ -473,8 +471,7 @@ $e.ui.debug.toggleBreakpointInUI = (line) => {
 			$e.session.editor.session.clearBreakpoint(line - 1);
 		}
 	} else {
-		const viewEl = $e.ui.element.querySelector("#view-blocks");
-		const blockEl = $e.ide.blocks.getByPosition(viewEl, line);
+		const blockEl = $e.ide.blocks.getByPosition(line);
 		if (blockEl) {
 			if ($e.execution.monitors[line].breakpoint) {
 				blockEl.classList.add("highlight");
@@ -517,7 +514,7 @@ $e.ui.debug.updateRemovedBreakpoint = (line) => {
 	if ($e.modes.views.current.type == "write") {
 		$e.session.editor.session.clearBreakpoint(line-1);
 	} else {
-		const blockEl = $e.ide.blocks.getByPosition($e.ui.element.querySelector("#view-blocks").firstChild, line - 1);
+		const blockEl = $e.ide.blocks.getByPosition(line - 1);
 		if (blockEl) blockEl.classList.remove("highlight");
 	}
 	const breakpointEl = $e.ui.element.querySelector("#toolbox-debug-analyzer-breakpoint-" + line);

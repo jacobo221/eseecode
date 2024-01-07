@@ -34,14 +34,14 @@ $e.ui.resizeView = (restore) => {
  * Switches the toolbox window adding animations, run from UI
  * @private
  * @param {String} [id] Level to switch to
- * @example $e.ui.switchViewModeFromUI("level2")
+ * @example $e.ui.switchViewFromUI("level2")
  */
-$e.ui.switchViewModeFromUI = (id) => {
+$e.ui.switchViewFromUI = (id) => {
 	const oldView = $e.modes.views.available[$e.modes.views.current.id];
 	const newView = $e.modes.views.available[id];
 	if (oldView.type != newView.type) $e.ui.loading.open();
 	setTimeout(() => {
-		$e.ui.switchViewMode(id, true);
+		$e.ui.switchView(id, true);
 		$e.ui.loading.close();
 	}, 100);
 };
@@ -51,9 +51,9 @@ $e.ui.switchViewModeFromUI = (id) => {
  * @private
  * @param {String} [id] Can refer to a view number, a view id or to a view name. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
  * @param {Boolean} [switchToolbox=false] If set to true, it will also switch the toolbox to the pieces of the new view
- * @example $e.ui.switchViewMode(2)
+ * @example $e.ui.switchView(2)
  */
-$e.ui.switchViewMode = (id, switchToolbox = false) => {
+$e.ui.switchView = (id, switchToolbox = false) => {
 	const oldMode = $e.modes.views.current.id;
 	if (!id) id = oldMode;
 	let program;
@@ -111,7 +111,7 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 				}
 				$e.ui.write.resetUndo();
 			}
-			$e.session.editor.session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakponts
+			$e.session.editor.session.clearBreakpoints(); // Even if we haven't changed the code in blocks mode, we could have changed the breakpoints
 		}
 	} else if (oldView.type == "write") {
 		if (newView.type == "blocks") {
@@ -120,7 +120,9 @@ $e.ui.switchViewMode = (id, switchToolbox = false) => {
 				// Only reset the blocks view if changes were made in the code, this preserves the undo's
 				$e.ide.blocks.changes.reset();
 				$e.ui.blocks.resetView();
+				$e.ui.blocks.lockBreakpoints = true; // Blocks are going to be added, do not shift the breakpoints one line down for each now block
 				program.makeBlocks(viewEl);
+				$e.ui.blocks.lockBreakpoints = false;
 			}
 		}
 	}

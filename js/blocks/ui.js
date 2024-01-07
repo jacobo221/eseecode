@@ -4,10 +4,10 @@
  * Scrolls to the given element in the givent parent node
  * @private
  * @param {!HTMLElement} blockEl Block
- * @param {!HTMLElement} [scrollEl] Element to scroll, by default it is the view blocks element
  * @example $e.ui.blocks.scrollTo($e.ui.element.querySelector("#block-1231231231")
  */
-$e.ui.blocks.scrollTo = (blockEl, scrollEl = $e.ui.element.querySelector("#view-blocks")) => {
+$e.ui.blocks.scrollTo = (blockEl) => {
+	const scrollEl = blockEl.closest(".panel-column");
 	const blockRect = blockEl.getBoundingClientRect();
 	const blockHeight = blockRect.height ? blockRect.height : blockRect.bottom - blockRect.top;
 	let blockOffsetTop = 0;
@@ -174,8 +174,8 @@ $e.ui.blocks.multiipleMoveEventStart = () => {
 		lastPointedBlock: undefined,
 		lastPointedAfter: undefined,
 	}
-	viewEl.addEventListener("pointerdown", $e.ui.blocks.multipleMoveEventAccept); // click is also triggered by touchstart
-	viewEl.addEventListener("pointermove", $e.ui.blocks.multipleMoveEventMove); // click is also triggered by touchstart
+	viewEl.addEventListener("pointerdown", $e.ui.blocks.multipleMoveEventAccept); // Click is also triggered by touchstart
+	viewEl.addEventListener("pointermove", $e.ui.blocks.multipleMoveEventMove); // Click is also triggered by touchstart
 };
 
 /**

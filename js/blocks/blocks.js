@@ -154,7 +154,7 @@ $e.ui.blocks.deleteFromCodeFromUI = (blockEl, combine) => {
  * @param {String} instructionSetId Name of the subblock to add
  * @param {!HTMLElement} parentBlock Block element where the subblock has to be added
  * @param {!HTMLElement} [nextSibling] Subblock element in parentBlock that the new block has to precede, or null to add it at the end of parentBlock
- * @example $e.ui.blocks.insertIntoCodeFromUI(blockEl, "elseIf")
+ * @example $e.ui.blocks.addIntoCodeFromUI("elseif"", blockEl)
  */
 $e.ui.blocks.addIntoCodeFromUI = (instructionSetId, parentBlock, nextSibling = null) => {
 	const blockEl = $e.ui.blocks.createAndPlaceBlock(instructionSetId, parentBlock, nextSibling, undefined, { isSubblock: parentBlock.classList.contains("container") });
@@ -297,7 +297,7 @@ $e.ui.blocks.addListeners = (blockEl) => {
  */
 $e.ui.blocks.insertIntoCode = (blockEl, parentNode = null, nextSibling = null) => {
 	if (!parentNode) parentNode = $e.ui.element.querySelector("#view-blocks");
-	parentNode.insertBefore(blockEl, nextSibling && nextSibling.id == "view-blocks-tip" ? null : nextSibling); // Often $e.ui.blocks.removeBeginTip is called after $e.ui.blocks.insertIntoCode so ignore the view-begin-tip block
+	parentNode.insertBefore(blockEl, nextSibling && nextSibling.id == "view-blocks-tip" ? null : nextSibling); // Often $e.ui.blocks.removeBeginTip is called after this function so ignore the view-begin-tip block
 	const instructionSetId = blockEl.dataset.instructionSetId;
 	const instruction = $e.instructions.set[instructionSetId];
 	$e.ui.blocks.removeBeginTip(); // Before adding first block delete view tip if it exists
@@ -309,5 +309,5 @@ $e.ui.blocks.insertIntoCode = (blockEl, parentNode = null, nextSibling = null) =
 	}
 	const counterBlockEl = blockEl.querySelector(".counter");
 	if (counterBlockEl) blockEl.removeChild(counterBlockEl);
-	$e.ui.debug.updateBlocksBreakpoints(blockEl, "add");
+	if (!$e.ui.blocks.lockBreakpoints) $e.ui.debug.updateBlocksBreakpoints(blockEl, "add");
 };

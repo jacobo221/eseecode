@@ -388,8 +388,7 @@ $e.ui.highlight = (lineNumber, reason = "stepped") => {
 	if (reason == "steps") displayLineNumber++; // Steps are triggered before executing the next line
 	const mode = $e.modes.views.current.type;
 	if (mode == "blocks") {
-		const viewEl = $e.ui.element.querySelector("#view-blocks");
-		const blockEl = $e.ide.blocks.getByPosition(viewEl, displayLineNumber);
+		const blockEl = $e.ide.blocks.getByPosition(displayLineNumber);
 		if (blockEl && blockEl.id != "view-blocks-tip") { // after last instruction in code there is no block (execution finished) so we must check if the block exists
 			blockEl.classList.add("highlight");
 			if (reason === "error") blockEl.classList.add("highlight-error");

@@ -855,7 +855,7 @@ $e.api.switchView = (id, action = true) => {
 		id = view.id;
 	}
 	$e.modes.views.current = $e.modes.views.available[id];
-	if (action) $e.ui.switchViewMode();
+	if (action) $e.ui.switchView();
 };
 
 /**
@@ -1133,7 +1133,7 @@ $e.api.addBreakpoints = (value, action = true) => {
 	if (value === "" || !value) value = [];
 	else if (typeof value == "string") value = value.replace(/ /g, '').split(",").map(v => $e.isNumber(parseInt(v)) ? parseInt(v) : v);
 	else if (typeof value == "number") value = [ value ];
-	$e.execution.monitors = Object.assign($e.execution.monitors, value.reduce((acc, b) => acc[b] = { breakpoint: true }, {}));
+	$e.execution.monitors = Object.assign($e.execution.monitors, value.reduce((acc, b) => { acc[b] = { breakpoint: true }; return acc; }, {}));
 	if (action) $e.ui.debug.updateMonitors();
 };
 
@@ -1147,6 +1147,7 @@ $e.api.addBreakpoints = (value, action = true) => {
  */
 $e.api.removeBreakpoints = (value, action = true) => {
 	if (value === "" || !value) value = [];
+	else if (value === true) value = Object.entries($e.execution.current.monitors).filter(([key, b]) => $e.isNumber(key, true)).map(([key, b]) => key);
 	else if (typeof value == "string") value = value.replace(/ /g, '').split(",").map(v => $e.isNumber(parseInt(v)) ? parseInt(v) : v);
 	else if (typeof value == "number") value = [ value ];
 	value.forEach(key => {
@@ -1165,7 +1166,7 @@ $e.api.removeBreakpoints = (value, action = true) => {
  */
 $e.api.getBreakpoints = () => {
 	const list = [];
-	Object.entries($e.session.monitor).forEach(([key, b]) => { if ($e.isNumber(key) || b.breakpoint) list.push(b); });
+	Object.entries($e.execution.monitors).forEach(([key, b]) => { if ($e.isNumber(key) || b.breakpoint) list.push(Object.assign({ name: key }, b)); });
 	return list;
 };
 
@@ -1175,13 +1176,13 @@ $e.api.getBreakpoints = () => {
  * @public
  * @param {String|Array<String>} value Variable names to watch
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example $e.api.debug.addWatches([ "firstname", "surname" ])
+ * @example $e.api.addWatches([ "firstname", "surname" ])
  */
 $e.api.addWatches = (value = [], action = true) => {
 	if (value === "") value = [];
 	else if (typeof value == "string") value = value.replace(/ /g, '').split(",");
 	else if (typeof value == "number") value = [ value ];
-	$e.execution.current.monitors = Object.assign($e.execution.current.monitors, value.reduce((acc, b) => acc[b] = { breakpoint: false }, {}));
+	$e.execution.current.monitors = Object.assign($e.execution.current.monitors, value.reduce((acc, b) => { acc[b] = { breakpoint: false }; return acc; }, {}));
 	if (action) $e.ui.debug.updateMonitors();
 };
 
@@ -1191,10 +1192,11 @@ $e.api.addWatches = (value = [], action = true) => {
  * @public
  * @param {String|Array<String>} value Block/Line numbers and/or variable names to remove from watches
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
- * @example $e.api.debug.removeWatches([ "name", "age" ])
+ * @example $e.api.removeWatches([ "name", "age" ])
  */
 $e.api.removeWatches = (value = [], action = true) => {
 	if (value === "") value = [];
+	else if (value === true) value = Object.entries($e.execution.current.monitors).filter(([key, b]) => !$e.isNumber(key, true)).map(([key, b]) => key);
 	else if (typeof value == "string") value = value.replace(/ /g, '').split(",");
 	else if (typeof value == "number") value = [ value ];
 	value.forEach(key => {
@@ -1213,7 +1215,7 @@ $e.api.removeWatches = (value = [], action = true) => {
  */
 $e.api.getWatches = () => {
 	const list = [];
-	Object.entries($e.session.monitor).forEach(([key, b]) => { if (!$e.isNumber(key) && !b.breakpoint) list.push(b); });
+	Object.entries($e.execution.monitors).forEach(([key, b]) => { if (!$e.isNumber(key) && !b.breakpoint) list.push(Object.assign({ name: key }, b)); });
 	return list;
 };
 
@@ -1229,12 +1231,59 @@ $e.api.isReady = () => {
 };
 
 /**
- * Returns the status of the last execution
+ * Returns the status of the current or last execution
  * @since 4.0
  * @public
  * @return {String} Status of the execution
  * @example $e.api.getStatus()
  */
-$e.api.getStatus = () => {
+$e.api.getStatus = (value) => {
 	return $e.execution.current.status;
+};
+
+/**
+ * Checks if the status of the current or last execution corresponds to the expectation
+ * @since 4.0
+ * @public
+ * @param {String} value Check if the execution is in this specific status
+ * @return {String} Status of the execution
+ * @example $e.api.getStatus()
+ */
+$e.api.isStatus = (value) => {
+	if (value === $e.execution.current.status) return true;
+	const statusCheckFunction = $e.execution["is" + value[0].toUpperCase() + value.substring(1).toLowerCase()];
+	return statusCheckFunction && statusCheckFunction();
+};
+
+/**
+ * Closes the dialog box
+ * @since 4.0
+ * @public
+ * @example $e.api.closeMsgbox()
+ */
+$e.api.closeMsgbox = () => {
+	$e.ui.msgBox.close();
+};
+
+/**
+ * Scrolls to a block element in the tooblox or view
+ * @since 4.0
+ * @public
+ * @param {HTMLElement} blockEl Block to scroll to
+ * @example $e.api.scrollToBlock(blockEl)
+ */
+$e.api.scrollToBlock = (blockEl) => {
+	$e.ui.blocks.scrollTo(blockEl);
+};
+
+/**
+ * Scrolls to a block element in the tooblox or view
+ * @since 4.0
+ * @public
+ * @param {Number} value Position to look for
+ * @return {HTMLElement} The block element in that position
+ * @example $e.api.getBlockByPosition(blockEl)
+ */
+$e.api.getBlockByPosition = (value) => {
+	return $e.ide.blocks.getByPosition(value);
 };

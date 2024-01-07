@@ -39,6 +39,7 @@
                     current: undefined,
                 },
                 dragging: undefined,
+                lockBreakpoints: false,
             },
             maxDragForSetup: 5,
             write: {},

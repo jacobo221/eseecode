@@ -1,6 +1,6 @@
 "use strict";
 
-var currentLanguage = (new URLSearchParams(window.location.search)).get("lang");
+let currentLanguage = (new URLSearchParams(window.location.search)).get("lang");
 if (!currentLanguage && document.referrer) {
     const oldUrl = new URL(document.referrer);
     const oldParams = new URLSearchParams(oldUrl.search);
@@ -12,7 +12,7 @@ if (!currentLanguage && document.referrer) {
     }
 }
 if (!currentLanguage) currentLanguage = navigator.language.substring(0, 2);
-var translations = {};
+const translations = {};
 function add_translations(more_translations) {
     for (let key in more_translations) {
     if (!translations[key]) translations[key] = {};
@@ -130,7 +130,7 @@ function ttPosition(ttBox, currentGuideStep) {
 }
 
 function redirectTutorial(url) {
-    iframe.contentWindow.$e.setPreventExit(false);
+    iframe.contentWindow.$e.api.setPreventExit(false);
     // Have to manually set realtive urls because in Firefox 118 it is using the iframe's location to calculate the parent frame's relative destination
     if (url.match(/(https?|file):\/\//)) {
         location.href = url;
@@ -145,7 +145,6 @@ function replaceLinks(text) {
 
 function ttActivate(currentGuideStep) {
     var element = currentGuideStep.element;
-    var position = currentGuideStep.position;
     // Create tooltip
     var ttBox = document.createElement("div");
     ttBox.id = "ttBox";
@@ -206,7 +205,9 @@ function ttActivate(currentGuideStep) {
             } else if ((element.nodeName == "INPUT") && element.type == "submit") {
                 element.form.addEventListener("submit", currentGuideStep.runNext);
             } else if (element.nodeName == "INPUT") {
-                [ "keypress", "paste", "input", "change", "pointerup" ].forEach(type => element.addEventListener(type, currentGuideStep.runNext));
+                [ "keydown", "paste", "input", "change", "pointerup" ].forEach(type => element.addEventListener(type, currentGuideStep.runNext));
+            } else if (element.nodeName == "SELECT") {
+                element.addEventListener("change", currentGuideStep.runNext);
             } else { // div, span, a, ...
                 element.addEventListener("pointerup", currentGuideStep.runNext);
             }
@@ -241,7 +242,7 @@ function ttDeactivate(clearBorders) {
     }
     if (clearBorders !== false) {
         if (currentGuideStep && currentGuideStep.element) {
-            [ "pointerdown", "pointermove", "pointerup", "keydown", "keyup", "keypress", "paste", "input", "change", "submit" ].forEach(type => currentGuideStep.element.removeEventListener(type, currentGuideStep.runNext));
+            [ "pointerdown", "pointermove", "pointerup", "keydown", "keyup", "keydown", "paste", "input", "change", "submit" ].forEach(type => currentGuideStep.element.removeEventListener(type, currentGuideStep.runNext));
             currentGuideStep.element.className = currentGuideStep.element.className.replace(/\bguideBorder\b/,'');
         }
         // Remove view blocks which have been copied with guideBorder
@@ -283,19 +284,19 @@ function verify(system, currentGuideStep) {
     var handler;
     switch (system) {
         case "code":
-            handler = () => normalizeCode(iframe.contentWindow.$e.downloadCode());
+            handler = () => normalizeCode(iframe.contentWindow.$e.api.downloadCode());
             break;
         case "input":
-            handler = iframe.contentWindow.$e.getInput;
+            handler = iframe.contentWindow.$e.api.getInput;
             break;
         case "output":
-            handler = iframe.contentWindow.$e.getOutput;
+            handler = iframe.contentWindow.$e.api.getOutput;
             break;
         case "breakpoints":
-            handler = iframe.contentWindow.$e.getBreakpoints;
+            handler = () => iframe.contentWindow.$e.api.getBreakpoints().map(b => b.name);
             break;
         case "watches":
-            handler = iframe.contentWindow.$e.setWatches;
+            handler = () => iframe.contentWindow.$e.api.getWatches().map(b => b.name);
             break;
         case "call":
             handler = currentGuideStep.argument;
@@ -316,7 +317,7 @@ function verifyElement(element, elementGuideIndex) {
     if (!element || !doc.getElementById(element.id)) {
         ttDeactivate();
         ttActivate({ text: "You stepped away from the instructions, you have to back up in the tutorial", action: "clickMessage", runNext: function() {
-            iframe.contentWindow.$e.restart();
+            iframe.contentWindow.$e.api.restart();
             timeoutHandler = setTimeout(guideRestart(), 500); // Give it time for eSeeCode to restart
         } });
     } else {
@@ -373,6 +374,7 @@ function guideGetHumanSteps() {
                 case "viewblockline":
                 case "info":
                 case "executebutton":
+                case "resumebutton":
                 case "clearbutton":
                 case "resetbutton":
                 case "touchbutton":
@@ -403,7 +405,7 @@ async function guideGoToStep(stepNumber) {
         return;
     }
     ttDeactivate();
-    iframe.contentWindow.$e.ui.msgBox.close();
+    iframe.contentWindow.$e.api.closeMsgbox();
     // Create a mashup of the last state of each type
     var mashupGuide = {};
     mashupGuide.code = ""; // By default, reset code, so if we go back to the first step it is blank
@@ -429,8 +431,8 @@ async function guideGoToStep(stepNumber) {
     [ "view", "toolbox", "grid", "gridstep", "guide", "filemenu", "lang", "input", "axis", "fullscreenmenu", "instructions", "precode", "code", "breakpoints", "watches" ].forEach(async function(key) {
         await guideNextStep({ type: key, argument: mashupGuide[key] }, true);
     });
-    if (iframe.contentWindow.$e.getView() == "touch") {
-        iframe.contentWindow.$e.execution.execute();
+    if (iframe.contentWindow.$e.api.getView() == "touch") {
+        iframe.contentWindow.$e.api.execute();
     }
     currentGuideIndex = stepNumber;
     guideNextStep();
@@ -439,15 +441,15 @@ async function guideGoToStep(stepNumber) {
 function guideStepBack(currentGuideStep) {
     var ttBox;
     if (!steppingBack) {
-        iframe.contentWindow.$e.stop();
-        iframe.contentWindow.$e.ui.msgBox.close();
+        iframe.contentWindow.$e.api.stop();
+        iframe.contentWindow.$e.api.closeMsgbox();
         ttDeactivate();
         ttActivate({ text: ((currentGuideStep.type == "verify" && currentGuideStep.text !== undefined)?currentGuideStep.text:"You didn't follow the step correctly. Please pay attention to the instructions."), action: "clickMessage" });
     }
     if (currentGuideStep.type == "verify") {
         var backupCode = currentGuideStep.correction;
         if (backupCode === undefined) {
-            for (var i=currentGuideIndex-1; i>=0; i--) {
+            for (var i = currentGuideIndex - 1; i >= 0; i--) {
                 if ((guideSteps[i].type == "verify" || guideSteps[i].type == "code") && !guideSteps[i].skipBackwards) {
                     backupCode = guideSteps[i].argument;
                     break;
@@ -457,8 +459,32 @@ function guideStepBack(currentGuideStep) {
         if (backupCode === undefined) {
             backupCode = "";   
         }
-        var runNow = (iframe.contentWindow.$e.getView() == "touch");
-        iframe.contentWindow.$e.ide.uploadCode(backupCode, runNow);
+        var runNow = (iframe.contentWindow.$e.api.getView() == "touch");
+        iframe.contentWindow.$e.api.uploadCode(backupCode, runNow);
+    } else if (currentGuideStep.type == "verifybreakpoints") {
+        let backupBreakpoints;
+        for (var i = currentGuideIndex - 1; i >= 0; i--) {
+            if ((guideSteps[i].type == "verifybreakpoints") && !guideSteps[i].skipBackwards) {
+                backupBreakpoints = guideSteps[i].argument;
+                break;
+            }
+        }
+        iframe.contentWindow.$e.api.removeBreakpoints(true);
+        if (backupBreakpoints !== undefined) {
+            iframe.contentWindow.$e.api.addBreakpoints(backupBreakpoints);
+        }
+    } else if (currentGuideStep.type == "verifywatches") {
+        let backupWatches;
+        for (var i = currentGuideIndex - 1; i >= 0; i--) {
+            if ((guideSteps[i].type == "verifywatches") && !guideSteps[i].skipBackwards) {
+                backupWatches = guideSteps[i].argument;
+                break;
+            }
+        }
+        iframe.contentWindow.$e.api.removeWatches(true);
+        if (backupWatches !== undefined) {
+            iframe.contentWindow.$e.api.addWatches(backupWatches);
+        }
     }
     if (currentGuideStep.stepsBack === undefined) {
         currentGuideStep.stepsBack = 2;
@@ -497,10 +523,13 @@ async function guideNextStep(currentGuideStep, silent) {
     } else {
         currentGuideStep.runNext = null;
     }
+    if (currentGuideStep.runNext === undefined) {
+        currentGuideStep.runNext = guideFinishStep;
+    }
     if (currentGuideStep.skipIf) {
         let value = currentGuideStep.skipIf;
         if (typeof value == "function") value = value();
-        const runningStatus = iframe.contentWindow.$e.getStatus();
+        const runningStatus = iframe.contentWindow.$e.api.getStatus();
         if (value == "running") value = runningStatus == "running";
         else if (value == "not running") value = runningStatus != "running";
         else if (value == "killed") value = runningStatus == "clean" || runningStatus == "finished" || runningStatus == "stopped";
@@ -519,42 +548,30 @@ async function guideNextStep(currentGuideStep, silent) {
         else if (value == "not paused") value = runningStatus != "paused";
         else if (value == "stepped") value = runningStatus == "stepped";
         else if (value == "not stepped") value = runningStatus != "stepped";
-        if (value) return;
+        setTimeout(currentGuideStep.runNext, 1);
+        if (value) {
+            return;
+        }
     }
     var element = undefined;
     var skipElement = false;
-    if (currentGuideStep.runNext === undefined) {
-        currentGuideStep.runNext = guideFinishStep;
-    }
     currentGuideStep.type = currentGuideStep.type.toLowerCase();
     if (currentGuideStep.wait) await new Promise(r => setTimeout(r, currentGuideStep.wait !== true ? currentGuideStep.wait : 200));
     switch (currentGuideStep.type) {
-        case "breakpointadd":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-breakpoint-add";
-            break;
-        case "watchadd":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-watch-add";
-            break;
-        case "watchaddinput":
-            currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "watchAddInput";
-            break;
         case "breakpoint":
         case "watch":
             currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument;
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + (currentGuideStep.type ? "breakpoint" : "watch") + "-" + currentGuideStep.argument;
             break;
         case "breakpointtoggle":
         case "watchtoggle":
             currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-break";
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + (currentGuideStep.type ? "breakpoint" : "watch") + "-" + currentGuideStep.argument + "-break";
             break;
         case "breakpointremove":
         case "watchremove":
             currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-analyzer-" + ($e.isNumber(currentGuideStep.argument, true) ? "line" : "watch") + "-" + currentGuideStep.argument + "-remove";
+            currentGuideStep.argument = "toolbox-debug-analyzer-" + (currentGuideStep.type ? "breakpoint" : "watch") + "-" + currentGuideStep.argument + "-remove";
             break;
         case "breakpointupdate":
             currentGuideStep.type = "htmlelement";
@@ -564,9 +581,9 @@ async function guideNextStep(currentGuideStep, silent) {
             currentGuideStep.type = "htmlelement";
             currentGuideStep.argument = "toolbox-debug-analyzer-breakpoint-" + currentGuideStep.argument + "-count";
             break;
-        case "executespeed":
+        case "executeorresumebutton":
             currentGuideStep.type = "htmlelement";
-            currentGuideStep.argument = "toolbox-debug-execute-instructionsDelay-input";
+            currentGuideStep.argument = iframe.contentWindow.$e.api.isStatus("frozen") ? "button-resume" : "button-execute";
             break;
     }
     switch (currentGuideStep.type) {
@@ -583,10 +600,10 @@ async function guideNextStep(currentGuideStep, silent) {
                 block = block.nextSibling;
             }
             if (element) {
-                iframe.contentWindow.$e.ui.blocks.scrollTo(element, toolboxEl);
+                iframe.contentWindow.$e.api.scrollToBlock(element);
                 // Inject floatingBlock before going to next step
-                var currentMode = iframe.contentWindow.$e.modes.views.current;
-                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                var currentViewName = iframe.contentWindow.$e.api.getView();
+                if ((currentViewName == "drag" || currentViewName == "build") && currentGuideStep.runNext === guideFinishStep) {
                     currentGuideStep.runNext = guideDraggingBlock;
                 }
             }
@@ -595,14 +612,13 @@ async function guideNextStep(currentGuideStep, silent) {
             }
             break;
         case "viewblockline":
-            var viewEl = doc.getElementById("view-blocks");
-            var blockEl = iframe.contentWindow.$e.ide.blocks.getByPosition(viewEl, currentGuideStep.argument)
-            if (blockEl) {
+            element = iframe.contentWindow.$e.api.getBlockByPosition(currentGuideStep.argument);
+            if (element) {
                 // Scroll to this block
-                iframe.contentWindow.$e.ui.blocks.scrollTo(blockEl);
+                iframe.contentWindow.$e.api.scrollToBlock(element);
                 // Inject floatingBlock before going to next step
-                var currentMode = iframe.contentWindow.$e.modes.views.current;
-                if ((currentMode.name.toLowerCase() == "drag" || currentMode.name.toLowerCase() == "build") && currentGuideStep.runNext === guideFinishStep) {
+                var currentViewName = iframe.contentWindow.$e.api.getView();
+                if ((currentViewName == "drag" || currentViewName == "build") && currentGuideStep.runNext === guideFinishStep) {
                     currentGuideStep.runNext = guideDraggingBlock;
                 }
             }
@@ -736,7 +752,7 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "breakpoints":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {
-                iframe.contentWindow.$e.setBreakpoints(currentGuideStep.argument, true);
+                iframe.contentWindow.$e.api.addBreakpoints(currentGuideStep.argument, true);
             }
             element = undefined;
             skipElement = true;
@@ -745,7 +761,7 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "watches":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {
-                iframe.contentWindow.$e.setWatches(currentGuideStep.argument, true);
+                iframe.contentWindow.$e.api.addWatches(currentGuideStep.argument, true);
             }
             element = undefined;
             skipElement = true;
@@ -834,7 +850,7 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
     }
     if (element) {
-        currentGuideStep.oldBorder = getComputedStyle(element, '').getPropertyValue('border');
+        currentGuideStep.oldBorder = getComputedStyle(element, "").getPropertyValue("border");
         element.className += " guideBorder";
     } else if (!skipElement) {
         guideStepBack(currentGuideStep);
@@ -875,7 +891,9 @@ function translateToHTMLElement(code) {
         "toolbox": "toolbox-content",
         "dialogs": "toolbox-tabs",
         "views": "view-tabs",
-        "view": "view-tabdiv",
+        "viewall": "view-blocks",
+        "viewblocks": "view-blocks",
+        "viewcode": "view-write",
         "viewmaximize": "view-tabs-resize",
         "whiteboard": "whiteboard",
         "cameraimage": "whiteboard-downloadImage",
@@ -890,6 +908,7 @@ function translateToHTMLElement(code) {
         "parametersvisual": "setupBlockTabsVisual",
         "parameterstext": "setupBlockTabsText",
         "executebutton": "button-execute",
+        "resumebutton": "button-resume",
         "clearbutton": "button-clear",
         "pausebutton": "button-pause",
         "resetbutton": "button-reset",
@@ -912,7 +931,11 @@ function translateToHTMLElement(code) {
         "debugcommand": "toolbox-debug-command-input",
         "debugcommandexecute": "toolbox-debug-command-button",
         "breakpointadd": "toolbox-debug-breakpoint-add",
-        "watchpointadd": "toolbox-debug-watchpoint-add"
+        "watchadd": "toolbox-debug-watch-add",
+        "watchaddinput": "watchAddInput",
+        "executespeed": "toolbox-debug-execute-instructionsDelay-input",
+        "stepbackwards": "toolbox-debug-execute-step-backwards",
+        "stepforward": "toolbox-debug-execute-step-forward",
     }
     var elementId = translationTable[code];
     return elementId;
@@ -934,14 +957,14 @@ function loadGuide(iframeId, src, lang) {
     document.body.appendChild(css);
     iframe = document.getElementById(iframeId);
     if (!iframe) {
-        console.error("Failed to laod the iframe");
+        console.error("Failed to load the iframe");
         return;
     }
     window.addEventListener("load", function() {
         iframe.addEventListener("load", async function() {
 
             async function waitForAPIReady() {
-                while (!iframe.contentWindow.$e.isReady || !iframe.contentWindow.$e.isReady()) await new Promise(r => setTimeout(r, 200));
+                while (!iframe.contentWindow.$e.api.isReady || !iframe.contentWindow.$e.api.isReady()) await new Promise(r => setTimeout(r, 200));
                 guideRestart();
             }
 
@@ -981,7 +1004,7 @@ function loadGuide(iframeId, src, lang) {
                 stepButton.id = "guideHumanStepButton"+guideHumanStep.index;
                 stepButton.title = guideHumanStep.title?_(guideHumanStep.title):_("Step")+" "+(i+1);
                 stepButton.className = "guideHumanStepButton";
-                stepButton.onclick = "guideGoToStep("+guideHumanStep.index+")";
+                stepButton.setAttribute("onclick", "guideGoToStep("+guideHumanStep.index+")");
                 guideStepsButtons.appendChild(stepButton);
             }
             if (iframe.nextSibling) {
@@ -1051,7 +1074,7 @@ function createMouseClickHandler() {
             }
         }
     }
-    doc.body.addEventListener("click", shadowMouseClick); // click is also triggered by touchstart
+    doc.body.addEventListener("click", shadowMouseClick); // Click is also triggered by touchstart
 }
 
 var currentGuideIndex;
