@@ -343,7 +343,7 @@ $e.ui.debug.addOrUpdateBreakpointInUI = (line, replaceLine) => {
 	breakpointEl.addEventListener("pointercancel", $e.ui.unhighlight);
 	let breakpointText = "<input type=\"checkbox\" id=\"toolbox-debug-analyzer-breakpoint-" + line + "-break\" onchange=\"$e.ui.debug.toggleBreakpointInUI(" + line + ", this)\" " + ($e.execution.monitors[line].breakpoint ? "checked" : "") + " />";
 	breakpointText += "<label id=\"toolbox-debug-analyzer-breakpoint-" + line + "-name\" for=\"toolbox-debug-analyzer-breakpoint-" + line + "-break\">" + _("Line") + " " + line + "</label>: ";
-	breakpointText += "<span id=\"toolbox-debug-analyzer-breakpoint" + line + "-count\">" + $e.execution.current.monitors[line].count + "</span>";
+	breakpointText += "<span id=\"toolbox-debug-analyzer-breakpoint" + line + "-count\">" + ($e.execution.current.monitors[line] ? $e.execution.current.monitors[line].count : 0) + "</span>";
 	breakpointText += "<button id=\"toolbox-debug-analyzer-breakpoint-" + line + "-edit\" class=\"toolbox-debug-analyzer-breakpoint-edit link\" onclick=\"$e.ui.debug.modifyBreakpoint(" + line + ")\">✏️</button>";
 	breakpointText += "<button id=\"toolbox-debug-analyzer-breakpoint-" + line + "-remove\" class=\"toolbox-debug-analyzer-breakpoint-remove link\" onclick=\"$e.ui.debug.updateRemovedBreakpointFromUI(" + line + ")\">❌</button>";
 	breakpointEl.innerHTML = breakpointText;

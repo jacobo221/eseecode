@@ -136,6 +136,8 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.restoreAutosave(value);
 		} else if (key == "exercise") {
 			$e.api.setExercise(value);
+		} else if (key == "step") {
+			$e.api.showStep(value);
 		} else if (key == "stepsize") {
 			$e.api.setStepSize(value);
 		} else if (key == "breakpoints") {
@@ -252,7 +254,7 @@ $e.api.fullscreen = (value) => {
  * Sets the code view maximized
  * @since 2.4
  * @public
- * @param {Boolean} [fullscreen] Force fullscreen
+ * @param {Boolean} [value] Force code maximized
  * @example $e.api.maximize()
  */
 $e.api.maximize = (value) => {
@@ -1097,6 +1099,17 @@ $e.api.setInstructionsDelay = (milliseconds) => {
  */
 $e.api.setInstructionsPause = (milliseconds) => {
 	$e.execution.instructionsMinimumPause = parseInt(milliseconds);
+};
+
+/**
+ * Defines the number of instructions to jump on every stepped execution
+ * @since 4.0
+ * @public
+ * @param {Boolean|String} value Whether to show it (true) or hide it (false)
+ * @example $e.api.showStep(1)
+ */
+$e.api.showStep = (value) => {
+	$e.ui.element.querySelector("#toolbox-debug-execute-step").classList[$e.confirmNo(value) ? "add" : "remove"]("hide");
 };
 
 /**

@@ -470,9 +470,7 @@ function guideStepBack(currentGuideStep) {
             }
         }
         iframe.contentWindow.$e.api.removeBreakpoints(true);
-        if (backupBreakpoints !== undefined) {
-            iframe.contentWindow.$e.api.addBreakpoints(backupBreakpoints);
-        }
+        iframe.contentWindow.$e.api.addBreakpoints(backupBreakpoints, true);
     } else if (currentGuideStep.type == "verifywatches") {
         let backupWatches;
         for (var i = currentGuideIndex - 1; i >= 0; i--) {
@@ -482,9 +480,7 @@ function guideStepBack(currentGuideStep) {
             }
         }
         iframe.contentWindow.$e.api.removeWatches(true);
-        if (backupWatches !== undefined) {
-            iframe.contentWindow.$e.api.addWatches(backupWatches);
-        }
+        iframe.contentWindow.$e.api.addWatches(backupWatches, true);
     }
     if (currentGuideStep.stepsBack === undefined) {
         currentGuideStep.stepsBack = 2;
@@ -709,6 +705,20 @@ async function guideNextStep(currentGuideStep, silent) {
             setTimeout(currentGuideStep.runNext, 120);
             return;
             break;
+        case "stepbackards":
+            iframe.contentWindow.$e.api.runSteps(-1);
+            element = undefined;
+            skipElement = true;
+            setTimeout(currentGuideStep.runNext, 120);
+            return;
+            break;
+        case "stepforward":
+            iframe.contentWindow.$e.api.runSteps(1);
+            element = undefined;
+            skipElement = true;
+            setTimeout(currentGuideStep.runNext, 120);
+            return;
+            break;
         case "fullscreen":
             iframe.contentWindow.$e.api.fullscreen(currentGuideStep.argument);
             element = undefined;
@@ -752,7 +762,8 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "breakpoints":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {
-                iframe.contentWindow.$e.api.addBreakpoints(currentGuideStep.argument, true);
+                iframe.contentWindow.$e.api.removeBreakpoints(true);
+                iframe.contentWindow.$e.api.addBreakpoints(currentGuideStep.argument);
             }
             element = undefined;
             skipElement = true;
@@ -761,7 +772,8 @@ async function guideNextStep(currentGuideStep, silent) {
             break;
         case "watches":
             if (currentGuideStep.argument || currentGuideStep.argument === "") {
-                iframe.contentWindow.$e.api.addWatches(currentGuideStep.argument, true);
+                iframe.contentWindow.$e.api.removeWatches(true);
+                iframe.contentWindow.$e.api.addWatches(currentGuideStep.argument);
             }
             element = undefined;
             skipElement = true;
@@ -912,6 +924,8 @@ function translateToHTMLElement(code) {
         "clearbutton": "button-clear",
         "pausebutton": "button-pause",
         "resetbutton": "button-reset",
+        "stepbackwardsbutton": "toolbox-debug-execute-step-backwards",
+        "stepforwardbutton": "toolbox-debug-execute-step-forward",
         "fullscreenbutton": "fullscreen-button",
         "setup": "toolbox-tabs-setup",
         "language": "translations-select",
@@ -934,8 +948,6 @@ function translateToHTMLElement(code) {
         "watchadd": "toolbox-debug-watch-add",
         "watchaddinput": "watchAddInput",
         "executespeed": "toolbox-debug-execute-instructionsDelay-input",
-        "stepbackwards": "toolbox-debug-execute-step-backwards",
-        "stepforward": "toolbox-debug-execute-step-forward",
     }
     var elementId = translationTable[code];
     return elementId;
