@@ -2066,7 +2066,166 @@ async function wait(milliseconds = 1000) {
 	return await new Promise(r => setTimeout(() => r(), milliseconds));
 };
 
-// Additional instructions
+// Additional instructions, for jsDoc
+
+/**
+ * Adds to values
+ * @name +
+ * @since 1.0
+ * @public
+ * @param {Number} first_value First value to use
+ * @param {Number} second_value Second value to use
+ * @return Resulting value
+ * @example 5 + 10
+ */
+
+/**
+ * Substracts a value from another value
+ * @name -
+ * @since 1.0
+ * @public
+ * @param {Number} first_value First value to use
+ * @param {Number} second_value Second value to use
+ * @return Resulting value
+ * @example 10 - 8
+ */
+
+/**
+ * Multiplies two values
+ * @name *
+ * @since 1.0
+ * @public
+ * @param {Number} first_value First value to use
+ * @param {Number} second_value Second value to use
+ * @return Resulting value
+ * @example 3 * 6
+ */
+
+/**
+ * Divides two values
+ * @name /
+ * @since 1.0
+ * @public
+ * @param {Number} first_value First value to use
+ * @param {Number} second_value Second value to use
+ * @return Resulting value
+ * @example 40 / 4
+ */
+
+/**
+ * Obtains the reminder of dividng a value with another value
+ * @name %
+ * @since 1.0
+ * @public
+ * @param {Number} first_value First value to use
+ * @param {Number} second_value Second value to use
+ * @return Resulting value
+ * @example 10 % 3
+ */
+
+/**
+ * Assigns a value to a variable
+ * @name =
+ * @since 1.0
+ * @public
+ * @param {String} identifier Unique identifier for the variable
+ * @param {*} value Value to assign
+ * @return The assigned value
+ * @example a = "Melina"
+ */
+
+/**
+ * Adds a number to the value in a variable
+ * @name +=
+ * @since 1.0
+ * @public
+ * @param {String} identifier Variable to update
+ * @param {Number} value Value to add
+ * @return New value
+ * @example count += 2;
+ */
+
+/**
+ * Substracts a number to the value in a variable
+ * @name -=
+ * @since 1.0
+ * @public
+ * @param {String} identifier Variable to update
+ * @param {Number} value Value to substract
+ * @return New value
+ * @example countdown -= 3;
+ */
+
+/**
+ * Divides a variable with a value
+ * @name /=
+ * @since 1.0
+ * @public
+ * @param {String} identifier Unique identifier for the variable
+ * @param {Number} value Value to use as divider
+ * @return New value
+ * @example total /= 2;
+ */
+
+/**
+ * Stores in a variable the remaining of dividing it with another value
+ * @name %=
+ * @since 1.0
+ * @public
+ * @param {String} identifier Unique identifier for the variable
+ * @param {Number} value Value to use as divider
+ * @return New value
+ * @example seconds %= 60;
+ */
+
+/**
+ * Increments in 1 the value of a variable. If placed before the variable name it will increment before using the variable, if placed after the variable name the variable will first be used and only then incremented
+ * @name ++
+ * @since 1.0
+ * @public
+ * @param {Identifier} identifier Variable to increment
+ * @return New value
+ * @example i++;
+ */
+
+/**
+ * Decrements in 1 the value of a variable. If placed before the variable name it will decrement before using the variable, if placed after the variable name the variable will first be used and only then decremented
+ * @name --
+ * @since 1.0
+ * @public
+ * @param {Identifier} identifier Variable to decrement
+ * @return New value
+ * @example --i;
+ */
+
+/**
+ * Allows to declare a variable
+ * @name var
+ * @since 1.0
+ * @public
+ * @param {Identifier} identifier Unique identifier for the variable
+ * @return Pointer to the variable
+ * @example var thisIsAVariable
+ */
+
+/**
+ * Allows to declare a variable containing several values
+ * @name array
+ * @since 1.0
+ * @public
+ * @param {Identifier} identifier Unique identifier for the array
+ * @return Pointer to the array
+ * @example array thisIsAnArray
+ */
+
+/**
+ * Allows to branch the code
+ * @name if
+ * @since 1.0
+ * @public
+ * @param {Boolean} condition While this condition resolves true the inline code will be repeatedly run
+ * @example if(isWrong) { write("Wrong answer!"); }
+ */
 
 /**
  * Allows to iterate a specific amount of times
@@ -2088,12 +2247,14 @@ async function wait(milliseconds = 1000) {
  */
 
 /**
- * Allows to branch the code
- * @name if
+ * Allows to iterate based on a condition
+ * @name for
  * @since 1.0
  * @public
+ * @param {Statement} inicialization Initialization of variables
  * @param {Boolean} condition While this condition resolves true the inline code will be repeatedly run
- * @example if(isWrong) { write("Wrong answer!"); }
+ * @param {Statement} variation Variation of variables on each iteration
+ * @example for(var i = 0; i < list.length; i++) { write(list[i]); }
  */
 
 /**
@@ -2108,21 +2269,27 @@ async function wait(milliseconds = 1000) {
  */
 
 /**
- * Allows to declare a variable
- * @name var
+ * Break the execution of a function and return to the caller
+ * @name return
  * @since 1.0
  * @public
- * @param {String} identifier Unique identifier for the variable
- * @return Pointer to the variable
- * @example var thisIsAVariable
+ * @param {*} value Value to return to the caller
+ * @return {*} Value returned
+ * @example return true;
  */
 
 /**
- * Allows to declare a variable containing several values
- * @name array
+ * Breaks the execution of a loop iteration (in while, for or repeat) and continues to the next iteration
+ * @name continue
  * @since 1.0
  * @public
- * @param {String} identifier Unique identifier for the array
- * @return Pointer to the array
- * @example array thisIsAnArray
+ * @example for (var i = 0; i < list.length; i++) { output(i, true); if (i % 2 == 0) continue; }
+ */
+
+/**
+ * Breaks the execution of a loop (in while, for or repeat)
+ * @name break
+ * @since 1.0
+ * @public
+ * @example for (var i = 0; i < list.length; i++) { output(i, true); if (i > 20) break; }
  */

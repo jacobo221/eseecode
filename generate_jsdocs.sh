@@ -12,7 +12,7 @@ for file in $files; do
 	cat "$HOME/eseecode/js/$file.js" | sed -E 's/^\$e\.api\.([a-zA-Z0-9_]+) = \((.*)\) => \{/function \1(\2) {/' | sed -E 's/^\$e\.api\.([a-zA-Z0-9_]+) = (async )?function /\2function \1/' > "$tempfilename"
 	jsdoc -a -d="$dirOut" -q -s "$tempfilename" >/dev/null
 	fileOut="$dirOut/$(basename $file).html"
-	firstLine="$(grep "====== methods summary =====" "$jsdocFileOut" -n | cut -d: -f1)"
+	firstLine="$(grep -E "====== (properties|methods) summary =====" "$jsdocFileOut" -m1 -n | cut -d: -f1)"
 	lastLine="$(grep "====== event details =====" "$jsdocFileOut" -n | cut -d: -f1)"
 	echo "<html><head><title></title><link rel="stylesheet" type="text/css" href=\"$cssFile\" /></head><body>" > "$fileOut"
 	sed -n "$firstLine","$lastLine"p "$jsdocFileOut" >> "$fileOut"
