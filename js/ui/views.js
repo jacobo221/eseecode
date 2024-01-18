@@ -49,7 +49,7 @@ $e.ui.switchViewFromUI = (id) => {
 /**
  * Switches the user interface to the specified view
  * @private
- * @param {String} [id] Can refer to a view number, a view id or to a view name. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
+ * @param {String} [id] View id. If unset it checks the "view" parameter in the browser's URL. If it can't determine the new view, it keeps the current view
  * @param {Boolean} [switchToolbox=false] If set to true, it will also switch the toolbox to the pieces of the new view
  * @example $e.ui.switchView(2)
  */
@@ -156,7 +156,7 @@ $e.ui.switchView = (id, switchToolbox = false) => {
 /**	
  * Switches the toolbox window
  * @private
- * @param {String} [id] Toolbox name. If unset it keeps the current toolbox window
+ * @param {String} [id] Toolbox id. If unset it keeps the current toolbox window
  * @example $e.ui.switchToolboxMode("debug")
  */
 $e.ui.switchToolboxMode = (id = $e.modes.toolboxes.current.id) => {

@@ -43,7 +43,7 @@
 		function ññ() { console.log.apply(this, Array.from(arguments).map(arg => { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
 
 		// Run
-		function init(el, v) {
+		function init(v) {
 			var el = document.createElement("script");
 			el.type = "text/javascript";
 			el.src = "js/eseecode.js" + (v ? '?v=' + v : '');
@@ -52,14 +52,14 @@
 		var v = (new URLSearchParams(window.location.search)).get("v");
 		if (v === "") v = Date.now(); // ?v= is passed without value
 		if (v) {
-			v(el, v);
+			init(v);
 		} else {
 			// No explicit v= parameter, default to the version number so when there is a version bump all files are refreshed
 			window.$e = {};
 			const el = document.createElement("script");
 			el.onload = function() {
 				document.title = $e.platform.name;
-				init(el, $e.platform.version);
+				init($e.platform.version);
 			};
 			el.setAttribute("src", "js/init.js?=" + Date.now()); // We want to make sure the file containing the version number is always refreshed
 			document.head.appendChild(el);
