@@ -1,4 +1,11 @@
-## 4.0 (2023-01-07)
+## 4.1 (?????)
+* Dynamic fill() icon
+* Fixed breakpoint general toggle should not toggle whiteboard layers
+* Fixed flow view of non-standard functions
+* Fixed missing parameters in custom function calls in blocks mode
+* Fixed code editor displaying wrong cursor position in Chrome
+
+## 4.0 (2024-01-18)
 
 *Milestone reached: Flowchart, real grid resize, animate the guide movements, multiselect blocks, run backwards, autosave*
 * New flowchart style. New url parameters style= and styletabs=, and API calls setStyle() and showFlowTab()

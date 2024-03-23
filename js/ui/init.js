@@ -22,7 +22,7 @@
             toolbxosWindow: null,
             guideVisible: true,
             gridVisible: true,
-            gridStep: 50,
+            gridStep: 25,
             setupType: undefined,
             filemenuVisible: true,
             fullscreenmenuVisible: undefined,

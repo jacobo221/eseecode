@@ -44,7 +44,15 @@ $e.ide.blocks.getParameters = (blockEl) => {
 	if (!instructionSetId) return; // This may happen for the view-begin-tip
 	const instruction = $e.instructions.set[instructionSetId];
 	const parameters = [];
-	if (instruction.parameters) {
+	if (instructionSetId === "call") {
+		datasetKeys = Object.keys(blockEl.dataset);
+		datasetKeys.filter(name => name.startsWith("param")).forEach((datasetKey) => {
+			let value = blockEl.dataset[datasetKey];
+			if (value === undefined) value = "";
+			blockEl.dataset[datasetKey] = value;
+			parameters.push(value);
+		});
+	} else if (instruction.parameters) {
 		instruction.parameters.forEach((instructionParameter, i) => {
 			let value = blockEl.dataset["param" + i];
 			if (value === undefined) value = "";

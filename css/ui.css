@@ -10,7 +10,7 @@ div.ace_gutter-cell {
 .ace_text-layer {
 	padding-left: var(--default-space) !important;
 }
-.ace_line {
+.ace_line, #view-write > div:not([class]) > div:not([class]) { /* The latter selector is a hack to have ACE calculate the font size correctly from $measureNode in FontMetrics */
 	height: calc(var(--block-small-size) + 2 * var(--minimal-border)) !important; /* Overwrite element defined height to be consistent among different browser engines and match build view blocks */
 }
 .ace-breakpoint { 

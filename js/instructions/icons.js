@@ -260,20 +260,32 @@ $e.instructions.icons.endShape = (ctx, height, width, margin, param) => {
 $e.instructions.icons.fill = $e.instructions.icons["fill-container"] = (ctx, height, width, margin, param) => {
 	const startAngle = 0;
 	const endAngle = 2 * Math.PI;
-	ctx.fillStyle = "#00FFFF";
+	let fillColor = "#00FFFF";
+	let borderColor = "#008888";
+	if (param) {
+		if (param[0] && typeof param[0] == "string") {
+			const color = param[0].replace(/^['"]/, '').replace(/['"]$/, '');
+			if ($e.isColor(color)) fillColor = color;
+		}
+		if (param[1] && typeof param[1] == "string") {
+			const color = param[1].replace(/^['"]/, '').replace(/['"]$/, '');
+			if ($e.isColor(color)) borderColor = color;
+		}
+	}
+	ctx.fillStyle = fillColor;
 	ctx.beginPath();
 	ctx.rect(margin, margin, width - margin * 2, height - margin * 2);
 	ctx.fill();
 	ctx.closePath();
 	ctx.lineWidth = 4;
-	ctx.strokeStyle = "#000000";
+	ctx.strokeStyle = borderColor;
 	ctx.beginPath();
 	ctx.moveTo(width - margin, margin);
 	ctx.lineTo(margin, margin);
 	ctx.lineTo(margin, height / 2);
 	ctx.stroke();
 	ctx.closePath();
-	ctx.fillStyle = "#000000";
+	ctx.fillStyle = borderColor;
 	ctx.beginPath();
 	ctx.arc(margin, height / 2, 2, startAngle, endAngle, false);
 	ctx.arc(margin, margin + 3 * (height - margin * 2) / 4, 2, startAngle, endAngle, false);

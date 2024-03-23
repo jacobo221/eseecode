@@ -196,7 +196,7 @@ $e.ui.blocks.createAndPlaceBlock = (blockOrInstructionSetId, parentBlock, nextSi
 			$e.ui.blocks.insertIntoCode(blockEl, parentBlock, nextSibling);
 		}
 		const instruction = $e.instructions.set[instructionSetId];
-		if (instruction.reportContainer) {
+		if (instruction && instruction.reportContainer) {
 			const containerEl = blockEl.closest(".container");
 			if (containerEl) containerEl.classList.add("has-" + instructionSetId);
 		}
@@ -224,8 +224,14 @@ $e.ui.blocks.initialize = (blockEl, instructionSetId, params = [], options = {})
 	}
 	if (!blockEl.id) blockEl.id = $e.backend.newblockId();
 	blockEl.dataset.instructionSetId = instructionSetId;
-	if (instruction.parameters && params !== false) {
-		instruction.parameters.forEach((instructionParameter, i) => blockEl.dataset["param" + i] = params[i] === undefined ? "" : params[i]); // With this we make sure all the parameters are initialized in the block's dataset
+	if (params !== false) {
+		if (instructionSetId == "call") {
+			blockEl.dataset["param0"] = params[0];
+			blockEl.dataset["param1"] = "";
+			params.slice(1).forEach((param, i) => blockEl.dataset["param1"] += (i === 0 ? "" : ", ") + (param === undefined ? "" : param)); // With this we make sure all the parameters are initialized in the block's dataset
+		} else if (instruction.parameters) {
+			instruction.parameters.forEach((instructionParameter, i) => blockEl.dataset["param" + i] = params[i] === undefined ? "" : params[i]); // With this we make sure all the parameters are initialized in the block's dataset
+		}
 	}
 	blockEl.classList.add("block", instruction.name);
 	if (options.isSubblock || (blockEl.parentNode && blockEl.parentNode.classList.contains("container"))) blockEl.classList.add("subblock");

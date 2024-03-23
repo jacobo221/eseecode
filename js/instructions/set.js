@@ -310,7 +310,9 @@ $e.instructions.init = () => {
 			});
 			for (let i = instruction.parameters.length; i < values.length; i++) {
 				const param = values[i];
-				if (param) parameters.push(param);
+				if (instructionSetId === "call") {
+					parameters[parameters.length - 1] += (parameters[parameters.length - 1] ? ", " : "") + param;
+				} else if (param) parameters.push(param);
 			}
 		}
 		strings.name += instruction.nameRewrite && instruction.nameRewrite.name ? instruction.nameRewrite.name : instruction.name;
@@ -328,7 +330,7 @@ $e.instructions.init = () => {
 		let lastParameterWithValueIndex = parameters ? parameters.findLastIndex(parameter => !!parameter) : -1;
 		parameters.some((param, i) => {
 			if (lastMandatoryParameterIndex < i && lastParameterWithValueIndex < i) return true;
-			const instruction_parameter = instruction.parameters[i];
+			const instruction_parameter = instruction.parameters[i] ? instruction.parameters[i] : {};
 			if (instruction_parameter.space) strings.code += " ";
 			if (!bracketsUnclosed && (!instruction_parameter.noBrackets && (!instruction.code || !instruction.code.noBrackets))) {
 				if (instruction.code && instruction.code.space && !parametersText.endsWith(" ")) {

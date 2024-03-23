@@ -369,8 +369,8 @@
 		if (options.realcode) {
 			str += "setColor(" + fillColor + ");";
 			str += "endShape();";
-                } else {
-		        str += "}";
+		} else {
+			str += "}";
 		}
 
 		return str;

@@ -74,7 +74,6 @@ $e.ui.debug.enableAllNoneBreakpoints = () => {
 	const visibility = checkboxEl.checked;
 	$e.ui.element.querySelectorAll("#toolbox-debug-analyzer-breakpoints input[type=checkbox], #toolbox-debug-analyzer-watches input[type=checkbox]").forEach((el, i) => {
 		el.checked = visibility;
-		$e.ui.toggleCanvas(i, visibility);
 	});
 };
 

@@ -70,7 +70,7 @@
 		document.body.innerHTML = "<p><b>The latest eSeeCode version is not compatible with your browser!</b></p>";
 		document.body.innerHTML += "<p>Please use one of the following browsers:<ul><li>Chrome >= 57</li><li>Edge >= 79</li><li>Firefox >= 66</li><li>Safari >= 13</li><li>Opera >= 44</li></ul></p>";
 		document.body.innerHTML += "<p><i>Alternatively, <a href=\"https://play.eseecode.com/versions\">you can try using an older version of eSeeCode</a>.</i></p>";
-		document.body.innerHTML += "<p>In " + timeToRedirect + " seconds you will be automatically redirected to eSeeCode version 2.4 (released in 2016) as a failback for compatibility with your device.</p>";
+		document.body.innerHTML += "<p>In " + timeToRedirect + " seconds you will be automatically redirected to eSeeCode version 2.4 (released in 2016) as a fallback for compatibility with your device.</p>";
 		setTimeout(function () { window.location.href = "https://play.eseecode.com/2.4"; }, timeToRedirect * 1000);
 	}
 </script>
