@@ -11655,7 +11655,7 @@ var warnings = {
   W116: "Expected '{a}' and instead saw '{b}'.",
   W117: "'{a}' is not defined.",
   W118: "'{a}' is only available in Mozilla JavaScript extensions (use moz option).",
-  W119: "'{a}' is only available in ES{b} (use 'esversion: {b}').",
+  W119: "'{a}' is not available in eSeeCode.", // eSeeCode
   W120: "You might be leaking a variable ({a}) here.",
   W121: "Extending prototype of native object: '{a}'.",
   W122: "Invalid typeof value '{a}'",
@@ -15458,7 +15458,7 @@ oop.inherits(JavaScriptWorker, Mirror);
 (function() {
     this.setOptions = function(options) {
         this.options = options || {
-            esversion: 11,
+            esversion: 5, // eSeeCode
             moz: true,
             devel: true,
             browser: true,
