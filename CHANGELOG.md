@@ -1,5 +1,6 @@
 ## 4.1 (?????)
 * Dynamic fill() icon
+* Updated ACE editor to upstream's latest
 * Fixed breakpoint general toggle should not toggle whiteboard layers
 * Fixed flow view of non-standard functions
 * Fixed missing parameters in custom function calls in blocks mode
