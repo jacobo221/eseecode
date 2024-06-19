@@ -296,6 +296,7 @@ $e.ide.uploadCode = (code, run, type) => {
  * @example $e.ide.saveFile("forward(100)", "esee.code", "text/plain")
  */
 $e.ide.saveFile = (data64, filename, mimetype) => {
+	let data;
 	if (!mimetype.startsWith("text/")) {
 		data = window.atob(data64);
 		const rawLength = data.length;

@@ -16,7 +16,7 @@ window.addEventListener("message", async (event) => {
 		api_parameters	= event.data.parameters;
 		api_nounce		= event.data.request;
 		if (!api_parameters) api_parameters = [];
-		else if (typeof api_parameters != "array") api_parameters = [ api_parameters ];
+		else if (!Array.isArray(api_parameters)) api_parameters = [ api_parameters ];
 	}
 	
 	let response = await $e.api[api_call](...api_parameters);
@@ -49,7 +49,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 	url_params = new URLSearchParams(url_params);
 	if (url_params.get("e")) {
 		const encodedParamsSearch = new URLSearchParams(atob(url_params.get("e")));
-		encodedParamsSearch.forEach((k, v) => url_params.append(k, v));
+		encodedParamsSearch.forEach((v, k) => url_params.append(k, v));
 	}
 
 	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
@@ -392,7 +392,7 @@ $e.api.getView = () => {
  * @example $e.api.getWhiteboard()
  */
 $e.api.getWhiteboard = (gridVisible, guideVisible) => {
-	return $e.ide.downloadWhiteboard(true, gridVisible, guideVisible);
+	return $e.ide.downloadWhiteboard(true, gridVisible, guideVisible).dataUrl;
 };
 
 /**
@@ -585,7 +585,8 @@ $e.api.setInstructions = (value, action = true) => {
 	const instructions = value.split(";");
 	const customNameCount = {};
 	$e.instructions.custom = [];
-	instructions.forEach((instruction, i) => {
+	for (let j = 0; j < instructions.length; j++) {
+		const instruction = instructions[j];
 		const instructionName = instruction.trim();
 		if (customNameCount[instructionName] === undefined) {
 			customNameCount[instructionName] = 1;
@@ -593,8 +594,8 @@ $e.api.setInstructions = (value, action = true) => {
 			customNameCount[instructionName]++;
 		}
 		const baseInstructionId = instructionName;
-		const newInstructionId = baseInstructionId + "-custom" + customNameCount[instructionName];
 		if ($e.instructions.set[baseInstructionId]) {
+			const newInstructionId = baseInstructionId + "-custom" + customNameCount[instructionName];
 			$e.instructions.set[newInstructionId] = $e.clone($e.instructions.set[baseInstructionId]);
 			$e.instructions.set[newInstructionId].show = [];
 			let customInstructionsNum = 0;
@@ -602,15 +603,16 @@ $e.api.setInstructions = (value, action = true) => {
 				customInstructionsNum = $e.instructions.custom.length;
 			}
 			$e.instructions.custom[customInstructionsNum] = newInstructionId;
-			for (let k = 0; j + 1 + k < instructions.length && (
-			$e.isNumber(instructions[j + 1 + k], true) ||
-			$e.isBoolean(instructions[j + 1 + k], true) ||
-			instructions[j + 1 + k].startsWith('"') ||
-			instructions[j + 1 + k].startsWith("'") ||
-			instructions[j + 1 + k] == "showParams" ||
-			instructions[j + 1 + k] == "noChange" ||
-			instructions[j + 1 + k].startsWith("param:") ||
-			instructions[j + 1 + k].startsWith("count:")); k++) {
+			let k;
+			for (k = 0; j + 1 + k < instructions.length && (
+				$e.isNumber(instructions[j + 1 + k], true) ||
+				$e.isBoolean(instructions[j + 1 + k], true) ||
+				instructions[j + 1 + k].startsWith('"') ||
+				instructions[j + 1 + k].startsWith("'") ||
+				instructions[j + 1 + k] == "showParams" ||
+				instructions[j + 1 + k] == "noChange" ||
+				instructions[j + 1 + k].startsWith("param:") ||
+				instructions[j + 1 + k].startsWith("count:")); k++) {
 				// Doing this when custom instructions have been previously created is redundant but doesn't hurt and allows us to increase variable i skipping the parameters without duplicating code
 				if (instructions[j + 1 + k] == "showParams") {
 					$e.instructions.set[newInstructionId].showParams = true;
@@ -627,6 +629,8 @@ $e.api.setInstructions = (value, action = true) => {
 					let param = instructions[j + 1 + k];
 					if (param.startsWith("param:")) {
 						param = param.split(":")[1];
+						if (parseInt(param) == param) param = parseInt(param);
+						else if (parseFloat(param) == param) param = parseFloat(param);
 					}
 					$e.instructions.set[newInstructionId].parameters[k].initial = param;
 					$e.instructions.set[newInstructionId].parameters[k].forceInitial = true;
@@ -635,11 +639,10 @@ $e.api.setInstructions = (value, action = true) => {
 				}
 			}
 			j += k;
-			newInstructionId++;
 		} else {
 			console.error("Error while loading instructions from URL: Instruction " + instructionName + " doesn't exist");
 		}
-	});
+	}
 	if (action) $e.ui.blocks.initToolbox($e.modes.toolboxes.current.id, $e.modes.toolboxes.current.element);
 	$e.session.editor.setOptions({readOnly: !!$e.session.disableCode});
 };

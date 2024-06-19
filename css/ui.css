@@ -141,6 +141,9 @@ div.ace_gutter-cell {
 	white-space: pre-line;
 	font-family: var(--default-font);
 }
+.msgBox:has(.unsupported) {
+	min-width: calc(var(--input-large-size) + var(--block-big-size) + 2 * var(--default-space));
+}
 .submit-wrapper {
 	margin: var(--default-space) 0;
 	width: 100%;
@@ -290,7 +293,7 @@ span.tab-title {
 #loadcode,
 #savecode {
 	min-width: 6em;
-	height: 4em;
+	min-height: 4em;
 }
 #translations-select,
 #themes-select {
@@ -636,7 +639,7 @@ span.tab-title {
 	visibility: hidden;
 }
 input.unsupported {
-	width: 480px;
+	width: var(--input-large-size);
 }
 #fullscreen-button::before {
 	content: "□";

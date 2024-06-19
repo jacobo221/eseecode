@@ -1,11 +1,17 @@
 ## 4.1 (?????)
 * Dynamic fill() icon
-* Code view now allows editing and pasting on mobile devices.
-* Updated ACE editor to upstream's latest
+* Code view now allows editing and pasting on mobile devices (updated ACE editor to upstream's latest)
+* Fixed whiteboard background overlapping grid
+* Fixed save code to file
 * Fixed breakpoint general toggle should not toggle whiteboard layers
 * Fixed flow view of non-standard functions
 * Fixed missing parameters in custom function calls in blocks mode
 * Fixed code editor displaying wrong cursor position in Chrome
+* Fixed immediate execution from API
+* Fixed line highlight on synthax error
+* Fixed parsing URL parameters in e=
+* Fixed API call setInstrucions()
+* Fixed API call downloadWhiteboard()
 
 ## 4.0 (2024-01-18)
 

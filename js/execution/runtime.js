@@ -6,12 +6,13 @@
  * @param {Boolean} [immediate] Run immediately (disable breakpoints and pauses)
  * @param {String} [inCode] Code to run. If unset run the code in the view window
  * @param {Boolean} [justPrecode] Whether or not to ignore the usercode and just run the precode
+ * @param {Boolean} [skipAnimation] Whether or not to skip animating the instructions. If immediate is true by default animation will be skipped
  * @example $e.execution.execute()
  */
-$e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimation) {
+$e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimation = immediate) {
 	if (!inCode) $e.execution.resetSandbox();
 	let code;
-	if (immediate || inCode) code = inCode; // Code from events runs without stepping or breakpoints
+	if (inCode) code = inCode; // Code from events runs without stepping or breakpoints
 	$e.ui.unhighlight();
 	if (code === undefined) {
 		const mode = $e.modes.views.current.type;
@@ -27,7 +28,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 					code = program.makeWrite("", "\t");
 				} catch (exception) {
 					$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message);
-					const lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
+					let lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
 					if (lineNumber && lineNumber[2]) {
 						lineNumber = lineNumber[2];
 						$e.ui.highlight(lineNumber, "error");
@@ -46,7 +47,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	}
 	$e.execution.current.kill = false; // Must be set after $e.backend.reset()
 	$e.execution.current.breaktoui = false;
-	if (!inCode && !justPrecode && !immediate && $e.execution.prerun) $e.execution.prerun();
+	if (!inCode && $e.execution.prerun) $e.execution.prerun();
 	let jsCode = "";
 	try {
 		jsCode += "\"use strict\";";
@@ -101,7 +102,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	if ($e.modes.toolboxes.current.id == "debug") {
 		$e.ui.debug.resetLayers();
 	}
-	if (!inCode && !justPrecode && !immediate && $e.execution.postrun) $e.execution.postrun();
+	if (!inCode && !justPrecode && $e.execution.postrun) $e.execution.postrun();
 };
 
 /**

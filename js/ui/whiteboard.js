@@ -28,7 +28,7 @@ $e.ide.imagifyWhiteboard = (gridVisible = $e.ui.gridVisible, guideVisible = $e.u
 /**
  * Links an A HTML element to the current whiteboard export drawing
  * @private
- * @param {Boolean} onlyReturn If true, the a file is not downloaded
+ * @param {Boolean} onlyReturn If true, the file is not downloaded
  * @param {Boolean} gridVisible Can be use to force toggling the grid
  * @param {Boolean} guideVisible Can be use to force toggling the guide
  * @example $e.ide.downloadWhiteboard()
@@ -473,9 +473,25 @@ $e.ide.drawOutOfBoundsGuide = (context, pos, shiftX, shiftY) => {
  * @private
  * @example $e.ide.resetGrid()
  */
-$e.ide.resetGrid = () => {
-	const ctx = $e.backend.whiteboard.layers.available["grid"].context;
+$e.ide.resetGrid = (ctx = $e.backend.whiteboard.layers.available["grid"].context) => {
 	$e.backend.whiteboard.layers.clear("grid");
+	if ($e.execution.background) {
+		const img = new Image();
+		img.onload = () => {
+			const canvasWidth = $e.backend.whiteboard.width;
+			const canvasHeight = $e.backend.whiteboard.width;
+			ctx.save();
+			ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+			ctx.restore();
+			ctx.translate(canvasWidth / 2, canvasHeight / 2);
+			// Restore the canvas position and orientation for future image() calls
+			ctx.translate(-canvasWidth / 2, -canvasHeight / 2);
+			if ($e.ui.gridVisible) {
+				$e.ide.drawGrid(ctx);
+			}
+		}
+		img.src = $e.execution.background;
+	}
 	if ($e.ui.gridVisible) {
 		$e.ide.drawGrid(ctx);
 	}

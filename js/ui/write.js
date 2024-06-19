@@ -168,11 +168,11 @@ $e.ide.write.synthaxHighlight = (code) => {
 		lineEl.className = "ace_line";
 		const spaceSpan = document.createElement("span");
 		if (tokens && tokens.tokens.length) {
-			const outputLines = [];
-			rootText.$renderSimpleLine(outputLines, tokens.tokens);
+			const outputEl = document.createElement("span");
+			rootText.$renderSimpleLine(outputEl, tokens.tokens);
 			spaceSpan.innerHTML = "&nbsp;".repeat(leadingSpacesCount);
 			lineEl.insertBefore(spaceSpan, lineEl.children[0]);
-			lineEl.innerHTML += outputLines.join("");
+			lineEl.innerHTML += outputEl.innerHTML;
 		} else {
 			spaceSpan.innerHTML = "&nbsp;";
 			lineEl.appendChild(spaceSpan);

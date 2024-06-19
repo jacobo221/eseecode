@@ -96,19 +96,6 @@ $e.backend.whiteboard.layers.getOrCreate = (id) => {
 	canvas.height = canvasHeight;
 	const context = canvas.getContext("2d");
 	const origin = $e.backend.whiteboard.axis.user2systemCoords({ x: 0, y: 0 });
-	if ($e.execution.background) {
-		const img = new Image();
-		img.onload = () => {
-			const ctx = canvas.getContext("2d");
-			ctx.save();
-			ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-			ctx.restore();
-			ctx.translate(canvasWidth / 2, canvasHeight / 2);
-			// Restore the canvas position and orientation for future image() calls
-			ctx.translate(-canvasWidth / 2, -canvasHeight / 2);
-		}
-		img.src = $e.execution.background;
-	}
 	$e.backend.whiteboard.layers.available[id] = {
 		name: id,
 		canvas: canvas,
