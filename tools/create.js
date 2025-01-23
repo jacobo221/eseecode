@@ -76,6 +76,7 @@ add_translations({
 		"Text": "Texto",
 		"Application settings": "Configuración de la aplicación",
 		"Default": "Por defecto",
+		"Your saved value": "Tu valor guardado",
 		"Programming environment": "Entorno de programación",
 		"Whiteboard": "Pizarra",
 		"Instructions": "Instrucciones",
@@ -119,6 +120,12 @@ add_translations({
 		"Remove": "Borrar",
 		"Add": "Añadir",
 		"Add instruction": "Añadir instrucción",
+		"Name": "Nombre",
+		"Type": "Tipo",
+		"Description": "Descripción",
+		"Is optional": "Es opcional",
+		"Default value": "Valor por defecto",
+		"Remove parameter": "Eliminar parámetro",
 	},
 	"ca": {
 		"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
@@ -195,6 +202,7 @@ add_translations({
 		"Text": "Text",
 		"Application settings": "Configuració de l'aplicació",
 		"Default": "Per defecte",
+		"Your saved value": "EL teu valor desat",
 		"Programming environment": "Entorn de programació",
 		"Whiteboard": "Pissarra",
 		"Instructions": "Instruccions",
@@ -239,6 +247,12 @@ add_translations({
 		"Remove": "Esborrar",
 		"Add": "Afegir",
 		"Add instruction": "Afegir instrucció",
+		"Name": "Nombre",
+		"Type": "Tipus",
+		"Description": "Descripció",
+		"Is optional": "És opcional",
+		"Default value": "Valor per defecte",
+		"Remove parameter": "Eliminar paràmetre",
 	}
 });
 
@@ -315,6 +329,7 @@ var setupItems = {
 	},
 	"Share": {
 		links: { type: "html", skipParameterInURL: true, },
+		embed: { type: "html", skipParameterInURL: true, advanced: true, },
 	}
 	
 }
@@ -335,7 +350,7 @@ function createExerciseTool(divId, createExerciseHandle, src, skipURL, mergeStep
 	handle = createExerciseHandle;
 	if (!handle) handle = function(url) {
 		url = encodeExerciseURL(url);
-		document.getElementById("links").innerHTML = "Use this code to embed the exercise in your website:<br /><br />&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\" allowfullscreen=\"true\">&lt;/iframe>" + (url.length >= 2000 ? "The resulting URL has 2000 characters or more. This URL might not load correctly on Internet Explorer browsers!" : "");
+		document.getElementById("embed").innerHTML = "Use this code to embed the exercise in your website:<br /><br />&lt;iframe width=\"1000\" height=\"600\" src=\""+url+"\" allowfullscreen=\"true\">&lt;/iframe>" + (url.length >= 2000 ? "The resulting URL has 2000 characters or more. This URL might not load correctly on Internet Explorer browsers!" : "");
 	};
 	mainURL = src;
 	if (!mainURL) {
@@ -440,10 +455,10 @@ function createSetupField(setupPage, key, parentDiv) {
 		if (setupPage[key].initial || setupPage[key].userValue) {
 			divHelp.innerHTML += "<br />";
 			if (setupPage[key].initial) {
-				divHelp.innerHTML += "<br /><u>Default:</u> <i>"+decodeURIComponent(setupPage[key].initial)+"</i>";
+				divHelp.innerHTML += "<br /><u>" + _("Default") + ":</u> <i>"+decodeURIComponent(setupPage[key].initial)+"</i>";
 			}
 			if (setupPage[key].userValue) {
-				divHelp.innerHTML += "<br /><u>Your saved value:</u> <i>"+decodeURIComponent(setupPage[key].userValue)+"</i>";
+				divHelp.innerHTML += "<br /><u>" + _("Your saved value") + ":</u> <i>"+decodeURIComponent(setupPage[key].userValue)+"</i>";
 			}
 		}
 		div.appendChild(divHelp);
@@ -1092,7 +1107,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 	instructionParamDiv.className = "paramWrapper";
 
 	var instructionParamNameLabel = document.createElement("label");
-	instructionParamNameLabel.innerHTML = "Name: ";
+	instructionParamNameLabel.innerHTML = _("Name") + ": ";
 	instructionParamDiv.appendChild(instructionParamNameLabel);
 	var instructionParamNameEl = document.createElement("input");
 	instructionParamNameEl.name = "name";
@@ -1105,7 +1120,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 
 	var instructionParamTypeDiv = document.createElement("div");
 	var instructionParamTypeLabel = document.createElement("label");
-	instructionParamTypeLabel.innerHTML = "Type: ";
+	instructionParamTypeLabel.innerHTML = _("Type") + ": ";
 	instructionParamTypeDiv.appendChild(instructionParamTypeLabel);
 	var instructionParamTypeSelect = document.createElement("select");
 	instructionParamTypeSelect.name = "type";
@@ -1120,7 +1135,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 
 	var instructionParamTipDiv = document.createElement("div");
 	var instructionParamTipLabel = document.createElement("label");
-	instructionParamTipLabel.innerHTML = "Description: ";
+	instructionParamTipLabel.innerHTML = _("Description") + ": ";
 	instructionParamTipDiv.appendChild(instructionParamTipLabel);
 	var instructionParamTipEl = document.createElement("input");
 	instructionParamTipEl.name = "tip";
@@ -1129,7 +1144,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 
 	var instructionParamOptionalDiv = document.createElement("div");
 	var instructionParamOptionalLabel = document.createElement("label");
-	instructionParamOptionalLabel.innerHTML = "Is optional: ";
+	instructionParamOptionalLabel.innerHTML = _("Is optional") + ": ";
 	instructionParamOptionalDiv.appendChild(instructionParamOptionalLabel);
 	var instructionParamOptionalEl = document.createElement("input");
 	instructionParamOptionalEl.type = "checkbox";
@@ -1139,7 +1154,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 
 	var instructionParamInitialDiv = document.createElement("div");
 	var instructionParamInitialLabel = document.createElement("label");
-	instructionParamInitialLabel.innerHTML = "Default value: ";
+	instructionParamInitialLabel.innerHTML = _("Default value") + ": ";
 	instructionParamInitialDiv.appendChild(instructionParamInitialLabel);
 	var instructionParamInitialEl = document.createElement("input");
 	instructionParamInitialEl.name = "initial";
@@ -1148,7 +1163,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 
 	var instructionParamRemoveDiv = document.createElement("div");
 	var instructionParamRemoveEl = document.createElement("button");
-	instructionParamRemoveEl.innerHTML = "Remove parameter";
+	instructionParamRemoveEl.innerHTML = _("Remove parameter");
 	instructionParamRemoveEl.addEventListener("click", (event) => { event.target.closest(".paramWrapper").parentNode.removeChild(event.target.closest(".paramWrapper")); updateCustomInstructionWrappers(); });
 	instructionParamRemoveDiv.appendChild(instructionParamRemoveEl);
 	instructionParamDiv.appendChild(instructionParamRemoveDiv);

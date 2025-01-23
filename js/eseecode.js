@@ -156,7 +156,7 @@
 				const counter = new countFiles(
 					numFiles,
 					(countdown, event) => updateProgress(i * 100 / files_to_load.length, (i + 1) * 100 / files_to_load.length, numFiles, countdown, event),
-					failedProgress
+					failedProgress,
 				);
 				const headEl = document.querySelector("head");
 				subfiles.forEach(file => loadFile(file, headEl, counter.count, counter.kill));
