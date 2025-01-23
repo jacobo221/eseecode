@@ -113,7 +113,7 @@ $e.ui.saveCode = () => {
 			filename = $e.ui.codeFilename;
 		}
 		const mimetype = "text/plain";
-		$e.ide.saveFile($e.downloadCode(), filename, mimetype);
+		$e.ide.saveFile($e.api.downloadCode(), filename, mimetype);
 		$e.ui.msgBox.close();
 	}, acceptName: _("Save"), cancel: true, focus: "filename" });
 };
