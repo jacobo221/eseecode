@@ -102,7 +102,7 @@ $e.ui.resetIO = (clearInput) => {
  */
 $e.ui.saveCode = () => {
 	$e.ui.msgBox.open(_("Give a name to the file") + ": <input id=\"filename\" value=\"" + $e.ui.codeFilename + "\">", { acceptAction: () => { 
-		const filename = $e.ui.element.querySelector("#filename").value;
+		let filename = $e.ui.element.querySelector("#filename").value;
 		filename = filename.replace("/", "").replace("\\", "");
 		if (filename.length > 0 && !filename.includes(".")) {
 			filename += ".esee";
