@@ -202,6 +202,9 @@ div.ace_gutter-cell {
 	min-height: var(--button-big-size);
 	margin: var(--default-space);
 }
+.monospace {
+	font-family: "Lucida Console", "Courier New", monospace;
+}
 .panel-column {
 	position: relative;
 	width: inherit;

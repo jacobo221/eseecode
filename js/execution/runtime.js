@@ -27,7 +27,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 					const program = eseecodeLanguage.parse(code);
 					code = program.makeWrite("", "\t");
 				} catch (exception) {
-					$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message);
+					$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
 					let lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
 					if (lineNumber && lineNumber[2]) {
 						lineNumber = lineNumber[2];
@@ -84,7 +84,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		}
 		jsCode += "})();";
 	} catch (exception) {
-		$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message);
+		$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
 		return;
 	}
 	if (inCode === undefined || inCode === null) {
@@ -395,7 +395,7 @@ $e.execution.showResults = (err) => {
 				brackets = "()";
 			}
 		}
-		$e.ui.msgBox.open(_("Error found during execution at line %s in %s", [ err.line, err.name + brackets ]) + "\n" + err.text) + ":";
+		$e.ui.msgBox.open(_("Error found during execution at line %s in %s", [ err.line, err.name + brackets ]) + "\n" + err.text, { classes: "monospace" }) + ":";
 		$e.ui.highlight(err.line, "error");
 	} else {
 		// The code didn't finish running and there is no known reason
@@ -432,5 +432,5 @@ $e.execution.printError = (err) => {
 	} else {
 		message = _("Runtime error!");
 	}
-	$e.ui.msgBox.open(message, { classes: "error" });
+	$e.ui.msgBox.open(message, { classes: [ "error", "monospace" ] });
 };

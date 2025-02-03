@@ -251,11 +251,11 @@ $e.ide.uploadCode = (code, run, type) => {
 			program = eseecodeLanguage.parse(code);
 		} catch (exception) {
 			codeParseable = false;
-			$e.ui.msgBox.open(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors", [level]) + ":\n\n" + exception.name + ":  " + exception.message);
+			$e.ui.msgBox.open(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors", [level]) + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
 		}
 	} else {
 		codeParseable = false;
-		$e.ui.msgBox.open(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode", [level]));
+		$e.ui.msgBox.open(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode", [level]), { classes: "monospace" });
 	}
 	if (type === "precode") {
 		$e.execution.precode = code;

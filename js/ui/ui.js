@@ -352,7 +352,12 @@ $e.ui.reset = async () => {
 	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer));
 	$e.session.updateOnViewSwitch = false;
 	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "execute", "maximize" ]);
-	if (firstLoad && $e.setup.autorestore) $e.ide.loadAutosave();
+	if (firstLoad && $e.setup.autorestore) await new Promise((resolve, reject) => {
+			const parseTimeout = setTimeout(reject, 5 * 1000);
+			$e.ide.loadAutosave();
+			clearTimeout(parseTimeout);
+			resolve();
+		});
 	$e.ui.themes.current.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
 	$e.ide.loadBrowserURLParameters([ "theme" ], undefined, true);
 	$e.session.lastChange = 0;
