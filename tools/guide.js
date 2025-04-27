@@ -234,11 +234,11 @@ function ttDeactivate(clearBorders) {
     var currentGuideStep = guideSteps[currentGuideIndex];
     var ttBox = doc.getElementById("ttBox");
     if (ttBox) {
-        ttBox.parentNode.removeChild(ttBox);
+        ttBox.remove();
     }
     var ttBoxWrapper = doc.getElementById("ttBoxWrapper");
     if (ttBoxWrapper) {
-        ttBoxWrapper.parentNode.removeChild(ttBoxWrapper);
+        ttBoxWrapper.remove();
     }
     if (clearBorders !== false) {
         if (currentGuideStep && currentGuideStep.element) {

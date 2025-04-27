@@ -90,7 +90,7 @@ $e.ui.blocks.removeFromCode = (blockEl) => {
 		instruction.countInstances--;
 		$e.ui.blocks.updateCount(instructionSetId);
 	}
-	blockEl.parentNode.removeChild(blockEl);
+	blockEl.remove();
 	if (!viewEl.firstChild) $e.ui.blocks.addBeginTip();
 };
 

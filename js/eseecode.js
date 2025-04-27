@@ -164,7 +164,7 @@
 			}
 			// All files loaded, start application
 			$e.ui.reset();
-			wrapperProgressEl.parentNode.removeChild(wrapperProgressEl);
+			wrapperProgressEl.remove();
 		} catch(error) {
 			console.error(error);
 			failedProgress();

@@ -307,7 +307,7 @@ $e.ui.blocks.addBeginTip = () => {
 	const viewEl = $e.ui.element.querySelector("#view-blocks");
 	if (!$e.ui.blocks.codeIsEmpty()) return;
 	const oldTipsEl = $e.ui.element.querySelector("#view-blocks-tip");
-	if (oldTipsEl) oldTipsEl.parentNode.removeChild(oldTipsEl);
+	if (oldTipsEl) oldTipsEl.remove();
 	const level = $e.modes.views.current.id;
 	// View tip
 	let text = "";
@@ -331,7 +331,7 @@ $e.ui.blocks.removeBeginTip = () => {
 	// Remove view tip
 	const tipEl = $e.ui.element.querySelector("#view-blocks-tip");
 	if (!tipEl) return;
-	tipEl.parentNode.removeChild(tipEl);
+	tipEl.remove();
 };
 
 /**

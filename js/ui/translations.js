@@ -22,7 +22,7 @@ $e.ui.translations.switch = (lang, run) => {
 	const headElements = headElement.children;
 	Array.from(headElements).forEach(element => {
 		if (element.tagName === "SCRIPT" && element.src && element.src.includes(translationsPath+"/")) {
-			element.parentNode.removeChild(element);
+			element.remove();
 		}
 	});
 	// Add translation file

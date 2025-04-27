@@ -22,7 +22,7 @@ $e.ui.loading.open = () => {
  */
 $e.ui.loading.close = () => {
 	const wrapperEl = $e.ui.element.querySelector("#loadingWrapper");
-	if (wrapperEl) wrapperEl.parentNode.removeChild(wrapperEl);
+	if (wrapperEl) wrapperEl.remove();
 };
 
 /**
@@ -126,7 +126,7 @@ $e.ui.msgBox.close = () => {
 	id--;
 	const msgBoxElement = $e.ui.element.querySelector("#msgBoxWrapper" + id);
 	if (msgBoxElement) {
-		msgBoxElement.parentNode.removeChild(msgBoxElement);
+		msgBoxElement.remove();
 		if (id > 0) {
 			$e.ui.element.querySelector("#msgBoxWrapper" + (id - 1)).focus();
 		} else if ($e.modes.views.current.type === "write") {

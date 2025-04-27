@@ -145,7 +145,7 @@ $e.ui.debug.highlightWatches = (watches) => {
 $e.ui.debug.updateRemoveWatch = (watch) => {
 	$e.debug.removeWatch(watch);
 	const watchEl = $e.ui.element.querySelector("#toolbox-debug-analyzer-watch-" + watch);
-	if (watchEl) watchEl.parentNode.removeChild(watchEl);
+	if (watchEl) watchEl.remove();
 };
 
 /**
@@ -392,7 +392,7 @@ $e.ui.debug.updateModifiedBreakpoint = (oldLine, line) => {
 		if (blockEl) blockEl.classList.remove("highlight");
 	}
 	const blockEl = $e.ui.element.querySelector("#toolbox-debug-analyzer-breakpoint-" + oldLine);
-	if (blockEl) blockEl.parentNode.removeChild(blockEl);
+	if (blockEl) blockEl.remove();
 	$e.ui.debug.addOrUpdateBreakpointInUI(line, oldLine);
 
 };
@@ -518,7 +518,7 @@ $e.ui.debug.updateRemovedBreakpoint = (line) => {
 		if (blockEl) blockEl.classList.remove("highlight");
 	}
 	const breakpointEl = $e.ui.element.querySelector("#toolbox-debug-analyzer-breakpoint-" + line);
-	if (breakpointEl) breakpointEl.parentNode.removeChild(breakpointEl);
+	if (breakpointEl) breakpointEl.remove();
 };
 
 /**

@@ -991,7 +991,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 			const row = document.querySelector("[data-id="+instructionDescr.id+"]");
 			if (row) row.style.display = "block";
 		}
-		event.target.closest(".instructionWrapper").parentNode.removeChild(event.target.closest(".instructionWrapper"));
+		event.target.closest(".instructionWrapper").remove();
 	});
 	instructionApplyDiv.appendChild(instructionCancelButton);
 	instructionForm.appendChild(instructionApplyDiv);
@@ -1081,16 +1081,16 @@ function applyCustomInstruction(form, instructionsSetDiv, event) {
 	instructionDiv.appendChild(instructionEditButton);
 	var instructionRemoveButton = document.createElement("button");
 	instructionRemoveButton.innerHTML = "Remove";
-	instructionRemoveButton.addEventListener("click", (event) => event.target.closest(".instructionRowWrapper").parentNode.removeChild(event.target.closest(".instructionRowWrapper")));
+	instructionRemoveButton.addEventListener("click", (event) => event.target.closest(".instructionRowWrapper").remove());
 	instructionDiv.appendChild(instructionRemoveButton);
 	const previousInstructionDiv = document.querySelector("[data-id="+instructionId+"]");
 	if (previousInstructionDiv) {
 		previousInstructionDiv.parentNode.insertBefore(instructionDiv, previousInstructionDiv);
-		previousInstructionDiv.parentNode.removeChild(previousInstructionDiv);
+		previousInstructionDiv.remove();
 	} else {
 		instructionsSetDiv.appendChild(instructionDiv);
 	}
-	form.parentNode.removeChild(form);
+	form.remove();
 
 	updateInstructions();
 	buildURL();
@@ -1164,7 +1164,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 	var instructionParamRemoveDiv = document.createElement("div");
 	var instructionParamRemoveEl = document.createElement("button");
 	instructionParamRemoveEl.innerHTML = _("Remove parameter");
-	instructionParamRemoveEl.addEventListener("click", (event) => { event.target.closest(".paramWrapper").parentNode.removeChild(event.target.closest(".paramWrapper")); updateCustomInstructionWrappers(); });
+	instructionParamRemoveEl.addEventListener("click", (event) => { event.target.closest(".paramWrapper").remove(); updateCustomInstructionWrappers(); });
 	instructionParamRemoveDiv.appendChild(instructionParamRemoveEl);
 	instructionParamDiv.appendChild(instructionParamRemoveDiv);
 

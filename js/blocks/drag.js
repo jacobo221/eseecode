@@ -41,7 +41,7 @@ $e.ui.blocks.cleanFloatingBlockVisualEffects = (isMoving = false) => {
 	blockEl.classList.remove("deleteCandidate", "setupCandidate", "moveCandidate", "addCandidate", "cancelCandidate", "fromToolbox", "highlight");
 	if (!isMoving) {
 		if (blockEl.parentNode.id == "body") {
-			blockEl.parentNode.removeChild(blockEl);
+			blockEl.remove();
 		} else { // The floating block has been placed in the code
 			blockEl.classList.remove("floating");
 			blockEl.style.left = "";
@@ -143,7 +143,7 @@ $e.ui.blocks.modifyEventStart = (event) => {
 			[ "top", "left" ].forEach(key => shadowBlockEl.style[key] = destBlockPosition[key] + "px");
 			shadowBlockEl.style.opacity = 0;
 			setTimeout(() => {
-				shadowBlockEl.parentNode.removeChild(shadowBlockEl);
+				shadowBlockEl.remove();
 			}, animation_duration * 1000);
 		}, 0);
 	} else {

@@ -22,13 +22,13 @@ $e.backend.unique = () => {
 
 /** Stop a background sound
  * @private
- * @param {Object} audio AUdio object to stop
+ * @param {Object} audio Audio object to stop
  * @example $e.backend.sound.stop(backgroundSound("music.mp3"))
  */
 $e.backend.sound.stop = (audio) => {
 	if (!audio) return;
 	audio.pause();
-	if (audio.parentNode) audio.parentNode.removeChild(audio);
+	if (audio.parentNode) audio.remove();
 };
 
 /** Returns a window and focuses to it if none had focus

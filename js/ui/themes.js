@@ -77,7 +77,7 @@ $e.ui.themes.switch = (newTheme, redrawBlocks) => {
 	$e.session.semaphor = 0;
 	if (oldTheme != "default") Array.from(headElements).filter(element => { // Do not remove teh default theme, it is always behind to give basic format
 		return (element.tagName === "LINK" && element.rel === "stylesheet" && element.href && element.href.startsWith(oldThemePath + "/")) || (element.tagName === "SCRIPT" && element.src && element.src.startsWith(oldThemePath + "/")); // We don't remove them yet, instead we add them to an array of elements to remove and we remove them all at once, otherwise they are reordered while looping and some are left behind
-	}).forEach(element => element.parentNode.removeChild(element)); // We remove them now, in reverse order so that remval doesn't affect the order
+	}).forEach(element => element.remove()); // We remove them now, in reverse order so that remval doesn't affect the order
 	if (newTheme == "default") return; // The default theme is already loaded, it is always loaded at the beginning
 	// Add files
 	const newThemeJSPath = newThemePath + "/theme.js" + ($e.v ? "?v=" + $e.v : "");

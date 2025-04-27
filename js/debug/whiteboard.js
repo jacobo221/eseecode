@@ -145,5 +145,5 @@ $e.ui.debug.highlightCanvas = (id) => {
  */
 $e.ui.debug.unhighlightCanvas = () => {
 	const canvasEl = $e.ui.element.querySelector("#canvas-wrapper-highlight");
-	if (canvasEl) canvasEl.parentNode.removeChild(canvasEl);
+	if (canvasEl) canvasEl.remove();
 };
