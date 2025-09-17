@@ -1,6 +1,7 @@
 ## 4.1 (?????)
 * Dynamic fill() icon
 * Code view now allows editing and pasting on mobile devices (updated ACE editor to upstream's latest)
+* Added API call getInstructionsDelay()
 * Fixed whiteboard background overlapping grid
 * Fixed save code to file
 * Fixed breakpoint general toggle should not toggle whiteboard layers

@@ -339,6 +339,16 @@ $e.api.getOutput = () => {
 };
 
 /**
+ * Gets the delay between instructions
+ * @since 4.1
+ * @public
+ * @example $e.api.getInstructionsDelay
+ */
+$e.api.getInstructionsDelay = () => {
+	return $e.execution.instructionsDelay;
+};
+
+/**
  * Gets the number of lines of code in the current/last execution
  * @since 3.0
  * @public
