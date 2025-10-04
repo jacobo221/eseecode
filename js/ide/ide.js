@@ -295,70 +295,37 @@ $e.ide.uploadCode = (code, run, type) => {
  * @param mimetype MIME type
  * @example $e.ide.saveFile("forward(100)", "esee.code", "text/plain")
  */
-$e.ide.saveFile = (data64, filename, mimetype) => {
-	let data;
+$e.ide.saveFile = (data, filename, mimetype) => {
 	if (!mimetype.startsWith("text/")) {
-		data = window.atob(data64);
+		data = window.atob(data);
 		const rawLength = data.length;
 		const uInt8Array = new Uint8Array(rawLength);
 		for (let i = 0; i < rawLength; ++i) {
 			uInt8Array[i] = data.charCodeAt(i);
 		}
 		data = uInt8Array;
-	} else {
-		// It is text, so the data has been passed as a String, not in base64
-		data = data64;
 	}
 	const downloadLink = document.createElement("a");
-	// Chrome / Firefox
-	const supportDownloadAttribute = 'download' in downloadLink;
-	// Safari
-	const isSafari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-	if (supportDownloadAttribute) {
-		let blob;
-		try {
-			blob = new Blob([ data ], { type:mimetype });
-		} catch(error) {
-			// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
-			const builder = new window.BlobBuilder();
-			builder.append(data);
-			blob = builderbuilder.getBlob(mimetype);
-		}
-		const codeURI = URL.createObjectURL(blob);
-		downloadLink.href = codeURI;
-		downloadLink.download = filename;
-		downloadLink.style.display = "none";
-		document.body.appendChild(downloadLink);
-		downloadLink.click();
-		document.body.removeChild(downloadLink);
-		// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
-		setTimeout(function () {
-			URL.revokeObjectURL(codeURI);
-		}, 250);
-		$e.ui.msgBox.close();
-	} else if (isSafari) {
-		$e.ui.msgBox.close(); // We cannot close the msgBox later because we would be closing the new msgBox where the link is going to be create it, so close it now
-		setTimeout(() => {
-			$e.ui.msgBox.open(_("Your browser doesn't support direct download of files, please click on %s and save the page that will open.", [ "<a id='msgBoxDw' target='_blank'>" + _("this link") + "</a>" ]), { acceptName: _("Close") });
-			const downloadLinkElement = $e.ui.element.querySelector("#msgBoxDw");
-			if (!mimetype.istartsWith("text/")) {
-				downloadLinkElement.href = "data:" + mimetype + ";base64," + data64;
-			} else {
-				downloadLinkElement.href = "data:" + mimetype + "," + encodeURIComponent(data64);
-			}
-			downloadLinkElement.addEventListener("click", $e.ui.msgBox.close);
-		}, 100);
-	} else {
-		const oWin = window.open("about:blank", "_blank");
-		if (!mimetype.startsWith("text/")) {
-			oWin.document.write("data:" + mimetype + ";base64," + data64);
-		} else {
-			oWin.document.write("data:" + mimetype + "," + encodeURIComponent(data64));
-		}
-		oWin.document.close();
-		// Keep the window open, this is the last option
-		oWin.close();
-		$e.ui.msgBox.close();
+	let blob;
+	try {
+		blob = new Blob([ data ], { type:mimetype });
+	} catch(error) {
+		// If Blob doesn't exist assume it is an old browser using deprecated BlobBuilder
+		const builder = new window.BlobBuilder();
+		builder.append(data);
+		blob = builderbuilder.getBlob(mimetype);
 	}
+	const codeURI = URL.createObjectURL(blob);
+	downloadLink.href = codeURI;
+	downloadLink.download = filename;
+	downloadLink.style.display = "none";
+	document.body.appendChild(downloadLink);
+	downloadLink.click();
+	document.body.removeChild(downloadLink);
+	// Just in case that some browser handle the click/window.open asynchronously I don't revoke the object URL immediately
+	setTimeout(function () {
+		URL.revokeObjectURL(codeURI);
+	}, 250);
+	$e.ui.msgBox.close();
 	$e.session.lastSave = Date.now();
 };

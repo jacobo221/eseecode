@@ -21,8 +21,6 @@ eSeeCode source code is available at the [eSeeCode repository at GitHub](https:/
 
 Bug reports and patches are welcome on GitHub's [issue tracker](https://github.com/jacobo221/eseecode/issues).
 
-If you find eSeeCode useful and want to repay my work, [a small donation would be appreciated](https://pledgie.com/campaigns/25803).
-
 Download
 --------
 
@@ -38,6 +36,7 @@ Integrated projects
 
 This project would have never been possible without the following projects which are bundled with it:
 * [Ace](https://github.com/ajaxorg/ace-builds)
+* [html-to-image](https://github.com/bubkoo/html-to-image)
 * [Jison](https://github.com/zaach/jison)
 * [jsParser](https://github.com/cjihrig/jsparser)
-* [jsgif](http://github.com/antimatter15/jsgif)
+* [jsgif](https://github.com/antimatter15/jsgif)

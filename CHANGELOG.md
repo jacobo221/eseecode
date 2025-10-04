@@ -1,7 +1,13 @@
 ## 4.1 (?????)
+
+*Milestone reached: Download code view as image
+* Download the code view as an image
 * Dynamic fill() icon
 * Code view now allows editing and pasting on mobile devices (updated ACE editor to upstream's latest)
-* Added API call getInstructionsDelay()
+* Added API calls getInstructionsDelay(), screenshotCode()
+* Removed donation text from readme: never recevied one, never remembered that text even existed
+* Removed all download file method
+* Fixed minimum whiteboard width
 * Fixed whiteboard background overlapping grid
 * Fixed save code to file
 * Fixed breakpoint general toggle should not toggle whiteboard layers

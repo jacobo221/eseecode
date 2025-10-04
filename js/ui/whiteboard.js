@@ -120,6 +120,11 @@ $e.ui.downloadWhiteboard = () => {
 			"<div>" +
 				_("Layers per row") + ": <input id=\"setup-downloadLayers-columns\" type=\"number\" value=\"" + $e.ui.downloadLayersColumns + "\" " + inputType + " min=\"1\" onchange=\"$e.ui.downloadLayersColumns=this.value\" style=\"width:40px\" />" +
 			"</div>" +
+		"</div>" +
+		"<br />" +
+		"<br />" +
+		"<div style=\"text-align:center\" class=\"" + textStyle + "\">" +
+			"<button id=\"whiteboard-screenshotCode\" class=\"tab\" onclick=\"$e.ui.screenshotCode()\">" + _("Download screenshot of the code") + "</button>" +
 		"</div>";
 	$e.ui.msgBox.open(msgBoxContent, { noSubmit: true, cancelName: _("Close") });
 };
@@ -250,6 +255,19 @@ $e.ide.downloadLayers = (grid) => {
 	const filename = "layers-" + Date.now() + "." + dataTuple.mimetype.split("/")[1];
 	const mimetype = dataTuple.mimetype;
 	$e.ide.saveFile(data, filename, mimetype);
+};
+
+/**
+ * Downloads a an image of the code in the current view, called from the UI
+ * @private
+ * @example $e.ui.screenshotCode()
+ */
+$e.ui.screenshotCode = async () => {
+	const mimetype = "image/png";
+	const filename = "code-" + Date.now() + "." + mimetype.split("/")[1];
+	let screenshot = await $e.api.screenshotCode();
+	screenshot = screenshot.split(",")[1];
+	$e.ide.saveFile(screenshot, filename, mimetype);
 };
 
 /**

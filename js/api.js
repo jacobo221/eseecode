@@ -188,6 +188,49 @@ $e.api.downloadCode = () => {
 };
 
 /**
+ * Returns a screenshot of the user's code in the current view
+ * @public
+ * @return {String} Base64 screenchot of the code
+ * @example $e.api.schreenshotCode()
+ */
+$e.api.screenshotCode = async () => {
+	const mode = $e.modes.views.current.type;
+	const codeEl = document.querySelector(mode === "write" ? "#view-write" : "#view-blocks");
+	// Temporarily expand the element so overflow doesn’t clip anything
+	const prev = {
+		height: codeEl.style.height,
+		width: codeEl.style.width,
+		overflow: codeEl.style.overflow,
+	};
+	codeEl.style.height = codeEl.scrollHeight + "px";
+	codeEl.style.width = codeEl.scrollWidth + "px";
+	codeEl.style.overflow = "visible";
+
+	// Wait a frame for layout to settle
+	await new Promise(r => requestAnimationFrame(() => r()));
+
+	let data;
+	try {
+		data = htmlToImage.toPng(codeEl, {
+			pixelRatio: Math.min(2, window.devicePixelRatio || 1), // quality vs memory
+			canvasWidth: codeEl.scrollWidth,
+			canvasHeight: codeEl.scrollHeight,
+			cacheBust: true,
+		});
+	} catch (err) {
+		console.error("Screenshot failed:", err);
+		alert("Could not create image (content may be too large or cross-origin images blocked).");
+	} finally {
+		// Restore original styles
+		await new Promise(r => requestAnimationFrame(() => r())); // Give it time for htmlToImage to obtain the screenshot
+		codeEl.style.height = prev.height;
+		codeEl.style.width = prev.width;
+		codeEl.style.overflow = prev.overflow;
+	}
+	return data;
+};
+
+/**
  * Returns the grid's properties
  * @since 3.0
  * @public

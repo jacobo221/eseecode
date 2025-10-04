@@ -136,6 +136,7 @@
 				"js/libs/jsgif/LZWEncoder.js",
 				"js/libs/jsgif/NeuQuant.js",
 				"js/libs/jsgif/GIFEncoder.js",
+				"js/libs/html-to-image/html-to-image.min.js",
 			], [
 				// Depends on theme.js
 				() => $e.ui.themes.current.files,

@@ -598,6 +598,7 @@ span.tab-title {
 	margin: 0 auto;
 	flex-direction: column;
 	overflow: hidden;
+	min-width: var(--portrait-min-width);
 }
 #whiteboard {
 	box-sizing: border-box;

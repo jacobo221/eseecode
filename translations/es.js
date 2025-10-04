@@ -527,6 +527,7 @@ $e.ui.translations.current = {
 		"Remove selected blocks": "Elimina los bloques seleccionados",
 		"Restore code": "Recuperar codi",
 		"Move selected blocks": "Mueve los bloques seleccionados",
+		"Download screenshot of the code": "Descarga captura de imágen del código",
 	}
 };
 
