@@ -53,7 +53,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		jsCode += "\"use strict\";";
 		jsCode += "(async function() {";
 		let instructions = Object.values($e.instructions.set);
-		if (!inCode && ($e.execution.precode || instructions.some(d => d.run))) { // Don't load precode again when running the code of an event
+		if (!inCode && ($e.execution.precode || instructions.some(d => d.run && !d.alias))) { // Don't load precode again when running the code of an event
 			let customInstructionsCode = "";
 			Object.values(instructions).forEach(instruction_details => {
 				if (!instruction_details || !instruction_details.run) return;
@@ -66,7 +66,13 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 					});
 					customInstructionsCode += parameters_text;
 				}
-				customInstructionsCode += "){\n" + instruction_details.run + "}\n";
+				customInstructionsCode += "){\n" +
+					(instruction_details.single ? "$e.execution.current.programCounterDisabled = true;" : "") +
+					(!instruction_details.animate ? "var original_delay = $e.api.getInstructionsDelay();$e.api.setInstructionsDelay(0);" : "") +
+					instruction_details.run +
+					(!instruction_details.animate ? ";$e.api.setInstructionsDelay(original_delay);" : "") +
+					(instruction_details.single ? ";$e.execution.current.programCounterDisabled = false;" : "") +
+					"}\n";
 			});
 			// We want to run precode inline so it shares the same context
 			const real_precode = $e.execution.code2run(customInstructionsCode + $e.execution.precode, { inject: false, inline: true, realcode: true });
@@ -240,9 +246,24 @@ $e.execution.injection = async (lineNumber, variables, inline) => {
 	// Check limits
 	if ($e.execution.current.kill) throw "executionKilled";
 
+	if ($e.execution.current.programCounterDisabled) {
+
+		if (typeof $e.execution.current.programCounterDisabled !== "number") {
+			$e.execution.current.programCounterDisabled = 1;
+		} else {
+			$e.execution.current.programCounterDisabled++;
+		}
+
+		// Every now and then break synchronism so the program can be paused by the user if there is an infinite loop, instead of crashing the browser
+		if (!$e.execution.current.programCounterDisabled % 100 === 1) await new Promise(r => { setTimeout(r, 0); });
+
+		return;
+
+	}
+
 	$e.execution.current.programCounter++;
 
-	if ($e.execution.current.stepped !== undefined && $e.execution.current.programCounter < $e.execution.current.stepped) return; // Stepped executions do not trigger breakpoints. This is particularly necessary for backwards steps since they re-run the whole program up to the target instruction number and we do not want breakpoints to be triggered in the way
+	if ($e.execution.current.stepped !== undefined && $e.execution.current.programCounter < $e.execution.current.stepped && !$e.execution.current.programCounterDisabled) return; // Stepped executions do not trigger breakpoints. This is particularly necessary for backwards steps since they re-run the whole program up to the target instruction number and we do not want breakpoints to be triggered in the way
 
 	$e.ui.highlight(lineNumber, "stepped");
 

@@ -234,6 +234,7 @@ $e.ui.write.initToolbox = (level, toolboxEl) => {
 			if (title == "blank") return;
 			const blockEl = document.createElement('div');
 			blockEl.classList.add("textblock");
+			if (instruction.classes?.includes("container")) blockEl.classList.add("container");
 			blockEl.id = "block-" + title;
 			blockEl.title = _(instruction.tip);
 			blockEl.dataset.instructionSetId = instruction.name;

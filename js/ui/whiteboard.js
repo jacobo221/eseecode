@@ -124,7 +124,11 @@ $e.ui.downloadWhiteboard = () => {
 		"<br />" +
 		"<br />" +
 		"<div style=\"text-align:center\" class=\"" + textStyle + "\">" +
-			"<button id=\"whiteboard-screenshotCode\" class=\"tab\" onclick=\"$e.ui.screenshotCode()\">" + _("Download screenshot of the code") + "</button>" +
+			"<button id=\"whiteboard-screenshotCode\" class=\"tab\" onclick=\"$e.ui.screenshotCode(document.querySelector('#setup-screenshotCode-background').checked ? document.querySelector('#setup-screenshotCode-background-color').value : undefined)\">" + _("Download screenshot of the code") + "</button>" +
+			"<div>" +
+				"<input id=\"setup-screenshotCode-background\" type=\"checkbox\" onchange=\"document.querySelector('#setup-screenshotCode-background-properties').style.display = this.checked ? 'initial' : 'none'\" /> " +
+				_("Background") + "<span id=\"setup-screenshotCode-background-properties\" style=\"display: none\">: <input id=\"setup-screenshotCode-background-color\" type=\"color\" value=\"#ffffff\" /></span>" +
+			"</div>" +
 		"</div>";
 	$e.ui.msgBox.open(msgBoxContent, { noSubmit: true, cancelName: _("Close") });
 };
@@ -262,12 +266,16 @@ $e.ide.downloadLayers = (grid) => {
  * @private
  * @example $e.ui.screenshotCode()
  */
-$e.ui.screenshotCode = async () => {
+$e.ui.screenshotCode = async (backgroundColor) => {
 	const mimetype = "image/png";
 	const filename = "code-" + Date.now() + "." + mimetype.split("/")[1];
-	let screenshot = await $e.api.screenshotCode();
-	screenshot = screenshot.split(",")[1];
-	$e.ide.saveFile(screenshot, filename, mimetype);
+	let screenshot = await $e.api.screenshotCode(backgroundColor);
+	if (screenshot) {
+		screenshot = screenshot.split(",")[1];
+		$e.ide.saveFile(screenshot, filename, mimetype);
+	} else {
+		alert(_("Could not create image (content may be too large or cross-origin images blocked)."));
+	}
 };
 
 /**

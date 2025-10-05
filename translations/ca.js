@@ -528,6 +528,7 @@ $e.ui.translations.current = {
 		"Restore code": "Recuperar código",
 		"Move selected blocks": "Mou els blocs seleccionats",
 		"Download screenshot of the code": "Descarrega captura d'imatge del codi",
+		"Could not create image (content may be too large or cross-origin images blocked).": "No s'ha pogut crear la imatge (el contingut és massa gran o conté imatges d'altres webs",
 	}
 };
 

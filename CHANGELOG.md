@@ -1,12 +1,14 @@
-## 4.1 (?????)
+## 4.1 (2025-10-06)
 
 *Milestone reached: Download code view as image
 * Download the code view as an image
 * Dynamic fill() icon
 * Code view now allows editing and pasting on mobile devices (updated ACE editor to upstream's latest)
-* Added API calls getInstructionsDelay(), screenshotCode()
+* Added API calls getInstructionsDelay(), screenshotCode(), getAutosave(), loadAutosave()
 * Removed donation text from readme: never recevied one, never remembered that text even existed
 * Removed all download file method
+* Custom instructions can now be set up to only count as one instruction execution and disable animation of inner instructions
+* Fixed code view doesnt't display missing semicolor warnings
 * Fixed minimum whiteboard width
 * Fixed whiteboard background overlapping grid
 * Fixed save code to file

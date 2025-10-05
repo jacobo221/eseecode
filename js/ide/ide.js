@@ -51,10 +51,10 @@ $e.ide.autosave = (forceCode = true) => {
  */
 $e.ide.loadAutosave = () => {
 	const path = window.location.pathname;
-	const exercise = $e.setup.exercise ? $e.setup.exercise : "";
+	const exercise = $e.setup?.exercise ? $e.setup.exercise : "";
 	const autosave_id = path + "_" + exercise;
 	const timestamp = localStorage.getItem("autosave_timestamp_" + autosave_id);
-	if ($e.setup.autosaveExpiration && Date.now() > timestamp + $e.setup.autosaveExpiration * 1000) {
+	if ($e.setup?.autosaveExpiration && Date.now() > timestamp + $e.setup.autosaveExpiration * 1000) {
 		localStorage.removeItem("autosave_" + autosave_id);
 		localStorage.removeItem("autosave_timestamp_" + autosave_id);
 	} else {

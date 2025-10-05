@@ -126,6 +126,15 @@ add_translations({
 		"Is optional": "Es opcional",
 		"Default value": "Valor por defecto",
 		"Remove parameter": "Eliminar parámetro",
+		"Apply": "Aplicar",
+		"Implement the instruction": "Implementación de la instrucción",
+		"URL or image name": "URL o nombre de imagen",
+		"Icon": "Icono",
+		"Show in": "Mostrar en",
+		"Category": "Categoría",
+		"Name": "Nombre",
+		"Count as a single instruction": "Contar como una única instrucción",
+		"Keep animation": "Mantener animación",
 	},
 	"ca": {
 		"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
@@ -202,7 +211,7 @@ add_translations({
 		"Text": "Text",
 		"Application settings": "Configuració de l'aplicació",
 		"Default": "Per defecte",
-		"Your saved value": "EL teu valor desat",
+		"Your saved value": "El teu valor desat",
 		"Programming environment": "Entorn de programació",
 		"Whiteboard": "Pissarra",
 		"Instructions": "Instruccions",
@@ -247,12 +256,21 @@ add_translations({
 		"Remove": "Esborrar",
 		"Add": "Afegir",
 		"Add instruction": "Afegir instrucció",
-		"Name": "Nombre",
+		"Name": "Nom",
 		"Type": "Tipus",
 		"Description": "Descripció",
 		"Is optional": "És opcional",
 		"Default value": "Valor per defecte",
 		"Remove parameter": "Eliminar paràmetre",
+		"Apply": "Aplicar",
+		"Implement the instruction": "Implementació de la instrucció",
+		"URL or image name": "URL o nom de imatge",
+		"Icon": "Icone",
+		"Show in": "Mostrar a",
+		"Category": "Categoria",
+		"Name": "Nom",
+		"Count as a single instruction": "Comptar com una única instrucció",
+		"Keep animation": "Mantindre animació",
 	}
 });
 
@@ -337,11 +355,11 @@ var parametersCalledFromAPI;
 
 function encodeExerciseURL(url) {
 	if (url.includes('code=') || url.includes('custominstructions=')) { // code=, precode=, postcode=, custominstructions=
-		let [ mainURL, restURL ] = url.split('?');
-		let [ params, target ] = restURL.split('#');
+		let [ mainURL, ...restURL ] = url.split('?');
+		let [ params, ...target ] = restURL.join('?').split('#');
 		url = mainURL;
 		if (params) url += '?e=' + btoa(params);
-		if (target) url += '#' + target;
+		if (target.length > 0) url += '#' + target.join('#');
 	}
 	return url;
 }
@@ -360,7 +378,12 @@ function createExerciseTool(divId, createExerciseHandle, src, skipURL, mergeStep
 	var assistant = document.getElementById(divId);
 
 	if (!mergeSteps) mergeSteps = {};
-	setupItems = Object.assign(setupItems, mergeSteps);
+	if (typeof mergeSteps === 'function') {
+		setupItems = mergeSteps(setupItems);
+	} else {
+		setupItems = Object.assign(setupItems, mergeSteps);
+	}
+	if (!Array.isArray(setupItems)) setupItems = Object.entries(setupItems).map(([page, setupPage]) => ({ page, setupPage }));
 	var stepNumber = 1;
 	var divSwitch = document.createElement("div");
 	divSwitch.id = "switch";
@@ -378,7 +401,7 @@ function createExerciseTool(divId, createExerciseHandle, src, skipURL, mergeStep
 	var divSteps = document.createElement("div");
 	divSteps.id = "steps";
 	divSteps.class = "steps";
-	Object.entries(setupItems).forEach(([page, setupPage]) => {
+	setupItems.forEach(({ page, setupPage }) => {
 		var div = document.createElement("div");
 		div.id = "step-"+stepNumber;
 		div.class = "step";
@@ -411,10 +434,10 @@ function createExerciseTool(divId, createExerciseHandle, src, skipURL, mergeStep
 	element.id = "jump";
 	stepNumber = 1;
 	var options = "";
-	for (var page in setupItems) {
+	setupItems.forEach(({ page }) => {
 		options += "<option value=\""+stepNumber+"\">"+stepNumber+": "+_(page)+"</option>"; 
 		stepNumber++;
-	}
+	});
 	element.innerHTML = options;
 	element.addEventListener("change", jump);
 	divButtons.appendChild(element);
@@ -643,7 +666,7 @@ function createSetupField(setupPage, key, parentDiv) {
 		setupButton.value = _("Customize");
 		setupButton.disabled = true;
 		setupButton.dataset.elementId = elementId;
-		setupButton.addEventListener("click", changeParameters);
+		setupButton.addEventListener("click", () => changeParameters({target: select2.selectedOptions[0]}));
 		buttonsDiv.appendChild(setupButton);
 		br = document.createElement("br");
 		buttonsDiv.appendChild(br);
@@ -651,7 +674,14 @@ function createSetupField(setupPage, key, parentDiv) {
 		blankButton.type = "button";
 		blankButton.style.marginBottom = "1px";
 		blankButton.value = _("Add spacer");
-		if (!setupPage[key].skipParameterInURL) blankButton.addEventListener("click",function() {var option = document.createElement("option");option.value="blank;";option.innerHTML="-----";document.getElementById(elementId).appendChild(option);buildURL();});
+		if (!setupPage[key].skipParameterInURL) blankButton.addEventListener("click",function() {
+			var option = document.createElement("option");
+			option.value="blank;";
+			option.innerHTML="-----";
+			const selectEl = document.getElementById(elementId);
+			selectEl.insertBefore(option, selectEl.selectedOptions[0]?.nextSibling);
+			buildURL();
+		});
 		buttonsDiv.appendChild(blankButton);
 		br = document.createElement("br");
 		buttonsDiv.appendChild(br);
@@ -825,28 +855,35 @@ function createSortOptions(setupItem, select, selectOptions, selectOrder, elemen
 
 function createCustomInstructionsUI(descr) {
 
-	if (!descr) descr = "{}";
+	let customInstructionsSetEl = document.getElementById("custominstructions");
+	let instructionsSetDiv;			
+	if (!customInstructionsSetEl) {
+		var div = document.createElement("div");
+		div.className = "custominstructions";
+		customInstructionsSetEl = document.createElement("textarea");
+		customInstructionsSetEl.id = "custominstructions";
+		customInstructionsSetEl.name = "custominstructions";
+		customInstructionsSetEl.style.display = "none";
+		div.appendChild(customInstructionsSetEl);
 
-	var div = document.createElement("div");
-	div.className = "custominstructions";
-
-	var customInstructionsSetEl = document.createElement("textarea");
-	customInstructionsSetEl.id = "custominstructions";
-	customInstructionsSetEl.name = "custominstructions";
-	customInstructionsSetEl.style.display = "none";
+		var instructionsDiv = document.createElement("div");
+		instructionsSetDiv = document.createElement("div");
+		instructionsSetDiv.id = "custominstructionsset";
+		instructionsDiv.appendChild(instructionsSetDiv);
+		var instructionsNewDiv = document.createElement("div");
+		var instructionsNewButton = document.createElement("button");
+		instructionsNewButton.innerHTML = "+ " + _("Add instruction");
+		instructionsNewButton.addEventListener("click", () => addOrUpdateCustomInstruction({}, instructionsSetDiv));
+		instructionsNewDiv.appendChild(instructionsNewButton);
+		instructionsDiv.appendChild(instructionsNewDiv);
+		div.appendChild(instructionsDiv);
+	} else {
+		instructionsSetDiv = document.getElementById("custominstructionsset");
+	}
 	customInstructionsSetEl.value = descr;
-	div.appendChild(customInstructionsSetEl);
 
-	var instructionsDiv = document.createElement("div");
-	var instructionsSetDiv = document.createElement("div");
-	instructionsDiv.appendChild(instructionsSetDiv);
-	var instructionsNewDiv = document.createElement("div");
-	var instructionsNewButton = document.createElement("button");
-	instructionsNewButton.innerHTML = "+ " + _("Add instruction");
-	instructionsNewButton.addEventListener("click", () => addOrUpdateCustomInstruction({}, instructionsSetDiv));
-	instructionsNewDiv.appendChild(instructionsNewButton);
-	instructionsDiv.appendChild(instructionsNewDiv);
-	div.appendChild(instructionsDiv);
+	const customInstructions = JSON.parse(descr || "{}");
+	Object.values(customInstructions).forEach((customInstruction) => applyCustomInstruction(customInstruction, instructionsSetDiv));
 
 	return div;
 
@@ -871,7 +908,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionNameDiv = document.createElement("div");
 	var instructionNameLabel = document.createElement("label");
-	instructionNameLabel.innerHTML = "Name: ";
+	instructionNameLabel.innerHTML = _("Name") + ": ";
 	instructionNameDiv.appendChild(instructionNameLabel);
 	var instructionNameEl = document.createElement("input");
 	instructionNameEl.id = "instructionName";
@@ -886,7 +923,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionCategoryDiv = document.createElement("div");
 	var instructionCategoryLabel = document.createElement("label");
-	instructionCategoryLabel.innerHTML = "Category: ";
+	instructionCategoryLabel.innerHTML = _("Category") + ": ";
 	instructionCategoryDiv.appendChild(instructionCategoryLabel);
 	var instructionCategorySelect = document.createElement("select");
 	instructionCategorySelect.name = "category";
@@ -902,7 +939,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionTypeDiv = document.createElement("div");
 	var instructionTypeLabel = document.createElement("label");
-	instructionTypeLabel.innerHTML = "Type: ";
+	instructionTypeLabel.innerHTML = _("Type") + ": ";
 	instructionTypeDiv.appendChild(instructionTypeLabel);
 	var instructionTypeSelect = document.createElement("select");
 	instructionTypeSelect.name = "type";
@@ -917,7 +954,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionLevelDiv = document.createElement("div");
 	var instructionLevelLabel = document.createElement("label");
-	instructionLevelLabel.innerHTML = "Show in: ";
+	instructionLevelLabel.innerHTML = _("Show in") + ": ";
 	instructionLevelDiv.appendChild(instructionLevelLabel);
 	var instructionLevelSelect = document.createElement("select");
 	instructionLevelSelect.name = "show";
@@ -934,18 +971,18 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionIconDiv = document.createElement("div");
 	var instructionIconLabel = document.createElement("label");
-	instructionIconLabel.innerHTML = "Icon: ";
+	instructionIconLabel.innerHTML = _("Icon")  + ": ";
 	instructionIconDiv.appendChild(instructionIconLabel);
 	var instructionIconEl = document.createElement("input");
 	instructionIconEl.id = "instructionIcon";
 	instructionIconEl.name = "icon";
-	instructionIconEl.placeholder = "URL or image name";
+	instructionIconEl.placeholder = _("URL or image name");
 	instructionIconDiv.appendChild(instructionIconEl);
 	instructionForm.appendChild(instructionIconDiv);
 
 	var instructionTipDiv = document.createElement("div");
 	var instructionTipLabel = document.createElement("label");
-	instructionTipLabel.innerHTML = "Description: ";
+	instructionTipLabel.innerHTML = _("Description") + ": ";
 	instructionTipDiv.appendChild(instructionTipLabel);
 	var instructionTipEl = document.createElement("input");
 	instructionTipEl.name = "tip";
@@ -956,7 +993,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 
 	var instructionParamsNewDiv = document.createElement("div");
 	var instructionParamsNewEl = document.createElement("button");
-	instructionParamsNewEl.innerHTML = "+ Add parameter";
+	instructionParamsNewEl.innerHTML = "+ " + _("Add parameter");
 	instructionParamsNewEl.addEventListener("click", (event) => addOrUpdateCustomInstructionParam({}, instructionParamsDiv, event));
 	instructionParamsNewDiv.appendChild(instructionParamsNewEl);
 	instructionForm.appendChild(instructionParamsNewDiv);
@@ -965,7 +1002,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 	instructionCodeDiv.className = "instructionCodeDiv";
 	instructionCodeDiv.style.display = "none";
 	var instructionCodeLabel = document.createElement("label");
-	instructionCodeLabel.innerHTML = "Implement the instruction: ";
+	instructionCodeLabel.innerHTML = _("Implement the instruction") + ": ";
 	instructionCodeDiv.appendChild(instructionCodeLabel);
 	var instructionCodeFirstLabel = document.createElement("div");
 	instructionCodeFirstLabel.id = "instructionCodeFirstLabel";
@@ -976,8 +1013,31 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 	instructionCodeDiv.appendChild(instructionCodeEl);
 	var instructionCodeLastLabel = document.createElement("div");
 	instructionCodeLastLabel.innerHTML = "}";
+	instructionCodeLastLabel.style.marginTop = "0px";
 	instructionCodeDiv.appendChild(instructionCodeLastLabel);
 	instructionForm.appendChild(instructionCodeDiv);
+
+	var instructionSingleDiv = document.createElement("div");
+	var instructionSingleLabel = document.createElement("label");
+	instructionSingleLabel.innerHTML = _("Count as a single instruction") + ": ";
+	instructionSingleDiv.appendChild(instructionSingleLabel);
+	var instructionSingleEl = document.createElement("input");
+	instructionSingleEl.type = "checkbox";
+	instructionSingleEl.name = "single";
+	instructionSingleEl.checked = instructionDescr.single ?? true;
+	instructionSingleDiv.appendChild(instructionSingleEl);
+	instructionForm.appendChild(instructionSingleDiv);
+
+	var instructionAnimateDiv = document.createElement("div");
+	var instructionAnimateLabel = document.createElement("label");
+	instructionAnimateLabel.innerHTML = _("Keep animation") + ": ";
+	instructionAnimateDiv.appendChild(instructionAnimateLabel);
+	var instructionAnimateEl = document.createElement("input");
+	instructionAnimateEl.type = "checkbox";
+	instructionAnimateEl.name = "animate";
+	instructionAnimateEl.checked = instructionDescr.animate ?? true;
+	instructionAnimateDiv.appendChild(instructionAnimateEl);
+	instructionForm.appendChild(instructionAnimateDiv);
 
 	var instructionApplyDiv = document.createElement("div");
 	var instructionApplyButton = document.createElement("input");
@@ -985,7 +1045,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 	instructionApplyButton.value = _("Apply");
 	instructionApplyDiv.appendChild(instructionApplyButton);
 	var instructionCancelButton = document.createElement("button");
-	instructionCancelButton.innerHTML = "Cancel";
+	instructionCancelButton.innerHTML = _("Cancel");
 	instructionCancelButton.addEventListener("click", event => {
 		if (instructionDescr && instructionDescr.id) {
 			const row = document.querySelector("[data-id="+instructionDescr.id+"]");
@@ -997,7 +1057,7 @@ function addOrUpdateCustomInstruction(instructionDescr, instructionsSetDiv) {
 	instructionForm.appendChild(instructionApplyDiv);
 
 	instructionForm.addEventListener("submit", (event) => applyCustomInstruction(instructionForm, instructionsSetDiv, event));
-	instructionsSetDiv.appendChild(instructionForm);
+	instructionsSetDiv.insertBefore(instructionForm, instructionsSetDiv.querySelector(`[data-id="${instructionDescr.name}"]`));
 
 	updateCustomInstructionFields(instructionDescr, instructionForm);
 	if (instructionDescr.parameters) instructionDescr.parameters.forEach(d => addOrUpdateCustomInstructionParam(d, instructionParamsDiv));
@@ -1011,16 +1071,23 @@ function getCustomInstructionFields(form, processParameters) {
 
 	Object.values(form.querySelectorAll("input, select, textarea")).forEach(el => {
 
+		if ([ "button", "submit", "reset", ].includes(el.type)) return;
+
 		if (!processParameters && el.closest(".paramWrapper")) return;
 
 		let value;
 		if (el.tagName == "SELECT") {
-			if (el.getAttribute("multiple")) value = Array.from(el.selectedOptions).reduce((acc, o) => acc.concat(o.value), []);
+			if (el.hasAttribute("multiple")) value = Array.from(el.selectedOptions).reduce((acc, o) => acc.concat(o.value), []);
 			else value = el.value;
 		} else if (el.type == "checkbox") {
 			value = el.checked;
 		} else {
 			value = el.value;
+			if (processParameters && el.name === "initial") {
+				const paramType = form.querySelector("[name=type]").value;
+				if (paramType === "number") value = parseFloat(el.value);
+				else if (paramType === "bool") !value || value === "false" || value == "0" || value === false ? false : true;
+			}
 		}
 
 		const key = el.name;
@@ -1056,41 +1123,45 @@ function updateCustomInstructionFields(instructionDescr, form) {
 
 }
 
-function applyCustomInstruction(form, instructionsSetDiv, event) {
+function applyCustomInstruction(instructionDescr, instructionsSetDiv, event) {
 
 	if (event) event.preventDefault();
 
-	const instructionId = form.querySelector("#instructionId").value;
-	const instructionName = form.querySelector("#instructionName").value;
-
-	const customInstructionsSetEl = document.getElementById("custominstructions");
-	const customInstructionsSet = JSON.parse(customInstructionsSetEl.value);
-	customInstructionsSet[instructionId] = getCustomInstructionFields(form, false);
-	customInstructionsSet[instructionId].parameters = Array.from(form.querySelectorAll(".paramWrapper")).reduce((acc, el) => acc.concat(getCustomInstructionFields(el, true)), []);
-	customInstructionsSetEl.value = JSON.stringify(customInstructionsSet);
+	if (instructionDescr instanceof HTMLElement) {
+		const form = instructionDescr;
+		instructionDescr = {
+			id: form.querySelector("#instructionId").value,
+			name: form.querySelector("#instructionName").value,
+		};
+		const customInstructionsSetEl = document.getElementById("custominstructions");
+		const customInstructionsSet = JSON.parse(customInstructionsSetEl.value);
+		customInstructionsSet[instructionDescr.id] = getCustomInstructionFields(form, false);
+		customInstructionsSet[instructionDescr.id].parameters = Array.from(form.querySelectorAll(".paramWrapper")).reduce((acc, el) => acc.concat(getCustomInstructionFields(el, true)), []);
+		customInstructionsSetEl.value = JSON.stringify(customInstructionsSet);
+		form.remove();
+	}
 
 	var instructionDiv = document.createElement("div");
-	instructionDiv.dataset.id = instructionId;
+	instructionDiv.dataset.id = instructionDescr.id;
 	instructionDiv.className = "instructionRowWrapper";
 	var instructionSpan = document.createElement("span");
-	instructionSpan.innerHTML = instructionName;
+	instructionSpan.innerHTML = instructionDescr.name;
 	instructionDiv.appendChild(instructionSpan);
 	var instructionEditButton = document.createElement("button");
 	instructionEditButton.innerHTML = "Edit";
-	instructionEditButton.addEventListener("click", () => addOrUpdateCustomInstruction(JSON.parse(document.getElementById("custominstructions").value)[instructionId], instructionsSetDiv));
+	instructionEditButton.addEventListener("click", () => addOrUpdateCustomInstruction(JSON.parse(document.getElementById("custominstructions").value)[instructionDescr.id], instructionsSetDiv));
 	instructionDiv.appendChild(instructionEditButton);
 	var instructionRemoveButton = document.createElement("button");
 	instructionRemoveButton.innerHTML = "Remove";
-	instructionRemoveButton.addEventListener("click", (event) => event.target.closest(".instructionRowWrapper").remove());
+	instructionRemoveButton.addEventListener("click", (event) => event.target.closest(".instructionRowWrapper").parentNode.removeChild(event.target.closest(".instructionRowWrapper")));
 	instructionDiv.appendChild(instructionRemoveButton);
-	const previousInstructionDiv = document.querySelector("[data-id="+instructionId+"]");
+	const previousInstructionDiv = document.querySelector("[data-id="+instructionDescr.id+"]");
 	if (previousInstructionDiv) {
 		previousInstructionDiv.parentNode.insertBefore(instructionDiv, previousInstructionDiv);
-		previousInstructionDiv.remove();
+		previousInstructionDiv.parentNode.removeChild(previousInstructionDiv);
 	} else {
 		instructionsSetDiv.appendChild(instructionDiv);
 	}
-	form.remove();
 
 	updateInstructions();
 	buildURL();
@@ -1177,7 +1248,7 @@ function addOrUpdateCustomInstructionParam(instructionParamDescr, instructionPar
 }
 
 function updateCustomInstructionWrappers() {
-	var readyName = !!document.getElementById("instructionName").value;
+	var readyName = !!document.getElementById("instructionName")?.value;
 	Array.from(document.querySelectorAll(".instructionCodeDiv")).forEach(el => el.style.display = readyName ? "block" : "none");
 	if (!readyName) return;
 	var name = document.getElementById("instructionName").value;
@@ -1196,9 +1267,8 @@ function updateInstructions() {
 		return;
 	}
 	$e.instructions.set = Object.assign({}, $e.instructions._set, custominstructions);
-	let setupItem = setupItems["Instructions"]["instructions"];
-	let elementId = "instructionsorigin";
-	createSortOptions(setupItem, document.getElementById(elementId), {}, {}, elementId);
+	let setupItem = setupItems.find(({ page }) => page === "Instructions").setupPage["instructions"];
+	createSortOptions(setupItem, document.getElementById("instructionsorigin"), {}, {}, "instructions");
 }
 
 function goToNextStep() {
@@ -1269,10 +1339,12 @@ function switchMode() {
 }
 
 function buildURL(event) {
+	if (buildURL.disabled) return;
+
 	var url = mainURL;
 	var components = [];
 	var paramsText = "";
-	Object.entries(setupItems).forEach(([page, setupPage]) => {
+	setupItems.forEach(({ setupPage }) => {
 		Object.entries(setupPage).forEach(([key, setupPageItem]) => {
 			if (setupPageItem.type == "html" || setupPageItem.type == "fieldset") {
 				return;
@@ -1390,7 +1462,7 @@ function selectOrderMove(sens, id) {
 
 function changeParameters(event) {
 	var target = undefined;
-	if (event.target.getAttribute("data-elementId")) {
+	if (event.target?.getAttribute("data-elementId")) {
 		// Calling from button
 		var select = document.getElementById(event.target.getAttribute("data-elementId"));
 		for (var i = select.options.length-1; i>=0; i--) {
@@ -1418,9 +1490,9 @@ function changeParameters(event) {
 		"<input type=\"button\" value=\"Apply\" onclick=\"changeParametersApply('instructions')\" />";
 	setupDiv.id = "setupDiv";
 	var instructionParameters = $e.instructions.set[instructionName].parameters;
-	for (var i=0; i<instructionParameters.length; i++) {
+	for (var i=0; i<instructionParameters?.length; i++) {
 		var initialHelper = ((!instructionParameters[i].optional || instructionParameters[i].optional === false) && instructionParameters[i].initial)?" Default: "+instructionParameters[i].initial:"";
-		setupDiv.querySelector("#setupDivParams").innerHTML += $e_ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" />"+initialHelper+"<br />";
+		setupDiv.querySelector("#setupDivParams").innerHTML += $e.ordinal(i+1)+" parameter '"+instructionParameters[i].name +"' ("+instructionParameters[i].type+"): <input id=\"setupDivParam"+(i+1)+"\" />"+initialHelper+"<br />";
 	}
 	var countParams = 1;
 	var values = target.value.split(";");

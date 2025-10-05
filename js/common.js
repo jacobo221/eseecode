@@ -109,10 +109,10 @@ $e.confirmYes = (value) => {
 };
 
 /**
- * Returns true if the value looks like an OK, false otherwise
+ * Returns false if the value looks like an NOT ok, true otherwise
  * @private
  * @param {String|Boolean} value Value to check
- * @return {Boolean} Whether the value looks like an OK
+ * @return {Boolean} Whether the value looks like a not ok
  * @example $e.confirmNo("No")
  */
 $e.confirmNo = (value) => {

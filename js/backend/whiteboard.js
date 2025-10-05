@@ -516,7 +516,7 @@ $e.backend.whiteboard.guides.setAngleAndMove = async (angle = $e.backend.whitebo
  */
 $e.backend.whiteboard.animate = async (callback) => {
 	const currentInstruction = $e.execution.getProgramCounter(); // We'll use this to abort mid-animation if the code has moved on
-	const transitionTime = $e.execution.instructionsDelay > $e.execution.instructionsMinimumPause ? $e.execution.instructionsDelay - $e.execution.instructionsMinimumPause : 0;
+	const transitionTime = $e.execution.instructionsDelay > $e.execution.instructionsMinimumPause && $e.execution.current.animate ? $e.execution.instructionsDelay - $e.execution.instructionsMinimumPause : 0;
 	if ($e.execution.current.animate && $e.execution.instructionsAnimationFramePause < transitionTime) {
 		const divisions = parseInt(transitionTime / $e.execution.instructionsAnimationFramePause);
 		const animateContext = $e.backend.whiteboard.layers.available.animate.canvas.getContext("2d"); // Using a separate animation layer is essential so the final result is identical regardless of the execution happening with or without anmiation enabled

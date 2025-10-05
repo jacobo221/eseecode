@@ -14,7 +14,7 @@ $e.instructions.setIcon = (instructionSetId, iconEl, param) => {
 	canvas.height = height;
 	const ctx = canvas.getContext("2d");
 	const margin = height < 4 * 15 ? 0 : 15;
-	if ($e.instructions.icons[instructionSetId]) $e.instructions.icons[instructionSetId](ctx, height, width, margin, param);
+	if ($e.instructions.icons[instructionSetId]) $e.instructions.icons[instructionSetId](ctx, height, width, margin, param, iconEl);
 	iconEl.style.setProperty("--icon-image-current", "url(" + ctx.canvas.toDataURL() + ")");
 };
 

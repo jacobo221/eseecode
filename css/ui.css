@@ -633,6 +633,12 @@ span.tab-title {
 	height: 100%;
 	background-repeat: repeat;
 }
+#toolbox-blocks .block.contained {
+	display: none;
+}
+#toolbox-write .textblock.container {
+	display: none;
+}
 .level1.running #toolbox-blocks {
 	pointer-events: none; /* Disable to avoid running two executions at the same time */
 }

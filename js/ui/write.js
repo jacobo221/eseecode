@@ -67,6 +67,7 @@ $e.ui.write.resetView = (code = "", resetCursor) => {
 			tabSize: $e.setup.tabSize,
 			fixedWidthGutter: true,
 			animatedScroll: true,
+			readOnly: !!$e.session.disableCode,
 		});
 		$e.ui.element.querySelector("#view-write").addEventListener("copy", (event) => {
 			if (event.clipboardData) event.clipboardData.setData("text/html", $e.ide.write.synthaxHighlight(event.clipboardData.getData("text/plain")));
@@ -87,6 +88,7 @@ $e.ui.write.resetView = (code = "", resetCursor) => {
 	}
 	$e.session.editor.session.on("change", $e.ui.write.changed);
 	$e.session.editor.session.setUseWrapMode(false);
+	$e.session.editor.session.on("changeMode", () => $e.session.editor.session.$worker.send("changeOptions", [ { asi: true } ]));
 };
 
 /**

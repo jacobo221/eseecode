@@ -18,7 +18,7 @@ window.addEventListener("message", async (event) => {
 		if (!api_parameters) api_parameters = [];
 		else if (!Array.isArray(api_parameters)) api_parameters = [ api_parameters ];
 	}
-	
+
 	let response = await $e.api[api_call](...api_parameters);
 
 	if (api_nounce) event.source.postMessage({ response: response, nounce: api_nounce }, event.origin);
@@ -31,7 +31,7 @@ window.addEventListener("message", async (event) => {
  * @public
  * @param {String} [url] URL to parse. If unset use browser's location
  * @param {Array} [whitelist] Only load this specific parameters
- * @param {Boolean} [action] Run the action (true) or only set it up (false)
+ * @param {Boolean} [action=true] Run the action (true) or only set it up (false)
  * @param {Array} [blacklist] Do not load this specific parameters
  * @example $e.api.api.loadURLParams("view=drag")
  */
@@ -52,7 +52,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		encodedParamsSearch.forEach((v, k) => url_params.append(k, v));
 	}
 
-	let prerequisites = [ "instructions", "custominstructions", "customInstructions", "code", "precode" ]; // Lowest priority first, highest priority last
+	let prerequisites = [ "instructions", "custominstructions", "code", "precode" ]; // Lowest priority first, highest priority last
 	Array.from(url_params).sort((a, b) => prerequisites.indexOf(b[0]) - prerequisites.indexOf(a[0])).forEach(async function(param) {
 		const key = param[0].toLowerCase();
 		let value = param[1];
@@ -190,10 +190,11 @@ $e.api.downloadCode = () => {
 /**
  * Returns a screenshot of the user's code in the current view
  * @public
+ * @param {String} [backgroundColor] Background colour to use in the image, otherwise transparent
  * @return {String} Base64 screenchot of the code
  * @example $e.api.schreenshotCode()
  */
-$e.api.screenshotCode = async () => {
+$e.api.screenshotCode = async (backgroundColor) => {
 	const mode = $e.modes.views.current.type;
 	const codeEl = document.querySelector(mode === "write" ? "#view-write" : "#view-blocks");
 	// Temporarily expand the element so overflow doesn’t clip anything
@@ -211,15 +212,17 @@ $e.api.screenshotCode = async () => {
 
 	let data;
 	try {
-		data = htmlToImage.toPng(codeEl, {
+		const imageProperties = {
 			pixelRatio: Math.min(2, window.devicePixelRatio || 1), // quality vs memory
 			canvasWidth: codeEl.scrollWidth,
 			canvasHeight: codeEl.scrollHeight,
 			cacheBust: true,
-		});
+		};
+		if (backgroundColor) imageProperties.backgroundColor = backgroundColor;
+		data = htmlToImage.toPng(codeEl, imageProperties);
 	} catch (err) {
 		console.error("Screenshot failed:", err);
-		alert("Could not create image (content may be too large or cross-origin images blocked).");
+		data = false;
 	} finally {
 		// Restore original styles
 		await new Promise(r => requestAnimationFrame(() => r())); // Give it time for htmlToImage to obtain the screenshot
@@ -650,6 +653,7 @@ $e.api.setInstructions = (value, action = true) => {
 		if ($e.instructions.set[baseInstructionId]) {
 			const newInstructionId = baseInstructionId + "-custom" + customNameCount[instructionName];
 			$e.instructions.set[newInstructionId] = $e.clone($e.instructions.set[baseInstructionId]);
+			$e.instructions.set[newInstructionId].isAlias = true;
 			$e.instructions.set[newInstructionId].show = [];
 			let customInstructionsNum = 0;
 			if ($e.instructions.custom) {
@@ -697,7 +701,7 @@ $e.api.setInstructions = (value, action = true) => {
 		}
 	}
 	if (action) $e.ui.blocks.initToolbox($e.modes.toolboxes.current.id, $e.modes.toolboxes.current.element);
-	$e.session.editor.setOptions({readOnly: !!$e.session.disableCode});
+	$e.session.editor?.setOptions({readOnly: !!$e.session.disableCode});
 };
 
 /**
@@ -717,8 +721,7 @@ $e.api.setCustomInstructions = (value, action = true) => {
 	(Array.isArray(instructions) ? instructions : Object.values(instructions)).forEach(instruction_details => {
 		let instruction_name = instruction_details.name;
 		$e.instructions.set[instruction_name] = instruction_details;
-		if (instruction_details.icon) $e.instructions.icons[instruction_name] = (iconEl, param) => {
-			const margin = height < 15 * 4 ? 0 : 15;
+		if (instruction_details.icon) $e.instructions.icons[instruction_name] = (ctx, height, width, margin, param, iconEl) => {
 			const img = new Image();
 			img.crossOrigin = "anonymous";
 			img.onload = () => {
@@ -730,6 +733,8 @@ $e.api.setCustomInstructions = (value, action = true) => {
 				tempCtx.drawImage(img, 0, 0, width - 2 * margin, height - 2 * margin);
 				tempCtx.restore();
 				ctx.drawImage(tempCanvas, margin, margin);
+				iconEl.style.setProperty("--icon-image-current", "url(" + ctx.canvas.toDataURL() + ")"); // Because this is an asynchronous call we must update the icon again now
+
 			}
 			img.src = instruction_details.icon;
 		};
@@ -924,7 +929,7 @@ $e.api.switchView = (id, action = true) => {
  * @example $e.api.autosave()
  */
 $e.api.autosave = (forceCode) => {
-	$e.ide.autosave();
+	$e.ide.autosave(forceCode);
 };
 
 /**
@@ -950,7 +955,7 @@ $e.api.setAutosaveExpiration = (value) => {
 };
 
 /**
- * Restores the lasts autosaved code
+ * Restores the last autosaved code when loading the IDE for the first time
  * @since 4.0
  * @public
  * @param {Boolean|String} value Whether to restore now the last autosaved code or not
@@ -959,6 +964,32 @@ $e.api.setAutosaveExpiration = (value) => {
 $e.api.restoreAutosave = (value) => {
 	value = typeof value == "string" ? value.toLowerCase() : value;
 	$e.setup.autorestore = !$e.confirmNo(value);
+};
+
+/**
+ * Loads the autosaved code into the IDE
+ * @since 4.1
+ * @public
+ * @example $e.api.loadAutosave()
+ */
+$e.api.loadAutosave = () => {
+	$e.ide.loadAutosave();
+};
+
+/**
+ * Obtains the autosave information
+ * @since 4.1
+ * @public
+ * @example $e.api.getAutosave()
+ */
+$e.api.getAutosave = () => {
+	const path = window.location.pathname;
+	const exercise = $e.setup?.exercise ? $e.setup.exercise : "";
+	const autosave_id = path + "_" + exercise;
+	const timestamp = localStorage.getItem("autosave_timestamp_" + autosave_id);
+	const code = localStorage.getItem("autosave_" + autosave_id);
+	const expires = timestamp ? timestamp + $e.setup.autosaveExpiration * 1000 : undefined;
+	return { code, timestamp, expires, };
 };
 
 /**
