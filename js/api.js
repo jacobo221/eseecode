@@ -19,6 +19,7 @@ window.addEventListener("message", async (event) => {
 		else if (!Array.isArray(api_parameters)) api_parameters = [ api_parameters ];
 	}
 
+	if (!$e.api[api_call]) return console.error("Invalid API endpoint: " + api_call);
 	let response = await $e.api[api_call](...api_parameters);
 
 	if (api_nounce) event.source.postMessage({ response: response, nounce: api_nounce }, event.origin);

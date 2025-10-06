@@ -124,7 +124,7 @@ $e.ui.downloadWhiteboard = () => {
 		"<br />" +
 		"<br />" +
 		"<div style=\"text-align:center\" class=\"" + textStyle + "\">" +
-			"<button id=\"whiteboard-screenshotCode\" class=\"tab\" onclick=\"$e.ui.screenshotCode(document.querySelector('#setup-screenshotCode-background').checked ? document.querySelector('#setup-screenshotCode-background-color').value : undefined)\">" + _("Download screenshot of the code") + "</button>" +
+			"<button id=\"whiteboard-screenshotCode\" onclick=\"$e.ui.screenshotCode(document.querySelector('#setup-screenshotCode-background').checked ? document.querySelector('#setup-screenshotCode-background-color').value : undefined)\">" + _("Download screenshot of the code") + "</button>" +
 			"<div>" +
 				"<input id=\"setup-screenshotCode-background\" type=\"checkbox\" onchange=\"document.querySelector('#setup-screenshotCode-background-properties').style.display = this.checked ? 'initial' : 'none'\" /> " +
 				_("Background") + "<span id=\"setup-screenshotCode-background-properties\" style=\"display: none\">: <input id=\"setup-screenshotCode-background-color\" type=\"color\" value=\"#ffffff\" /></span>" +

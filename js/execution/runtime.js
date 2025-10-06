@@ -53,10 +53,10 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 		jsCode += "\"use strict\";";
 		jsCode += "(async function() {";
 		let instructions = Object.values($e.instructions.set);
-		if (!inCode && ($e.execution.precode || instructions.some(d => d.run && !d.alias))) { // Don't load precode again when running the code of an event
+		if (!inCode && ($e.execution.precode || instructions.some(d => d.run && !d.isAlias))) { // Don't load precode again when running the code of an event
 			let customInstructionsCode = "";
 			Object.values(instructions).forEach(instruction_details => {
-				if (!instruction_details || !instruction_details.run) return;
+				if (!instruction_details || !instruction_details.run || instruction_details.isAlias) return;
 				customInstructionsCode += "\nfunction " + instruction_details.name + "(";
 				if (instruction_details.parameters) {
 					let parameters_text = "";
