@@ -1,6 +1,6 @@
 ## 4.1 (2025-10-06)
 
-*Milestone reached: Download code view as image
+*Milestone reached: Download code view as image, fully customize new  instructions
 * Download the code view as an image
 * Dynamic fill() icon
 * Code view now allows editing and pasting on mobile devices (updated ACE editor to upstream's latest)
