@@ -40,7 +40,7 @@
 
 		// Shorthands for debugging
 		function ñ() { console.log.apply(this, arguments); }
-		function ññ() { console.log.apply(this, Array.from(arguments).map(arg => { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
+		function ññ() { console.log.apply(this, Array.from(arguments).map(function(arg) { var o; try { o = JSON.parse(JSON.stringify(arg)) } catch(e) { o = "*****" + JSON.stringify(arg) }; return { frozen: o, live: arg, typeof: typeof arg, }; })); }
 
 		// Run
 		function init(v) {
