@@ -3,7 +3,7 @@
 (function $eseecodeLoader(eseecodeEl) {
 
 	// If the page is not ready, wait (we need document.body to be ready). This allows to call this script both in head and in body
-	if (document.readyState === "complete") return window.addEventListener("load", () => $eseecodeLoader(eseecodeEl));
+	if (document.readyState !== "complete") return window.addEventListener("load", () => $eseecodeLoader(eseecodeEl));
 
 	// Do not run twice
 	if (window.$e && $e.session) return false;
@@ -16,7 +16,7 @@
 	(async function() {
 		$e.session.ready = false; // Mark that it is being loaded
 
-		$e.cache_token = new URLSearchParams(document.currentScript.src.split("?").slice(1).join("?")).get("v");
+		$e.cache_token = new URLSearchParams(document.currentScript?.src.split("?").slice(1).join("?")).get("v");
 
 		const scripts = document.querySelectorAll("script");
 		const scriptPath = scripts[scripts.length - 1].src;
@@ -53,22 +53,31 @@
 		// Functions can be called to add more files, but these will be loaded in sequence
 		class countFiles {
 			constructor(num, nextCallback, stopCallback) {
-				self = this;
-				self.countdown = num;
-				self.nextCallback = nextCallback;
-				self.stopCallback = stopCallback;
+				this.countdown = num;
+				this.nextCallback = nextCallback;
+				this.stopCallback = stopCallback;
+				this.resolve = null;
+				this.reject = null;
+				
+				// Ensure correct 'this' when passed as a callback
+				this.count = this.count.bind(this);
+				this.kill = this.kill.bind(this);
 			}
 			count(event) {
-				self.countdown--;
-				if (self.countdown === 0) self.success(event);
-				else if (self.nextCallback) self.nextCallback(self.countdown, event);
+				if (this.countdown == null) return; // Not yet initialized
+                
+				this.countdown--;
+				if (this.countdown === 0) this.resolve(event);
+				else if (this.nextCallback) this.nextCallback(this.countdown, event);
 			}
 			kill(event) {
-				self.countdown = undefined; // undefined + N == NaN
-				if (self.stopCallback) self.stopCallback(self.countdown, event);
+				this.countdown = undefined; // undefined + N == NaN
+				if (this.stopCallback) this.stopCallback(this.countdown, event);
+				this.reject(event);
 			}
-			wait(r) {
-				self.success = r;
+			wait(resolve, reject) {
+				this.resolve = resolve;
+				this.reject = reject;
 			}
 		}
 		const loadedFiles = [];
@@ -161,7 +170,7 @@
 				);
 				const headEl = document.querySelector("head");
 				subfiles.forEach(file => loadFile(file, headEl, counter.count, counter.kill));
-				await new Promise(r => counter.wait(r));
+				await new Promise((resolve, reject) => counter.wait(resolve, reject));
 			}
 			// All files loaded, start application
 			$e.ui.reset();
