@@ -98,7 +98,11 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	}
 	const oldWindowProperties = Object.getOwnPropertyNames(window);
 	$e.execution.traceInject();
-	await eval(jsCode);
+	try {
+		await eval(jsCode);
+	} catch (e) {
+		$e.execution.updateStatus("stopped");
+	}
 	$e.execution.current.stepped = undefined;
 	$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement. It is necessary to have it here and not jsCode so t¡if the execution is stopped this is still done
 	$e.execution.traceRestore();
@@ -407,7 +411,7 @@ $e.execution.showResults = (err) => {
 		$e.ui.unhighlight();
 	} else if (err === "executionKilled") {
 		// Do nothing
-	} else if (err.type == "codeError") {
+	} else if (err?.type == "codeError") {
 		const instructionId = err.name;
 		let brackets = "";
 		if (instructionId >= 0) {
@@ -432,9 +436,9 @@ $e.execution.showResults = (err) => {
  */
 $e.execution.printError = (err) => {
 	let lineNumber;
-	if (err.lineNumber) { // Firefox
+	if (err?.lineNumber) { // Firefox
 		lineNumber = err.lineNumber;
-	} else if (err.stack) { // Chrome
+	} else if (err?.stack) { // Chrome
 		const lines = err.stack.split("\n");
 		lines.forEach(line => {
 			if (line.includes("at <anonymous>:")) lineNumber = line.split(":")[1];
@@ -448,7 +452,7 @@ $e.execution.printError = (err) => {
 			$e.session.editor.gotoLine(lineNumber, 0);
 		}
 		message = _("Error '%s' in line %s", [ err.name, lineNumber ]) + ": " + err.message;
-	} else if (err.stack) {
+	} else if (err?.stack) {
 		message = err.name + ": " + err.message + "\n" + err.stack;
 	} else {
 		message = _("Runtime error!");
