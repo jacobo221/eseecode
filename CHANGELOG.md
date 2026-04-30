@@ -23,6 +23,7 @@
 * Fixed API call downloadWhiteboard()
 * Fixed UI to display code errors in monospace so the arrow points at the precise place in the code
 * Fixed loading autosave where it sometimes can break with autosaved code and eSeeCode doesn't load
+* Fixed app loading when a race condition could halt the start up process
 
 ## 4.0 (2024-01-18)
 

@@ -48,56 +48,28 @@
 		wrapperProgressEl.appendChild(progressEl);
 		$e.ui.element.parentNode.appendChild(wrapperProgressEl);
 
-		// Load files, when order does matter:
-		// File batches are divided in arrays to separate dependencies, so all files in same array are loaded in parallel
-		// Functions can be called to add more files, but these will be loaded in sequence
-		class countFiles {
-			constructor(num, nextCallback, stopCallback) {
-				this.countdown = num;
-				this.nextCallback = nextCallback;
-				this.stopCallback = stopCallback;
-				this.resolve = null;
-				this.reject = null;
-				
-				// Ensure correct 'this' when passed as a callback
-				this.count = this.count.bind(this);
-				this.kill = this.kill.bind(this);
-			}
-			count(event) {
-				if (this.countdown == null) return; // Not yet initialized
-                
-				this.countdown--;
-				if (this.countdown === 0) this.resolve(event);
-				else if (this.nextCallback) this.nextCallback(this.countdown, event);
-			}
-			kill(event) {
-				this.countdown = undefined; // undefined + N == NaN
-				if (this.stopCallback) this.stopCallback(this.countdown, event);
-				this.reject(event);
-			}
-			wait(resolve, reject) {
-				this.resolve = resolve;
-				this.reject = reject;
-			}
-		}
+		// Load files in batches; all files within a batch load in parallel, batches are sequential to respect dependencies
+		// Entries in each batch can be a path string or a function returning an array of path strings
 		const loadedFiles = [];
-		function loadFile(path, headEl, count, error) {
-			if (loadedFiles.includes(path)) return count && count(); // Do not load the same file twice
+		function loadFile(path, headEl) {
+			if (loadedFiles.includes(path)) return Promise.resolve(); // Do not load the same file twice
 			const pathLength = path.indexOf("?");
 			if (pathLength > 0) path = path.substring(0, pathLength);
 			const type = path.substring(path.lastIndexOf(".") + 1);
-			if (type !== "js" && type !== "css") return error(); // Cannot autodetect type of file so cannot be correctly appended and monitored (onload/onerror), therefore fail now
+			if (type !== "js" && type !== "css") return Promise.reject(new Error("Cannot autodetect type: " + path)); // Cannot correctly append and monitor (onload/onerror)
 			const fullPath = (path.startsWith("https://") || path.startsWith("http://") ? "" : eseecodePath + (type == "js" ? "/" : "/css/")) + path;
 			const el = document.createElement(type == "js" ? "script" : "link");
 			if (type == "css") el.rel = "stylesheet";
-			if (count) el.onload = count;
-			if (error) el.onerror = error;
 			el.setAttribute(type == "js" ? "src" : "href", fullPath + ($e.cache_token ? "?v=" + $e.cache_token : ""));
-			headEl.appendChild(el);
 			loadedFiles.push(path);
+			return new Promise((resolve, reject) => {
+				el.onload = resolve;
+				el.onerror = reject;
+				headEl.appendChild(el);
+			});
 		}
-		const updateProgress = (from, to, steps, countdown, event) => { if (!progressEl.dataset.locked) progressEl.textContent = Math.floor(to - (to - from) / steps * countdown) + "%"; };
-		const failedProgress = (countdown, error) => { console.error("Failure", error); progressEl.dataset.locked = true; progressEl.textContent = "Failed!"; progressEl.classList.remove("loading"); };
+		const updateProgress = (from, to, loaded, total) => { if (!progressEl.dataset.locked) progressEl.textContent = Math.floor(from + (to - from) * loaded / total) + "%"; };
+		const failedProgress = (error) => { console.error("Failure", error); progressEl.dataset.locked = true; progressEl.textContent = "Failed!"; progressEl.classList.remove("loading"); };
 		const files_to_load = [
 			[
 				"definitions.css", /* This a theme file, so use theme-relative path */
@@ -160,24 +132,20 @@
 			]
 		];
 		try {
-			for (let i = 0, files = files_to_load[i]; i < files_to_load.length; i++, files = files_to_load[i]) {
-				const subfiles = files.reduce((acc, v) => typeof v == "string" ? acc.concat(v) : acc.concat(v()), []);
-				const numFiles = subfiles.length;
-				const counter = new countFiles(
-					numFiles,
-					(countdown, event) => updateProgress(i * 100 / files_to_load.length, (i + 1) * 100 / files_to_load.length, numFiles, countdown, event),
-					failedProgress,
-				);
+			for (let i = 0; i < files_to_load.length; i++) {
+				const subfiles = files_to_load[i].reduce((acc, v) => typeof v == "string" ? acc.concat(v) : acc.concat(v()), []);
 				const headEl = document.querySelector("head");
-				subfiles.forEach(file => loadFile(file, headEl, counter.count, counter.kill));
-				await new Promise((resolve, reject) => counter.wait(resolve, reject));
+				const from = i * 100 / files_to_load.length;
+				const to = (i + 1) * 100 / files_to_load.length;
+				let loaded = 0;
+				await Promise.all(subfiles.map(file => loadFile(file, headEl).then(() => updateProgress(from, to, ++loaded, subfiles.length))));
 			}
 			// All files loaded, start application
 			$e.ui.reset();
 			wrapperProgressEl.remove();
 		} catch(error) {
 			console.error(error);
-			failedProgress();
+			failedProgress(error);
 		}
 
 	})();

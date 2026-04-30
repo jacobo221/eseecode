@@ -1,4 +1,4 @@
-"use static";
+"use strict";
 
 /**
  * Switch translation
@@ -38,7 +38,7 @@ $e.ui.translations.switch = (lang, run) => {
 			$e.ui.switchToolboxMode();
 			const elementTranslator = $e.ui.element.querySelector("#translations-translator");
 			if (translation.translator && elementTranslator) {
-				const translatorHTML = translation.translator;
+				let translatorHTML = translation.translator;
 				if (translation.translatorLink) {
 					translatorHTML = "<span class=\"link\" onclick=\"window.open('" + translation.translatorLink + "', '_blank')\">" + translatorHTML + "</span>";
 				}
@@ -87,9 +87,7 @@ $e.ui.translations.resetSelect = () => {
 	// Get available translations
 	let translations = $e.ui.translations.available;
 	// Sort by name
-	translations = translations.sort((a, b) => {
-		return a.name > b.name;
-	});
+	translations = translations.sort((a, b) => a.name.localeCompare(b.name));
 	// Add translations to dropdown menu
 	translations.forEach(translation => {
 		const option = document.createElement("option");

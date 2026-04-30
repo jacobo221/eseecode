@@ -142,9 +142,9 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		} else if (key == "stepsize") {
 			$e.api.setStepSize(value);
 		} else if (key == "breakpoints") {
-			$e.api.addBreakpoints(value, false, action);
+			$e.api.addBreakpoints(value, action);
 		} else if (key == "watches") {
-			$e.api.addWatches(value, false, action);
+			$e.api.addWatches(value, action);
 		} else if (key == "whiteboardresolution") {
 			$e.api.setWhiteboardResolution(value, action);
 		} else if (key == "v") {
@@ -220,7 +220,7 @@ $e.api.screenshotCode = async (backgroundColor) => {
 			cacheBust: true,
 		};
 		if (backgroundColor) imageProperties.backgroundColor = backgroundColor;
-		data = htmlToImage.toPng(codeEl, imageProperties);
+		data = await htmlToImage.toPng(codeEl, imageProperties);
 	} catch (err) {
 		console.error("Screenshot failed:", err);
 		data = false;
@@ -1115,14 +1115,14 @@ $e.api.showTranslations = (value, action = true) => {
  * @example $e.api.getWhiteboardResolution()
  */
 $e.api.getWhiteboardResolution = () => {
-	return { width: $e.backend.whiteboard.width, height: $e.backend.whiteboard.width };
+	return { width: $e.backend.whiteboard.width, height: $e.backend.whiteboard.height };
 };
 
 /**
  * Changes the whiteboard size
  * @since 4.0
  * @public
- * @param {Array<Number>Number|String|Number} value Width and height of the new whiteboard
+ * @param {Array<Number>|String|Number} value Width and height of the new whiteboard
  * @param {Boolean} [run=true] If true, applies the theme immediately
  * @example $e.api.setWhiteboardResolution("sharp")
  */
@@ -1130,7 +1130,7 @@ $e.api.setWhiteboardResolution = (value, run) => {
 	if ($e.isNumber(value)) value = [ value ];
 	else if (typeof value == "string") value = value.split(",");
 	if (value[1] === undefined) value[1] = value[0];
-	[ $e.backend.whiteboard.width, $e.backend.whiteboard.width ] = value.map(v => parseInt(v));
+	[ $e.backend.whiteboard.width, $e.backend.whiteboard.height ] = value.map(v => parseInt(v));
 	$e.ui.loadWhiteboardSize();
 	if (run) $e.backend.whiteboard.reset();
 };

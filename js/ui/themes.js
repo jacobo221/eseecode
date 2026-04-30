@@ -1,4 +1,4 @@
-"use static";
+"use strict";
 
 /**
  * Initializes/Resets the themes menu UI element
@@ -26,7 +26,7 @@ $e.ui.themes.resetSelect = () => {
 	// Reset themes in dropdown menu
 	select.options.length = 0;
 	// Sort by name
-	themes = themes.sort((a, b) => a.name > b.name);
+	themes = themes.sort((a, b) => a.name.localeCompare(b.name));
 	// Add themes to dropdown menu
 	themes.forEach(theme => {
 		const option = document.createElement("option");
@@ -68,7 +68,7 @@ $e.ui.themes.switch = (newTheme, redrawBlocks) => {
 		const elementCSS = document.createElement("link");
 		elementCSS.rel = "stylesheet";
 		elementCSS.type = "text/css";
-		elementCSS.href = filepath + ($e.v ? "?v=" + $e.v : "");
+		elementCSS.href = filepath + ($e.cache_token ? "?v=" + $e.cache_token : "");
 		return elementCSS;
 	};
 	// Replace/remove the previous theme
@@ -80,7 +80,7 @@ $e.ui.themes.switch = (newTheme, redrawBlocks) => {
 	}).forEach(element => element.remove()); // We remove them now, in reverse order so that remval doesn't affect the order
 	if (newTheme == "default") return; // The default theme is already loaded, it is always loaded at the beginning
 	// Add files
-	const newThemeJSPath = newThemePath + "/theme.js" + ($e.v ? "?v=" + $e.v : "");
+	const newThemeJSPath = newThemePath + "/theme.js" + ($e.cache_token ? "?v=" + $e.cache_token : "");
 	const elementJS = document.createElement("script");
 	elementJS.type = "text/javascript";
 	elementJS.src = newThemeJSPath;
