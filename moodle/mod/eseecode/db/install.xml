@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/eseecode/db" VERSION="20240101" COMMENT="XMLDB file for Moodle mod/eseecode"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+
+    <TABLE NAME="eseecode" COMMENT="Stores each instance of the eSeeCode Editor activity">
+      <FIELDS>
+        <FIELD NAME="id"              TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course"          TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"   COMMENT="FK to course.id"/>
+        <FIELD NAME="name"            TYPE="char" LENGTH="255" NOTNULL="true"              COMMENT="Activity name"/>
+        <FIELD NAME="intro"           TYPE="text" NOTNULL="false"                          COMMENT="Standard module intro"/>
+        <FIELD NAME="introformat"     TYPE="int"  LENGTH="4"  NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="statement"       TYPE="text" NOTNULL="false"                          COMMENT="Problem statement shown to students"/>
+        <FIELD NAME="statementformat" TYPE="int"  LENGTH="4"  NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="timecreated"     TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified"    TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="eseecode_submissions" COMMENT="Stores student code drafts and final submissions">
+      <FIELDS>
+        <FIELD NAME="id"           TYPE="int"  LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="eseecodeid"   TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"   COMMENT="FK to eseecode.id"/>
+        <FIELD NAME="userid"       TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"   COMMENT="FK to user.id"/>
+        <FIELD NAME="code"         TYPE="text" NOTNULL="false"                          COMMENT="Student code"/>
+        <FIELD NAME="status"       TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" COMMENT="draft or submitted"/>
+        <FIELD NAME="timecreated"  TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int"  LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary"          TYPE="primary"  FIELDS="id"/>
+        <KEY NAME="fk_eseecodeid"    TYPE="foreign"  FIELDS="eseecodeid" REFTABLE="eseecode" REFFIELDS="id"/>
+        <KEY NAME="fk_userid"        TYPE="foreign"  FIELDS="userid"     REFTABLE="user"     REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="ix_eseecodeid_userid" UNIQUE="true" FIELDS="eseecodeid, userid"/>
+      </INDEXES>
+    </TABLE>
+
+  </TABLES>
+</XMLDB>

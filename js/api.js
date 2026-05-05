@@ -9,7 +9,7 @@
 window.addEventListener("message", async (event) => {
 
 	let api_call		= event.data;
-	if (!api_call) return; // Skip parsing other libraries' messages, such as skuplt's
+	if (!api_call) return; // Skip parsing other libraries' messages, such as skulpt's
 	
 	let api_parameters	= [];
 	let api_nounce		= undefined;

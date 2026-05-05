@@ -69,7 +69,7 @@
 			const fullPath = (path.startsWith("https://") || path.startsWith("http://") ? "" : eseecodePath + (type == "js" ? "/" : "/css/")) + path;
 			const el = document.createElement(type == "js" ? "script" : "link");
 			if (type == "css") el.rel = "stylesheet";
-			el.setAttribute(type == "js" ? "src" : "href", fullPath + ($e.cache_token ? "?v=" + $e.cache_token : ""));
+			el.setAttribute(type == "js" ? "src" : "href", fullPath + ($e.cache_token ? (fullPath.includes("?") ? "&" : "?") + "v=" + $e.cache_token : ""));
 			loadedFiles.push(path);
 			return new Promise((resolve, reject) => {
 				el.onload = resolve;

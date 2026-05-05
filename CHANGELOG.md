@@ -1,7 +1,8 @@
 ## 5.0 (???)
 
-*Milestoen reached: Support Python3 as programming language
+*Milestone reached: Support for Python3, Moodle plugin
 * eSeeCode is now compatible with Python3
+* Moodle plugin for eSeeCode integration
 * Fixed initial load where it could sometimes run into a race condition
 * Fixed bug where if the user's code crashed it could leave an unstable session and UI
 * Cleaned up init process
