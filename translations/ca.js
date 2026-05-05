@@ -95,7 +95,7 @@ $e.ui.translations.current = {
 		"Enter the values for %s's parameters": "Per a %s entra els valors dels seus paràmetres",
 		"Do you really want to start over?": "Estàs segur que vols tornar a començar?",
 		"Careful, any code you haven't saved will be lost if you leave this page!": "Atenció, perdràs el codi que no hagi desat si abandones aquesta pàgina!",
-		"You don't have the eseecodeLanguage loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?": "No tens eseecodeLanguage carregat. Si encara vols canviar al mode %s no podràs tornar al mode de blocs.\nEstàs segur de voler canviar al mode %s?",
+		"You don't have the language loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?": "No tens el llenguatge carregat. Si encara vols canviar al mode %s no podràs tornar al mode de blocs.\nEstàs segur de voler canviar al mode %s?",
 		"Can't convert the code to blocks. There is the following problem in your code": "No es pot convertir el codi a blocs. Existeix el següent error al teu codi",
 		"The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab": "L'execució s'ha detingut perque trigava massa.\nSi vols permetre-li més temps d'execució augmenta el valor de la casella 'Aturar l'execució passats' a la pestanya de configuració",
 		"Runtime error!": "Error d'execució!",
@@ -106,7 +106,7 @@ $e.ui.translations.current = {
 		"Failed to upload the file!": "Error en pujar el fitxer!",
 		"%s is not a valid eSee file! (Invalid file type %s)": "%s no és un arxiu eSee vàlid! (Tipus invàlid %s)",
 		"Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors": "No ha estat possible obrir el codi en mode %s perque s'han trobat errors al codi. Si us plau obre l'arxiu a la vista de Codi i corregeix els errors",
-		"Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode": "No ha estat possible obrir el codi en mode %s perque no tens carregat eseecodeLanguage. Si us plau obre l'arxiu a la vista de Codi",
+		"Can't open the code in %s mode because you don't have the language script loaded. Please open the file in Code view mode": "No ha estat possible obrir el codi en mode %s perque no tens carregat el llenguatge. Si us plau obre l'arxiu a la vista de Codi",
 		"The code is being loaded. Please be patient while waiting...": "El codi s'està caregant. Si us plau sigues pacient mentre esperes...",
 		"Turns 90 degrees right": "Gira 90 graus a la dreta",
 		"action": "acció",
@@ -529,6 +529,7 @@ $e.ui.translations.current = {
 		"Move selected blocks": "Mou els blocs seleccionats",
 		"Download screenshot of the code": "Descarrega captura d'imatge del codi",
 		"Could not create image (content may be too large or cross-origin images blocked).": "No s'ha pogut crear la imatge (el contingut és massa gran o conté imatges d'altres webs",
+		"Programming language": "Llenguatge de programació",
 	}
 };
 

@@ -233,12 +233,12 @@ $e.ui.smoothScroll = (el, height, startTop = el.scrollTop) => {
  * @private
  * @example $e.ui.resetExecution()
  */
-$e.ui.resetExecution = () => {
+$e.ui.resetExecution = async () => {
 	if (!$e.ide.codeIsEmpty() || $e.ide.hasUndoRedo()) {
 		$e.ui.msgBox.open(_("Do you really want to start over?"), { acceptAction: $e.ui.resetForced, cancelAction: $e.ui.msgBox.close });
 		return false;
 	} else {
-		$e.ui.resetForced();
+		await $e.ui.resetForced();
 	}
 };
 
@@ -279,17 +279,28 @@ $e.ui.resetFileMenu = () => {
  * @example $e.ui.reset()
  */
 $e.ui.reset = async () => {
+
+	// Hide while we reset
 	$e.ui.element.style.opacity = 0; // We make it invisible but displayed so the heights, widths, etc are calculated. Set back to visible from within $e.ui.reset()
+	
+	// Instructions to only run once
 	const firstLoad = !$e.backend.whiteboard.element;
 	if (firstLoad) { // First load
-		$e.ui.init();
+
+		// Create UI
+		await $e.ui.init();
 		$e.backend.whiteboard.element = $e.ui.element.querySelector("#whiteboard");
 		$e.ui.toolboxWindow = $e.ui.element.querySelector("#toolbox-window");
 		$e.ui.themes.init();
-		$e.instructions.init();
+		$e.ui.translations.resetMenu();
+		await $e.ui.themes.switch(); // Load the default theme, which contains the base CSS on top of which work all other themes
+		await $e.ide.loadBrowserURLParameters(undefined, [ "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ], undefined, { lang: navigator.language?.substring(0, 2), codelang: "javascript" }); // Prepare the environment except execution and UI elements that are loaded later
+		$e.execution.codelang.resetMenu();
+		$e.instructions.init(); // Must be loaded after URL param codelang
 		$e.ide.initCategories();
-		$e.ide.loadBrowserURLParameters(undefined, [ "precode", "code", "postcode", "execute", "maximize", "toolbox", "theme" ]); // Prepare the environment except execution and UI elements that are loaded later
 		$e.ui.initializeSetup();
+
+		// Create event handlers
 		window.addEventListener("resize", $e.ui.write.windowResizeHandler);
 		if ($e.ui.whiteboardResizeInterval) clearInterval($e.ui.whiteboardResizeInterval);
 		$e.ui.whiteboardResizeInterval = setInterval($e.ui.whiteboardResizeHandler, 100);
@@ -301,22 +312,28 @@ $e.ui.reset = async () => {
 			}
 		});
 		$e.ui.toggleFullscreenIcon();
+		
+		// Initiate autosave
 		if ($e.setup.autosaveInterval && $e.setup.autosaveInterval > 0) {
 			setInterval(() => {
 				if ($e.session.lastAutosave < $e.session.lastChange) $e.ide.autosave();
 			}, $e.setup.autosaveInterval * 1000);
 		}
 	}
+
+	// Reset UI
+	$e.ui.element.querySelector("#title #logo").href = $e.platform.website;
+	$e.ui.element.querySelector("#title #logo > img").src = $e.basepath + $e.platform.logo;
 	$e.ui.loadWhiteboardSize();
 	$e.ui.initElements();
 	$e.ui.themes.resetMenu();
-	$e.ui.element.querySelector("#title").innerHTML = '<a href="' + $e.platform.website + '" target="_blank" id="logo"><img src="' + $e.basepath + $e.platform.logo + '" title="" /></a>';
 	$e.ui.resetGridModeSelect();
 	$e.ide.blocks.changes.reset();
 	$e.ui.debug.resetBreakpointsHighlights();
 	$e.debug.resetMonitors();
 	$e.ide.blocks.resetCount();
 	$e.ui.resetFileMenu();
+
 	// Init $e.modes array with ui elements
 	if (!$e.modes.views.current) $e.modes.views.current = $e.modes.views.available[$e.setup.defaultView];
 	Object.values($e.modes.views.available).forEach(view => view.tab = $e.ui.element.querySelector("#view-tabs-" + view.id));
@@ -328,6 +345,12 @@ $e.ui.reset = async () => {
 	});
 	$e.ui.resizeView(true);
 	$e.ui.initView();
+	$e.session.updateOnViewSwitch = false;
+
+	// Reset translation
+	await $e.ui.translations.switch();
+
+	// Reset execution
 	await $e.backend.reset(false); // Precode is loaded later with $e.ide.loadBrowserURLParameters()
 	$e.ui.debug.reset(true);
 	$e.debug.resetMonitors();
@@ -335,8 +358,9 @@ $e.ui.reset = async () => {
 	$e.ide.resetUndo();
 	$e.ui.refreshUndo();
 	$e.ui.element.querySelector("#toolbox-tabs-window").classList.add("hide");
-	$e.ui.translations.resetMenu();
-	$e.ui.translations.switch();
+	await $e.ide.loadBrowserURLParameters([ "theme", "toolbox", "e", "precode", "code", "postcode", "execute", "maximize" ], undefined, true, { theme: "default" });
+	
+	// Reset events handlers
 	document.body.removeEventListener("keydown", $e.ui.keyboardShortcuts);
 	document.body.addEventListener("keydown", $e.ui.keyboardShortcuts);
 	window.removeEventListener("beforeunload", $e.ui.windowRefresh);
@@ -345,34 +369,25 @@ $e.ui.reset = async () => {
 	$e.ui.whiteboardResizeHandler();
 	// onkeydown handler will be called from shortcuts so it is only called when no shortcut exists
 	document.body.removeEventListener("keyup", $e.backend.events.keyboard);
-	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.removeEventListener(type, $e.backend.events.pointer));
-	$e.backend.events.reset();
-	// onkeydown handler will be called from shortcuts so it is only called when no shortcut exists
 	document.body.addEventListener("keyup", $e.backend.events.keyboard, false);
-	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => $e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer));
-	$e.session.updateOnViewSwitch = false;
-	$e.ide.loadBrowserURLParameters([ "e", "precode", "code", "postcode", "execute", "maximize" ]);
+	[ "pointerdown", "pointermove", "pointerup", "pointerout", "pointercancel" ].forEach(type => {
+		$e.backend.whiteboard.element.removeEventListener(type, $e.backend.events.pointer);
+		$e.backend.whiteboard.element.addEventListener(type, $e.backend.events.pointer);
+	});
+	$e.backend.events.reset();
+	
+	// Load user's autosaved code
 	if (firstLoad && $e.setup.autorestore) await new Promise((resolve, reject) => {
 			const parseTimeout = setTimeout(reject, 5 * 1000);
 			$e.ide.loadAutosave();
 			clearTimeout(parseTimeout);
 			resolve();
 		});
-	$e.ui.themes.current.loaded = true; // Initially we assume the theme (default) is loaded, switchTheme will immediately change it to false otherwise
-	$e.ide.loadBrowserURLParameters([ "theme" ], undefined, true);
+
 	$e.session.lastChange = 0;
-	const testUntilReady = () => {
-		if ($e.ui.translations.current.loaded && $e.ui.themes.current.loaded) {
-			$e.session.ready = Date.now();
-			$e.ide.loadBrowserURLParameters([ "toolbox" ], undefined, true);
-			$e.ui.element.style.visibility = ""; // Remove the visiblity = "hidden" set in eseecode.js to improve the loading animation
-			$e.ui.element.style.opacity = 1;
-		} else {
-			setTimeout(testUntilReady, 100);
-		}
-	};
-	testUntilReady();
-	return;
+
+	// Display
+	$e.ui.element.style.opacity = 1;
 };
 
 /**
@@ -552,8 +567,8 @@ $e.ui.toggleFullscreen = (fullscreen) => {
  * @private
  * @example $e.ui.resetForced()
  */
-$e.ui.resetForced = () => {
-	$e.ui.reset();
+$e.ui.resetForced = async () => {
+	await $e.ui.reset();
 	$e.ui.msgBox.close();
 };
 

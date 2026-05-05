@@ -69,10 +69,11 @@ $e.ide.loadAutosave = () => {
  * @param {Array} [whitelist] Only load this specific parameters
  * @param {Array} [blacklist] Do not load this specific parameters
  * @param {Boolean} [action=false] Run the action (true) or only set it up (false)
+ * @param {Object<string, *>} [defaults] For each parameter it's default value of no value has been defined
  * @example $e.ide.loadBrowserURLParameters([ "precode" ])
  */
-$e.ide.loadBrowserURLParameters = async function(whitelist, blacklist, action = false) {
-	return await $e.api.loadURLParams(window.location.href, whitelist, action, blacklist); // Page load API calls are silent, they will be loaded during page load
+$e.ide.loadBrowserURLParameters = async function(whitelist, blacklist, action = false, defaults) {
+	return await $e.api.loadURLParams(window.location.href, whitelist, action, blacklist, defaults); // Page load API calls are silent, they will be loaded during page load
 };
 
 /**
@@ -246,16 +247,21 @@ $e.ide.uploadCode = (code, run, type) => {
 	let program;
 	// Always start by trying to load the code into the current level
 	let codeParseable = true;
-	if (eseecodeLanguage) {
-		try {
-			program = eseecodeLanguage.parse(code);
-		} catch (exception) {
+	if ($e.execution.codelang.current?.id === "javascript") {
+		if ($e.execution.codelang.current.getJison) {
+			try {
+				program = $e.execution.codelang.current.getJison().parse(code);
+			} catch (exception) {
+				codeParseable = false;
+				$e.ui.msgBox.open(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors", [level]) + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
+			}
+		} else {
 			codeParseable = false;
-			$e.ui.msgBox.open(_("Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors", [level]) + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
+			$e.ui.msgBox.open(_("Can't open the code in %s mode because you don't have the language script loaded. Please open the file in Code view mode", [level]), { classes: "monospace" });
 		}
 	} else {
+		// ToDo
 		codeParseable = false;
-		$e.ui.msgBox.open(_("Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode", [level]), { classes: "monospace" });
 	}
 	if (type === "precode") {
 		$e.execution.precode = code;
@@ -275,11 +281,11 @@ $e.ide.uploadCode = (code, run, type) => {
 				$e.ui.write.resetView(program.makeWrite("", "\t"));
 				$e.session.updateOnViewSwitch = "write";
 			}
-			$e.ui.updateViewButtonsVisibility();
 		} else {
 			$e.ui.switchView("level4");
 			$e.ui.write.resetView(code);
 		}
+		$e.ui.updateViewButtonsVisibility();
 	}
 	if (run) {
 		if (type === "precode") $e.execution.execute(true, undefined, true);

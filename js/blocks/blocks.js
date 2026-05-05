@@ -188,11 +188,12 @@ $e.ui.blocks.createAndPlaceBlock = (blockOrInstructionSetId, parentBlock, nextSi
 		instructionSetId = blockEl.dataset.instructionSetId;
 	}
 	const isUpdate = blockOrInstructionSetId === blockEl;
+	options.isToolbox = !!parentBlock.closest("#toolbox-blocks");
 	$e.ui.blocks.initialize(blockEl, instructionSetId, isUpdate ? false : params, options);
 	if (parentBlock !== undefined) {
 		if (options.notIntoCode) {
 			parentBlock.insertBefore(blockEl, nextSibling);
-	 	} else {
+		} else {
 			$e.ui.blocks.insertIntoCode(blockEl, parentBlock, nextSibling);
 		}
 		const instruction = $e.instructions.set[instructionSetId];
@@ -210,7 +211,7 @@ $e.ui.blocks.createAndPlaceBlock = (blockOrInstructionSetId, parentBlock, nextSi
  * @param {!HTMLElement} blockEl Block element
  * @param {String} instructionSetId Id of the instruction in $e.instructions.set
  * @param {Array<*>|Boolean} [params=[]] Values of the parameters. If set to false, the parameters are not initialized
- * @param {Object} [options] If noInitSubblocks is true container blocks with no subblocks will not have their mandatory subblocks created, if isSubblock is true the block will be initialized as a subblock
+ * @param {Object} [options] If noInitSubblocks is true container blocks with no subblocks will not have their mandatory subblocks created, if isSubblock is true the block will be initialized as a subblock, if isToolbox is true thee block will be set up for the toolbox
  * @return {HTMLElement} Block element
  * @example $e.ui.blocks.initialize(document.body.createElement("div"), "forward")
  */
@@ -238,8 +239,7 @@ $e.ui.blocks.initialize = (blockEl, instructionSetId, params = [], options = {})
 	if (instruction.container) blockEl.classList.add("container");
 	if (instruction.code && instruction.code.extraIndent) blockEl.classList.add("extraIndent");
 	if (instruction.classes) blockEl.classList.add(...instruction.classes);
-	const isToolbox = blockEl.closest("#toolbox-blocks");
-	$e.ui.blocks.paint(blockEl, isToolbox);
+	$e.ui.blocks.paint(blockEl, options.isToolbox);
 	$e.ui.blocks.addListeners(blockEl);
 	if (!options.noInitSubblocks && instruction.container && !blockEl.querySelector(".block")) { // We are creating a new container, initialize it with its mandatory subblocks
 		instruction.container.filter(subblock => !subblock.optional).forEach(subblock => $e.ui.blocks.createAndPlaceBlock(subblock.instruction, blockEl, undefined, undefined, { notIntoCode: options.notIntoCode, isSubblock: true }));

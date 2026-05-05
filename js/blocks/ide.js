@@ -135,7 +135,6 @@ $e.ide.blocks.resetCount = () => {
 	});
 };
 
-
 /**
  * Converts all blocks into code and puts the code in the write view
  * @private
@@ -144,9 +143,9 @@ $e.ide.blocks.resetCount = () => {
 $e.ide.blocks.toWrite = () => {
 	const code = $e.ide.blocks.toCode($e.ui.element.querySelector("#view-blocks").firstChild);
 	let cleanCode;
-	if (eseecodeLanguage) {
+	if ($e.execution.codelang.current.getJison) {
 		try {
-			const program = eseecodeLanguage.parse(code);
+			const program = $e.execution.codelang.current.getJison().parse(code);
 			cleanCode = program.makeWrite("", "\t");
 		} catch (exception) {
 			// This should never happen

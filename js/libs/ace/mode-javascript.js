@@ -124,7 +124,7 @@ exports.JsDocCommentHighlightRules = JsDocCommentHighlightRules;
 
 });
 
-define("ace/mode/eseecode_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/jsdoc_comment_highlight_rules","ace/mode/text_highlight_rules"], function(require, exports, module){"use strict"; // eSeeCode
+define("ace/mode/javascript_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/jsdoc_comment_highlight_rules","ace/mode/text_highlight_rules"], function(require, exports, module){"use strict";
 var oop = require("../lib/oop");
 var DocCommentHighlightRules = require("./jsdoc_comment_highlight_rules").JsDocCommentHighlightRules;
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
@@ -1140,10 +1140,10 @@ oop.inherits(FoldMode, CFoldMode);
 
 });
 
-define("ace/mode/eseecode",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/eseecode_highlight_rules","ace/mode/matching_brace_outdent","ace/worker/worker_client","ace/mode/behaviour/javascript","ace/mode/folding/javascript"], function(require, exports, module){"use strict"; // eSeeCode
+define("ace/mode/javascript",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/javascript_highlight_rules","ace/mode/matching_brace_outdent","ace/worker/worker_client","ace/mode/behaviour/javascript","ace/mode/folding/javascript"], function(require, exports, module){"use strict";
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var JavaScriptHighlightRules = require("./eseecode_highlight_rules").JavaScriptHighlightRules; // eSeeCode
+var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var WorkerClient = require("../worker/worker_client").WorkerClient;
 var JavaScriptBehaviour = require("./behaviour/javascript").JavaScriptBehaviour;
@@ -1197,7 +1197,7 @@ oop.inherits(Mode, TextMode);
         this.$outdent.autoOutdent(doc, row);
     };
     this.createWorker = function (session) {
-        var worker = new WorkerClient(["ace"], "ace/mode/eseecode_worker", "JavaScriptWorker"); // eSeeCode
+        var worker = new WorkerClient(["ace"], "ace/mode/javascript_worker", "JavaScriptWorker");
         worker.attachToDocument(session.getDocument());
         worker.on("annotate", function (results) {
             session.setAnnotations(results.data);
@@ -1207,13 +1207,13 @@ oop.inherits(Mode, TextMode);
         });
         return worker;
     };
-    this.$id = "ace/mode/eseecode"; // eSeeCode
-    this.snippetFileId = "ace/snippets/eseecode"; // eSeeCode
+    this.$id = "ace/mode/javascript";
+    this.snippetFileId = "ace/snippets/javascript";
 }).call(Mode.prototype);
 exports.Mode = Mode;
 
 });                (function() {
-                    window.require(["ace/mode/eseecode"], function(m) { // eSeeCode
+                    window.require(["ace/mode/javascript"], function(m) {
                         if (typeof module == "object" && typeof exports == "object" && module) {
                             module.exports = m;
                         }

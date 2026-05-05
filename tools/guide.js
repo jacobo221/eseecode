@@ -643,6 +643,7 @@ async function guideNextStep(currentGuideStep, silent) {
         case "api":
             if (currentGuideStep.argument) {
                 iframe.contentWindow.$e.api.loadURLParams(currentGuideStep.argument);
+                await new Promise(r => setTimeout(r, 100)); // Leave time for the API to do its work, otherwise the next UI might not be ready when the next step is processed
             }
             element = undefined;
             skipElement = true;
@@ -942,6 +943,7 @@ function translateToHTMLElement(code) {
         "fullscreenbutton": "fullscreen-button",
         "setup": "toolbox-tabs-setup",
         "language": "translations-select",
+        "codelang": "codelang-select",
         "load": "loadcode",
         "save": "savecode",
         "gridenable": "setup-grid-enable",

@@ -3,62 +3,46 @@
 /**
  * Switch translation
  * @private
- * @param {String} [lang] Language code to translate to. If unset it checks the "lang" parameter in the browser's URL. If it can't determine the new translation, it takes "default"
+ * @param {String} [lang] Language code to translate to. By default, "default"
  * @param {Boolean} [run=true] Switch language in already visible UI elements
  * @example $e.ui.translations.switch("ca")
  */
-$e.ui.translations.switch = (lang, run) => {
-	$e.ui.translations.current.loaded = false;
-	run = (!run || run !== false);
+$e.ui.translations.switch = async (lang = "default", run) => {
+	run = (run !== false);
 	if (!lang || lang == "default") {
 		$e.ui.translations.current = { id: "default", name: "English", code: "en", strings: {} };
 		lang = "default";
 	}
 	lang = lang.toLowerCase();
-	const headElement = document.querySelector("head");
-	const translationsPath = "translations";
-	const translationPath = $e.basepath + "/" + translationsPath + "/" + lang + ".js" + ($e.cache_token ? "?v=" + $e.cache_token : "");
-	// Remove the previous theme
-	const headElements = headElement.children;
-	Array.from(headElements).forEach(element => {
-		if (element.tagName === "SCRIPT" && element.src && element.src.includes(translationsPath+"/")) {
-			element.remove();
-		}
-	});
+
 	// Add translation file
-	const runWhenTranslationLoaded = (run) => {
-		let translation;
-		if (run) {
-			translation = $e.ui.translations.current;
-			$e.ui.translations.addStaticText();
-			$e.ui.resetGridModeSelect();
-			$e.ui.translations.resetMenu();
-			$e.ui.themes.resetMenu();
-			$e.ui.switchView();
-			$e.ui.switchToolboxMode();
-			const elementTranslator = $e.ui.element.querySelector("#translations-translator");
-			if (translation.translator && elementTranslator) {
-				let translatorHTML = translation.translator;
-				if (translation.translatorLink) {
-					translatorHTML = "<span class=\"link\" onclick=\"window.open('" + translation.translatorLink + "', '_blank')\">" + translatorHTML + "</span>";
-				}
-				elementTranslator.innerHTML = _("Translated to %s by %s", [translation.name, translatorHTML]);
-			}
-		}
-		const select = $e.ui.element.querySelector("#translations-select");
-		select.value = lang;
-		if (run) $e.ui.element.lang = translation.code;
-		$e.ui.translations.current.loaded = true;
-	};
-	if (lang === "default") {
-		runWhenTranslationLoaded(run);
-	} else {
-		const elementJS = document.createElement("script");
-		elementJS.type = "text/javascript";
-		elementJS.src = translationPath;
-		elementJS.onload = () => { runWhenTranslationLoaded(run); };
-		headElement.appendChild(elementJS);
+	if (lang !== "default") {
+		const translationsPath = "translations";
+		const translationPath = $e.basepath + "/" + translationsPath + "/" + lang + ".js" + ($e.cache_token ? "?v=" + $e.cache_token : "");
+		await $e.loadFiles([ [ translationPath, ], ]);
 	}
+	
+	let translation;
+	if (run) {
+		translation = $e.ui.translations.current;
+		$e.ui.translations.addStaticText();
+		$e.ui.resetGridModeSelect();
+		$e.ui.translations.resetMenu();
+		$e.ui.themes.resetMenu();
+		$e.ui.switchView();
+		$e.ui.switchToolboxMode();
+		const elementTranslator = $e.ui.element.querySelector("#translations-translator");
+		if (translation.translator && elementTranslator) {
+			let translatorHTML = translation.translator;
+			if (translation.translatorLink) {
+				translatorHTML = "<span class=\"link\" onclick=\"window.open('" + translation.translatorLink + "', '_blank')\">" + translatorHTML + "</span>";
+			}
+			elementTranslator.innerHTML = _("Translated to %s by %s", [translation.name, translatorHTML]);
+		}
+	}
+	const select = $e.ui.element.querySelector("#translations-select");
+	select.value = lang;
+	if (run) $e.ui.element.lang = translation.code;
 };
 
 /**
@@ -111,6 +95,7 @@ $e.ui.translations.addStaticText = () => {
 		$e.ui.element.querySelector("#view-tabs-" + levelId).title = _("Double click to maximize/restore");
 	});
 	$e.ui.element.querySelector("#translations-switch").title = _("Language");
+	$e.ui.element.querySelector("#codelang-switch").title = _("Programming language");
 	$e.ui.element.querySelector("#themes-switch").title = _("Theme");
 	$e.ui.element.querySelector("#logo").title = _($e.platform.name);
 	$e.ui.element.querySelector("#toolbox-setup-author").innerHTML = _("v") + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.changelog) + "', '_blank')\"\">" + _($e.platform.version) + "</span><br />" + _("Licensed under the") + " " + "<span class=\"link\" onclick=\"window.open('" + _($e.platform.license_link) + "', '_blank')\">" + _($e.platform.license) + "</span></div>";

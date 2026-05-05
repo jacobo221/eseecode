@@ -62,21 +62,25 @@ $e.ui.switchView = (id, switchToolbox = false) => {
 	if (oldView.type == "write" && newView.type == "blocks") {
 		let code;
 		code = $e.session.editor.getValue();
-		if (eseecodeLanguage) {
-			try {
-				program = eseecodeLanguage.parse(code);
-			} catch (exception) {
-				$e.ui.msgBox.open(_("Can't convert the code to blocks. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message);
-				if (!exception.message) return;
-				const lineNumberMatch = exception.message.match(/. (i|o)n line ([0-9]+)/);
-				if (!lineNumberMatch) return;
-				const lineNumber = lineNumberMatch[2];
-				$e.ui.highlight(lineNumber, "error");
-				$e.session.editor.gotoLine(lineNumber, 0, true);
-				return;
+		if ($e.execution.codelang.current?.id === "javascript") {
+			if ($e.execution.codelang.current.getJison) {
+				try {
+					program = $e.execution.codelang.current.getJison().parse(code);
+				} catch (exception) {
+					$e.ui.msgBox.open(_("Can't convert the code to blocks. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message);
+					if (!exception.message) return;
+					const lineNumberMatch = exception.message.match(/. (i|o)n line ([0-9]+)/);
+					if (!lineNumberMatch) return;
+					const lineNumber = lineNumberMatch[2];
+					$e.ui.highlight(lineNumber, "error");
+					$e.session.editor.gotoLine(lineNumber, 0, true);
+					return;
+				}
+			} else {
+				if (!confirm(_("You don't have the language loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?", [ newView.name, newView.name ]))) return;
 			}
 		} else {
-			if (!confirm(_("You don't have the eseecodeLanguage loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?", [ newView.name, newView.name ]))) return;
+			// ToDo makeBlocks for python
 		}
 	}
 	// Save scroll position
@@ -160,7 +164,6 @@ $e.ui.switchView = (id, switchToolbox = false) => {
  * @example $e.ui.switchToolboxMode("debug")
  */
 $e.ui.switchToolboxMode = (id = $e.modes.toolboxes.current.id) => {
-	if (!$e.session.ready) return; // We are going to go though several functions that reset the toolbox and the view, so lock it for now until teh platform is ready and we really want to initialize it
 	Object.values($e.modes.toolboxes.available).forEach((toolbox) => {
 		if (!toolbox.element) return; // We might call this function before the toolboxes have been created, so check
 		toolbox.element.classList.add("hide");

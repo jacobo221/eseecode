@@ -9,6 +9,8 @@
 window.addEventListener("message", async (event) => {
 
 	let api_call		= event.data;
+	if (!api_call) return; // Skip parsing other libraries' messages, such as skuplt's
+	
 	let api_parameters	= [];
 	let api_nounce		= undefined;
 	if (typeof api_call != "string") {
@@ -30,37 +32,40 @@ window.addEventListener("message", async (event) => {
  * Parses the parameters in the URL
  * @since 2.3
  * @public
- * @param {String} [url] URL to parse. If unset use browser's location
+ * @param {String} [url] URL to parse
  * @param {Array} [whitelist] Only load this specific parameters
  * @param {Boolean} [action=true] Run the action (true) or only set it up (false)
  * @param {Array} [blacklist] Do not load this specific parameters
+ * @param {Object<string, *>} [defaults] For each it's default value of no value has been defined
  * @example $e.api.api.loadURLParams("view=drag")
  */
-$e.api.loadURLParams = async function(url = "", whitelist, action = true, blacklist) { // By default explicit API calls result in immediate UI effect
-	let url_params = "";
+$e.api.loadURLParams = async function(url = "", whitelist, action = true, blacklist, defaults = {}) { // By default explicit API calls result in immediate UI effect
+	let urlParamsString = "";
 	if (url.includes("?")) {
-		url_params = url.split("?")[1]; // Full URL with parameters
+		urlParamsString = url.split("?")[1]; // Full URL with parameters
 	} else {
 		if (url.match(/^https?:\/\/|file:\/\//)) { // Full URL without parameters
-			url_params = "";
+			urlParamsString = "";
 		} else {
-			url_params = url; // Only parameters
+			urlParamsString = url; // Only parameters
 		}
 	}
-	url_params = new URLSearchParams(url_params);
-	if (url_params.get("e")) {
-		const encodedParamsSearch = new URLSearchParams(atob(url_params.get("e")));
-		encodedParamsSearch.forEach((v, k) => url_params.append(k, v));
+	const urlParamsObj = new URLSearchParams(urlParamsString);
+	if (urlParamsObj.get("e")) {
+		const encodedParamsSearch = new URLSearchParams(atob(urlParamsObj.get("e")));
+		encodedParamsSearch.forEach((v, k) => urlParamsObj.append(k, v));
 	}
+	const urlParams = Object.assign(defaults, urlParamsObj.entries().reduce((acc, [k, v]) => ({ ...acc, [k]: v, }), {}));
 
 	let prerequisites = [ "instructions", "custominstructions", "code", "precode" ]; // Lowest priority first, highest priority last
-	Array.from(url_params).sort((a, b) => prerequisites.indexOf(b[0]) - prerequisites.indexOf(a[0])).forEach(async function(param) {
-		const key = param[0].toLowerCase();
-		let value = param[1];
+	const sortedParams = Array.from(Object.keys(urlParams)).sort((a, b) => prerequisites.indexOf(b) - prerequisites.indexOf(a));
+	for (const param of sortedParams) {
+		const key = param.toLowerCase();
 		if (whitelist && !whitelist.includes(key)) return;
 		if (blacklist && blacklist.includes(key)) return;
 		if (key == "e") return; // Already processed
 
+		const value = urlParams[param];
 		if (key == "grid") {
 			$e.api.showGrid(value, action);
 		} else if (key == "gridstep") {
@@ -80,11 +85,11 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		} else if (key == "filemenu") {
 			$e.api.showFilemenu(value, action);
 		} else if (key == "lang") {
-			$e.api.switchLanguage(value, action);
+			await $e.api.switchLanguage(value, action);
 		} else if (key == "translations") {
 			$e.api.showTranslations(value, action);
 		} else if (key == "theme") {
-			$e.api.setTheme(value, action);
+			await $e.api.setTheme(value, action);
 		} else if (key == "themes") {
 			$e.api.showThemes(value);
 		} else if (key == "maximize") {
@@ -103,6 +108,8 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 			$e.api.switchView(value, action);
 		} else if (key == "dialog" || key == "toolbox") { // dialog is deprecated since 4.0
 			$e.api.switchToolbox(value, action);
+		} else if (key == "codelang") {
+			await $e.api.switchCodelang(value, action);
 		} else if (key == "instructions") {
 			$e.api.setInstructions(value, action);
 		} else if (key == "custominstructions") {
@@ -152,11 +159,7 @@ $e.api.loadURLParams = async function(url = "", whitelist, action = true, blackl
 		} else {
 			console.error("Unknown API key", key);
 		}
-	});
-
-	// Default to browser language if no language has been defined
-	if (!whitelist && !url_params.get("lang") && navigator.language) $e.ui.translations.switch(navigator.language.substring(0, 2));
-
+	}
 };
 
 /**
@@ -468,8 +471,8 @@ $e.api.reset = () => {
  * @public
  * @example $e.api.restart()
  */
-$e.api.restart = () => {
-	$e.ui.reset();
+$e.api.restart = async () => {
+	await $e.ui.reset();
 	$e.ui.msgBox.close();
 };
 
@@ -627,6 +630,29 @@ $e.api.setInput = (value = "", action = true) => {
 	$e.backend.io.reset();
 	$e.execution.inputDefault = value;
 	if (action) $e.ui.resetIO(true);
+};
+
+/**
+ * Switches to the specified programming language
+ * @since 5.0
+ * @public
+ * @param {String} value Programming language to switch to
+ * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
+ * @example $e.api.switchCodelang("python")
+ */
+$e.api.switchCodelang = async (value, action = true) => {
+	const codelangChanged = await $e.execution.codelang.switch(value);
+	if (action && codelangChanged) $e.execution.codelang.switchMenu(value);
+};
+
+/**
+ * Returns the current active programming language
+ * @since 5.0
+ * @public
+ * @example $e.api.getCodelang()
+ */
+$e.api.getCodelang = () => {
+	return $e.execution.codelang.current?.id;
 };
 
 /**
@@ -899,8 +925,8 @@ $e.api.switchDialog = $e.api.switchToolbox;
  * @param {Boolean} [action=true] Whether to run the actions to apply the changes (true) or just set the variables (false)
  * @example $e.api.switchLanguage("ca")
  */
-$e.api.switchLanguage = (value, action) => {
-	$e.ui.translations.switch(value, action);
+$e.api.switchLanguage = async (value, action) => {
+	await $e.ui.translations.switch(value, action);
 
 };
 
@@ -1143,9 +1169,8 @@ $e.api.setWhiteboardResolution = (value, run) => {
  * @param {Boolean} [run=true] If true, applies the theme immediately
  * @example $e.api.setTheme("sharp")
  */
-$e.api.setTheme = (theme, run) => {
-	if (!$e.session.ready && !run) return;
-	$e.ui.themes.switch(theme, true);
+$e.api.setTheme = async (theme, run) => {
+	await $e.ui.themes.switch(theme, run);
 };
 
 /**

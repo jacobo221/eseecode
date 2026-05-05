@@ -253,3 +253,59 @@ $e.execution.traceRestore = () => {
 		window[replacedFunction.name] = replacedFunction.original;
 	});
 };
+
+/**
+ * Switches the active programming language. Can, and must, be only be run once
+ * @private
+ * @param {String} [codelang] Programming language to switch to. By default, the current programming language
+ * @param {String} [force] If `true` it will force switching the programming language
+ * @example $e.execution.codelang.switch("python")
+ */
+$e.execution.codelang.switch = async (codelang = $e.execution.codelang.current?.id, force) => {
+	if ($e.execution.codelang.current?.id === codelang && !force) return;
+	const codelangDescr = $e.execution.codelang.available.find((candidate) => codelang === candidate.id);
+	if (!codelangDescr) return false;
+	if (codelangDescr.files) await $e.loadFiles(codelangDescr.files);
+	$e.execution.codelang.current = codelangDescr;
+
+	$e.execution.codelang.switchMenu(codelang);
+	if ($e.session.editor) $e.session.editor.setOptions({
+			mode: "ace/mode/" + codelangDescr.id,
+	});
+
+	return true;
+};
+
+/**
+ * Initializes/Resets the codelang selection element to provide all available programming languages
+ * @private
+ * @example $e.execution.codelang.resetMenu()
+ */
+$e.execution.codelang.resetMenu = () => {
+	const select = $e.ui.element.querySelector("#codelang-select");
+	// Reset translations in dropdown menu
+	select.options.length = 0;
+	// Get available programming languages
+	let codelangs = $e.execution.codelang.available;
+	// Sort by name
+	codelangs = codelangs.sort((a, b) => a.name.localeCompare(b.name));
+	// Add translations to dropdown menu
+	codelangs.forEach(codelang => {
+		const option = document.createElement("option");
+		option.value = codelang.id;
+		option.text = codelang.name;
+		select.add(option, null);
+	});
+	select.value = $e.execution.codelang.current?.id;
+};
+
+/**
+ * Updates the codelang selection element in the programming languages menu
+ * @private
+ * @param {String} codelang Programming language to switch the UI menu to
+ * @example $e.execution.codelang.switchMenu("python")
+ */
+$e.execution.codelang.switchMenu = (codelang) => {
+	const select = $e.ui.element.querySelector("#codelang-select");
+	select.value = codelang;
+};

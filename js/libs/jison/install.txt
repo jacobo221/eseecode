@@ -2,5 +2,5 @@ On Ubuntu 13.10:
 sudo apt-get install npm
 sudo apt-get install nodejs-legacy
 sudo npm install jison -g
-jison eseecodeLanguage.jison
-edit eseccodeLanguage.js and change "var parser = (function(){"... for "var eseecodeLanguage = (function(){"
+jison javascriptLanguage.jison
+edit javascriptLanguage.js and change "var parser = (function(){"... for "var javascriptLanguage = (function(){"

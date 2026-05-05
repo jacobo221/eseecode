@@ -877,4 +877,4 @@
 	ast.LiteralNode.prototype.makeWrite = function(indent, indentChar, options = {}) {
 		return this.value;
 	};
-})(eseecodeLanguage);
+})(javascriptLanguage);

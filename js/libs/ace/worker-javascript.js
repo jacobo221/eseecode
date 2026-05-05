@@ -1334,7 +1334,7 @@ var Mirror = exports.Mirror = function(sender) {
 
 });
 
-define("ace/mode/eseecode/jshint",[], function(require, exports, module) { // eSeeCode
+define("ace/mode/javascript/jshint",[], function(require, exports, module) {
 module.exports = (function outer (modules, cache, entry) {
     var previousRequire = typeof require == "function" && require;
     function newRequire(name, jumped){
@@ -15409,12 +15409,12 @@ arguments[4]["/node_modules/assert/node_modules/util/util.js"][0].apply(exports,
 
 });
 
-define("ace/mode/eseecode_worker",[], function(require, exports, module) { // eSeeCode
+define("ace/mode/javascript_worker",[], function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
 var Mirror = require("../worker/mirror").Mirror;
-var lint = require("./eseecode/jshint").JSHINT; // eSeeCode
+var lint = require("./javascript/jshint").JSHINT;
 
 function startRegex(arr) {
     return RegExp("^(" + arr.join("|") + ")");

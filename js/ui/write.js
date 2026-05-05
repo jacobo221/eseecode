@@ -52,12 +52,12 @@ $e.ui.write.insertText = (event) => {
  * @example $e.ui.write.resetView($e.ui.element.querySelector("#view-write"))
  */
 $e.ui.write.resetView = (code = "", resetCursor) => {
-	if (!$e.session.editor) { // Every time setOptions is called defining mode the worker-eseecode.js file is re-fetched, so make sure we only use set options once
+	if (!$e.session.editor) { // Every time setOptions is called defining mode the worker-javascript.js file is re-fetched, so make sure we only use set options once
 		$e.session.editor = ace.edit("view-write");
 		ace.require("ace/ext/language_tools");
 		$e.session.editor.setOptions({
 			theme: "ace/theme/chrome",
-			mode: "ace/mode/eseecode",
+			mode: "ace/mode/" + $e.execution.codelang.current?.id,
 			newLineMode: "windows", // Otherwise copy&paste in Windows pastes all code in a single line. Linux and Mac, on the other hand, can handle Windows newlines
 			enableBasicAutocompletion: true,
 			enableSnippets: true,
@@ -88,7 +88,7 @@ $e.ui.write.resetView = (code = "", resetCursor) => {
 	}
 	$e.session.editor.session.on("change", $e.ui.write.changed);
 	$e.session.editor.session.setUseWrapMode(false);
-	$e.session.editor.session.on("changeMode", () => $e.session.editor.session.$worker.send("changeOptions", [ { asi: true } ]));
+	$e.session.editor.session.on("changeMode", () => $e.session.editor.session.$worker?.send("changeOptions", [ { asi: true } ]));
 };
 
 /**

@@ -40,3 +40,4 @@ This project would have never been possible without the following projects which
 * [Jison](https://github.com/zaach/jison)
 * [jsParser](https://github.com/cjihrig/jsparser)
 * [jsgif](https://github.com/antimatter15/jsgif)
+* [Skulpt](https://github.com/skulpt/skulpt)

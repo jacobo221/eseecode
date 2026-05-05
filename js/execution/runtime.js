@@ -21,22 +21,26 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 			code = $e.ide.blocks.toCode(viewEl.firstChild);
 		} else if (mode == "write") {
 			code = $e.session.editor.getValue();
-			// Check and clean code before parsing
-			if (eseecodeLanguage) {
-				try {
-					const program = eseecodeLanguage.parse(code);
-					code = program.makeWrite("", "\t");
-				} catch (exception) {
-					$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
-					let lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
-					if (lineNumber && lineNumber[2]) {
-						lineNumber = lineNumber[2];
-						$e.ui.highlight(lineNumber, "error");
-						$e.session.editor.gotoLine(lineNumber, 0, true);
+			// Check and clean code before parsing — skip for Python (Skulpt handles parsing)
+			if ($e.execution.codelang.current?.id === "javascript") {
+				if ($e.execution.codelang.current.getJison) {
+					try {
+						const program = $e.execution.codelang.current.getJison().parse(code);
+						code = program.makeWrite("", "\t");
+					} catch (exception) {
+						$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
+						let lineNumber = exception.message.match(/. (i|o)n line ([0-9]+)/);
+						if (lineNumber && lineNumber[2]) {
+							lineNumber = lineNumber[2];
+							$e.ui.highlight(lineNumber, "error");
+							$e.session.editor.gotoLine(lineNumber, 0, true);
+						}
+						return;
 					}
-					return;
+					$e.ui.write.resetView(code, false);
 				}
-				$e.ui.write.resetView(code, false);
+			} else {
+				// ToDo: Adapt for python? probably same makeWrite will work
 			}
 		}
 		if (code && $e.session.lastChange) $e.ide.autosave(code); // Only overwrite autosaved code if the user has entered code, thus not taking statements initial code for autosave
@@ -48,71 +52,87 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
 	$e.execution.current.kill = false; // Must be set after $e.backend.reset()
 	$e.execution.current.breaktoui = false;
 	if (!inCode && $e.execution.prerun) $e.execution.prerun();
-	let jsCode = "";
-	try {
-		jsCode += "\"use strict\";";
-		jsCode += "(async function() {";
-		let instructions = Object.values($e.instructions.set);
-		if (!inCode && ($e.execution.precode || instructions.some(d => d.run && !d.isAlias))) { // Don't load precode again when running the code of an event
-			let customInstructionsCode = "";
-			Object.values(instructions).forEach(instruction_details => {
-				if (!instruction_details || !instruction_details.run || instruction_details.isAlias) return;
-				customInstructionsCode += "\nfunction " + instruction_details.name + "(";
-				if (instruction_details.parameters) {
-					let parameters_text = "";
-					Object.values(instruction_details.parameters).forEach(instructionParam_details => {
-						if (!instructionParam_details || !instructionParam_details.name) return;
-						parameters_text += (parameters_text ? ", " : "") + instructionParam_details.name;
-					});
-					customInstructionsCode += parameters_text;
-				}
-				customInstructionsCode += "){\n" +
-					(instruction_details.single ? "$e.execution.current.programCounterDisabled = true;" : "") +
-					(!instruction_details.animate ? "var original_delay = $e.api.getInstructionsDelay();$e.api.setInstructionsDelay(0);" : "") +
-					instruction_details.run +
-					(!instruction_details.animate ? ";$e.api.setInstructionsDelay(original_delay);" : "") +
-					(instruction_details.single ? ";$e.execution.current.programCounterDisabled = false;" : "") +
-					"}\n";
-			});
-			// We want to run precode inline so it shares the same context
-			const real_precode = $e.execution.code2run(customInstructionsCode + $e.execution.precode, { inject: false, inline: true, realcode: true });
-			jsCode += "$e.execution.current.precode.running=true;" + real_precode + ";";
-		}
-		if (!justPrecode) {
-			const real_usercode = $e.execution.code2run(code, { inject: !immediate, realcode: true });
-			jsCode += "$e.execution.current.animate = " + !skipAnimation + ";$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;";
-			$e.execution.current.linesCount = real_usercode.split("\n").length - 1;
-			if (!inCode && $e.execution.postcode) { // Don't load postcode again when running the code of an event
-				const real_postcode = $e.execution.code2run($e.execution.postcode, { realcode: true });
-				jsCode += ";$e.execution.current.postcode.running=true;" + real_postcode + ";";
+
+	if ($e.execution.codelang.current?.id === "javascript") {
+
+		let jsCode = "";
+		try {
+			jsCode += "\"use strict\";";
+			jsCode += "(async function() {";
+			let instructions = Object.values($e.instructions.set);
+			if (!inCode && ($e.execution.precode || instructions.some(d => d.run && !d.isAlias))) { // Don't load precode again when running the code of an event
+				let customInstructionsCode = "";
+				Object.values(instructions).forEach(instruction_details => {
+					if (!instruction_details || !instruction_details.run || instruction_details.isAlias) return;
+					customInstructionsCode += "\nfunction " + instruction_details.name + "(";
+					if (instruction_details.parameters) {
+						let parameters_text = "";
+						Object.values(instruction_details.parameters).forEach(instructionParam_details => {
+							if (!instructionParam_details || !instructionParam_details.name) return;
+							parameters_text += (parameters_text ? ", " : "") + instructionParam_details.name;
+						});
+						customInstructionsCode += parameters_text;
+					}
+					customInstructionsCode += "){\n" +
+						(instruction_details.single ? "$e.execution.current.programCounterDisabled = true;" : "") +
+						(!instruction_details.animate ? "var original_delay = $e.api.getInstructionsDelay();$e.api.setInstructionsDelay(0);" : "") +
+						instruction_details.run +
+						(!instruction_details.animate ? ";$e.api.setInstructionsDelay(original_delay);" : "") +
+						(instruction_details.single ? ";$e.execution.current.programCounterDisabled = false;" : "") +
+						"}\n";
+				});
+				// We want to run precode inline so it shares the same context
+				const real_precode = $e.execution.code2run(customInstructionsCode + $e.execution.precode, { inject: false, inline: true, realcode: true });
+				jsCode += "$e.execution.current.precode.running=true;" + real_precode + ";";
 			}
-			jsCode += "$e.execution.updateStatus(\"finished\");";
+			if (!justPrecode) {
+				const real_usercode = $e.execution.code2run(code, { inject: !immediate, realcode: true });
+				jsCode += "$e.execution.current.animate = " + !skipAnimation + ";$e.execution.current.usercode.running=true;$e.execution.initProgramCounter();$e.execution.updateStatus(\"running\");" + real_usercode + ";$e.execution.current.usercode.running=false;";
+				$e.execution.current.linesCount = real_usercode.split("\n").length - 1;
+				if (!inCode && $e.execution.postcode) { // Don't load postcode again when running the code of an event
+					const real_postcode = $e.execution.code2run($e.execution.postcode, { realcode: true });
+					jsCode += ";$e.execution.current.postcode.running=true;" + real_postcode + ";";
+				}
+				jsCode += "$e.execution.updateStatus(\"finished\");";
+			}
+			jsCode += "})();";
+		} catch (exception) {
+			$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
+			return;
 		}
-		jsCode += "})();";
-	} catch (exception) {
-		$e.ui.msgBox.open(_("Can't parse the code. There is the following problem in your code") + ":\n\n" + exception.name + ":  " + exception.message, { classes: "monospace" });
-		return;
+		if (inCode === undefined || inCode === null) {
+			$e.session.lastRun = Date.now();
+		}
+		const oldWindowProperties = Object.getOwnPropertyNames(window);
+		$e.execution.traceInject();
+		try {
+			await eval(jsCode);
+		} catch (e) {
+			$e.execution.updateStatus("stopped");
+		}
+		$e.execution.current.stepped = undefined;
+		$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement. It is necessary to have it here and not jsCode so t¡if the execution is stopped this is still done
+		$e.execution.traceRestore();
+		$e.execution.updateSandboxChanges(oldWindowProperties, Object.getOwnPropertyNames(window)); // Do not reset yet (reset before next new execution), as there might be interaction to run with the last run code
+		$e.execution.current.usercode.running = false;
+		// if debug is open refresh it
+		if ($e.modes.toolboxes.current.id == "debug") {
+			$e.ui.debug.resetLayers();
+		}
+		if (!inCode && !justPrecode && $e.execution.postrun) $e.execution.postrun();
+
+	} else if ($e.execution.codelang.current?.id === "python" && !inCode && !justPrecode) {
+
+		// ToDo: At the moment, when codelang=python, precode and postcode still must be defined as JavaScript (only student code is run via Skulpt). Also, on python is does not yet trace which line is being run
+		if (inCode === undefined || inCode === null) $e.session.lastRun = Date.now();
+		await $e.execution.codelang.current.run(code, immediate, skipAnimation);
+		$e.execution.current.stepped = undefined;
+		$e.execution.current.animate = false;
+		$e.execution.current.usercode.running = false;
+		if ($e.modes.toolboxes.current.id === "debug") $e.ui.debug.resetLayers();
+		if (!inCode && !justPrecode && $e.execution.postrun) $e.execution.postrun();
+
 	}
-	if (inCode === undefined || inCode === null) {
-		$e.session.lastRun = Date.now();
-	}
-	const oldWindowProperties = Object.getOwnPropertyNames(window);
-	$e.execution.traceInject();
-	try {
-		await eval(jsCode);
-	} catch (e) {
-		$e.execution.updateStatus("stopped");
-	}
-	$e.execution.current.stepped = undefined;
-	$e.execution.current.animate = false; // Leave it as false so if the whiteboard is reset placing the guide in the initial position is not an animated movement. It is necessary to have it here and not jsCode so t¡if the execution is stopped this is still done
-	$e.execution.traceRestore();
-	$e.execution.updateSandboxChanges(oldWindowProperties, Object.getOwnPropertyNames(window)); // Do not reset yet (reset before next new execution), as there might be interaction to run with the last run code
-	$e.execution.current.usercode.running = false;
-	// if debug is open refresh it
-	if ($e.modes.toolboxes.current.id == "debug") {
-		$e.ui.debug.resetLayers();
-	}
-	if (!inCode && !justPrecode && $e.execution.postrun) $e.execution.postrun();
 };
 
 /**
@@ -124,7 +144,7 @@ $e.execution.execute = async function(immediate, inCode, justPrecode, skipAnimat
  * @example eval($e.execution.code2run("repeat(4){forward(100)}"))
  */
 $e.execution.code2run = (pseudoCode, options) => {
-	const program = eseecodeLanguage.parse(pseudoCode);
+	const program = $e.execution.codelang.current.getJison().parse(pseudoCode);
 	const userCode = program.makeWrite("", "\t", options);
 	let code = "";
 	const globalVars = $e.instructions.variables;

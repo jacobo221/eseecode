@@ -1,3 +1,11 @@
+## 5.0 (???)
+
+*Milestoen reached: Support Python3 as programming language
+* eSeeCode is now compatible with Python3
+* Fixed initial load where it could sometimes run into a race condition
+* Fixed bug where if the user's code crashed it could leave an unstable session and UI
+* Cleaned up init process
+
 ## 4.1 (2025-10-06)
 
 *Milestone reached: Download code view as image, fully customize new  instructions

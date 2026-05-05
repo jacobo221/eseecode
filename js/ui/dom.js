@@ -1,9 +1,9 @@
 "use strict";
 
-$e.ui.init = () =>  {
+$e.ui.init = async () =>  {
 	$e.ui.element.innerHTML = '\
 		<div id="header">\
-			<h1 id="title"></h1>\
+			<h1 id="title"><a href="" target="_blank" id="logo"><img src="" title="" /></a></h1>\
 			<span id="fullscreen-button" class="button"></span>\
 		</div>\
 		<div id="body">\
@@ -56,6 +56,12 @@ $e.ui.init = () =>  {
 								<select id="translations-select"></select>\
 							</div>\
 							<div id="translations-translator"></div>\
+						</div>\
+						<div id="codelang">\
+							<div id="codelang-switch">\
+								<span id="codelang-title"></span>\
+								<select id="codelang-select"></select>\
+							</div>\
 						</div>\
 						<div id="themes">\
 							<div id="themes-switch">\
@@ -123,7 +129,14 @@ $e.ui.init = () =>  {
 		</div>\
 		<div id="footer"></div>\
 	';
-	setTimeout(() => Object.entries({
+	await new Promise((resolve) => {
+		// Wait for the DOM to be created
+		const intervalHandler = setInterval(() => {
+			if (!$e.ui.element.querySelector("#title")) return;
+			resolve();
+		}, 1);
+	});
+	Object.entries({
 		"fullscreen-button": $e.ui.toggleFullscreen,
 		"toolbox-tabs-setup": () => $e.ui.switchToolboxMode("setup"),
 		"toolbox-tabs-pieces": () => $e.ui.switchToolboxMode($e.modes.views.current.id),
@@ -133,6 +146,7 @@ $e.ui.init = () =>  {
 		"loadcode": $e.ui.loadCode,
 		"savecode": $e.ui.saveCode,
 		"translations-select": (event) => $e.ui.translations.switch(event.target.value),
+		"codelang-select": (event) => $e.execution.codelang.switch(event.target.value),
 		"themes-select": (event) => $e.ui.themes.switch(event.target.value),
 		"setup-grid-enable": $e.ui.toggleGrid,
 		"setup-guide-enable": $e.toggleGuideFromUI,
@@ -172,5 +186,5 @@ $e.ui.init = () =>  {
 		if (el.type == "checkbox" || el.type == "range" || el.tagName == "SELECT") listenerType = "change";
 		else if (el.tagName == "FORM") listenerType = "submit";
 		el.addEventListener(listenerType, call);
-	}), 0); // Make it asynchronous so it gives time for the DOM to be created
+	});
 };

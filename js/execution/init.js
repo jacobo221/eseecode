@@ -3,6 +3,39 @@
 (() => {
     Object.assign($e, {
         execution: {
+            codelang: {
+                current: undefined,
+                available: [
+                    {
+                        id: "javascript",
+                        name: "JavaScript",
+                        files: [
+                            [
+                                "js/libs/jison/javascriptLanguage.js",
+                            ], [
+                                // Depends on js/jison/javascriptLanguage.js
+                                "js/libs/jison/makeBlocks.js",
+                                "js/libs/jison/makeWrite.js",
+                            ],
+                        ],
+                        getJison: () => javascriptLanguage,
+                    },
+                    {
+                        id: "python",
+                        name: "Python",
+                        files: [
+                            [
+                                "js/libs/skulpt/skulpt.min.js",
+                            ], [
+                                // Depends on js/libs/skulpt/skulpt.min.js
+                                "js/libs/skulpt/skulpt-stdlib.js",
+                                "js/execution/python.js",
+                            ],
+                        ],
+                        getJison: () => pythonLanguage,
+                    },
+                ],
+            },
             stepSize: 1,
             instructionsDelay: 200,
             instructionsMinimumPause: 100,

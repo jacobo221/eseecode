@@ -95,7 +95,7 @@ $e.ui.translations.current = {
 		"Enter the values for %s's parameters": "Para %s introduce los valores de sus %s parámetros",
 		"Do you really want to start over?": "¿Estás seguro de que quieres volver a empezar?",
 		"Careful, any code you haven't saved will be lost if you leave this page!": "¡Atención! Perderás el código que no hayas guardado si abandonas esta página.",
-		"You don't have the eseecodeLanguage loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?": "No tienes eseecodeLanguage cargado. Si todavía quieres cambiar al modo %s no podrás volver al modo de bloques.\n¿Estás seguro de querer cambiar al modo %s?",
+		"You don't have the language loaded. If you still want to switch to %s you won't be able to go back to any blocks mode.\nAre you sure you want to switch to %s?": "No tienes el lenguaje cargado. Si todavía quieres cambiar al modo %s no podrás volver al modo de bloques.\n¿Estás seguro de querer cambiar al modo %s?",
 		"Can't convert the code to blocks. There is the following problem in your code": "No se puede convertir el codigo a bloques. Existe el siguiente error en tu código",
 		"The execution is being aborted because it is taking too long.\nIf you want to allow it to run longer increase the value in 'Stop execution after' in the setup tab": "La ejecución se ha detenido porque tardaba demasiado.\nSi quieres permitirle más tiempo de ejecución aumenta el valor de la casilla 'Detener la ejecución tras' en la pestaña de configuración",
 		"Runtime error!": "¡Error de ejecución!",
@@ -106,8 +106,8 @@ $e.ui.translations.current = {
 		"Failed to upload the file!": "Error cargar el archivo!",
 		"%s is not a valid eSee file! (Invalid file type %s)": "¡%s no és un archivo eSee válido! (Tipo inválido %s)",
 		"Can't open the code in %s mode because there are erros in the code. Please open the file in Code view mode and fix the following errors": "No ha sido posible abrir el código en modo %s porque se han encontrado errores en el código. Por favor abre el archivo en la vista de Código y corrige los errores",
-		"Can't open the code in %s mode because you don't have the eseecodeLanguage script loaded. Please open the file in Code view mode": "No ha sido posible abrir el código en modo %s porque no tienes cargado eseecodeLanguage. Por favor abre el archivo en la vista de Código",
-	    "The code is being loaded. Please be patient while waiting...": "El código se está cargando. Por favor se paciente mientras esperas...",
+		"Can't open the code in %s mode because you don't have the language script loaded. Please open the file in Code view mode": "No ha sido posible abrir el código en modo %s porque no tienes cargado el lenguaje. Por favor abre el archivo en la vista de Código",
+		"The code is being loaded. Please be patient while waiting...": "El código se está cargando. Por favor se paciente mientras esperas...",
 		"Turns 90 degrees right": "Gira 90 grados a la derecha",
 		"action": "acción",
 		"Assigns a value to a variable": "Asigna un valor a una variable",
@@ -529,6 +529,7 @@ $e.ui.translations.current = {
 		"Move selected blocks": "Mueve los bloques seleccionados",
 		"Download screenshot of the code": "Descarga captura de imágen del código",
 		"Could not create image (content may be too large or cross-origin images blocked).": "No se ha podido crear la imagen (el contenido es demasiado grande o contiene imágenes de otras webs",
+		"Programming language": "Lenguaje de programación",
 	}
 };
 

@@ -387,4 +387,4 @@
 		if (!parentBlock) return this.makeWrite("", "");
 		appendBlock("null", parentBlock, [ this.makeWrite("", "") ]);
 	};
-})(eseecodeLanguage);
+})(javascriptLanguage);

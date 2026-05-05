@@ -33,7 +33,6 @@
 
 		// At this point CSS files are not loaded yet, so set style directly to element
 		$e.ui.element.style.visibility = "hidden"; // This allows for he opacity animation to not display an initian view of the element before running the animation, plus it hides the element's background colour (which only covers a fraction of the display) during the loading of the initial CSS files
-		$e.ui.element.style.opacity = 0; // We make it invisible but displayed so the heights, widths, etc are calculated. Set back to visible from within $e.ui.reset()
 		const wrapperProgressEl = document.createElement("div");
 		wrapperProgressEl.id = "loadingWrapper";
 		wrapperProgressEl.classList.add("loadingWrapper");
@@ -51,6 +50,16 @@
 		// Load files in batches; all files within a batch load in parallel, batches are sequential to respect dependencies
 		// Entries in each batch can be a path string or a function returning an array of path strings
 		const loadedFiles = [];
+		$e.loadFiles = async (filesToLoad, options = {}) => {
+			for (let i = 0; i < filesToLoad.length; i++) {
+				const subfiles = filesToLoad[i].reduce((acc, v) => typeof v == "string" ? acc.concat(v) : acc.concat(v() || []), []);
+				const headEl = document.querySelector("head");
+				const from = i * 100 / filesToLoad.length;
+				const to = (i + 1) * 100 / filesToLoad.length;
+				let loaded = 0;
+				await Promise.all(subfiles.map(file => loadFile(file, headEl).then(() => updateProgress(from, to, ++loaded, subfiles.length, options.progressFormat))));
+			}
+		}
 		function loadFile(path, headEl) {
 			if (loadedFiles.includes(path)) return Promise.resolve(); // Do not load the same file twice
 			const pathLength = path.indexOf("?");
@@ -68,9 +77,10 @@
 				headEl.appendChild(el);
 			});
 		}
-		const updateProgress = (from, to, loaded, total) => { if (!progressEl.dataset.locked) progressEl.textContent = Math.floor(from + (to - from) * loaded / total) + "%"; };
+		const updateProgress = (from, to, loaded, total, progressFormat) => { if (!progressEl.dataset.locked) progressEl.textContent = progressFormat === "percentage" ? Math.floor(from + (to - from) * loaded / total) + "%" : loaded + " / " + total; };
 		const failedProgress = (error) => { console.error("Failure", error); progressEl.dataset.locked = true; progressEl.textContent = "Failed!"; progressEl.classList.remove("loading"); };
-		const files_to_load = [
+
+		const filesToLoad = [
 			[
 				"definitions.css", /* This a theme file, so use theme-relative path */
 				"ui.css", /*Load the CSS as soon as possible to style the progress animation. This a theme file, so use theme-relative path */
@@ -111,7 +121,6 @@
 				"js/instructions/set.js",
 				"js/instructions/implementation.js",
 				"js/instructions/icons.js",
-				"js/libs/jison/eseecodeLanguage.js",
 				"js/api.js",
 				"js/libs/ace/ace.js",
 				"js/libs/jsgif/LZWEncoder.js",
@@ -119,29 +128,18 @@
 				"js/libs/jsgif/GIFEncoder.js",
 				"js/libs/html-to-image/html-to-image.min.js",
 			], [
-				// Depends on theme.js
-				() => $e.ui.themes.current.files,
 				// Depends on js/ace/ace.js
 				"js/debug/debug.js",
 				"js/debug/whiteboard.js",
 				"js/debug/breakpoints.js",
 				"js/libs/ace/ext-language_tools.js",
-				// Depends on js/jison/eseecodeLanguage.js
-				"js/libs/jison/makeBlocks.js",
-				"js/libs/jison/makeWrite.js",
-			]
+			],
 		];
 		try {
-			for (let i = 0; i < files_to_load.length; i++) {
-				const subfiles = files_to_load[i].reduce((acc, v) => typeof v == "string" ? acc.concat(v) : acc.concat(v()), []);
-				const headEl = document.querySelector("head");
-				const from = i * 100 / files_to_load.length;
-				const to = (i + 1) * 100 / files_to_load.length;
-				let loaded = 0;
-				await Promise.all(subfiles.map(file => loadFile(file, headEl).then(() => updateProgress(from, to, ++loaded, subfiles.length))));
-			}
-			// All files loaded, start application
-			$e.ui.reset();
+			await $e.loadFiles(filesToLoad, { progressFormat: "percentage" });
+			await $e.ui.reset();
+			$e.session.ready = Date.now();
+			$e.ui.element.style.visibility = "";
 			wrapperProgressEl.remove();
 		} catch(error) {
 			console.error(error);
