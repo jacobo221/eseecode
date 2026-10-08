@@ -79,6 +79,8 @@ codelangPython.createBuiltin = (funcName) => {
  * Registers all eSeeCode instruction functions as Skulpt Python built-ins.
  * Called once per execution so fresh wrappers are created after precode may
  * have added custom instructions to window[funcName].
+ * Also registers __eseecode_inject(), the line-level execution tracker that
+ * makePython3Write.js injects before each Python statement.
  * @private
  * @example codelangPython.python.setupBuiltins()
  */
@@ -88,6 +90,26 @@ codelangPython.setupBuiltins = () => {
 		const funcName = instruction.name;
 		if (typeof window[funcName] !== "function") return;
 		Sk.builtins[funcName] = codelangPython.createBuiltin(funcName);
+	});
+
+	// Called by injected __eseecode_inject(N) statements in the user's Python.
+	// Mirrors what $e.execution.injectCode() produces for JavaScript: counts
+	// instructions, highlights the current line, handles breakpoints and stepping.
+	Sk.builtins['__eseecode_inject'] = new Sk.builtin.func(function(lineNumber) {
+		if ($e.execution.current.kill) throw "executionKilled";
+		const lineNum = Sk.ffi.remapToJs(lineNumber);
+		// injection() is always async; wrap in a Skulpt suspension so Python
+		// execution waits for it (breakpoints, step-delays, etc.).
+		const promise = $e.execution.injection(lineNum, (function() {
+			$e.execution.current.watchesChanged = [];
+		})(), undefined);
+		const susp = new Sk.misceval.Suspension();
+		susp.resume = function() {
+			if ($e.execution.current.kill) throw "executionKilled";
+			return Sk.builtin.none.none$;
+		};
+		susp.data = { type: "Sk.promise", promise: promise };
+		return susp;
 	});
 };
 
@@ -117,7 +139,14 @@ codelangPython.handleError = (err) => {
 	let lineNumber;
 
 	if (err.traceback?.length > 0) {
-		lineNumber = err.traceback[err.traceback.length - 1].lineno;
+		let instrumentedLine = err.traceback[err.traceback.length - 1].lineno;
+		// Translate the instrumented-code line number back to the original Python
+		// line number using the map built by makePython3Write.js during injection.
+		if (pythonLanguage.lastLineMap && instrumentedLine > 0) {
+			lineNumber = pythonLanguage.lastLineMap[instrumentedLine - 1] || instrumentedLine;
+		} else {
+			lineNumber = instrumentedLine;
+		}
 	}
 
 	message = (typeof err.toString === "function") ? err.toString() : String(err);
@@ -188,6 +217,13 @@ codelangPython.run = async (code, immediate, skipAnimation) => {
 		return;
 	}
 
+	// Transform user code: inject __eseecode_inject(N) before each statement so
+	// Skulpt reports line-level progress, handles breakpoints, and counts
+	// instructions — equivalent to what $e.execution.injectCode() does for JS.
+	const parsed = pythonLanguage.parse(code);
+	const instrumentedCode = parsed.makeWrite("", "\t", { inject: !immediate, realcode: true });
+	$e.execution.current.linesCount = instrumentedCode.split('\n').length;
+
 	// Execute Python user code via Skulpt
 	$e.execution.current.animate = !skipAnimation;
 	$e.execution.current.usercode.running = true;
@@ -195,7 +231,7 @@ codelangPython.run = async (code, immediate, skipAnimation) => {
 	$e.execution.updateStatus("running");
 
 	try {
-		await codelangPython.execute(code);
+		await codelangPython.execute(instrumentedCode);
 		$e.execution.showResults();
 	} catch(err) {
 		codelangPython.handleError(err);

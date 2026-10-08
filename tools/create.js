@@ -135,6 +135,7 @@ add_translations({
 		"Name": "Nombre",
 		"Count as a single instruction": "Contar como una única instrucción",
 		"Keep animation": "Mantener animación",
+		"Author": "Autor",
 	},
 	"ca": {
 		"Using this tool you can create your own custom eSeeCode platform to fit exactly your needs for each exercise.<br><br>Use the preview panel below to see and test live how eSeeCode will look like with your settings.<br>Once you are done setting it up, copy the URL and share it.": "",
@@ -271,6 +272,7 @@ add_translations({
 		"Name": "Nom",
 		"Count as a single instruction": "Comptar com una única instrucció",
 		"Keep animation": "Mantindre animació",
+		"Author": "Autor",
 	}
 });
 
